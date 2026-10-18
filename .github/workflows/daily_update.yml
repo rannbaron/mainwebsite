@@ -37,7 +37,7 @@ jobs:
 
       - name: Run Daily Update
         run: |
-          python3 update_server.py
+          python3 update_server.py 2>&1 | tee update.log
 
       - name: Commit and push updated map data
         run: |
@@ -49,6 +49,30 @@ jobs:
           else
             git commit -m "Automated update: Early Voting Day $(date +'%Y-%m-%d %H:%M UTC')"
             git push
+          fi
+
+      - name: Send Email Notification
+        if: always()
+        env:
+          SMTP_SERVER: smtp.gmail.com
+          SMTP_PORT: 587
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          if [ -n "$SMTP_PASSWORD" ]; then
+            STATUS="SUCCESS"
+            if [ "${{ job.status }}" != "success" ]; then
+              STATUS="FAILURE"
+            elif grep -q "Everything is up to date" update.log 2>/dev/null; then
+              STATUS="NO_CHANGE"
+            fi
+            python3 send_notification.py \
+              --status "$STATUS" \
+              --recipient "baronrann@gmail.com" \
+              --log-file "update.log" \
+              --summary "Daily automated NC early voting map update: $STATUS" || true
+          else
+            echo "Notice: SMTP_PASSWORD secret is not configured in GitHub repository secrets. Skipping email."
           fi
 
       - name: Setup Pages
