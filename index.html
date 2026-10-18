@@ -73,7 +73,7 @@
       cursor: pointer;
     }
     .arrow-group:hover {
-      filter: drop-shadow(0 0 10px currentColor);
+      filter: brightness(1.35);
     }
 
     .glass-card {
@@ -250,11 +250,6 @@
       <!-- SVG Map Canvas -->
       <div id="svgContainer" class="w-full flex-1 flex items-center justify-center p-2 relative select-none">
         <svg id="ncMapSvg" viewBox="0 0 1200 483" class="w-full h-full max-h-[760px] transition-all duration-300">
-          <defs>
-            <filter id="arrowShadow" x="-20%" y="-20%" width="140%" height="140%">
-              <feDropShadow dx="0" dy="1" stdDeviation="2.5" flood-color="#000000" flood-opacity="0.85"/>
-            </filter>
-          </defs>
           <g id="countiesLayer"></g>
           <g id="precinctsLayer"></g>
           <g id="arrowsLayer"></g>
@@ -568,12 +563,12 @@
       return '#1e293b';
     }
 
-    // High-Contrast SVG Arrow Generator with Casing
+    // High-Contrast SVG Arrow Generator with Clean Proportional Casing
     function renderCurvedArrow(x0, y0, x1, y1, curve, headSize, strokeWidth, color, id) {
       const dx = x1 - x0;
       const dy = y1 - y0;
       const L = Math.hypot(dx, dy);
-      if (L < 0.1) return null;
+      if (L < 0.05) return null;
 
       const nx = -dy / L;
       const ny = dx / L;
@@ -594,42 +589,42 @@
       const tny = tx;
 
       // Arrowhead wings
-      const w1x = x1 - headSize * tx + headSize * 0.48 * tnx;
-      const w1y = y1 - headSize * ty + headSize * 0.48 * tny;
-      const w2x = x1 - headSize * tx - headSize * 0.48 * tnx;
-      const w2y = y1 - headSize * ty - headSize * 0.48 * tny;
+      const w1x = x1 - headSize * tx + headSize * 0.46 * tnx;
+      const w1y = y1 - headSize * ty + headSize * 0.46 * tny;
+      const w2x = x1 - headSize * tx - headSize * 0.46 * tnx;
+      const w2y = y1 - headSize * ty - headSize * 0.46 * tny;
 
       const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       g.setAttribute('class', 'arrow-group');
-      g.setAttribute('filter', 'url(#arrowShadow)');
       if (id) g.setAttribute('id', id);
 
       const dShaft = `M ${x0.toFixed(2)} ${y0.toFixed(2)} Q ${cx.toFixed(2)} ${cy.toFixed(2)} ${x1.toFixed(2)} ${y1.toFixed(2)}`;
       const dHead = `M ${x1.toFixed(2)} ${y1.toFixed(2)} L ${w1x.toFixed(2)} ${w1y.toFixed(2)} L ${w2x.toFixed(2)} ${w2y.toFixed(2)} Z`;
 
-      // 1. Dark Contrast Casing (Halo underneath)
+      // 1. Dark Contrast Casing (proportional dark halo underneath)
       const casingShaft = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       casingShaft.setAttribute('d', dShaft);
       casingShaft.setAttribute('fill', 'none');
       casingShaft.setAttribute('stroke', '#030712');
-      casingShaft.setAttribute('stroke-width', (strokeWidth + 2.6).toFixed(2));
+      casingShaft.setAttribute('stroke-width', (strokeWidth * 2.2).toFixed(3));
       casingShaft.setAttribute('stroke-linecap', 'round');
-      casingShaft.setAttribute('opacity', '0.9');
+      casingShaft.setAttribute('opacity', '0.95');
 
       const casingHead = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       casingHead.setAttribute('d', dHead);
       casingHead.setAttribute('fill', '#030712');
       casingHead.setAttribute('stroke', '#030712');
       casingHead.setAttribute('stroke-linejoin', 'round');
-      casingHead.setAttribute('stroke-width', '2.8');
-      casingHead.setAttribute('opacity', '0.9');
+      casingHead.setAttribute('stroke-linecap', 'round');
+      casingHead.setAttribute('stroke-width', (strokeWidth * 1.5).toFixed(3));
+      casingHead.setAttribute('opacity', '0.95');
 
       // 2. Forefront Luminous Colored Arrow
       const shaft = document.createElementNS('http://www.w3.org/2000/svg', 'path');
       shaft.setAttribute('d', dShaft);
       shaft.setAttribute('fill', 'none');
       shaft.setAttribute('stroke', color);
-      shaft.setAttribute('stroke-width', strokeWidth.toFixed(2));
+      shaft.setAttribute('stroke-width', strokeWidth.toFixed(3));
       shaft.setAttribute('stroke-linecap', 'round');
 
       const head = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -637,7 +632,7 @@
       head.setAttribute('fill', color);
       head.setAttribute('stroke', color);
       head.setAttribute('stroke-linejoin', 'round');
-      head.setAttribute('stroke-width', (strokeWidth * 0.4).toFixed(2));
+      head.setAttribute('stroke-width', (strokeWidth * 0.25).toFixed(3));
 
       g.appendChild(casingShaft);
       g.appendChild(casingHead);
@@ -757,8 +752,8 @@
       if (!precincts.length) return;
 
       const countyW = county.bbox[2];
-      const headSize = Math.max(0.45, countyW * 0.016 * arrowWeight);
-      const strokeWidth = Math.max(0.08, countyW * 0.0026 * arrowWeight);
+      const headSize = Math.max(0.38, countyW * 0.0135 * arrowWeight);
+      const strokeWidth = Math.max(0.065, countyW * 0.0022 * arrowWeight);
 
       const scale = DATA.scale;
       const u_pos = [Math.cos(125 * Math.PI / 180), -Math.sin(125 * Math.PI / 180)];
@@ -786,7 +781,7 @@
         // Precinct Arrow
         if (showArrows && m.hasData && Math.abs(m.swing) >= 0.25) {
           const absS = Math.abs(m.swing);
-          const L_px = Math.max(1.4, (620 + 60 * Math.min(absS, 25.0)) * scale);
+          const L_px = Math.max(1.1, (460 + 50 * Math.min(absS, 25.0)) * scale);
           const u = m.swing > 0 ? u_pos : u_neg;
           const curve = m.swing > 0 ? -0.16 : 0.16;
 
