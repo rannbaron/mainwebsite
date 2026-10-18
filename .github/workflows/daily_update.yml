@@ -1,0 +1,63 @@
+name: Daily Early Voting Update
+
+on:
+  schedule:
+    # 6:00 AM EDT = 10:00 UTC
+    - cron: '0 10 * * *'
+    # Fallback at 7:00 AM EDT = 11:00 UTC
+    - cron: '0 11 * * *'
+  workflow_dispatch: # Allows manual trigger button in GitHub Actions tab
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  update-data-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python dependencies
+        run: |
+          pip install requests pandas
+
+      - name: Run Daily Update
+        run: |
+          python3 update_server.py
+
+      - name: Commit and push updated map data
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add index.html .absentee_2026.meta.json
+          if git diff --staged --quiet; then
+            echo "No changes detected on NCSBE S3 today."
+          else
+            git commit -m "Automated update: Early Voting Day $(date +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

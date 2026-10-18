@@ -1,0 +1,36 @@
+# Large binary archives and election data dumps
+*.zip
+*.csv
+*.tar.gz
+*.tsv
+nc_elections_data/
+logs/
+scratch/
+
+# Credentials and secrets
+.env
+*.pem
+*.key
+service_account.json
+
+# Local exploratory analysis & generated images (not needed for web deployment)
+*.ipynb
+*.png
+remote_deployment/
+generate_map_data.py
+interactive_map.html
+nc_early_voting_analysis.py
+nc_map_data.js
+nc_map_data.json
+plot_county_swing_map.py
+plot_precinct_swing_map.py
+run_daily_cron.sh
+update_daily.py
+
+# Python & Environment
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.ipynb_checkpoints/
