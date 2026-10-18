@@ -256,11 +256,6 @@
         </svg>
       </div>
 
-      <!-- Floating Tooltip -->
-      <div id="floatingTooltip" class="absolute pointer-events-none hidden z-30 glass-card px-3.5 py-2.5 rounded-xl shadow-2xl border border-slate-600 transition-opacity duration-150">
-        <!-- Injected via JS -->
-      </div>
-
       <!-- Map Footer Status Bar -->
       <div class="border-t border-slate-800/80 bg-slate-900/80 px-4 py-2 flex items-center justify-between text-xs text-slate-400">
         <div class="flex items-center gap-2">
@@ -1213,19 +1208,31 @@
     }
 
     function updateTooltipPosition(e) {
-      const x = e.clientX;
-      const y = e.clientY;
-      const w = tooltipEl.offsetWidth || 190;
-      const h = tooltipEl.offsetHeight || 95;
+      if (!tooltipEl || tooltipEl.classList.contains('hidden') || !e) return;
+      const clientX = e.clientX !== undefined ? e.clientX : (window.innerWidth / 2);
+      const clientY = e.clientY !== undefined ? e.clientY : (window.innerHeight / 2);
+
+      const pad = 12;
+      const w = tooltipEl.offsetWidth || 230;
+      const h = tooltipEl.offsetHeight || 115;
       
-      let left = x + 15;
-      let top = y + 15;
+      let left = clientX + 16;
+      let top = clientY + 16;
 
-      if (left + w > window.innerWidth - 10) left = x - w - 15;
-      if (top + h > window.innerHeight - 10) top = y - h - 15;
+      // If overflowing right edge of viewport, flip to left of cursor
+      if (left + w > window.innerWidth - pad) {
+        left = clientX - w - 16;
+      }
+      if (left < pad) left = pad;
 
-      tooltipEl.style.left = `${left}px`;
-      tooltipEl.style.top = `${top}px`;
+      // If overflowing bottom edge of viewport, flip above cursor
+      if (top + h > window.innerHeight - pad) {
+        top = clientY - h - 16;
+      }
+      if (top < pad) top = pad;
+
+      tooltipEl.style.left = `${Math.round(left)}px`;
+      tooltipEl.style.top = `${Math.round(top)}px`;
     }
 
     function hideTooltip() {
@@ -1333,5 +1340,10 @@
 
     window.addEventListener('DOMContentLoaded', init);
   </script>
+
+  <!-- Floating Tooltip (Fixed to Viewport, immune to container overflow clipping) -->
+  <div id="floatingTooltip" class="fixed pointer-events-none hidden z-50 glass-card px-4 py-3 rounded-xl shadow-2xl border border-slate-600/90 transition-opacity duration-100 min-w-[210px] max-w-[320px]">
+    <!-- Injected via JS -->
+  </div>
 </body>
 </html>
