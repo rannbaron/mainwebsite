@@ -28,9 +28,16 @@ NCSBE_2026_URL = "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/absentee
 EV_START_DATE = pd.to_datetime("2026-10-15")
 
 def norm(val):
-    if not val:
+    if val is None or pd.isna(val):
         return ''
-    s = str(val).strip().upper()
+    s = str(val).strip()
+    try:
+        f = float(s)
+        if f.is_integer():
+            s = str(int(f))
+    except (ValueError, OverflowError):
+        pass
+    s = s.upper()
     s = re.sub(r'^(PRECINCT|PCT|PREC)\s*[\#\:\-]?\s*', '', s)
     s = re.sub(r'[^A-Z0-9]', '', s)
     return s
@@ -120,6 +127,15 @@ def process_2026_returns(zip_path, shp_lookup, target_ev_day=None):
                         c_map = shp_lookup.get(county, {})
 
                         def match_pid(raw_p):
+                            if county == 'WAYNE':
+                                try:
+                                    f = float(raw_p)
+                                    i = int(f)
+                                    w_str = str(i) if i in [1920, 2530] else f"{i:02d}"
+                                    if w_str in c_map:
+                                        return c_map[w_str]
+                                except Exception:
+                                    pass
                             p_norm = norm(raw_p)
                             if p_norm in c_map:
                                 return c_map[p_norm]
@@ -218,9 +234,20 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
             county_sums[cname]['black'] += c26['black']
 
     # 2. Update County Data
+    county_direct = {}
+    for cname, c_group in p_df.groupby('county'):
+        county_direct[cname] = {
+            'tot': int(c_group['tot'].sum()),
+            'dem': int(c_group['dem'].sum()),
+            'rep': int(c_group['rep'].sum()),
+            'una': int(c_group['una'].sum()),
+            'white': int(c_group['white'].sum()),
+            'black': int(c_group['black'].sum())
+        }
+
     for county in data['counties']:
         cid = county['id']
-        c_stats = county_sums.get(cid, {'tot': 0, 'dem': 0, 'rep': 0, 'una': 0, 'white': 0, 'black': 0})
+        c_stats = county_direct.get(cid) or county_sums.get(cid, {'tot': 0, 'dem': 0, 'rep': 0, 'una': 0, 'white': 0, 'black': 0})
         county['data']['2026'] = c_stats
         
         st_tot += c_stats['tot']
