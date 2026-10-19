@@ -268,6 +268,23 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
         'black': st_black
     }
 
+    # 3.5. Recompute 2026 Vote Forecasts (Dual-Regime & Empirical Bayes)
+    try:
+        import vote_forecast
+        c_returns = {c['id']: c['data']['2026'] for c in data['counties']}
+        forecast_res = vote_forecast.predict_all(c_returns)
+        for county in data['counties']:
+            cid = county['id']
+            county['forecast'] = forecast_res['counties'].get(cid)
+        data['state']['forecast'] = forecast_res['statewide']
+        for cid, plist in data.get('precincts', {}).items():
+            c_fc = forecast_res['counties'].get(cid)
+            for p in plist:
+                p['forecast'] = vote_forecast.predict_precinct(cid, p['data'].get('2026'), p['data'].get('2022'), c_fc)
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Updated 2026 Vote Forecast: Statewide Dem {data['state']['forecast']['pred_final_dem']}% [{data['state']['forecast']['range_low']}% - {data['state']['forecast']['range_high']}%]")
+    except Exception as e:
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Warning: Error computing vote forecast: {e}")
+
     # Save updated base JSON
     with open(base_json_path, 'w') as f:
         json.dump(data, f)
@@ -286,6 +303,20 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
             f.write(updated_html)
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Injected updated data into {output_html_path} ({len(updated_html):,} bytes)")
 
+        # Also inject into beta/index.html if it exists
+        beta_html_path = os.path.join(os.path.dirname(output_html_path) or ".", "beta", "index.html")
+        if os.path.exists(beta_html_path):
+            with open(beta_html_path, 'r') as f:
+                b_html = f.read()
+            updated_b_html = re.sub(
+                r'window\.NC_MAP_DATA\s*=\s*\{[\s\S]*?\};\s*</script>',
+                f'window.NC_MAP_DATA = {compact_json};\n  </script>',
+                b_html
+            )
+            with open(beta_html_path, 'w') as f:
+                f.write(updated_b_html)
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Injected updated data into {beta_html_path} ({len(updated_b_html):,} bytes)")
+
         # Copy to destination public_html if specified
         dest_path = dest_public_html or os.getenv("DEST_HTML_PATH", "")
         if dest_path and dest_path.strip() and dest_path.lower() != "none":
@@ -303,6 +334,21 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
                 except Exception:
                     pass
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] Successfully copied to public_html: {dest_path} (mode: 0644)")
+
+                # Also copy beta to destination if present
+                if os.path.exists(beta_html_path):
+                    dest_beta = os.path.join(dest_dir, "beta", "index.html")
+                    os.makedirs(os.path.dirname(dest_beta), exist_ok=True)
+                    try:
+                        os.chmod(os.path.dirname(dest_beta), 0o755)
+                    except Exception:
+                        pass
+                    shutil.copy2(beta_html_path, dest_beta)
+                    try:
+                        os.chmod(dest_beta, 0o644)
+                    except Exception:
+                        pass
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Successfully copied beta to public_html: {dest_beta}")
             except Exception as e:
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice on copy to {dest_path}: {e}")
     else:
