@@ -128,6 +128,7 @@ def compute_daily_changes(prev_day=None, curr_day=None):
         shift = round(d_curr - d_prev, 2)
         p_shift = round(p_dem_curr - p_dem_prev, 1)
 
+        margin_curr = c_curr.get('pred_margin', round(2 * d_curr - 100.0, 2))
         c_info = {
             'county': cname.title(),
             'rating_prev': r_prev,
@@ -135,12 +136,18 @@ def compute_daily_changes(prev_day=None, curr_day=None):
             'rating_changed': (r_prev != r_curr),
             'dem_prev': d_prev,
             'dem_curr': d_curr,
+            'margin_curr': margin_curr,
             'shift': shift,
             'p_dem_prev': p_dem_prev,
             'p_dem_curr': p_dem_curr,
             'p_shift': p_shift,
             'range_low': c_curr['range_low'],
             'range_high': c_curr['range_high'],
+            'ci_margin_low': c_curr.get('ci_margin_low', round(2.0 * c_curr['range_low'] - 100.0, 2)),
+            'ci_margin_high': c_curr.get('ci_margin_high', round(2.0 * c_curr['range_high'] - 100.0, 2)),
+            'margin_width': c_curr.get('margin_width', round(2.0 * (c_curr['range_high'] - c_curr['range_low']), 2)),
+            'margin_confidence': c_curr.get('margin_confidence', 'moderate confidence'),
+            'call_confidence': c_curr.get('call_confidence', 'moderate confidence'),
             'actual_2022': c_curr['actual_2022'],
             'winner_2022': 'D' if c_curr['actual_2022'] > 50.0 else 'R'
         }
@@ -185,6 +192,8 @@ def compute_daily_changes(prev_day=None, curr_day=None):
             'curr_low': st_curr['range_low'],
             'curr_high': st_curr['range_high'],
             'rating': st_curr['rating'],
+            'margin_confidence': st_curr.get('margin_confidence', 'moderate confidence'),
+            'call_confidence': st_curr.get('call_confidence', 'high confidence'),
             'ratings_summary_prev': st_prev.get('ratings_summary', {}),
             'ratings_summary_curr': st_curr.get('ratings_summary', {})
         },
@@ -209,8 +218,13 @@ def format_plain_text(data):
         f"  - Total Ballots Added: +{t['new_tot']:,} ({t['pct_increase']:+.1f}% increase; {t['prev_tot']:,} -> {t['curr_tot']:,})",
         f"  - Sunday Additions Party Split: Dem {t['pct_dem']}% | Rep {t['pct_rep']}% | Una {t['pct_una']}%",
         f"  - Statewide 2026 Forecast: Dem {sf['curr_dem']}% (was {sf['prev_dem']}%, shift {sf['dem_shift']:+.2f}%)",
-        f"  - 95% Confidence Interval: [{sf['curr_low']}% - {sf['curr_high']}%] (Rating: {sf['rating']})",
+        f"  - Statewide Rating: {sf['rating']} [Call: {sf['call_confidence']} | Margin: {sf['margin_confidence']}]",
         f"  - Rating Changes Detected: {len(data['rating_changes'])} county change(s)",
+        "",
+        "UNDERSTANDING MODEL CONFIDENCE:",
+        "  * Call confidence is how confident the model is about Democrats or Republicans winning that county.",
+        "  * Margin confidence is how confident the model is about the numerical final outcome in that county, such as D+5, or R+3.",
+        "  (Scale: very low confidence | low confidence | moderate confidence | high confidence | very high confidence)",
         "",
         "=" * 70,
         "2. COUNTY RATING CHANGES (Day-over-Day)",
@@ -219,11 +233,13 @@ def format_plain_text(data):
 
     if data['rating_changes']:
         for c in data['rating_changes']:
+            m_sign = '+' if c['margin_curr'] > 0 else ''
             lines.extend([
                 f"  * {c['county'].upper()}: {c['rating_prev']} -> {c['rating_curr']}",
-                f"    - Forecast Dem Share: {c['dem_prev']}% -> {c['dem_curr']}% ({c['shift']:+.2f}%)",
+                f"    - Forecast Dem Share: {c['dem_prev']}% -> {c['dem_curr']}% ({c['shift']:+.2f}%) | Margin: {m_sign}{c['margin_curr']:.2f}%",
                 f"    - Flip Probability P(Dem): {c['p_dem_prev']}% -> {c['p_dem_curr']}% ({c['p_shift']:+.1f}%)",
-                f"    - 95% Bounds: [{c['range_low']}% - {c['range_high']}%]",
+                f"    - Model Confidence: Call: {c['call_confidence']} | Margin: {c['margin_confidence']}",
+                f"    - 95% Margin CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]",
                 ""
             ])
     else:
@@ -236,7 +252,8 @@ def format_plain_text(data):
         "=" * 70,
     ])
     for c in data['current_flips']:
-        lines.append(f"  * {c['county']:<14} | 2026 Pred: {c['dem_curr']:.1f}% | 2022 Act: {c['actual_2022']:.1f}% | P(Flip): {c['p_dem_curr']:.1f}% | {c['rating_curr']}")
+        m_sign = '+' if c['margin_curr'] > 0 else ''
+        lines.append(f"  * {c['county']:<14} | 2026: {c['dem_curr']:.1f}% ({m_sign}{c['margin_curr']:.1f}%) | 2022: {c['actual_2022']:.1f}% | Call: {c['call_confidence']} | Margin: {c['margin_confidence']} | {c['rating_curr']}")
 
     lines.extend([
         "",
@@ -246,7 +263,8 @@ def format_plain_text(data):
     ])
     for c in data['toss_ups']:
         p_rep = round(100.0 - c['p_dem_curr'], 1)
-        lines.append(f"  * {c['county']:<14} | 2026 Pred: {c['dem_curr']:.1f}% | Flip Chance (D): {c['p_dem_curr']:.1f}% | Hold Chance (R): {p_rep:.1f}% | [{c['range_low']}% - {c['range_high']}%]")
+        m_sign = '+' if c['margin_curr'] > 0 else ''
+        lines.append(f"  * {c['county']:<14} | 2026: {c['dem_curr']:.1f}% ({m_sign}{c['margin_curr']:.1f}%) | D: {c['p_dem_curr']:.1f}% / R: {p_rep:.1f}% | Call: {c['call_confidence']} | Margin: {c['margin_confidence']} | 95% CI Margin: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]")
 
     lines.extend([
         "",
@@ -313,34 +331,66 @@ def format_html(data):
             bg, color = "#ffd7d9", "#da1e28"
         return f'<span style="display:inline-block;padding:3px 8px;font-size:12px;font-weight:700;border-radius:4px;background:{bg};color:{color};">{rating}</span>'
 
+    def conf_badge(conf):
+        c_low = conf.lower()
+        if "very high" in c_low:
+            bg, color = "#dcfce7", "#15803d" # green
+        elif "high" in c_low:
+            bg, color = "#ecfdf5", "#047857" # emerald
+        elif "moderate" in c_low:
+            bg, color = "#fef3c7", "#b45309" # amber
+        elif "very low" in c_low:
+            bg, color = "#fee2e2", "#b91c1c" # red
+        else:
+            bg, color = "#ffedd5", "#c2410c" # orange (low)
+        short_label = conf.title().replace(" Confidence", "")
+        return f'<span style="display:inline-block;padding:2px 6px;font-size:11px;font-weight:700;border-radius:4px;background:{bg};color:{color};">{short_label}</span>'
+
+    confidence_guide = """
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:12px 16px;margin:16px 0;font-size:13px;color:#334155;line-height:1.5;">
+        <div style="font-weight:700;margin-bottom:4px;color:#0f172a;">Understanding Model Confidence:</div>
+        <ul style="margin:0;padding-left:18px;">
+            <li><strong>Call confidence:</strong> How confident the model is about Democrats or Republicans winning that county.</li>
+            <li><strong>Margin confidence:</strong> How confident the model is about the numerical final outcome in that county, such as D+5, or R+3.</li>
+        </ul>
+        <div style="margin-top:6px;font-size:11px;color:#64748b;">Scale: <em>Very Low</em> &bull; <em>Low</em> &bull; <em>Moderate</em> &bull; <em>High</em> &bull; <em>Very High</em></div>
+    </div>
+    """
+
     # Build rating changes HTML
     if data['rating_changes']:
         rc_rows = "".join([
             f"""<tr>
                 <td style="padding:10px 12px;font-weight:600;border-bottom:1px solid #e5e7eb;">{c['county']}</td>
                 <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{badge(c['rating_prev'])} &rarr; {badge(c['rating_curr'])}</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{c['dem_prev']:.2f}% &rarr; <strong>{c['dem_curr']:.2f}%</strong> <span style="color:#16a34a;font-weight:600;">({c['shift']:+.2f}%)</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{c['p_dem_prev']:.1f}% &rarr; <strong>{c['p_dem_curr']:.1f}%</strong></td>
-                <td style="padding:10px 12px;color:#6b7280;font-size:12px;border-bottom:1px solid #e5e7eb;">{c['range_low']:.1f}% - {c['range_high']:.1f}%</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;"><strong>{c['dem_curr']:.2f}%</strong> ({'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%) <span style="color:#16a34a;font-size:11px;font-weight:600;">({c['shift']:+.2f}%)</span></td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['call_confidence'])}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['margin_confidence'])}</td>
+                <td style="padding:10px 12px;color:#6b7280;font-size:12px;border-bottom:1px solid #e5e7eb;">[{'+' if c['ci_margin_low']>0 else ''}{c['ci_margin_low']:.1f}%, {'+' if c['ci_margin_high']>0 else ''}{c['ci_margin_high']:.1f}%]</td>
             </tr>"""
             for c in data['rating_changes']
         ])
         rc_html = f"""
+        {confidence_guide}
         <table style="width:100%;border-collapse:collapse;margin:12px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;">
             <thead>
                 <tr style="background:#f3f4f6;text-align:left;font-size:12px;color:#4b5563;text-transform:uppercase;">
                     <th style="padding:10px 12px;">County</th>
                     <th style="padding:10px 12px;">Rating Change</th>
-                    <th style="padding:10px 12px;">Pred Dem %</th>
-                    <th style="padding:10px 12px;">Flip Prob P(Dem)</th>
-                    <th style="padding:10px 12px;">Dual-Regime CI</th>
+                    <th style="padding:10px 12px;">2026 Pred (Margin)</th>
+                    <th style="padding:10px 12px;">Call Conf.</th>
+                    <th style="padding:10px 12px;">Margin Conf.</th>
+                    <th style="padding:10px 12px;">95% Margin CI</th>
                 </tr>
             </thead>
             <tbody>{rc_rows}</tbody>
         </table>
         """
     else:
-        rc_html = "<p style='color:#6b7280;font-style:italic;'>No county rating changes detected today.</p>"
+        rc_html = f"""
+        {confidence_guide}
+        <p style='color:#6b7280;font-style:italic;'>No county rating changes detected today.</p>
+        """
 
     # Build projected flips HTML
     flips_rows = "".join([
@@ -348,8 +398,9 @@ def format_html(data):
             <td style="padding:8px 12px;font-weight:600;border-bottom:1px solid #e5e7eb;">{c['county']}</td>
             <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{badge(c['rating_curr'])}</td>
             <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;color:#dc2626;">{c['actual_2022']:.2f}%</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;color:#2563eb;font-weight:700;">{c['dem_curr']:.2f}%</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;font-weight:700;">{c['p_dem_curr']:.1f}%</td>
+            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;color:#2563eb;font-weight:700;">{c['dem_curr']:.2f}% ({'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%)</td>
+            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['call_confidence'])}</td>
+            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['margin_confidence'])}</td>
         </tr>"""
         for c in data['current_flips']
     ])
@@ -359,10 +410,10 @@ def format_html(data):
         f"""<tr>
             <td style="padding:8px 12px;font-weight:600;border-bottom:1px solid #e5e7eb;">{c['county']}</td>
             <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{badge(c['rating_curr'])}</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;"><strong>{c['dem_curr']:.2f}%</strong></td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;color:#2563eb;font-weight:700;">{c['p_dem_curr']:.1f}%</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;color:#dc2626;font-weight:700;">{100.0 - c['p_dem_curr']:.1f}%</td>
-            <td style="padding:8px 12px;color:#6b7280;font-size:12px;border-bottom:1px solid #e5e7eb;">{c['range_low']:.1f}% - {c['range_high']:.1f}%</td>
+            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;"><strong>{c['dem_curr']:.2f}%</strong> ({'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%)</td>
+            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['call_confidence'])}</td>
+            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['margin_confidence'])}</td>
+            <td style="padding:8px 12px;color:#6b7280;font-size:12px;border-bottom:1px solid #e5e7eb;">[{'+' if c['ci_margin_low']>0 else ''}{c['ci_margin_low']:.1f}%, {'+' if c['ci_margin_high']>0 else ''}{c['ci_margin_high']:.1f}%]</td>
         </tr>"""
         for c in data['toss_ups']
     ])
