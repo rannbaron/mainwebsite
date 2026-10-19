@@ -268,6 +268,23 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
         'black': st_black
     }
 
+    # 3.5. Recompute 2026 Vote Forecasts (Dual-Regime & Empirical Bayes)
+    try:
+        import vote_forecast
+        c_returns = {c['id']: c['data']['2026'] for c in data['counties']}
+        forecast_res = vote_forecast.predict_all(c_returns)
+        for county in data['counties']:
+            cid = county['id']
+            county['forecast'] = forecast_res['counties'].get(cid)
+        data['state']['forecast'] = forecast_res['statewide']
+        for cid, plist in data.get('precincts', {}).items():
+            c_fc = forecast_res['counties'].get(cid)
+            for p in plist:
+                p['forecast'] = vote_forecast.predict_precinct(cid, p['data'].get('2026'), p['data'].get('2022'), c_fc)
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Updated 2026 Vote Forecast: Statewide Dem {data['state']['forecast']['pred_final_dem']}% [{data['state']['forecast']['range_low']}% - {data['state']['forecast']['range_high']}%]")
+    except Exception as e:
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Warning: Error computing vote forecast: {e}")
+
     # Save updated base JSON
     with open(base_json_path, 'w') as f:
         json.dump(data, f)
