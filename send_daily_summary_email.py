@@ -581,8 +581,9 @@ def format_html(data):
                             <th style="padding:8px 12px;">County</th>
                             <th style="padding:8px 12px;">Rating</th>
                             <th style="padding:8px 12px;">2022 Dem</th>
-                            <th style="padding:8px 12px;">2026 Pred</th>
-                            <th style="padding:8px 12px;">Flip Prob</th>
+                            <th style="padding:8px 12px;">2026 Pred (Margin)</th>
+                            <th style="padding:8px 12px;">Call Conf.</th>
+                            <th style="padding:8px 12px;">Margin Conf.</th>
                         </tr>
                     </thead>
                     <tbody>{flips_rows}</tbody>
@@ -597,10 +598,10 @@ def format_html(data):
                         <tr style="background:#f3f4f6;text-align:left;font-size:11px;color:#4b5563;text-transform:uppercase;">
                             <th style="padding:8px 12px;">County</th>
                             <th style="padding:8px 12px;">Rating</th>
-                            <th style="padding:8px 12px;">Pred Dem</th>
-                            <th style="padding:8px 12px;">Flip (D)</th>
-                            <th style="padding:8px 12px;">Hold (R)</th>
-                            <th style="padding:8px 12px;">95% CI</th>
+                            <th style="padding:8px 12px;">2026 Pred (Margin)</th>
+                            <th style="padding:8px 12px;">Call Conf.</th>
+                            <th style="padding:8px 12px;">Margin Conf.</th>
+                            <th style="padding:8px 12px;">95% Margin CI</th>
                         </tr>
                     </thead>
                     <tbody>{toss_rows}</tbody>
