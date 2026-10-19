@@ -70,7 +70,7 @@ def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=No
         'rating': rating
     }
 
-def predict_county(county_name, dem, rep, una, tot, baselines=None):
+def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None):
     """
     Computes vote prediction for a single county based on current early voting turnout,
     historical 2022 UNA voting factor, 2022 EV-to-Final dropoff, and dual-regime empirical bounds.
@@ -90,16 +90,25 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None):
     est_ev_dem = pct_d + b['una_factor_2022'] * pct_u
     raw_final_dem = est_ev_dem + b['shift_2022']
 
+    # Select day-specific errors if ev_day is specified and available in b['by_day']
+    err_18 = b['err_2018']
+    err_22 = b['err_2022']
+    if ev_day is not None and 'by_day' in b:
+        day_str = str(ev_day)
+        if day_str in b['by_day']:
+            err_18 = b['by_day'][day_str]['err_2018']
+            err_22 = b['by_day'][day_str]['err_2022']
+
     # 2. Dual-Regime bounds (2018 Dem momentum vs 2022 Rep E-Day surge)
-    regime_18_dem = raw_final_dem - b['err_2018']
-    regime_22_dem = raw_final_dem - b['err_2022']
+    regime_18_dem = raw_final_dem - err_18
+    regime_22_dem = raw_final_dem - err_22
     range_low = min(regime_18_dem, regime_22_dem)
     range_high = max(regime_18_dem, regime_22_dem)
 
     # 3. Empirical Bayes shrinkage point estimate toward statewide macro average (+0.17%)
     v = b['votes_2022']
     s = 30000.0 / (30000.0 + v)
-    shrunk_bias = (1.0 - s) * ((b['err_2018'] + b['err_2022']) / 2.0) + s * 0.17
+    shrunk_bias = (1.0 - s) * ((err_18 + err_22) / 2.0) + s * 0.17
     eb_final_dem = raw_final_dem - shrunk_bias
 
     # Option 1: Clamp point estimate to dual-regime bounds [range_low, range_high]
@@ -142,7 +151,7 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None):
         'turnout_volume_weight': round(v, 1)
     }
 
-def predict_all(county_returns, baselines=None):
+def predict_all(county_returns, baselines=None, ev_day=None):
     """
     Computes county-level predictions and a volume-weighted statewide rollup.
     county_returns can be a dict: { 'COUNTY_NAME': {'dem': int, 'rep': int, 'una': int, 'tot': int} }
@@ -192,7 +201,7 @@ def predict_all(county_returns, baselines=None):
     }
 
     for cname, vals in county_dict.items():
-        res = predict_county(cname, vals['dem'], vals['rep'], vals['una'], vals['tot'], baselines)
+        res = predict_county(cname, vals['dem'], vals['rep'], vals['una'], vals['tot'], baselines, ev_day=ev_day)
         if res is not None:
             county_results[cname] = res
             v = res['turnout_volume_weight']
@@ -267,7 +276,7 @@ def predict_all(county_returns, baselines=None):
         'statewide': statewide
     }
 
-def predict_precinct(county_id, c26, c22, c_fc, baselines=None):
+def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None):
     """
     Computes 2026 forecast for a precinct within a county.
     Uses county-level UNA calibration and historical shift,
@@ -315,8 +324,16 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None):
     eb_final_rep = round(100.0 - eb_final_dem, 2)
     pred_margin = round(eb_final_dem - eb_final_rep, 2)
 
-    r18 = round(max(0.0, min(100.0, raw_final_dem - b['err_2018'])), 2)
-    r22 = round(max(0.0, min(100.0, raw_final_dem - b['err_2022'])), 2)
+    err_18 = b['err_2018']
+    err_22 = b['err_2022']
+    if ev_day is not None and 'by_day' in b:
+        day_str = str(ev_day)
+        if day_str in b['by_day']:
+            err_18 = b['by_day'][day_str]['err_2018']
+            err_22 = b['by_day'][day_str]['err_2022']
+
+    r18 = round(max(0.0, min(100.0, raw_final_dem - err_18)), 2)
+    r22 = round(max(0.0, min(100.0, raw_final_dem - err_22)), 2)
     range_low = min(r18, r22)
     range_high = max(r18, r22)
 
