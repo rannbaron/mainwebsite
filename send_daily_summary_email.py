@@ -129,6 +129,18 @@ def compute_daily_changes(prev_day=None, curr_day=None):
         p_shift = round(p_dem_curr - p_dem_prev, 1)
 
         margin_curr = c_curr.get('pred_margin', round(2 * d_curr - 100.0, 2))
+        margin_prev = c_prev.get('pred_margin', round(2 * d_prev - 100.0, 2))
+
+        call_conf_prev = c_prev.get('call_confidence', 'moderate confidence')
+        call_conf_curr = c_curr.get('call_confidence', 'moderate confidence')
+        call_conf_changed = (call_conf_prev != call_conf_curr)
+
+        margin_conf_prev = c_prev.get('margin_confidence', 'moderate confidence')
+        margin_conf_curr = c_curr.get('margin_confidence', 'moderate confidence')
+        margin_conf_changed = (margin_conf_prev != margin_conf_curr)
+
+        conf_changed = call_conf_changed or margin_conf_changed
+
         c_info = {
             'county': cname.title(),
             'rating_prev': r_prev,
@@ -136,6 +148,7 @@ def compute_daily_changes(prev_day=None, curr_day=None):
             'rating_changed': (r_prev != r_curr),
             'dem_prev': d_prev,
             'dem_curr': d_curr,
+            'margin_prev': margin_prev,
             'margin_curr': margin_curr,
             'shift': shift,
             'p_dem_prev': p_dem_prev,
@@ -145,9 +158,18 @@ def compute_daily_changes(prev_day=None, curr_day=None):
             'range_high': c_curr['range_high'],
             'ci_margin_low': c_curr.get('ci_margin_low', round(2.0 * c_curr['range_low'] - 100.0, 2)),
             'ci_margin_high': c_curr.get('ci_margin_high', round(2.0 * c_curr['range_high'] - 100.0, 2)),
+            'margin_width_prev': c_prev.get('margin_width', round(2.0 * (c_prev['range_high'] - c_prev['range_low']), 2)),
+            'margin_width_curr': c_curr.get('margin_width', round(2.0 * (c_curr['range_high'] - c_curr['range_low']), 2)),
             'margin_width': c_curr.get('margin_width', round(2.0 * (c_curr['range_high'] - c_curr['range_low']), 2)),
-            'margin_confidence': c_curr.get('margin_confidence', 'moderate confidence'),
-            'call_confidence': c_curr.get('call_confidence', 'moderate confidence'),
+            'call_conf_prev': call_conf_prev,
+            'call_conf_curr': call_conf_curr,
+            'call_conf_changed': call_conf_changed,
+            'margin_conf_prev': margin_conf_prev,
+            'margin_conf_curr': margin_conf_curr,
+            'margin_conf_changed': margin_conf_changed,
+            'conf_changed': conf_changed,
+            'margin_confidence': margin_conf_curr,
+            'call_confidence': call_conf_curr,
             'actual_2022': c_curr['actual_2022'],
             'winner_2022': 'D' if c_curr['actual_2022'] > 50.0 else 'R'
         }
@@ -159,6 +181,12 @@ def compute_daily_changes(prev_day=None, curr_day=None):
     # Sort shifts
     top_dem_shifts = sorted([c for c in all_county_shifts if c['shift'] > 0], key=lambda x: x['shift'], reverse=True)[:5]
     top_rep_shifts = sorted([c for c in all_county_shifts if c['shift'] < 0], key=lambda x: x['shift'])[:5]
+
+    # Confidence Changes
+    confidence_changes = [c for c in all_county_shifts if c['conf_changed']]
+    confidence_changes.sort(key=lambda x: (not x['call_conf_changed'], x['county']))
+    call_conf_changes = [c for c in all_county_shifts if c['call_conf_changed']]
+    margin_conf_changes = [c for c in all_county_shifts if c['margin_conf_changed']]
 
     # Current Projected Flips (2022 R -> 2026 D)
     current_flips = [c for c in all_county_shifts if c['winner_2022'] == 'R' and c['dem_curr'] > 50.0]
@@ -198,6 +226,9 @@ def compute_daily_changes(prev_day=None, curr_day=None):
             'ratings_summary_curr': st_curr.get('ratings_summary', {})
         },
         'rating_changes': rating_changes,
+        'confidence_changes': confidence_changes,
+        'call_conf_changes': call_conf_changes,
+        'margin_conf_changes': margin_conf_changes,
         'current_flips': current_flips,
         'toss_ups': toss_ups,
         'top_dem_shifts': top_dem_shifts,
@@ -220,6 +251,7 @@ def format_plain_text(data):
         f"  - Statewide 2026 Forecast: Dem {sf['curr_dem']}% (was {sf['prev_dem']}%, shift {sf['dem_shift']:+.2f}%)",
         f"  - Statewide Rating: {sf['rating']} [Call: {sf['call_confidence']} | Margin: {sf['margin_confidence']}]",
         f"  - Rating Changes Detected: {len(data['rating_changes'])} county change(s)",
+        f"  - Confidence Shifts Detected: {len(data['confidence_changes'])} county shift(s) ({len(data['call_conf_changes'])} Call, {len(data['margin_conf_changes'])} Margin)",
         "",
         "UNDERSTANDING MODEL CONFIDENCE:",
         "  * Call confidence is how confident the model is about Democrats or Republicans winning that county.",
@@ -227,7 +259,7 @@ def format_plain_text(data):
         "  (Scale: very low confidence | low confidence | moderate confidence | high confidence | very high confidence)",
         "",
         "=" * 70,
-        "2. COUNTY RATING CHANGES (Day-over-Day)",
+        f"2. COUNTY RATING CHANGES (Day-over-Day) — {len(data['rating_changes'])} COUNTIES",
         "=" * 70,
     ]
 
@@ -243,12 +275,35 @@ def format_plain_text(data):
                 ""
             ])
     else:
-        lines.append("  No county rating changes detected today.")
-        lines.append("")
+        lines.append("  No county rating changes detected today.\n")
 
     lines.extend([
         "=" * 70,
-        f"3. PROJECTED FLIPS (2022 R -> 2026 D) — {len(data['current_flips'])} COUNTIES",
+        f"3. COUNTY CONFIDENCE CHANGES (Day-over-Day) — {len(data['confidence_changes'])} COUNTIES",
+        "=" * 70,
+    ])
+
+    if data['confidence_changes']:
+        if data['call_conf_changes']:
+            lines.append("  Call Confidence Shifts (Certainty of Winner):")
+            for c in data['call_conf_changes']:
+                m_sign = '+' if c['margin_curr'] > 0 else ''
+                lines.append(f"    * {c['county'].upper()}: {c['call_conf_prev']} -> {c['call_conf_curr']}")
+                lines.append(f"      - 2026 Margin: {m_sign}{c['margin_curr']:.2f}% | Rating: {c['rating_curr']}")
+            lines.append("")
+
+        if data['margin_conf_changes']:
+            lines.append("  Margin Confidence Shifts (Precision of Numerical Outcome):")
+            for c in data['margin_conf_changes']:
+                lines.append(f"    * {c['county'].upper()}: {c['margin_conf_prev']} -> {c['margin_conf_curr']}")
+                lines.append(f"      - 95% Margin CI Width: {c['margin_width_prev']:.1f}% -> {c['margin_width_curr']:.1f}% | CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]")
+            lines.append("")
+    else:
+        lines.append("  No county confidence changes detected today.\n")
+
+    lines.extend([
+        "=" * 70,
+        f"4. PROJECTED FLIPS (2022 R -> 2026 D) — {len(data['current_flips'])} COUNTIES",
         "=" * 70,
     ])
     for c in data['current_flips']:
@@ -258,7 +313,7 @@ def format_plain_text(data):
     lines.extend([
         "",
         "=" * 70,
-        f"4. TOSS-UP BATTLEGROUNDS (40% - 60% Flip Probability) — {len(data['toss_ups'])} COUNTIES",
+        f"5. TOSS-UP BATTLEGROUNDS (40% - 60% Flip Probability) — {len(data['toss_ups'])} COUNTIES",
         "=" * 70,
     ])
     for c in data['toss_ups']:
@@ -269,7 +324,7 @@ def format_plain_text(data):
     lines.extend([
         "",
         "=" * 70,
-        "5. TOP COUNTY SHIFTS",
+        "6. TOP COUNTY SHIFTS",
         "=" * 70,
         "  Top Shifts Toward Democrats:",
     ])
@@ -283,7 +338,7 @@ def format_plain_text(data):
     lines.extend([
         "",
         "=" * 70,
-        "6. STATEWIDE RATINGS DISTRIBUTION",
+        "7. STATEWIDE RATINGS DISTRIBUTION",
         "=" * 70,
     ])
     summary_curr = sf['ratings_summary_curr']
@@ -363,7 +418,7 @@ def format_html(data):
             f"""<tr>
                 <td style="padding:10px 12px;font-weight:600;border-bottom:1px solid #e5e7eb;">{c['county']}</td>
                 <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{badge(c['rating_prev'])} &rarr; {badge(c['rating_curr'])}</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;"><strong>{c['dem_curr']:.2f}%</strong> ({'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%) <span style="color:#16a34a;font-size:11px;font-weight:600;">({c['shift']:+.2f}%)</span></td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;"><strong>{c['dem_curr']:.2f}%</strong> ({'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%) <span style="color:{'#16a34a' if c['shift'] > 0 else ('#dc2626' if c['shift'] < 0 else '#6b7280')};font-size:11px;font-weight:600;">({c['shift']:+.2f}%)</span></td>
                 <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['call_confidence'])}</td>
                 <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['margin_confidence'])}</td>
                 <td style="padding:10px 12px;color:#6b7280;font-size:12px;border-bottom:1px solid #e5e7eb;">[{'+' if c['ci_margin_low']>0 else ''}{c['ci_margin_low']:.1f}%, {'+' if c['ci_margin_high']>0 else ''}{c['ci_margin_high']:.1f}%]</td>
@@ -391,6 +446,45 @@ def format_html(data):
         {confidence_guide}
         <p style='color:#6b7280;font-style:italic;'>No county rating changes detected today.</p>
         """
+
+    # Build confidence changes HTML
+    if data['confidence_changes']:
+        conf_rows = "".join([
+            f"""<tr>
+                <td style="padding:10px 12px;font-weight:600;border-bottom:1px solid #e5e7eb;">{c['county']}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{badge(c['rating_curr'])}</td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
+                    {f'<span style="color:#64748b;font-size:11px;">{c["call_conf_prev"].title().replace(" Confidence","")}</span> &rarr; ' if c['call_conf_changed'] else ''}{conf_badge(c['call_conf_curr'])}
+                </td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
+                    {f'<span style="color:#64748b;font-size:11px;">{c["margin_conf_prev"].title().replace(" Confidence","")}</span> &rarr; ' if c['margin_conf_changed'] else ''}{conf_badge(c['margin_conf_curr'])}
+                </td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
+                    <strong>{'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%</strong>
+                </td>
+                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;color:#64748b;font-size:12px;">
+                    {c['margin_width_curr']:.1f}% {f'<span style="color:#94a3b8;font-size:11px;">(was {c["margin_width_prev"]:.1f}%)</span>' if c['margin_conf_changed'] else ''}
+                </td>
+            </tr>"""
+            for c in data['confidence_changes']
+        ])
+        conf_html = f"""
+        <table style="width:100%;border-collapse:collapse;margin:12px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;font-size:13px;">
+            <thead>
+                <tr style="background:#f3f4f6;text-align:left;font-size:11px;color:#4b5563;text-transform:uppercase;">
+                    <th style="padding:10px 12px;">County</th>
+                    <th style="padding:10px 12px;">Rating</th>
+                    <th style="padding:10px 12px;">Call Confidence</th>
+                    <th style="padding:10px 12px;">Margin Confidence</th>
+                    <th style="padding:10px 12px;">Margin</th>
+                    <th style="padding:10px 12px;">95% CI Width</th>
+                </tr>
+            </thead>
+            <tbody>{conf_rows}</tbody>
+        </table>
+        """
+    else:
+        conf_html = "<p style='color:#6b7280;font-style:italic;'>No county confidence changes detected today.</p>"
 
     # Build projected flips HTML
     flips_rows = "".join([
@@ -459,8 +553,9 @@ def format_html(data):
                     </div>
                     <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:14px;border-radius:6px;">
                         <div style="font-size:11px;font-weight:700;color:#1e40af;text-transform:uppercase;">2026 Forecast Dem Share</div>
-                        <div style="font-size:20px;font-weight:800;color:#1d4ed8;margin-top:2px;">{sf['curr_dem']:.2f}% <span style="font-size:13px;color:#16a34a;">({sf['dem_shift']:+.2f}%)</span></div>
+                        <div style="font-size:20px;font-weight:800;color:#1d4ed8;margin-top:2px;">{sf['curr_dem']:.2f}% <span style="font-size:13px;color:{'#16a34a' if sf['dem_shift'] > 0 else ('#dc2626' if sf['dem_shift'] < 0 else '#6b7280')};">({sf['dem_shift']:+.2f}%)</span></div>
                         <div style="font-size:12px;color:#1e40af;margin-top:4px;">CI: {sf['curr_low']:.1f}% - {sf['curr_high']:.1f}% ({badge(sf['rating'])})</div>
+                        <div style="font-size:11px;color:#475569;margin-top:4px;">Call: {conf_badge(sf['call_confidence'])} &bull; Margin: {conf_badge(sf['margin_confidence'])}</div>
                     </div>
                 </div>
 
@@ -470,7 +565,13 @@ def format_html(data):
                 </h2>
                 {rc_html}
 
-                <!-- Section 2: Projected Flips -->
+                <!-- Section 2: Confidence Changes -->
+                <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
+                    📶 County Confidence Shifts ({len(data['confidence_changes'])})
+                </h2>
+                {conf_html}
+
+                <!-- Section 3: Projected Flips -->
                 <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
                     🔄 Projected Flips (2022 R &rarr; 2026 D) — {len(data['current_flips'])} Counties
                 </h2>
@@ -487,7 +588,7 @@ def format_html(data):
                     <tbody>{flips_rows}</tbody>
                 </table>
 
-                <!-- Section 3: Toss Ups -->
+                <!-- Section 4: Toss Ups -->
                 <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
                     ⚖️ Toss-Up Battlegrounds (40% - 60% Flip Prob) — {len(data['toss_ups'])} Counties
                 </h2>
@@ -505,7 +606,7 @@ def format_html(data):
                     <tbody>{toss_rows}</tbody>
                 </table>
 
-                <!-- Section 4: Rating Breakdown -->
+                <!-- Section 5: Rating Breakdown -->
                 <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
                     📊 Statewide County Ratings Breakdown
                 </h2>
@@ -535,8 +636,16 @@ def send_summary_email(data, recipient=DEFAULT_RECIPIENT):
     load_env_file()
 
     rating_change_count = len(data['rating_changes'])
+    conf_change_count = len(data['confidence_changes'])
+
+    parts = []
     if rating_change_count > 0:
-        headline = f"({rating_change_count} Rating Change: " + ", ".join([f"{c['county']} {c['rating_prev']}->{c['rating_curr']}" for c in data['rating_changes'][:2]]) + ")"
+        parts.append(f"{rating_change_count} Rating Change{'s' if rating_change_count > 1 else ''}")
+    if conf_change_count > 0:
+        parts.append(f"{conf_change_count} Confidence Shift{'s' if conf_change_count > 1 else ''}")
+
+    if parts:
+        headline = f"({', '.join(parts)})"
     else:
         headline = "(Ratings Steady)"
 
