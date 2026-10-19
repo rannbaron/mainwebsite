@@ -1,5 +1,6 @@
 import os
 import json
+import math
 import numpy as np
 
 DEFAULT_BASELINES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "county_vote_baselines.json")
@@ -18,6 +19,54 @@ def load_baselines(path=None):
     
     with open(path, 'r') as f:
         return json.load(f)
+
+def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=None):
+    """
+    Computes win probability P(Dem), P(Rep), flip probability, and qualitative rating based on user thresholds:
+      >= 95%: Safe D (or Safe R)
+      85% - 95%: Very Likely D (or Very Likely R)
+      75% - 85%: Likely D (or Likely R)
+      60% - 75%: Lean D (or Lean R)
+      40% - 60%: Toss Up
+    Range [range_low, range_high] represents ~95% confidence interval (3.92 sigma).
+    """
+    width = max(0.1, range_high - range_low)
+    sigma = width / 3.92
+    z = (mu - 50.0) / sigma
+    p_dem = 0.5 * (1.0 + math.erf(z / math.sqrt(2.0)))
+    p_dem = max(0.0, min(1.0, p_dem))
+    p_rep = 1.0 - p_dem
+
+    if p_dem >= 0.95:
+        rating = 'Safe D'
+    elif p_dem >= 0.85:
+        rating = 'Very Likely D'
+    elif p_dem >= 0.75:
+        rating = 'Likely D'
+    elif p_dem >= 0.60:
+        rating = 'Lean D'
+    elif p_dem >= 0.40:
+        rating = 'Toss Up'
+    elif p_dem >= 0.25:
+        rating = 'Lean R'
+    elif p_dem >= 0.15:
+        rating = 'Likely R'
+    elif p_dem >= 0.05:
+        rating = 'Very Likely R'
+    else:
+        rating = 'Safe R'
+
+    p_flip = None
+    if actual_2022 is not None:
+        winner_2022 = 'D' if actual_2022 > 50.0 else 'R'
+        p_flip = p_rep if winner_2022 == 'D' else p_dem
+
+    return {
+        'p_dem': round(p_dem * 100.0, 1),
+        'p_rep': round(p_rep * 100.0, 1),
+        'p_flip': round(p_flip * 100.0, 1) if p_flip is not None else None,
+        'rating': rating
+    }
 
 def predict_county(county_name, dem, rep, una, tot, baselines=None):
     """
@@ -65,6 +114,8 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None):
     margin_high = 2.0 * range_high - 100.0
     swing = eb_final_dem - b['final_2022']
 
+    prob_info = compute_win_probability_and_rating(eb_final_dem, range_low, range_high, b['final_2022'])
+
     return {
         'pred_final_dem': round(eb_final_dem, 2),
         'pred_final_rep': round(eb_final_rep, 2),
@@ -82,6 +133,10 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None):
         'regime_2018_dem': round(regime_18_dem, 2),
         'pred_dem_regime22': round(regime_22_dem, 2),
         'pred_dem_regime18': round(regime_18_dem, 2),
+        'p_dem': prob_info['p_dem'],
+        'p_rep': prob_info['p_rep'],
+        'p_flip': prob_info['p_flip'],
+        'rating': prob_info['rating'],
         'turnout_volume_weight': round(v, 1)
     }
 
@@ -122,6 +177,18 @@ def predict_all(county_returns, baselines=None):
     flipped_to_dem = []
     flipped_to_rep = []
 
+    ratings_summary = {
+        'Safe D': 0,
+        'Very Likely D': 0,
+        'Likely D': 0,
+        'Lean D': 0,
+        'Toss Up': 0,
+        'Lean R': 0,
+        'Likely R': 0,
+        'Very Likely R': 0,
+        'Safe R': 0
+    }
+
     for cname, vals in county_dict.items():
         res = predict_county(cname, vals['dem'], vals['rep'], vals['una'], vals['tot'], baselines)
         if res is not None:
@@ -143,6 +210,9 @@ def predict_all(county_returns, baselines=None):
             elif res['actual_2022'] > 50.0 and res['pred_final_dem'] <= 50.0:
                 flipped_to_rep.append(cname)
 
+            if res.get('rating') in ratings_summary:
+                ratings_summary[res['rating']] += 1
+
     if total_proj_votes > 0:
         st_dem = (total_dem_votes / total_proj_votes) * 100.0
         st_rep = 100.0 - st_dem
@@ -161,6 +231,8 @@ def predict_all(county_returns, baselines=None):
     else:
         st_dem = st_rep = st_margin = st_low = st_high = st_margin_low = st_margin_high = st_swing = st_act22 = st_r18 = st_r22 = 0.0
 
+    st_prob_info = compute_win_probability_and_rating(st_dem, st_low, st_high, st_act22)
+
     statewide = {
         'pred_final_dem': round(st_dem, 2),
         'pred_final_rep': round(st_rep, 2),
@@ -177,6 +249,11 @@ def predict_all(county_returns, baselines=None):
         'regime_2018_dem': round(st_r18, 2),
         'pred_dem_regime22': round(st_r22, 2),
         'pred_dem_regime18': round(st_r18, 2),
+        'p_dem': st_prob_info['p_dem'],
+        'p_rep': st_prob_info['p_rep'],
+        'p_flip': st_prob_info['p_flip'],
+        'rating': st_prob_info['rating'],
+        'ratings_summary': ratings_summary,
         'counties_dem': counties_dem,
         'counties_rep': counties_rep,
         'flipped_to_dem': sorted(flipped_to_dem),
@@ -216,7 +293,11 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None):
                 'actual_2022': c_fc.get('actual_2022'),
                 'swing_vs_2022': c_fc.get('swing_vs_2022', 0.0),
                 'regime_2022_dem': c_fc.get('regime_2022_dem', 0.0),
-                'regime_2018_dem': c_fc.get('regime_2018_dem', 0.0)
+                'regime_2018_dem': c_fc.get('regime_2018_dem', 0.0),
+                'p_dem': c_fc.get('p_dem'),
+                'p_rep': c_fc.get('p_rep'),
+                'p_flip': c_fc.get('p_flip'),
+                'rating': c_fc.get('rating')
             }
         return None
 
@@ -254,6 +335,8 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None):
         act22_est = round(b['final_2022'], 2)
         swing = round(eb_final_dem - act22_est, 2)
 
+    p_prob_info = compute_win_probability_and_rating(eb_final_dem, range_low, range_high, act22_est)
+
     return {
         'pred_final_dem': eb_final_dem,
         'pred_final_rep': eb_final_rep,
@@ -267,7 +350,11 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None):
         'actual_2022': act22_est,
         'swing_vs_2022': swing,
         'regime_2022_dem': r22,
-        'regime_2018_dem': r18
+        'regime_2018_dem': r18,
+        'p_dem': p_prob_info['p_dem'],
+        'p_rep': p_prob_info['p_rep'],
+        'p_flip': p_prob_info['p_flip'],
+        'rating': p_prob_info['rating']
     }
 
 if __name__ == '__main__':
