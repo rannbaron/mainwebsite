@@ -20,7 +20,7 @@ def load_baselines(path=None):
     with open(path, 'r') as f:
         return json.load(f)
 
-def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=None):
+def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=None, sigma_floor=2.0):
     """
     Computes win probability P(Dem), P(Rep), flip probability, and qualitative rating based on user thresholds:
       >= 95%: Safe D (or Safe R)
@@ -28,10 +28,12 @@ def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=No
       75% - 85%: Likely D (or Likely R)
       60% - 75%: Lean D (or Lean R)
       40% - 60%: Toss Up
-    Range [range_low, range_high] represents ~95% confidence interval (3.92 sigma).
+    Range [range_low, range_high] represents historical dual-regime bounds.
+    To prevent extreme overconfidence early in voting, an empirical uncertainty floor
+    (sigma_floor = 2.0%, corresponding to ~95% MOE of +/- 3.92%) is applied.
     """
     width = max(0.1, range_high - range_low)
-    sigma = width / 3.92
+    sigma = max(sigma_floor, width / 3.92)
     z = (mu - 50.0) / sigma
     p_dem = 0.5 * (1.0 + math.erf(z / math.sqrt(2.0)))
     p_dem = max(0.0, min(1.0, p_dem))
