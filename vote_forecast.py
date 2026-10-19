@@ -51,6 +51,9 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None):
     shrunk_bias = (1.0 - s) * ((b['err_2018'] + b['err_2022']) / 2.0) + s * 0.17
     eb_final_dem = raw_final_dem - shrunk_bias
 
+    # Option 1: Clamp point estimate to dual-regime bounds [range_low, range_high]
+    eb_final_dem = max(range_low, min(range_high, eb_final_dem))
+
     # Clamp to valid percentages
     eb_final_dem = max(0.0, min(100.0, eb_final_dem))
     range_low = max(0.0, min(100.0, range_low))
@@ -149,6 +152,8 @@ def predict_all(county_returns, baselines=None):
 
         st_low = min(st_r18, st_r22)
         st_high = max(st_r18, st_r22)
+        st_dem = max(st_low, min(st_high, st_dem))
+        st_rep = 100.0 - st_dem
         st_margin = st_dem - st_rep
         st_margin_low = 2.0 * st_low - 100.0
         st_margin_high = 2.0 * st_high - 100.0
@@ -227,10 +232,15 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None):
     eb_final_rep = round(100.0 - eb_final_dem, 2)
     pred_margin = round(eb_final_dem - eb_final_rep, 2)
 
-    r18 = round(max(0.0, min(100.0, eb_final_dem - b['err_2018'])), 2)
-    r22 = round(max(0.0, min(100.0, eb_final_dem - b['err_2022'])), 2)
+    r18 = round(max(0.0, min(100.0, raw_final_dem - b['err_2018'])), 2)
+    r22 = round(max(0.0, min(100.0, raw_final_dem - b['err_2022'])), 2)
     range_low = min(r18, r22)
     range_high = max(r18, r22)
+
+    # Option 1: Clamp precinct point estimate to dual-regime bounds
+    eb_final_dem = max(range_low, min(range_high, eb_final_dem))
+    eb_final_rep = round(100.0 - eb_final_dem, 2)
+    pred_margin = round(eb_final_dem - eb_final_rep, 2)
 
     tot22 = c22.get('tot', 0) if c22 else 0
     if tot22 > 0:
