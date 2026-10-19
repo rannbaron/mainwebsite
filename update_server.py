@@ -83,7 +83,7 @@ def check_for_updates(zip_cache_path, meta_path, force=False):
         if os.path.exists(zip_cache_path) and force:
             print("Using existing local zip cache due to --force flag.")
             return True, zip_cache_path
-        return False, None
+        raise
 
 def process_2026_returns(zip_path, shp_lookup, target_ev_day=None):
     t0 = time.time()
@@ -294,10 +294,12 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
     if os.path.exists(output_html_path):
         with open(output_html_path, 'r') as f:
             html = f.read()
+        updated_html = re.sub(r'Cumulative Day \d+', f'Cumulative Day {ev_day}', html)
+        updated_html = re.sub(r'State Summary \(Day \d+\)', f'State Summary (Day {ev_day})', updated_html)
         updated_html = re.sub(
             r'window\.NC_MAP_DATA\s*=\s*\{[\s\S]*?\};\s*</script>',
             f'window.NC_MAP_DATA = {compact_json};\n  </script>',
-            html
+            updated_html
         )
         with open(output_html_path, 'w') as f:
             f.write(updated_html)
@@ -308,10 +310,12 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
         if os.path.exists(beta_html_path):
             with open(beta_html_path, 'r') as f:
                 b_html = f.read()
+            updated_b_html = re.sub(r'Cumulative Day \d+', f'Cumulative Day {ev_day}', b_html)
+            updated_b_html = re.sub(r'State Summary \(Day \d+\)', f'State Summary (Day {ev_day})', updated_b_html)
             updated_b_html = re.sub(
                 r'window\.NC_MAP_DATA\s*=\s*\{[\s\S]*?\};\s*</script>',
                 f'window.NC_MAP_DATA = {compact_json};\n  </script>',
-                b_html
+                updated_b_html
             )
             with open(beta_html_path, 'w') as f:
                 f.write(updated_b_html)
@@ -375,7 +379,12 @@ def main():
         print(f"Error: {base_json_path} not found.")
         sys.exit(1)
 
-    has_update, downloaded_zip = check_for_updates(zip_path, meta_path, force=args.force)
+    try:
+        has_update, downloaded_zip = check_for_updates(zip_path, meta_path, force=args.force)
+    except Exception as e:
+        print(f"Update check failed: {e}")
+        sys.exit(1)
+
     if not has_update and not args.force:
         print("Everything is up to date.")
         sys.exit(0)
