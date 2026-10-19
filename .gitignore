@@ -1,6 +1,7 @@
 # Large binary archives and election data dumps
 *.zip
 *.csv
+!nc_early_voting_party_ev_day_*.csv
 *.tar.gz
 *.tsv
 nc_elections_data/
