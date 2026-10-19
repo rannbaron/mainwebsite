@@ -6,7 +6,13 @@ on:
     - cron: '0 10 * * *'
     # Fallback at 7:00 AM EDT = 11:00 UTC
     - cron: '0 11 * * *'
-  workflow_dispatch: # Allows manual trigger button in GitHub Actions tab
+  workflow_dispatch:
+    inputs:
+      test_email_only:
+        description: 'Send test summary email without modifying or deploying data'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -36,14 +42,16 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Daily Update
+        if: "!github.event.inputs.test_email_only"
         run: |
           python3 update_server.py 2>&1 | tee update.log
 
       - name: Commit and push updated map data
+        if: "!github.event.inputs.test_email_only"
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json
+          git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_party_ev_day_*.csv
           if git diff --staged --quiet; then
             echo "No changes detected on NCSBE S3 today."
           else
@@ -51,7 +59,7 @@ jobs:
             git push
           fi
 
-      - name: Send Email Notification
+      - name: Send Daily Change Summary & Rating Shifts Email
         if: always()
         env:
           SMTP_SERVER: smtp.gmail.com
@@ -60,30 +68,23 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
         run: |
           if [ -n "$SMTP_PASSWORD" ]; then
-            STATUS="SUCCESS"
-            if [ "${{ job.status }}" != "success" ]; then
-              STATUS="FAILURE"
-            elif grep -q "Everything is up to date" update.log 2>/dev/null; then
-              STATUS="NO_CHANGE"
-            fi
-            python3 send_notification.py \
-              --status "$STATUS" \
-              --recipient "baronrann@gmail.com" \
-              --log-file "update.log" \
-              --summary "Daily automated NC early voting map update: $STATUS" || true
+            python3 send_daily_summary_email.py --recipient "baronrann@gmail.com"
           else
             echo "Notice: SMTP_PASSWORD secret is not configured in GitHub repository secrets. Skipping email."
           fi
 
       - name: Setup Pages
+        if: "!github.event.inputs.test_email_only"
         uses: actions/configure-pages@v4
 
       - name: Upload Pages Artifact
+        if: "!github.event.inputs.test_email_only"
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
 
   deploy:
+    if: "!github.event.inputs.test_email_only"
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
