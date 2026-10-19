@@ -358,6 +358,29 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
     else:
         print(f"Warning: {output_html_path} not found. Please provide an index.html template.")
 
+    # 4.5. Export daily county party CSV for diffing and email notifications
+    try:
+        c_party = p_df.groupby('county').agg(
+            dem=('dem', 'sum'),
+            rep=('rep', 'sum'),
+            una=('una', 'sum'),
+            tot=('tot', 'sum')
+        ).reset_index()
+        c_party.columns = ['County', 'Democrat (2026)', 'Republican (2026)', 'Unaffiliated (2026)', 'Total 2026']
+        st_row = pd.DataFrame([{
+            'County': 'STATEWIDE TOTAL',
+            'Democrat (2026)': int(c_party['Democrat (2026)'].sum()),
+            'Republican (2026)': int(c_party['Republican (2026)'].sum()),
+            'Unaffiliated (2026)': int(c_party['Unaffiliated (2026)'].sum()),
+            'Total 2026': int(c_party['Total 2026'].sum())
+        }])
+        c_party = pd.concat([c_party, st_row], ignore_index=True)
+        csv_name = f"nc_early_voting_party_ev_day_{ev_day}.csv"
+        c_party.to_csv(csv_name, index=False)
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
+    except Exception as e:
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: Could not export daily party CSV: {e}")
+
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Statewide 2026 Total: {st_tot:,} votes (Dem: {st_dem:,}, Rep: {st_rep:,}, Una: {st_una:,})")
 
 def main():
