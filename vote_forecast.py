@@ -20,24 +20,54 @@ def load_baselines(path=None):
     with open(path, 'r') as f:
         return json.load(f)
 
-def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=None, sigma_floor=2.0):
+HISTORICAL_SIGMA_BY_DAY = {
+    1: 3.344, 2: 2.643, 3: 2.537, 4: 2.578, 5: 2.180,
+    6: 1.856, 7: 1.636, 8: 1.535, 9: 1.401, 10: 1.395,
+    11: 1.371, 12: 1.186, 13: 1.096, 14: 0.942, 15: 0.830,
+    16: 0.683, 17: 0.658
+}
+
+def get_empirical_sigma(ev_day=None, default=2.578):
+    if ev_day is None:
+        return default
+    try:
+        d = int(ev_day)
+        if d in HISTORICAL_SIGMA_BY_DAY:
+            return HISTORICAL_SIGMA_BY_DAY[d]
+        elif d > 17:
+            return 0.658
+        elif d < 1:
+            return 3.344
+    except (ValueError, TypeError):
+        pass
+    return default
+
+def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=None, sigma_floor=None, ev_day=None):
     """
-    Computes win probability P(Dem), P(Rep), flip probability, and qualitative rating based on user thresholds:
+    Computes win probability P(Dem), P(Rep), flip probability, 95% confidence intervals, and qualitative rating based on user thresholds:
       >= 95%: Safe D (or Safe R)
       85% - 95%: Very Likely D (or Very Likely R)
       75% - 85%: Likely D (or Likely R)
       60% - 75%: Lean D (or Lean R)
       40% - 60%: Toss Up
     Range [range_low, range_high] represents historical dual-regime bounds.
-    To prevent extreme overconfidence early in voting, an empirical uncertainty floor
-    (sigma_floor = 2.0%, corresponding to ~95% MOE of +/- 3.92%) is applied.
+    To prevent extreme overconfidence early in voting, an empirical day-decaying uncertainty floor
+    (sigma_floor: ~3.34% Day 1 -> 2.58% Day 4 -> 1.40% Day 10 -> 0.66% Day 17) is applied based on
+    actual 2018 and 2022 backtests.
     """
+    if sigma_floor is None:
+        sigma_floor = get_empirical_sigma(ev_day, default=2.578)
+
     width = max(0.1, range_high - range_low)
     sigma = max(sigma_floor, width / 3.92)
     z = (mu - 50.0) / sigma
     p_dem = 0.5 * (1.0 + math.erf(z / math.sqrt(2.0)))
     p_dem = max(0.0, min(1.0, p_dem))
     p_rep = 1.0 - p_dem
+
+    ci_low = max(0.0, min(100.0, mu - 1.96 * sigma))
+    ci_high = max(0.0, min(100.0, mu + 1.96 * sigma))
+    moe = 1.96 * sigma
 
     if p_dem >= 0.95:
         rating = 'Safe D'
@@ -67,7 +97,13 @@ def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=No
         'p_dem': round(p_dem * 100.0, 1),
         'p_rep': round(p_rep * 100.0, 1),
         'p_flip': round(p_flip * 100.0, 1) if p_flip is not None else None,
-        'rating': rating
+        'rating': rating,
+        'sigma': round(sigma, 2),
+        'moe_95': round(moe, 2),
+        'ci_95_low': round(ci_low, 2),
+        'ci_95_high': round(ci_high, 2),
+        'ci_margin_low': round(2.0 * ci_low - 100.0, 2),
+        'ci_margin_high': round(2.0 * ci_high - 100.0, 2)
     }
 
 def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None):
@@ -125,7 +161,7 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None)
     margin_high = 2.0 * range_high - 100.0
     swing = eb_final_dem - b['final_2022']
 
-    prob_info = compute_win_probability_and_rating(eb_final_dem, range_low, range_high, b['final_2022'])
+    prob_info = compute_win_probability_and_rating(eb_final_dem, range_low, range_high, b['final_2022'], ev_day=ev_day)
 
     return {
         'pred_final_dem': round(eb_final_dem, 2),
@@ -148,6 +184,12 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None)
         'p_rep': prob_info['p_rep'],
         'p_flip': prob_info['p_flip'],
         'rating': prob_info['rating'],
+        'sigma': prob_info['sigma'],
+        'moe_95': prob_info['moe_95'],
+        'ci_95_low': prob_info['ci_95_low'],
+        'ci_95_high': prob_info['ci_95_high'],
+        'ci_margin_low': prob_info['ci_margin_low'],
+        'ci_margin_high': prob_info['ci_margin_high'],
         'turnout_volume_weight': round(v, 1)
     }
 
@@ -242,7 +284,7 @@ def predict_all(county_returns, baselines=None, ev_day=None):
     else:
         st_dem = st_rep = st_margin = st_low = st_high = st_margin_low = st_margin_high = st_swing = st_act22 = st_r18 = st_r22 = 0.0
 
-    st_prob_info = compute_win_probability_and_rating(st_dem, st_low, st_high, st_act22)
+    st_prob_info = compute_win_probability_and_rating(st_dem, st_low, st_high, st_act22, ev_day=ev_day)
 
     statewide = {
         'pred_final_dem': round(st_dem, 2),
@@ -264,6 +306,12 @@ def predict_all(county_returns, baselines=None, ev_day=None):
         'p_rep': st_prob_info['p_rep'],
         'p_flip': st_prob_info['p_flip'],
         'rating': st_prob_info['rating'],
+        'sigma': st_prob_info['sigma'],
+        'moe_95': st_prob_info['moe_95'],
+        'ci_95_low': st_prob_info['ci_95_low'],
+        'ci_95_high': st_prob_info['ci_95_high'],
+        'ci_margin_low': st_prob_info['ci_margin_low'],
+        'ci_margin_high': st_prob_info['ci_margin_high'],
         'ratings_summary': ratings_summary,
         'counties_dem': counties_dem,
         'counties_rep': counties_rep,
@@ -308,7 +356,13 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None):
                 'p_dem': c_fc.get('p_dem'),
                 'p_rep': c_fc.get('p_rep'),
                 'p_flip': c_fc.get('p_flip'),
-                'rating': c_fc.get('rating')
+                'rating': c_fc.get('rating'),
+                'sigma': c_fc.get('sigma'),
+                'moe_95': c_fc.get('moe_95'),
+                'ci_95_low': c_fc.get('ci_95_low'),
+                'ci_95_high': c_fc.get('ci_95_high'),
+                'ci_margin_low': c_fc.get('ci_margin_low'),
+                'ci_margin_high': c_fc.get('ci_margin_high')
             }
         return None
 
@@ -354,7 +408,7 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None):
         act22_est = round(b['final_2022'], 2)
         swing = round(eb_final_dem - act22_est, 2)
 
-    p_prob_info = compute_win_probability_and_rating(eb_final_dem, range_low, range_high, act22_est)
+    p_prob_info = compute_win_probability_and_rating(eb_final_dem, range_low, range_high, act22_est, ev_day=ev_day)
 
     return {
         'pred_final_dem': eb_final_dem,
@@ -373,7 +427,13 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None):
         'p_dem': p_prob_info['p_dem'],
         'p_rep': p_prob_info['p_rep'],
         'p_flip': p_prob_info['p_flip'],
-        'rating': p_prob_info['rating']
+        'rating': p_prob_info['rating'],
+        'sigma': p_prob_info['sigma'],
+        'moe_95': p_prob_info['moe_95'],
+        'ci_95_low': p_prob_info['ci_95_low'],
+        'ci_95_high': p_prob_info['ci_95_high'],
+        'ci_margin_low': p_prob_info['ci_margin_low'],
+        'ci_margin_high': p_prob_info['ci_margin_high']
     }
 
 if __name__ == '__main__':
