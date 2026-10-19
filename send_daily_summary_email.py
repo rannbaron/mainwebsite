@@ -289,14 +289,14 @@ def format_plain_text(data):
             for c in data['call_conf_changes']:
                 m_sign = '+' if c['margin_curr'] > 0 else ''
                 lines.append(f"    * {c['county'].upper()}: {c['call_conf_prev']} -> {c['call_conf_curr']}")
-                lines.append(f"      - 2026 Margin: {m_sign}{c['margin_curr']:.2f}% | Rating: {c['rating_curr']}")
+                lines.append(f"      - 2026 Margin: {m_sign}{c['margin_curr']:.2f}% | 95% Margin CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%] | Rating: {c['rating_curr']}")
             lines.append("")
 
         if data['margin_conf_changes']:
             lines.append("  Margin Confidence Shifts (Precision of Numerical Outcome):")
             for c in data['margin_conf_changes']:
                 lines.append(f"    * {c['county'].upper()}: {c['margin_conf_prev']} -> {c['margin_conf_curr']}")
-                lines.append(f"      - 95% Margin CI Width: {c['margin_width_prev']:.1f}% -> {c['margin_width_curr']:.1f}% | CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]")
+                lines.append(f"      - 95% Margin CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]")
             lines.append("")
     else:
         lines.append("  No county confidence changes detected today.\n")
@@ -319,7 +319,7 @@ def format_plain_text(data):
     for c in data['toss_ups']:
         p_rep = round(100.0 - c['p_dem_curr'], 1)
         m_sign = '+' if c['margin_curr'] > 0 else ''
-        lines.append(f"  * {c['county']:<14} | 2026: {c['dem_curr']:.1f}% ({m_sign}{c['margin_curr']:.1f}%) | D: {c['p_dem_curr']:.1f}% / R: {p_rep:.1f}% | Call: {c['call_confidence']} | Margin: {c['margin_confidence']} | 95% CI Margin: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]")
+        lines.append(f"  * {c['county']:<14} | 2026: {c['dem_curr']:.1f}% ({m_sign}{c['margin_curr']:.1f}%) | D: {c['p_dem_curr']:.1f}% / R: {p_rep:.1f}% | Call: {c['call_confidence']} | Margin: {c['margin_confidence']} | 95% Margin CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]")
 
     lines.extend([
         "",
@@ -463,7 +463,7 @@ def format_html(data):
                     <strong>{'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%</strong>
                 </td>
                 <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;color:#64748b;font-size:12px;">
-                    {c['margin_width_curr']:.1f}% {f'<span style="color:#94a3b8;font-size:11px;">(was {c["margin_width_prev"]:.1f}%)</span>' if c['margin_conf_changed'] else ''}
+                    [{'+' if c['ci_margin_low']>0 else ''}{c['ci_margin_low']:.1f}%, {'+' if c['ci_margin_high']>0 else ''}{c['ci_margin_high']:.1f}%]
                 </td>
             </tr>"""
             for c in data['confidence_changes']
@@ -477,7 +477,7 @@ def format_html(data):
                     <th style="padding:10px 12px;">Call Confidence</th>
                     <th style="padding:10px 12px;">Margin Confidence</th>
                     <th style="padding:10px 12px;">Margin</th>
-                    <th style="padding:10px 12px;">95% CI Width</th>
+                    <th style="padding:10px 12px;">95% Margin CI</th>
                 </tr>
             </thead>
             <tbody>{conf_rows}</tbody>
