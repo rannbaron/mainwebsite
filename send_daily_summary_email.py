@@ -81,8 +81,8 @@ def compute_daily_changes(prev_day=None, curr_day=None):
     df_prev = pd.read_csv(prev_file)
     df_curr = pd.read_csv(curr_file)
 
-    fc_prev = vote_forecast.predict_all(df_prev)
-    fc_curr = vote_forecast.predict_all(df_curr)
+    fc_prev = vote_forecast.predict_all(df_prev, ev_day=prev_day)
+    fc_curr = vote_forecast.predict_all(df_curr, ev_day=curr_day)
 
     st_prev = fc_prev['statewide']
     st_curr = fc_curr['statewide']
