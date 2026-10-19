@@ -66,9 +66,10 @@ jobs:
           SMTP_PORT: 587
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SUBSCRIBERS_REMOTE_URL: ${{ secrets.SUBSCRIBERS_REMOTE_URL }}
         run: |
           if [ -n "$SMTP_PASSWORD" ]; then
-            python3 send_daily_summary_email.py --recipient "baronrann@gmail.com"
+            python3 send_daily_summary_email.py --subscribers
           else
             echo "Notice: SMTP_PASSWORD secret is not configured in GitHub repository secrets. Skipping email."
           fi

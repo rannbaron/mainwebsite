@@ -13,6 +13,8 @@ scratch/
 *.pem
 *.key
 service_account.json
+subscribers.db
+*.db
 
 # Local exploratory analysis & generated images (not needed for web deployment)
 *.ipynb

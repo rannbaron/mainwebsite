@@ -27,6 +27,7 @@ from email.utils import formatdate, make_msgid, formataddr
 
 import pandas as pd
 import vote_forecast
+import subscriptions
 
 DEFAULT_RECIPIENT = "baronrann@gmail.com"
 
@@ -354,6 +355,7 @@ def format_plain_text(data):
         "",
         "=" * 70,
         "Interactive Map: https://rannbaron.github.io/mainwebsite/",
+        "To manage your subscription or unsubscribe, reply with 'unsubscribe'.",
         "=" * 70,
     ])
     return "\n".join(lines)
@@ -623,8 +625,9 @@ def format_html(data):
             </div>
 
             <!-- Email footer -->
-            <div style="border-top:1px solid #e5e7eb;padding:16px 28px;background:#f9fafb;font-size:11px;color:#9ca3af;text-align:center;">
-                Autonomous Early Voting Update System &bull; North Carolina 2026 Analysis
+            <div style="border-top:1px solid #e5e7eb;padding:16px 28px;background:#f9fafb;font-size:11px;color:#9ca3af;text-align:center;line-height:1.6;">
+                <div>Autonomous Early Voting Update System &bull; North Carolina 2026 Analysis</div>
+                <div style="margin-top:4px;color:#6b7280;">You received this daily update because you are subscribed to early voting reports. To unsubscribe, simply reply to this email with &ldquo;unsubscribe&rdquo;.</div>
             </div>
         </div>
     </body>
@@ -632,9 +635,28 @@ def format_html(data):
     """
     return html
 
-def send_summary_email(data, recipient=DEFAULT_RECIPIENT):
-    """Dispatches the multi-part email to the designated recipient."""
+def send_summary_email(data, recipient=None, send_to_subscribers=False):
+    """Dispatches the multi-part email to subscribers or designated recipient."""
     load_env_file()
+
+    if send_to_subscribers:
+        recipients = subscriptions.get_active_subscribers()
+        if not recipients:
+            recipients = [DEFAULT_RECIPIENT]
+    elif recipient:
+        recipients = [recipient]
+    else:
+        recipients = [DEFAULT_RECIPIENT]
+
+    # Deduplicate and normalize
+    seen = set()
+    unique_recipients = []
+    for r in recipients:
+        r_clean = r.strip().lower()
+        if r_clean and r_clean not in seen:
+            seen.add(r_clean)
+            unique_recipients.append(r_clean)
+    recipients = unique_recipients
 
     rating_change_count = len(data['rating_changes'])
     conf_change_count = len(data['confidence_changes'])
@@ -662,38 +684,54 @@ def send_summary_email(data, recipient=DEFAULT_RECIPIENT):
         smtp_pass = smtp_pass.replace(" ", "").strip()
     smtp_port = int(os.getenv("SMTP_PORT", 587))
 
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Preparing email notification to {recipient}...")
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Preparing email notification for {len(recipients)} recipient(s)...")
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Subject: {subject}")
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Recipients: {', '.join(recipients)}")
 
     if not smtp_pass or not smtp_user:
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Warning: SMTP_USER or SMTP_PASSWORD not set in environment or .env.")
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Cannot authenticate to {smtp_server}:{smtp_port}.")
         return False
 
-    msg = MIMEMultipart("alternative")
-    msg['From'] = formataddr(("NC Early Voting Updates", smtp_user))
-    msg['To'] = recipient
-    msg['Subject'] = subject
-    msg['Date'] = formatdate(localtime=True)
-    msg['Message-ID'] = make_msgid(domain="elections.map")
-
-    part1 = MIMEText(plain_body, 'plain', 'utf-8')
-    part2 = MIMEText(html_body, 'html', 'utf-8')
-    msg.attach(part1)
-    msg.attach(part2)
+    delivered_count = 0
+    failed_recipients = []
 
     try:
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Connecting to SMTP server {smtp_server}:{smtp_port}...")
-        server = smtplib.SMTP(smtp_server, smtp_port, timeout=15)
+        server = smtplib.SMTP(smtp_server, smtp_port, timeout=20)
         server.ehlo()
         if smtp_port == 587 or "gmail" in smtp_server:
             server.starttls()
             server.ehlo()
         server.login(smtp_user, smtp_pass)
-        server.sendmail(smtp_user, [recipient], msg.as_string())
+
+        for rec in recipients:
+            msg = MIMEMultipart("alternative")
+            msg['From'] = formataddr(("NC Early Voting Updates", smtp_user))
+            msg['To'] = rec
+            msg['Subject'] = subject
+            msg['Date'] = formatdate(localtime=True)
+            msg['Message-ID'] = make_msgid(domain="elections.map")
+
+            part1 = MIMEText(plain_body, 'plain', 'utf-8')
+            part2 = MIMEText(html_body, 'html', 'utf-8')
+            msg.attach(part1)
+            msg.attach(part2)
+
+            try:
+                server.sendmail(smtp_user, [rec], msg.as_string())
+                delivered_count += 1
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Successfully delivered to {rec}")
+            except Exception as e:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Failed delivery to {rec}: {e}")
+                failed_recipients.append(rec)
+
         server.quit()
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Email successfully delivered via {smtp_server}:{smtp_port} to {recipient}!")
-        return True
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Batch complete: {delivered_count}/{len(recipients)} emails delivered via {smtp_server}:{smtp_port}!")
+        if send_to_subscribers and delivered_count > 0:
+            successful = [r for r in recipients if r not in failed_recipients]
+            subscriptions.mark_sent(successful)
+        return delivered_count > 0
     except Exception as e:
         print(f"[{datetime.now().strftime('%H:%M:%S')}] SMTP delivery error: {e}")
         return False
@@ -702,7 +740,8 @@ def main():
     parser = argparse.ArgumentParser(description="NC Early Voting Daily Change Summary Emailer")
     parser.add_argument("--prev-day", type=int, default=None, help="Previous EV day (default: auto)")
     parser.add_argument("--curr-day", type=int, default=None, help="Current EV day (default: auto)")
-    parser.add_argument("--recipient", default=DEFAULT_RECIPIENT, help="Recipient email address")
+    parser.add_argument("--recipient", default=None, help="Recipient email address")
+    parser.add_argument("--subscribers", action="store_true", help="Send email to all active database subscribers")
     parser.add_argument("--dry-run", action="store_true", help="Print summary without sending email")
     parser.add_argument("--html-preview", help="Save HTML preview to specified file")
     args = parser.parse_args()
@@ -718,7 +757,11 @@ def main():
         print(format_plain_text(data))
         return
 
-    success = send_summary_email(data, recipient=args.recipient)
+    if args.subscribers:
+        success = send_summary_email(data, send_to_subscribers=True)
+    else:
+        success = send_summary_email(data, recipient=args.recipient or DEFAULT_RECIPIENT)
+
     if not success and not (os.getenv("SMTP_PASSWORD") and os.getenv("SMTP_USER")):
         print("\nNote: To send emails locally, set SMTP_USER and SMTP_PASSWORD in .env or run via GitHub Actions.")
 
