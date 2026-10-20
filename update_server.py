@@ -378,6 +378,14 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
         csv_name = f"nc_early_voting_party_ev_day_{ev_day}.csv"
         c_party.to_csv(csv_name, index=False)
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
+
+        # Export latest daily email artifacts for web app immediate welcome dispatch
+        try:
+            import send_daily_summary_email
+            email_data = send_daily_summary_email.compute_daily_changes()
+            send_daily_summary_email.save_latest_email_artifacts(email_data)
+        except Exception as e:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: Could not save daily email artifacts: {e}")
     except Exception as e:
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: Could not export daily party CSV: {e}")
 

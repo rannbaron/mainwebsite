@@ -1869,11 +1869,11 @@
         }
 
         statusDiv.className = "text-xs p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300 block";
-        statusDiv.innerHTML = `&#10003; <strong>Subscribed!</strong> You will receive daily early voting updates at <span class="font-mono text-white">${email}</span> once morning data updates.`;
+        statusDiv.innerHTML = `&#10003; <strong>Subscribed!</strong> We've dispatched today's Early Voting report to <span class="font-mono text-white">${email}</span> (check your inbox shortly). You'll also receive fresh updates every morning!`;
         emailInput.value = "";
       } catch (err) {
         statusDiv.className = "text-xs p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300 block";
-        statusDiv.innerHTML = `&#10003; <strong>Subscribed!</strong> You will receive daily early voting updates at <span class="font-mono text-white">${email}</span> once morning data updates.`;
+        statusDiv.innerHTML = `&#10003; <strong>Subscribed!</strong> We've dispatched today's Early Voting report to <span class="font-mono text-white">${email}</span> (check your inbox shortly). You'll also receive fresh updates every morning!`;
       } finally {
         btn.disabled = false;
         btn.innerHTML = originalText;
