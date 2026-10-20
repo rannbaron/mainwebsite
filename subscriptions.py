@@ -162,6 +162,10 @@ def sync_from_remote(remote_url=None, db_path=DB_PATH):
             emails = data
         elif isinstance(data, dict):
             emails = data.get("subscribers") or data.get("emails") or []
+            unsub_list = data.get("unsubscribed") or []
+            for u in unsub_list:
+                ue = u.get("email") if isinstance(u, dict) else str(u)
+                unsubscribe(ue, db_path=db_path)
         for item in emails:
             e = item.get("email") if isinstance(item, dict) else str(item)
             success, _, is_new = add_subscriber(e, source="remote_sync", db_path=db_path)
