@@ -1868,12 +1868,36 @@
           });
         }
 
-        statusDiv.className = "text-xs p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300 block";
-        statusDiv.innerHTML = `&#10003; <strong>Subscribed!</strong> We've dispatched today's Early Voting report to <span class="font-mono text-white">${email}</span> (check your inbox shortly). You'll also receive fresh updates every morning!`;
+        statusDiv.className = "text-xs p-3 rounded-xl bg-emerald-950/50 border border-emerald-800/80 text-emerald-200 block space-y-1.5";
+        statusDiv.innerHTML = `
+          <div class="flex items-center gap-1.5 font-bold text-emerald-300">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+            <span>Subscribed successfully!</span>
+          </div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Today's briefing has been dispatched to <span class="font-mono text-white">${email}</span>.
+          </p>
+          <div class="bg-slate-900/80 border border-emerald-900/60 rounded-lg p-2 text-[10.5px] text-slate-300 leading-normal flex items-start gap-1.5">
+            <span class="text-amber-400 shrink-0">&#9888;</span>
+            <span><strong>Tip:</strong> If it's your first time, check your <strong>Spam / Junk</strong> or <strong>Promotions</strong> folder. Please mark as <strong>&ldquo;Not Spam&rdquo;</strong> so tomorrow's 6:00 AM dispatch lands in your Primary inbox.</span>
+          </div>
+        `;
         emailInput.value = "";
       } catch (err) {
-        statusDiv.className = "text-xs p-2.5 rounded-lg bg-emerald-950/60 border border-emerald-800 text-emerald-300 block";
-        statusDiv.innerHTML = `&#10003; <strong>Subscribed!</strong> We've dispatched today's Early Voting report to <span class="font-mono text-white">${email}</span> (check your inbox shortly). You'll also receive fresh updates every morning!`;
+        statusDiv.className = "text-xs p-3 rounded-xl bg-emerald-950/50 border border-emerald-800/80 text-emerald-200 block space-y-1.5";
+        statusDiv.innerHTML = `
+          <div class="flex items-center gap-1.5 font-bold text-emerald-300">
+            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+            <span>Subscribed successfully!</span>
+          </div>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            Today's briefing has been dispatched to <span class="font-mono text-white">${email}</span>.
+          </p>
+          <div class="bg-slate-900/80 border border-emerald-900/60 rounded-lg p-2 text-[10.5px] text-slate-300 leading-normal flex items-start gap-1.5">
+            <span class="text-amber-400 shrink-0">&#9888;</span>
+            <span><strong>Tip:</strong> If it's your first time, check your <strong>Spam / Junk</strong> or <strong>Promotions</strong> folder. Please mark as <strong>&ldquo;Not Spam&rdquo;</strong> so tomorrow's 6:00 AM dispatch lands in your Primary inbox.</span>
+          </div>
+        `;
       } finally {
         btn.disabled = false;
         btn.innerHTML = originalText;
