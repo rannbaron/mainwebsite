@@ -354,8 +354,8 @@ def format_plain_text(data):
     lines.extend([
         "",
         "=" * 70,
-        "Interactive Map: https://rannbaron.github.io/mainwebsite/",
-        "To manage your subscription or unsubscribe, reply with 'unsubscribe'.",
+        "Interactive Map: https://rannbar-on.com/beta/",
+        "To unsubscribe from daily updates: {{UNSUBSCRIBE_URL}}",
         "=" * 70,
     ])
     return "\n".join(lines)
@@ -620,14 +620,19 @@ def format_html(data):
                 <!-- Footer Call to Action -->
                 <div style="margin-top:32px;padding:16px;background:#f3f4f6;border-radius:6px;text-align:center;">
                     <div style="font-size:13px;color:#4b5563;margin-bottom:8px;">View live precinct swings, turnout progression, and dual-regime map:</div>
-                    <a href="https://rannbaron.github.io/mainwebsite/" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:700;padding:8px 18px;border-radius:4px;font-size:13px;">Open Early Vote Swing Explorer &rarr;</a>
+                    <a href="https://rannbar-on.com/beta/" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:700;padding:8px 18px;border-radius:4px;font-size:13px;">Open Early Vote Swing Explorer &rarr;</a>
                 </div>
             </div>
 
             <!-- Email footer -->
-            <div style="border-top:1px solid #e5e7eb;padding:16px 28px;background:#f9fafb;font-size:11px;color:#9ca3af;text-align:center;line-height:1.6;">
-                <div>Autonomous Early Voting Update System &bull; North Carolina 2026 Analysis</div>
-                <div style="margin-top:4px;color:#6b7280;">You received this daily update because you are subscribed to early voting reports. To unsubscribe, simply reply to this email with &ldquo;unsubscribe&rdquo;.</div>
+            <div style="border-top:1px solid #e5e7eb;padding:20px 28px;background:#f9fafb;font-size:11px;color:#9ca3af;text-align:center;line-height:1.6;">
+                <div style="font-weight:600;color:#64748b;">Autonomous Early Voting Update System &bull; North Carolina 2026 Analysis</div>
+                <div style="margin-top:6px;color:#6b7280;">You received this dispatch because you subscribed to daily early voting reports.</div>
+                <div style="margin-top:8px;">
+                    <a href="{{{{UNSUBSCRIBE_URL}}}}" style="color:#2563eb;text-decoration:underline;font-weight:600;">Unsubscribe from daily updates</a>
+                    <span style="color:#cbd5e1;margin:0 8px;">&bull;</span>
+                    <a href="https://rannbar-on.com/beta/" style="color:#64748b;text-decoration:underline;">View Interactive Map</a>
+                </div>
             </div>
         </div>
     </body>
@@ -705,6 +710,10 @@ def send_summary_email(data, recipient=None, send_to_subscribers=False):
             server.ehlo()
         server.login(smtp_user, smtp_pass)
 
+        DEFAULT_UNSUB_BASE = "https://script.google.com/macros/s/AKfycby4nUxaJpTz50X43tc79R3vEUSDOEj-TQskmZce3hw6Pm2yw6d-pdEq10dek-WWrsWRcw/exec?action=unsubscribe"
+        unsub_base_url = os.getenv("UNSUBSCRIBE_ENDPOINT_URL") or DEFAULT_UNSUB_BASE
+        import urllib.parse
+
         for rec in recipients:
             msg = MIMEMultipart("alternative")
             msg['From'] = formataddr(("NC Early Voting Updates", smtp_user))
@@ -713,10 +722,18 @@ def send_summary_email(data, recipient=None, send_to_subscribers=False):
             msg['Date'] = formatdate(localtime=True)
             msg['Message-ID'] = make_msgid(domain="elections.map")
 
-            part1 = MIMEText(plain_body, 'plain', 'utf-8')
-            part2 = MIMEText(html_body, 'html', 'utf-8')
+            rec_unsub_url = f"{unsub_base_url}&email={urllib.parse.quote(rec)}"
+            rec_plain = plain_body.replace("{{UNSUBSCRIBE_URL}}", rec_unsub_url)
+            rec_html = html_body.replace("{{UNSUBSCRIBE_URL}}", rec_unsub_url)
+
+            part1 = MIMEText(rec_plain, 'plain', 'utf-8')
+            part2 = MIMEText(rec_html, 'html', 'utf-8')
             msg.attach(part1)
             msg.attach(part2)
+
+            # Modern RFC 8058 One-Click List-Unsubscribe header for Gmail, Apple Mail, Outlook
+            msg['List-Unsubscribe'] = f"<{rec_unsub_url}>"
+            msg['List-Unsubscribe-Post'] = "List-Unsubscribe=One-Click"
 
             try:
                 server.sendmail(smtp_user, [rec], msg.as_string())
@@ -757,6 +774,9 @@ def save_latest_email_artifacts(data, json_path="latest_daily_email.json", html_
         "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
     }
 
+    DEFAULT_UNSUB_BASE = "https://script.google.com/macros/s/AKfycby4nUxaJpTz50X43tc79R3vEUSDOEj-TQskmZce3hw6Pm2yw6d-pdEq10dek-WWrsWRcw/exec?action=unsubscribe"
+    public_html = html.replace("{{UNSUBSCRIBE_URL}}", DEFAULT_UNSUB_BASE)
+
     script_dir = os.path.dirname(os.path.abspath(__file__))
     out_json = os.path.join(script_dir, json_path)
     out_html = os.path.join(script_dir, html_path)
@@ -765,7 +785,7 @@ def save_latest_email_artifacts(data, json_path="latest_daily_email.json", html_
         with open(out_json, "w", encoding="utf-8") as f:
             json.dump(payload, f)
         with open(out_html, "w", encoding="utf-8") as f:
-            f.write(html)
+            f.write(public_html)
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Saved latest email artifacts: {json_path} ({len(json.dumps(payload)):,} bytes) & {html_path}")
         return True
     except Exception as e:
