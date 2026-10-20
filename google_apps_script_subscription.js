@@ -98,7 +98,7 @@ function doPost(e) {
 function sendWelcomeUpdateEmail(recipientEmail) {
   try {
     var url = "https://rannbaron.github.io/mainwebsite/latest_daily_email.json";
-    var resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+    var resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true });
     
     if (resp.getResponseCode() === 200) {
       var data = JSON.parse(resp.getContentText());
