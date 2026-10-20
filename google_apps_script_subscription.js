@@ -5,25 +5,28 @@
  * 1. Accepts POST requests from the website subscription form.
  * 2. Deduplicates subscribers and logs them to your connected Google Sheet.
  * 3. FIRST-TIME SUBSCRIBER IMMEDIATE DISPATCH:
- *    When a new user subscribes for the first time, immediately fetches
- *    the latest published daily update report from GitHub Pages and sends
- *    it directly to their inbox!
+ *    When a new user subscribes, immediately fetches the latest published
+ *    daily update report and delivers it directly to their inbox!
  * 4. Responds to GET requests with active subscriber list for the morning batch pipeline.
+ * 5. Includes a `testSendWelcome` function to easily grant email permissions and test delivery.
  * 
  * HOW TO UPDATE / DEPLOY IN GOOGLE APPS SCRIPT:
- * 1. Open your Apps Script project (from Extensions -> Apps Script in your spreadsheet).
+ * 1. Open your Apps Script project (Extensions -> Apps Script in your spreadsheet).
  * 2. Replace the editor contents with this file and click the Save icon.
- * 3. Click "Deploy" (top right) -> "Manage deployments".
- * 4. Click the edit icon (pencil) next to the Active Web App deployment.
- * 5. Change Version to: "New version".
- * 6. Click "Deploy".
+ * 3. SELECT `testSendWelcome` from the function dropdown at the top and click "Run" (▶).
+ *    -> Google will ask you to Review Permissions and Allow email sending.
+ *    -> This will also immediately deliver today's update email to rb6@duke.edu!
+ * 4. Click "Deploy" (top right) -> "Manage deployments".
+ * 5. Click the edit icon (pencil) next to the Active Web App deployment.
+ * 6. Change Version to: "New version".
+ * 7. Click "Deploy".
  */
 
 function setupSheet() {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["Timestamp", "Email", "Status", "Source"]);
-    sheet.getRange(1, 1, 1, 4).setFontWeight("bold").setBackground("#0f172a").setFontColor("#f8fafc");
+    sheet.appendRow(["Timestamp", "Email", "Status", "Source", "Welcome Sent"]);
+    sheet.getRange(1, 1, 1, 5).setFontWeight("bold").setBackground("#0f172a").setFontColor("#f8fafc");
   }
 }
 
@@ -71,12 +74,21 @@ function doPost(e) {
     var sentImmediate = false;
 
     if (foundIndex > 0) {
-      // Existing subscriber: reactivate if unsubscribed
+      // Existing subscriber
       sheet.getRange(foundIndex, 3).setValue("active");
+      
+      // If welcome email was never sent to this address, send it now!
+      var alreadySent = (rows[foundIndex - 1].length >= 5) ? rows[foundIndex - 1][4] : "";
+      if (!alreadySent || alreadySent.toString().toLowerCase() !== "yes") {
+        sentImmediate = sendWelcomeUpdateEmail(email);
+        if (sentImmediate) {
+          sheet.getRange(foundIndex, 5).setValue("yes");
+        }
+      }
     } else {
       // First-time subscriber: Record to sheet and send today's update report immediately!
-      sheet.appendRow([new Date(), email, "active", source]);
       sentImmediate = sendWelcomeUpdateEmail(email);
+      sheet.appendRow([new Date(), email, "active", source, sentImmediate ? "yes" : "pending"]);
     }
 
     return ContentService.createTextOutput(JSON.stringify({
@@ -97,10 +109,19 @@ function doPost(e) {
  */
 function sendWelcomeUpdateEmail(recipientEmail) {
   try {
-    var url = "https://rannbaron.github.io/mainwebsite/latest_daily_email.json";
+    // Use canonical custom domain to avoid 301 redirects
+    var url = "https://rannbar-on.com/latest_daily_email.json";
     var resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true });
+    var statusCode = resp.getResponseCode();
     
-    if (resp.getResponseCode() === 200) {
+    // Fallback if needed
+    if (statusCode !== 200) {
+      url = "https://rannbaron.github.io/mainwebsite/latest_daily_email.json";
+      resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true, followRedirects: true });
+      statusCode = resp.getResponseCode();
+    }
+    
+    if (statusCode === 200) {
       var data = JSON.parse(resp.getContentText());
       var subject = data.subject || "NC Early Voting Daily Update";
       var htmlBody = data.html || "";
@@ -116,13 +137,24 @@ function sendWelcomeUpdateEmail(recipientEmail) {
       Logger.log("Successfully dispatched immediate welcome update email to: " + recipientEmail);
       return true;
     } else {
-      Logger.log("Could not fetch latest_daily_email.json: HTTP " + resp.getResponseCode());
+      Logger.log("Could not fetch latest_daily_email.json: HTTP " + statusCode);
       return false;
     }
   } catch (err) {
     Logger.log("Error sending immediate welcome email to " + recipientEmail + ": " + err.toString());
     return false;
   }
+}
+
+/**
+ * Run this function ONCE inside the Apps Script editor to authorize email permissions
+ * and immediately test delivery to your email address!
+ */
+function testSendWelcome() {
+  var testEmail = "rb6@duke.edu";
+  Logger.log("Testing immediate welcome email delivery to: " + testEmail);
+  var success = sendWelcomeUpdateEmail(testEmail);
+  Logger.log("Delivery result: " + (success ? "SUCCESS" : "FAILED"));
 }
 
 // Handles GET requests from GitHub Actions / Python to retrieve active subscriber list
