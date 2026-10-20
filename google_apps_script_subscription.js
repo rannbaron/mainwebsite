@@ -8,18 +8,19 @@
  *    When a new user subscribes, immediately fetches the latest published
  *    daily update report and delivers it directly to their inbox!
  * 4. Responds to GET requests with active subscriber list for the morning batch pipeline.
- * 5. Includes a `testSendWelcome` function to easily grant email permissions and test delivery.
+ * 5. Includes an un-caught `testSendWelcome` function to force Google's Authorization dialog.
  * 
- * HOW TO UPDATE / DEPLOY IN GOOGLE APPS SCRIPT:
- * 1. Open your Apps Script project (Extensions -> Apps Script in your spreadsheet).
- * 2. Replace the editor contents with this file and click the Save icon.
- * 3. SELECT `testSendWelcome` from the function dropdown at the top and click "Run" (▶).
- *    -> Google will ask you to Review Permissions and Allow email sending.
- *    -> This will also immediately deliver today's update email to rb6@duke.edu!
- * 4. Click "Deploy" (top right) -> "Manage deployments".
- * 5. Click the edit icon (pencil) next to the Active Web App deployment.
- * 6. Change Version to: "New version".
- * 7. Click "Deploy".
+ * HOW TO ACTIVATE / DEPLOY IN GOOGLE APPS SCRIPT:
+ * 1. Paste this entire file into your Apps Script editor and click the Save icon (Ctrl+S).
+ * 2. Select `testSendWelcome` from the function dropdown at the top and click "Run" (▶).
+ *    -> Because this function is uncaught, Google will immediately prompt you:
+ *       "Authorization Required: NC Early Voting Subscriptions needs permission to access your data."
+ *    -> Click "Review permissions" -> Choose your Google Account -> Click "Advanced" -> Click "Go to NC Early Voting (unsafe)" -> Click "Allow".
+ *    -> You will receive the Day 5 report in your inbox immediately!
+ * 3. Click "Deploy" (top right) -> "Manage deployments".
+ * 4. Click the edit icon (pencil) next to the Active Web App deployment.
+ * 5. Change Version to: "New version".
+ * 6. Click "Deploy".
  */
 
 function setupSheet() {
@@ -149,12 +150,28 @@ function sendWelcomeUpdateEmail(recipientEmail) {
 /**
  * Run this function ONCE inside the Apps Script editor to authorize email permissions
  * and immediately test delivery to your email address!
+ * 
+ * NOTE: This function intentionally does NOT catch errors so Google Apps Script
+ * will halt and pop up the "Authorization Required" dialog!
  */
 function testSendWelcome() {
   var testEmail = "rb6@duke.edu";
-  Logger.log("Testing immediate welcome email delivery to: " + testEmail);
-  var success = sendWelcomeUpdateEmail(testEmail);
-  Logger.log("Delivery result: " + (success ? "SUCCESS" : "FAILED"));
+  Logger.log("Initiating test delivery to: " + testEmail);
+  
+  // Direct call forces Google Apps Script to request missing UrlFetchApp and MailApp permissions:
+  var url = "https://rannbar-on.com/latest_daily_email.json";
+  var resp = UrlFetchApp.fetch(url);
+  var data = JSON.parse(resp.getContentText());
+  
+  MailApp.sendEmail({
+    to: testEmail,
+    subject: data.subject,
+    body: data.text,
+    htmlBody: data.html,
+    name: "NC Early Voting Intelligence"
+  });
+  
+  Logger.log("SUCCESS! Welcome email dispatched to: " + testEmail);
 }
 
 // Handles GET requests from GitHub Actions / Python to retrieve active subscriber list
