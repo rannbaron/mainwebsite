@@ -139,7 +139,8 @@ function sendWelcomeUpdateEmail(recipientEmail) {
         subject: subject,
         body: plainBody,
         htmlBody: htmlBody,
-        name: "NC Early Voting Intelligence"
+        name: "NC Early Voting Intelligence",
+        replyTo: "baronrann@gmail.com"
       });
       Logger.log("Successfully dispatched immediate welcome update email to: " + recipientEmail);
       return true;
@@ -179,7 +180,8 @@ function testSendWelcome() {
     subject: data.subject,
     body: text,
     htmlBody: html,
-    name: "NC Early Voting Intelligence"
+    name: "NC Early Voting Intelligence",
+    replyTo: "baronrann@gmail.com"
   });
   
   Logger.log("SUCCESS! Welcome email dispatched to: " + testEmail);
@@ -342,3 +344,91 @@ function escapeHtml(str) {
   if (!str) return "";
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
+
+function renderUnsubscribeHtml(email, unsubscribed, resubUrl) {
+  var title = unsubscribed ? "Unsubscribed" : "Unsubscribe";
+  var bodyContent = "";
+
+  if (unsubscribed) {
+    bodyContent = [
+      '<div style="width:52px;height:52px;background:#ecfdf5;color:#059669;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px;">&#10003;</div>',
+      '<h1 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 8px;">You have been unsubscribed</h1>',
+      '<p style="color:#64748b;font-size:14px;line-height:1.6;margin:0 0 24px;">',
+      '  <strong>' + escapeHtml(email) + '</strong> has been removed from daily dispatches. You will no longer receive morning early voting updates.',
+      '</p>',
+      '<div style="display:flex;flex-direction:column;gap:12px;align-items:center;">',
+      '  <a href="' + resubUrl + '" style="font-size:13px;color:#2563eb;text-decoration:none;font-weight:600;">Unsubscribed by mistake? Click here to re-subscribe</a>',
+      '  <a href="https://rannbar-on.com/beta/" style="display:inline-block;background:#0f172a;color:#ffffff;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;margin-top:8px;">Return to Early Voting Explorer &rarr;</a>',
+      '</div>'
+    ].join("\n");
+  } else {
+    var formAction = ScriptApp.getService().getUrl();
+    bodyContent = [
+      '<h1 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 8px;">Unsubscribe from Updates</h1>',
+      '<p style="color:#64748b;font-size:14px;line-height:1.6;margin:0 0 20px;">',
+      (email ? 'The email <strong>' + escapeHtml(email) + '</strong> was not found in our active list.' : 'Enter your email address below to unsubscribe from daily morning early voting reports.'),
+      '</p>',
+      '<form method="GET" action="' + formAction + '" style="display:flex;flex-direction:column;gap:12px;">',
+      '  <input type="hidden" name="action" value="unsubscribe">',
+      '  <input type="email" name="email" required placeholder="Enter your email address" value="' + escapeHtml(email) + '" style="padding:10px 14px;border:1px solid #cbd5e1;border-radius:8px;font-size:14px;outline:none;">',
+      '  <button type="submit" style="background:#dc2626;color:#ffffff;border:none;padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;">Confirm Unsubscribe</button>',
+      '</form>',
+      '<div style="margin-top:20px;text-align:center;">',
+      '  <a href="https://rannbar-on.com/beta/" style="color:#64748b;font-size:13px;text-decoration:none;">&larr; Return to Interactive Map</a>',
+      '</div>'
+    ].join("\n");
+  }
+
+  return [
+    '<!DOCTYPE html>',
+    '<html>',
+    '<head>',
+    '  <meta charset="utf-8">',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+    '  <title>' + title + ' - NC Early Voting Intelligence</title>',
+    '  <style>',
+    '    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #070b14; color: #f8fafc; margin: 0; padding: 24px; min-height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }',
+    '    .card { background: #ffffff; color: #0f172a; border-radius: 16px; max-width: 480px; width: 100%; padding: 32px 28px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2); text-align: center; }',
+    '  </style>',
+    '</head>',
+    '<body>',
+    '  <div class="card">',
+    bodyContent,
+    '  </div>',
+    '</body>',
+    '</html>'
+  ].join("\n");
+}
+
+function renderResubscribeHtml(email) {
+  return [
+    '<!DOCTYPE html>',
+    '<html>',
+    '<head>',
+    '  <meta charset="utf-8">',
+    '  <meta name="viewport" content="width=device-width, initial-scale=1">',
+    '  <title>Re-subscribed - NC Early Voting Intelligence</title>',
+    '  <style>',
+    '    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #070b14; color: #f8fafc; margin: 0; padding: 24px; min-height: 100vh; display: flex; align-items: center; justify-content: center; box-sizing: border-box; }',
+    '    .card { background: #ffffff; color: #0f172a; border-radius: 16px; max-width: 480px; width: 100%; padding: 32px 28px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.2); text-align: center; }',
+    '  </style>',
+    '</head>',
+    '<body>',
+    '  <div class="card">',
+    '    <div style="width:52px;height:52px;background:#eff6ff;color:#2563eb;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px;">&#10003;</div>',
+    '    <h1 style="font-size:20px;font-weight:700;color:#0f172a;margin:0 0 8px;">Subscription Re-activated!</h1>',
+    '    <p style="color:#64748b;font-size:14px;line-height:1.6;margin:0 0 24px;">',
+    '      <strong>' + escapeHtml(email) + '</strong> has been re-subscribed to daily morning early voting updates.',
+    '    </p>',
+    '    <a href="https://rannbar-on.com/beta/" style="display:inline-block;background:#2563eb;color:#ffffff;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;text-decoration:none;">Open Early Voting Explorer &rarr;</a>',
+    '  </div>',
+    '</body>',
+    '</html>'
+  ].join("\n");
+}
+
+function escapeHtml(str) {
+  if (!str) return "";
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+

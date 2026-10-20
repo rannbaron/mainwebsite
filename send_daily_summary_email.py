@@ -717,6 +717,7 @@ def send_summary_email(data, recipient=None, send_to_subscribers=False):
         for rec in recipients:
             msg = MIMEMultipart("alternative")
             msg['From'] = formataddr(("NC Early Voting Updates", smtp_user))
+            msg['Reply-To'] = smtp_user
             msg['To'] = rec
             msg['Subject'] = subject
             msg['Date'] = formatdate(localtime=True)
