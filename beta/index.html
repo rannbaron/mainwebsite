@@ -321,6 +321,10 @@
           <span class="text-lg font-bold leading-none">&nearrow;</span>
           <span class="text-[11px] leading-tight" id="legendLabelNeg">Shift toward Republican</span>
         </div>
+        <div class="flex items-center gap-2 text-slate-200 font-semibold" id="legendRowFlip" style="display: none;">
+          <span class="w-3.5 h-3.5 rounded-sm border border-slate-500/60 shrink-0 inline-block shadow-sm" style="background: repeating-linear-gradient(45deg, #2563eb, #2563eb 2.5px, #dc2626 2.5px, #dc2626 5px);"></span>
+          <span class="text-[11px] leading-tight" id="legendLabelFlip">Predicted Flip (R &harr; D)</span>
+        </div>
         <div id="legendNote" class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/80 leading-normal">
           High-contrast casing arrows. Arrow length indicates percentage point shift.
         </div>
@@ -329,6 +333,18 @@
       <!-- SVG Map Canvas -->
       <div id="svgContainer" class="w-full flex-1 flex items-center justify-center p-2 relative select-none">
         <svg id="ncMapSvg" viewBox="0 0 1200 483" class="w-full h-full max-h-[760px] transition-all duration-300">
+          <defs>
+            <!-- Bicolor hatching / stripe pattern for Republican -> Democrat Flip -->
+            <pattern id="patternFlipRtoD" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="5" height="10" fill="#2563eb" />
+              <rect x="5" width="5" height="10" fill="#dc2626" />
+            </pattern>
+            <!-- Bicolor hatching / stripe pattern for Democrat -> Republican Flip -->
+            <pattern id="patternFlipDtoR" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+              <rect width="5" height="10" fill="#dc2626" />
+              <rect x="5" width="5" height="10" fill="#2563eb" />
+            </pattern>
+          </defs>
           <g id="countiesLayer"></g>
           <g id="precinctsLayer"></g>
           <g id="arrowsLayer"></g>
@@ -471,6 +487,15 @@
             <div id="fcPrecinctNotice" class="hidden text-[10px] text-amber-300 font-sans bg-amber-950/40 border border-amber-800/40 rounded px-2.5 py-1.5 leading-tight flex items-start gap-1.5">
               <span class="text-amber-400 font-bold">&bull;</span>
               <span>Showing <strong>parent county</strong> model. Individual precinct projections are not modeled.</span>
+            </div>
+
+            <!-- Flip Alert Badge (shows when county is a predicted flip) -->
+            <div id="fcFlipAlert" class="hidden text-[10px] font-bold text-amber-200 bg-amber-950/50 border border-amber-700/60 rounded px-2.5 py-1.5 font-sans flex items-center justify-between">
+              <span class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-sm inline-block border border-amber-500/60 shrink-0" style="background: repeating-linear-gradient(45deg, #2563eb, #2563eb 2px, #dc2626 2px, #dc2626 4px);"></span>
+                <span>Predicted Flip:</span>
+              </span>
+              <span id="fcFlipAlertText" class="font-mono text-amber-300">R &rarr; D</span>
             </div>
           </div>
 
@@ -740,7 +765,19 @@
       if (currentMapMode === 'forecast' && !activeCountyId) {
         const fc = entity && entity.forecast ? entity.forecast : null;
         if (fc) {
-          const margin = fc.pred_margin; // Dem - Rep
+          // Check for predicted flip first (bicolor hatching pattern)
+          const act = fc.actual_2022;
+          const pred = fc.pred_dem_share !== undefined ? fc.pred_dem_share : fc.pred_final_dem;
+          if (act !== undefined && act !== null && pred !== undefined && pred !== null) {
+            if (act <= 50.0 && pred > 50.0) {
+              return 'url(#patternFlipRtoD)';
+            }
+            if (act > 50.0 && pred <= 50.0) {
+              return 'url(#patternFlipDtoR)';
+            }
+          }
+
+          const margin = fc.pred_margin !== undefined ? fc.pred_margin : (pred - (100.0 - pred));
           const absM = Math.abs(margin);
           if (margin > 0) {
             // Projected Dem Win
@@ -1256,8 +1293,13 @@
       const labelPos = document.getElementById('legendLabelPos');
       const labelNeg = document.getElementById('legendLabelNeg');
       const note = document.getElementById('legendNote');
+      const rowFlip = document.getElementById('legendRowFlip');
       const iconPos = rowPos ? rowPos.querySelector('span:first-child') : null;
       const iconNeg = rowNeg ? rowNeg.querySelector('span:first-child') : null;
+
+      if (rowFlip) {
+        rowFlip.style.display = (currentMapMode === 'forecast' && !activeCountyId) ? 'flex' : 'none';
+      }
 
       if (currentMapMode === 'forecast') {
         if (activeCountyId) {
@@ -1280,7 +1322,7 @@
           if (iconNeg) iconNeg.innerHTML = '&#9632;';
           if (labelPos) labelPos.textContent = 'Projected Dem Win';
           if (labelNeg) labelNeg.textContent = 'Projected Rep Win';
-          if (note) note.textContent = 'Darker shades indicate higher projected win margin (>5%, >10%, >20%, >35%).';
+          if (note) note.textContent = 'Darker shades indicate projected margin. Bicolor hatching indicates counties predicted to flip.';
         }
       } else if (currentMapMode === 'margin') {
         if (title) title.textContent = `${yearA} Margin`;
@@ -1397,6 +1439,27 @@
           precinctNotice.classList.remove('hidden');
         } else {
           precinctNotice.classList.add('hidden');
+        }
+      }
+
+      // Flip Alert Badge
+      const flipAlert = document.getElementById('fcFlipAlert');
+      const flipAlertText = document.getElementById('fcFlipAlertText');
+      if (flipAlert && flipAlertText) {
+        const act = fc.actual_2022;
+        const demP = fc.pred_dem_share !== undefined ? fc.pred_dem_share : fc.pred_final_dem;
+        if (entity.id && act !== undefined && act !== null && demP !== undefined && demP !== null) {
+          if (act <= 50.0 && demP > 50.0) {
+            flipAlert.classList.remove('hidden');
+            flipAlertText.innerHTML = `R &rarr; D <span class="text-[9px] font-normal text-amber-300/80">('22: ${act.toFixed(1)}% &rarr; '26: ${demP.toFixed(1)}%)</span>`;
+          } else if (act > 50.0 && demP <= 50.0) {
+            flipAlert.classList.remove('hidden');
+            flipAlertText.innerHTML = `D &rarr; R <span class="text-[9px] font-normal text-amber-300/80">('22: ${act.toFixed(1)}% &rarr; '26: ${demP.toFixed(1)}%)</span>`;
+          } else {
+            flipAlert.classList.add('hidden');
+          }
+        } else {
+          flipAlert.classList.add('hidden');
         }
       }
 
@@ -1649,11 +1712,21 @@
     // Mouse Events: County
     function onCountyMouseEnter(county, e) {
       if (activeCountyId) return;
+      const el = document.getElementById(`county-${county.id}`);
+      if (el) {
+        el.setAttribute('stroke', '#ffffff');
+        el.setAttribute('stroke-width', '1.8');
+      }
       showTooltip(county, false, e);
       updateInspectorWithCounty(county);
     }
 
     function onCountyMouseLeave(county) {
+      const el = document.getElementById(`county-${county.id}`);
+      if (el && !activeCountyId) {
+        el.setAttribute('stroke', '#334155');
+        el.setAttribute('stroke-width', '0.75');
+      }
       hideTooltip();
       if (!activeCountyId) {
         updateInspectorWithState();
@@ -1723,12 +1796,34 @@
         const marginConf = (fc.margin_confidence || fc.margin_precision) ? `<span class="capitalize font-semibold" style="color: ${getConfidenceColor(fc.margin_confidence || fc.margin_precision)}">${(fc.margin_confidence || fc.margin_precision).replace(' confidence', '')}</span>` : '';
         const confSnippet = callConf ? `<div class="text-[10px] text-slate-400 font-sans flex items-center justify-between"><span>Confidence:</span><span>Call: ${callConf} &bull; Spread: ${marginConf}</span></div>` : '';
 
+        // Flip indicator in tooltip
+        let flipSnippet = '';
+        const act = fc.actual_2022;
+        if (act !== undefined && act !== null) {
+          if (act <= 50.0 && demShare > 50.0) {
+            flipSnippet = `
+              <div class="text-[10px] font-bold text-amber-300 bg-amber-950/70 border border-amber-600/70 rounded px-1.5 py-0.5 flex items-center justify-between">
+                <span>&bull; PREDICTED FLIP:</span>
+                <span class="font-mono">R &rarr; D ('22: ${act.toFixed(1)}% &rarr; '26: ${demShare.toFixed(1)}%)</span>
+              </div>
+            `;
+          } else if (act > 50.0 && demShare <= 50.0) {
+            flipSnippet = `
+              <div class="text-[10px] font-bold text-amber-300 bg-amber-950/70 border border-amber-600/70 rounded px-1.5 py-0.5 flex items-center justify-between">
+                <span>&bull; PREDICTED FLIP:</span>
+                <span class="font-mono">D &rarr; R ('22: ${act.toFixed(1)}% &rarr; '26: ${demShare.toFixed(1)}%)</span>
+              </div>
+            `;
+          }
+        }
+
         forecastHtml = `
-          <div class="mt-1 pt-1 border-t border-slate-700/60 font-mono text-xs space-y-0.5">
+          <div class="mt-1 pt-1 border-t border-slate-700/60 font-mono text-xs space-y-1">
             <div class="flex items-center justify-between gap-2">
               <span class="text-blue-300 font-sans">2026 Forecast:</span>
               <span style="color: ${mgnColor}" class="font-bold">${mgnText} ${rating}</span>
             </div>
+            ${flipSnippet}
             ${confSnippet}
           </div>
         `;
