@@ -418,10 +418,59 @@
             <div class="flex items-center gap-2">
               <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
               <span class="text-xs font-bold uppercase tracking-wider text-blue-200">2026 Vote Forecast</span>
-              <span class="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30 font-semibold">D vs R</span>
+              <span id="fcScopeBadge" class="text-[10px] bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30 font-semibold font-mono">Statewide</span>
             </div>
             <div id="forecastBadge" class="text-xs font-bold font-mono px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
               Dem +9.5%
+            </div>
+          </div>
+
+          <!-- Model Confidence & Rating Card -->
+          <div id="fcConfidenceBlock" class="bg-slate-950/60 border border-slate-800/90 rounded-lg p-2.5 space-y-2 font-mono text-xs shadow-inner">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5 font-sans">
+                <span class="text-[10px] uppercase font-bold text-slate-400">Rating:</span>
+                <span id="fcRatingBadge" class="text-xs font-extrabold px-2 py-0.5 rounded-md border font-mono bg-slate-800 text-slate-300 border-slate-700">Toss Up</span>
+              </div>
+              <div class="text-[10px] text-slate-400 font-sans" id="fcWinProb">
+                Win Prob: <span id="fcDemProb" class="font-mono font-bold text-blue-400">59.9% Dem</span>
+              </div>
+            </div>
+
+            <!-- Call Confidence & Margin Confidence Badges -->
+            <div class="grid grid-cols-2 gap-2 pt-1.5 border-t border-slate-800/80 font-sans">
+              <div class="bg-slate-900/80 p-2 rounded-md border border-slate-800 flex flex-col justify-between">
+                <div class="text-[9px] uppercase font-semibold text-slate-400 flex items-center justify-between">
+                  <span>Call Confidence</span>
+                  <span class="text-slate-500 text-[8px]" title="Certainty in projected winner">(Winner)</span>
+                </div>
+                <div id="fcCallConfBadge" class="text-xs font-bold mt-1 capitalize font-mono text-emerald-400 flex items-center gap-1">
+                  <span>&bull;</span>
+                  <span id="fcCallConfText">Very High</span>
+                </div>
+              </div>
+              <div class="bg-slate-900/80 p-2 rounded-md border border-slate-800 flex flex-col justify-between">
+                <div class="text-[9px] uppercase font-semibold text-slate-400 flex items-center justify-between">
+                  <span>Margin Confidence</span>
+                  <span class="text-slate-500 text-[8px]" title="Certainty in spread magnitude">(Spread)</span>
+                </div>
+                <div id="fcMarginConfBadge" class="text-xs font-bold mt-1 capitalize font-mono text-amber-400 flex items-center gap-1">
+                  <span>&bull;</span>
+                  <span id="fcMarginConfText">Low</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 95% Margin CI -->
+            <div class="pt-1 flex items-center justify-between text-[11px] border-t border-slate-800/80 text-slate-400">
+              <span class="font-sans text-[10px] uppercase font-semibold text-slate-400">95% Margin CI:</span>
+              <span id="fcMarginCiVal" class="font-mono font-bold text-slate-200">[-8.8% to +11.4% Dem]</span>
+            </div>
+
+            <!-- Precinct Level Notice (shows when inspecting precinct) -->
+            <div id="fcPrecinctNotice" class="hidden text-[10px] text-amber-300 font-sans bg-amber-950/40 border border-amber-800/40 rounded px-2.5 py-1.5 leading-tight flex items-start gap-1.5">
+              <span class="text-amber-400 font-bold">&bull;</span>
+              <span>Showing <strong>parent county</strong> model. Individual precinct projections are not modeled.</span>
             </div>
           </div>
 
@@ -541,7 +590,6 @@
           <div class="flex items-center text-[11px] bg-slate-900 border border-slate-700/80 p-0.5 rounded-lg">
             <button id="btnSortSwing" onclick="sortPrecinctTable('swing')" class="px-2.5 py-0.5 rounded font-semibold bg-blue-600 text-white">Swing</button>
             <button id="btnSortTurnout" onclick="sortPrecinctTable('turnout')" class="px-2.5 py-0.5 rounded text-slate-400 hover:text-white">Votes</button>
-            <button id="btnSortForecast" onclick="sortPrecinctTable('forecast')" class="px-2.5 py-0.5 rounded text-slate-400 hover:text-white">Forecast</button>
           </div>
         </div>
 
@@ -689,7 +737,7 @@
     function getEntityFill(m, entity) {
       if (currentMapMode === 'editorial') return '#111827';
 
-      if (currentMapMode === 'forecast') {
+      if (currentMapMode === 'forecast' && !activeCountyId) {
         const fc = entity && entity.forecast ? entity.forecast : null;
         if (fc) {
           const margin = fc.pred_margin; // Dem - Rep
@@ -1212,15 +1260,28 @@
       const iconNeg = rowNeg ? rowNeg.querySelector('span:first-child') : null;
 
       if (currentMapMode === 'forecast') {
-        if (title) title.textContent = '2026 Projected Margin';
-        if (subtitle) subtitle.textContent = 'D vs R Forecast';
-        if (rowPos) rowPos.style.color = '#3b82f6';
-        if (rowNeg) rowNeg.style.color = '#ef4444';
-        if (iconPos) iconPos.innerHTML = '&#9632;';
-        if (iconNeg) iconNeg.innerHTML = '&#9632;';
-        if (labelPos) labelPos.textContent = 'Projected Dem Win';
-        if (labelNeg) labelNeg.textContent = 'Projected Rep Win';
-        if (note) note.textContent = 'Darker shades indicate higher projected win margin (>5%, >10%, >20%, >35%).';
+        if (activeCountyId) {
+          const county = DATA.counties.find(c => c.id === activeCountyId);
+          if (title) title.textContent = 'Early Voting Swing';
+          if (subtitle) subtitle.textContent = `${county ? county.name : 'County'} Precincts`;
+          if (rowPos) rowPos.style.color = '#3b82f6';
+          if (rowNeg) rowNeg.style.color = '#ef4444';
+          if (iconPos) iconPos.innerHTML = '&nwarrow;';
+          if (iconNeg) iconNeg.innerHTML = '&nearrow;';
+          if (labelPos) labelPos.textContent = 'Shift toward Democrat';
+          if (labelNeg) labelNeg.textContent = 'Shift toward Republican';
+          if (note) note.textContent = 'County forecast remains in sidebar. Precincts display actual early voting shift.';
+        } else {
+          if (title) title.textContent = '2026 Projected Margin';
+          if (subtitle) subtitle.textContent = 'D vs R Forecast';
+          if (rowPos) rowPos.style.color = '#3b82f6';
+          if (rowNeg) rowNeg.style.color = '#ef4444';
+          if (iconPos) iconPos.innerHTML = '&#9632;';
+          if (iconNeg) iconNeg.innerHTML = '&#9632;';
+          if (labelPos) labelPos.textContent = 'Projected Dem Win';
+          if (labelNeg) labelNeg.textContent = 'Projected Rep Win';
+          if (note) note.textContent = 'Darker shades indicate higher projected win margin (>5%, >10%, >20%, >35%).';
+        }
       } else if (currentMapMode === 'margin') {
         if (title) title.textContent = `${yearA} Margin`;
         if (subtitle) subtitle.textContent = metricDimension === 'party' ? 'Dem vs Rep' : 'Black vs White';
@@ -1261,28 +1322,58 @@
       }
     }
 
+    function getConfidenceColor(conf) {
+      if (!conf) return '#94a3b8';
+      const c = conf.toLowerCase();
+      if (c.includes('very high')) return '#34d399'; // emerald-400
+      if (c.includes('high')) return '#2dd4bf';      // teal-400
+      if (c.includes('mod')) return '#60a5fa';       // blue-400
+      if (c.includes('very low')) return '#f87171';  // rose-400
+      if (c.includes('low')) return '#fbbf24';       // amber-400
+      return '#94a3b8';
+    }
+
+    function getRatingBadgeClasses(rating) {
+      if (!rating) return 'bg-slate-800 text-slate-300 border-slate-700';
+      const r = rating.toLowerCase();
+      if (r === 'safe d') return 'bg-blue-950 text-blue-200 border-blue-600/80';
+      if (r === 'very likely d') return 'bg-blue-900/60 text-blue-200 border-blue-500/80';
+      if (r === 'likely d') return 'bg-blue-900/40 text-blue-300 border-blue-500/60';
+      if (r === 'lean d') return 'bg-sky-950/70 text-sky-300 border-sky-500/60';
+      if (r === 'toss up') return 'bg-purple-950/70 text-purple-200 border-purple-500/70';
+      if (r === 'lean r') return 'bg-rose-950/70 text-rose-300 border-rose-500/60';
+      if (r === 'likely r') return 'bg-red-900/40 text-red-300 border-red-500/60';
+      if (r === 'very likely r') return 'bg-red-900/60 text-red-200 border-red-500/80';
+      if (r === 'safe r') return 'bg-red-950 text-red-200 border-red-600/80';
+      return 'bg-slate-800 text-slate-300 border-slate-700';
+    }
+
     // Inspector Updates
     function updateInspectorWithState() {
       const st = calcMetrics(DATA.state);
       updateInspectorDisplay('North Carolina Statewide', `State Summary (${yearA} vs ${yearB})`, st);
       updateTopHeaderRibbon(st);
-      updateForecastInspector(DATA.state);
+      updateForecastInspector(DATA.state, 'Statewide', false);
     }
 
     function updateInspectorWithCounty(c) {
       const m = calcMetrics(c);
       updateInspectorDisplay('County Overview', `${c.name} County`, m);
-      updateForecastInspector(c);
+      updateForecastInspector(c, `${c.name} County`, false);
     }
 
     function updateInspectorWithPrecinct(pr) {
       const m = calcMetrics(pr);
       const county = DATA.counties.find(c => c.id === activeCountyId);
       updateInspectorDisplay(`${county ? county.name : ''} County &bull; Precinct`, pr.name, m);
-      updateForecastInspector(pr);
+      if (county) {
+        updateForecastInspector(county, `${county.name} County`, true);
+      } else {
+        updateForecastInspector(DATA.state, 'Statewide', false);
+      }
     }
 
-    function updateForecastInspector(entity) {
+    function updateForecastInspector(entity, scopeTitle, isPrecinctContext = false) {
       const section = document.getElementById('forecastSection');
       if (!section) return;
 
@@ -1293,12 +1384,77 @@
       }
       section.classList.remove('hidden');
 
+      // Scope Title & Badge
+      const scopeBadge = document.getElementById('fcScopeBadge');
+      if (scopeBadge) {
+        scopeBadge.textContent = scopeTitle || (entity.name ? `${entity.name} County` : 'Statewide');
+      }
+
+      // Precinct Level Notice
+      const precinctNotice = document.getElementById('fcPrecinctNotice');
+      if (precinctNotice) {
+        if (isPrecinctContext) {
+          precinctNotice.classList.remove('hidden');
+        } else {
+          precinctNotice.classList.add('hidden');
+        }
+      }
+
+      // Rating Badge
+      const ratingBadge = document.getElementById('fcRatingBadge');
+      if (ratingBadge) {
+        ratingBadge.textContent = fc.rating || 'N/A';
+        ratingBadge.className = `text-xs font-extrabold px-2 py-0.5 rounded-md border font-mono ${getRatingBadgeClasses(fc.rating)}`;
+      }
+
+      // Win Probability
+      const winProbVal = document.getElementById('fcDemProb');
+      if (winProbVal) {
+        if (fc.p_dem !== undefined && fc.p_rep !== undefined) {
+          if (fc.p_dem >= 50.0) {
+            winProbVal.className = 'font-mono font-bold text-blue-400';
+            winProbVal.textContent = `${fc.p_dem.toFixed(1)}% Dem`;
+          } else {
+            winProbVal.className = 'font-mono font-bold text-red-400';
+            winProbVal.textContent = `${fc.p_rep.toFixed(1)}% Rep`;
+          }
+        } else {
+          winProbVal.textContent = 'N/A';
+        }
+      }
+
+      // Call Confidence
+      const callConfText = document.getElementById('fcCallConfText');
+      const callConfBadge = document.getElementById('fcCallConfBadge');
+      const callConf = fc.call_confidence || 'N/A';
+      if (callConfText) callConfText.textContent = callConf.replace(' confidence', '');
+      if (callConfBadge) callConfBadge.style.color = getConfidenceColor(callConf);
+
+      // Margin Confidence / Precision
+      const marginConfText = document.getElementById('fcMarginConfText');
+      const marginConfBadge = document.getElementById('fcMarginConfBadge');
+      const marginConf = fc.margin_confidence || fc.margin_precision || 'N/A';
+      if (marginConfText) marginConfText.textContent = marginConf.replace(' confidence', '');
+      if (marginConfBadge) marginConfBadge.style.color = getConfidenceColor(marginConf);
+
+      // 95% Margin CI
+      const fcMarginCiVal = document.getElementById('fcMarginCiVal');
+      if (fcMarginCiVal) {
+        if (fc.ci_margin_low !== undefined && fc.ci_margin_high !== undefined) {
+          const lowFmt = fc.ci_margin_low >= 0 ? `D+${fc.ci_margin_low.toFixed(1)}%` : `R+${Math.abs(fc.ci_margin_low).toFixed(1)}%`;
+          const highFmt = fc.ci_margin_high >= 0 ? `D+${fc.ci_margin_high.toFixed(1)}%` : `R+${Math.abs(fc.ci_margin_high).toFixed(1)}%`;
+          fcMarginCiVal.textContent = `[${lowFmt} to ${highFmt}]`;
+        } else {
+          fcMarginCiVal.textContent = 'N/A';
+        }
+      }
+
       const demShare = fc.pred_dem_share !== undefined ? fc.pred_dem_share : fc.pred_final_dem;
       const repShare = fc.pred_rep_share !== undefined ? fc.pred_rep_share : fc.pred_final_rep;
       const margin = fc.pred_margin !== undefined ? fc.pred_margin : (demShare - repShare);
       const absM = Math.abs(margin);
 
-      // Badge
+      // Margin Badge
       const badge = document.getElementById('forecastBadge');
       if (badge) {
         if (margin >= 0) {
@@ -1554,7 +1710,7 @@
       const m = calcMetrics(entity);
       if (!m) return;
 
-      const fc = entity && entity.forecast ? entity.forecast : null;
+      const fc = (!isPrecinct && entity && entity.forecast) ? entity.forecast : null;
       let forecastHtml = '';
       if (fc) {
         const demShare = fc.pred_dem_share !== undefined ? fc.pred_dem_share : fc.pred_final_dem;
@@ -1562,10 +1718,18 @@
         const margin = fc.pred_margin !== undefined ? fc.pred_margin : (demShare - repShare);
         const mgnColor = margin >= 0 ? '#38bdf8' : '#f87171';
         const mgnText = margin >= 0 ? `Dem +${margin.toFixed(1)}%` : `Rep +${Math.abs(margin).toFixed(1)}%`;
+        const rating = fc.rating ? `<span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 border border-slate-700 font-mono text-slate-300 ml-1 font-semibold">${fc.rating}</span>` : '';
+        const callConf = fc.call_confidence ? `<span class="capitalize font-semibold" style="color: ${getConfidenceColor(fc.call_confidence)}">${fc.call_confidence.replace(' confidence', '')}</span>` : '';
+        const marginConf = (fc.margin_confidence || fc.margin_precision) ? `<span class="capitalize font-semibold" style="color: ${getConfidenceColor(fc.margin_confidence || fc.margin_precision)}">${(fc.margin_confidence || fc.margin_precision).replace(' confidence', '')}</span>` : '';
+        const confSnippet = callConf ? `<div class="text-[10px] text-slate-400 font-sans flex items-center justify-between"><span>Confidence:</span><span>Call: ${callConf} &bull; Spread: ${marginConf}</span></div>` : '';
+
         forecastHtml = `
-          <div class="flex items-center justify-between gap-4 text-xs font-mono">
-            <span class="text-blue-300 font-sans">2026 Forecast:</span>
-            <span style="color: ${mgnColor}" class="font-bold">${mgnText} <span class="text-slate-400 font-normal">(${demShare.toFixed(1)}% D)</span></span>
+          <div class="mt-1 pt-1 border-t border-slate-700/60 font-mono text-xs space-y-0.5">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-blue-300 font-sans">2026 Forecast:</span>
+              <span style="color: ${mgnColor}" class="font-bold">${mgnText} ${rating}</span>
+            </div>
+            ${confSnippet}
           </div>
         `;
       }
@@ -1641,11 +1805,9 @@
       currentPrecinctSort = mode;
       const btnS = document.getElementById('btnSortSwing');
       const btnT = document.getElementById('btnSortTurnout');
-      const btnF = document.getElementById('btnSortForecast');
       [
         { el: btnS, key: 'swing' },
-        { el: btnT, key: 'turnout' },
-        { el: btnF, key: 'forecast' }
+        { el: btnT, key: 'turnout' }
       ].forEach(({ el, key }) => {
         if (!el) return;
         if (mode === key) {
@@ -1664,12 +1826,6 @@
       const list = precincts.map(pr => ({ pr, m: calcMetrics(pr) }));
       if (currentPrecinctSort === 'swing') {
         list.sort((a, b) => b.m.swing - a.m.swing);
-      } else if (currentPrecinctSort === 'forecast') {
-        list.sort((a, b) => {
-          const mA = a.pr.forecast ? (a.pr.forecast.pred_margin !== undefined ? a.pr.forecast.pred_margin : (a.pr.forecast.pred_final_dem - a.pr.forecast.pred_final_rep)) : -999;
-          const mB = b.pr.forecast ? (b.pr.forecast.pred_margin !== undefined ? b.pr.forecast.pred_margin : (b.pr.forecast.pred_final_dem - b.pr.forecast.pred_final_rep)) : -999;
-          return mB - mA;
-        });
       } else {
         list.sort((a, b) => b.m.totA - a.m.totA);
       }
@@ -1683,20 +1839,10 @@
         row.className = 'py-2 px-1.5 flex items-center justify-between hover:bg-slate-800/70 rounded cursor-pointer transition';
         const arrowSymbol = m.swing > 0 ? '&nwarrow;' : '&nearrow;';
 
-        const fc = pr.forecast;
-        let fcBadge = '';
-        if (fc) {
-          const fcMargin = fc.pred_margin !== undefined ? fc.pred_margin : (fc.pred_final_dem - fc.pred_final_rep);
-          const fcColor = fcMargin >= 0 ? '#38bdf8' : '#f87171';
-          const fcText = fcMargin >= 0 ? `D+${fcMargin.toFixed(1)}%` : `R+${Math.abs(fcMargin).toFixed(1)}%`;
-          fcBadge = `<span class="inline-block text-[10px] font-mono font-bold px-1.5 py-0.5 rounded bg-slate-800 border border-slate-700/80 ml-1.5" style="color: ${fcColor}" title="2026 Forecast">${fcText}</span>`;
-        }
-
         row.innerHTML = `
           <div class="truncate pr-2">
             <div class="font-semibold text-slate-200 truncate flex items-center">
               <span class="truncate">${pr.name}</span>
-              ${fcBadge}
             </div>
             <div class="text-[11px] text-slate-400 font-sans">${m.totA.toLocaleString()} votes &bull; ${metricDimension === 'party' ? `${m.demA.toFixed(1)}% D / ${m.repA.toFixed(1)}% R` : `${m.blackA.toFixed(1)}% Black / ${m.whiteA.toFixed(1)}% White`}</div>
           </div>
