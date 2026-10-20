@@ -1824,9 +1824,7 @@
     }
 
     // --- Subscription Management ---
-    // If you have deployed google_apps_script_subscription.js to Google Apps Script (or Formspree/webhook),
-    // set the Web App endpoint URL below:
-    const SUBSCRIPTION_ENDPOINT = "";
+    const SUBSCRIPTION_ENDPOINT = "https://script.google.com/macros/s/AKfycby4nUxaJpTz50X43tc79R3vEUSDOEj-TQskmZce3hw6Pm2yw6d-pdEq10dek-WWrsWRcw/exec";
 
     function focusSubscribe() {
       const card = document.getElementById('subscriptionCard');
@@ -1865,7 +1863,7 @@
           await fetch(SUBSCRIPTION_ENDPOINT, {
             method: 'POST',
             mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify({ email: email, timestamp: new Date().toISOString(), source: 'web' })
           });
         }

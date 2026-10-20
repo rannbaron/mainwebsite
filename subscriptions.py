@@ -141,7 +141,7 @@ def sync_from_remote(remote_url=None, db_path=DB_PATH):
       {"subscribers": ["user1@email.com", "user2@email.com"]}
     or a CSV containing emails.
     """
-    url = remote_url or os.getenv("SUBSCRIBERS_REMOTE_URL")
+    url = remote_url or os.getenv("SUBSCRIBERS_REMOTE_URL") or "https://script.google.com/macros/s/AKfycby4nUxaJpTz50X43tc79R3vEUSDOEj-TQskmZce3hw6Pm2yw6d-pdEq10dek-WWrsWRcw/exec"
     if not url:
         return 0
 
