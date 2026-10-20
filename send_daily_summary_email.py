@@ -736,6 +736,42 @@ def send_summary_email(data, recipient=None, send_to_subscribers=False):
         print(f"[{datetime.now().strftime('%H:%M:%S')}] SMTP delivery error: {e}")
         return False
 
+def save_latest_email_artifacts(data, json_path="latest_daily_email.json", html_path="latest_daily_email.html"):
+    """
+    Saves the latest daily summary email payload as JSON and HTML for web hosting.
+    This enables immediate delivery to first-time subscribers via the Google Apps Script Web App.
+    """
+    import json
+    from datetime import timezone
+
+    subject = f"NC Early Vote Day {data['curr_day']} Update ({len(data['rating_changes'])} Rating Changes, {len(data['confidence_changes'])} Confidence Shifts)"
+    html = format_html(data)
+    text = format_plain_text(data)
+
+    payload = {
+        "day": data["curr_day"],
+        "date": data["date_str"],
+        "subject": subject,
+        "html": html,
+        "text": text,
+        "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    }
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    out_json = os.path.join(script_dir, json_path)
+    out_html = os.path.join(script_dir, html_path)
+
+    try:
+        with open(out_json, "w", encoding="utf-8") as f:
+            json.dump(payload, f)
+        with open(out_html, "w", encoding="utf-8") as f:
+            f.write(html)
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Saved latest email artifacts: {json_path} ({len(json.dumps(payload)):,} bytes) & {html_path}")
+        return True
+    except Exception as e:
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Warning: Failed to save email artifacts: {e}")
+        return False
+
 def main():
     parser = argparse.ArgumentParser(description="NC Early Voting Daily Change Summary Emailer")
     parser.add_argument("--prev-day", type=int, default=None, help="Previous EV day (default: auto)")
@@ -743,10 +779,15 @@ def main():
     parser.add_argument("--recipient", default=None, help="Recipient email address")
     parser.add_argument("--subscribers", action="store_true", help="Send email to all active database subscribers")
     parser.add_argument("--dry-run", action="store_true", help="Print summary without sending email")
+    parser.add_argument("--save-artifacts-only", action="store_true", help="Save latest_daily_email.json/html without sending")
     parser.add_argument("--html-preview", help="Save HTML preview to specified file")
     args = parser.parse_args()
 
     data = compute_daily_changes(args.prev_day, args.curr_day)
+    save_latest_email_artifacts(data)
+
+    if args.save_artifacts_only:
+        return
 
     if args.html_preview:
         with open(args.html_preview, 'w') as f:

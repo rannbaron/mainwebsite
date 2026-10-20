@@ -56,7 +56,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_party_ev_day_*.csv
+          git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_party_ev_day_*.csv latest_daily_email.json latest_daily_email.html
           if git diff --staged --quiet; then
             echo "No changes detected on NCSBE S3 today."
             echo "updated=false" >> "$GITHUB_OUTPUT"

@@ -1,24 +1,22 @@
 /**
  * Google Apps Script for NC Early Voting Daily Intelligence Subscriptions
  * ------------------------------------------------------------------------
- * HOW TO DEPLOY:
- * 1. Open Google Sheets (https://sheets.new) and name the spreadsheet:
- *    "NC Early Voting 2026 Subscribers"
- * 2. In the menu, go to: Extensions -> Apps Script
- * 3. Delete any code in the editor and paste this entire file.
- * 4. Click "Deploy" (top right) -> "New deployment"
- * 5. Select type: "Web app"
- * 6. Set Description: "NC Early Voting Subscriptions"
- * 7. Set "Execute as": "Me"
- * 8. Set "Who has access": "Anyone"  <-- CRITICAL for accepting web form signups
- * 9. Click "Deploy" and authorize access.
- * 10. Copy the Web App URL (starts with https://script.google.com/macros/s/.../exec)
+ * FEATURES:
+ * 1. Accepts POST requests from the website subscription form.
+ * 2. Deduplicates subscribers and logs them to your connected Google Sheet.
+ * 3. FIRST-TIME SUBSCRIBER IMMEDIATE DISPATCH:
+ *    When a new user subscribes for the first time, immediately fetches
+ *    the latest published daily update report from GitHub Pages and sends
+ *    it directly to their inbox!
+ * 4. Responds to GET requests with active subscriber list for the morning batch pipeline.
  * 
- * 11. Connect it:
- *     a. In `index.html`, set:
- *        const SUBSCRIPTION_ENDPOINT = "https://script.google.com/macros/s/.../exec";
- *     b. In GitHub Repository Settings -> Secrets and variables -> Actions:
- *        Add Secret: SUBSCRIBERS_REMOTE_URL = https://script.google.com/macros/s/.../exec
+ * HOW TO UPDATE / DEPLOY IN GOOGLE APPS SCRIPT:
+ * 1. Open your Apps Script project (from Extensions -> Apps Script in your spreadsheet).
+ * 2. Replace the editor contents with this file and click the Save icon.
+ * 3. Click "Deploy" (top right) -> "Manage deployments".
+ * 4. Click the edit icon (pencil) next to the Active Web App deployment.
+ * 5. Change Version to: "New version".
+ * 6. Click "Deploy".
  */
 
 function setupSheet() {
@@ -69,18 +67,61 @@ function doPost(e) {
       }
     }
 
+    var isNew = (foundIndex === -1);
+    var sentImmediate = false;
+
     if (foundIndex > 0) {
-      // Reactivate if unsubscribed
+      // Existing subscriber: reactivate if unsubscribed
       sheet.getRange(foundIndex, 3).setValue("active");
     } else {
+      // First-time subscriber: Record to sheet and send today's update report immediately!
       sheet.appendRow([new Date(), email, "active", source]);
+      sentImmediate = sendWelcomeUpdateEmail(email);
     }
 
-    return ContentService.createTextOutput(JSON.stringify({ status: "success", email: email }))
-      .setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "success",
+      email: email,
+      is_new: isNew,
+      immediate_email_sent: sentImmediate
+    })).setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() }))
       .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Fetches today's published daily update email and immediately delivers it
+ * to a brand-new subscriber.
+ */
+function sendWelcomeUpdateEmail(recipientEmail) {
+  try {
+    var url = "https://rannbaron.github.io/mainwebsite/latest_daily_email.json";
+    var resp = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
+    
+    if (resp.getResponseCode() === 200) {
+      var data = JSON.parse(resp.getContentText());
+      var subject = data.subject || "NC Early Voting Daily Update";
+      var htmlBody = data.html || "";
+      var plainBody = data.text || "Please view this email in an HTML-compatible client.";
+      
+      MailApp.sendEmail({
+        to: recipientEmail,
+        subject: subject,
+        body: plainBody,
+        htmlBody: htmlBody,
+        name: "NC Early Voting Intelligence"
+      });
+      Logger.log("Successfully dispatched immediate welcome update email to: " + recipientEmail);
+      return true;
+    } else {
+      Logger.log("Could not fetch latest_daily_email.json: HTTP " + resp.getResponseCode());
+      return false;
+    }
+  } catch (err) {
+    Logger.log("Error sending immediate welcome email to " + recipientEmail + ": " + err.toString());
+    return false;
   }
 }
 
