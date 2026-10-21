@@ -2,18 +2,27 @@ name: Daily Early Voting Update
 
 on:
   schedule:
-    # 5:30 AM EDT = 09:30 UTC (shortly after NCSBE updates at ~09:20 UTC)
-    - cron: '30 9 * * *'
-    # 6:05 AM EDT = 10:05 UTC (primary morning run, offset from :00 to avoid runner queue delays)
-    - cron: '5 10 * * *'
-    # 6:35 AM EDT = 10:35 UTC (secondary morning run)
-    - cron: '35 10 * * *'
-    # 7:05 AM EDT = 11:05 UTC (fallback run)
-    - cron: '5 11 * * *'
+    # 5:28 AM EDT = 09:28 UTC (shortly after NCSBE updates at ~09:20 UTC)
+    - cron: '28 9 * * *'
+    # 6:08 AM EDT = 10:08 UTC (primary morning run, offset to avoid runner queue delays)
+    - cron: '8 10 * * *'
+    # 6:38 AM EDT = 10:38 UTC (secondary morning run)
+    - cron: '38 10 * * *'
+    # 7:08 AM EDT = 11:08 UTC (first fallback run)
+    - cron: '8 11 * * *'
+    # 7:38 AM EDT = 11:38 UTC (second fallback run)
+    - cron: '38 11 * * *'
+    # 8:08 AM EDT = 12:08 UTC (third fallback run)
+    - cron: '8 12 * * *'
   workflow_dispatch:
     inputs:
       test_email_only:
-        description: 'Send test summary email without modifying or deploying data'
+        description: 'Send test summary email to admin only (baronrann@gmail.com)'
+        required: false
+        default: false
+        type: boolean
+      force_email:
+        description: 'Force send email to all subscribers even if already dispatched today'
         required: false
         default: false
         type: boolean
@@ -33,6 +42,8 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -50,24 +61,8 @@ jobs:
         run: |
           python3 update_server.py 2>&1 | tee update.log
 
-      - name: Commit and push updated map data
-        if: github.event.inputs.test_email_only != 'true'
-        id: commit_step
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_party_ev_day_*.csv latest_daily_email.json latest_daily_email.html
-          if git diff --staged --quiet; then
-            echo "No changes detected on NCSBE S3 today."
-            echo "updated=false" >> "$GITHUB_OUTPUT"
-          else
-            git commit -m "Automated update: Early Voting Day $(date +'%Y-%m-%d %H:%M UTC')"
-            git push
-            echo "updated=true" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Send Daily Change Summary & Rating Shifts Email
-        if: "!cancelled() && (github.event.inputs.test_email_only == 'true' || steps.commit_step.outputs.updated == 'true' || (github.event_name == 'workflow_dispatch' && steps.commit_step.conclusion == 'success'))"
+        if: "!cancelled()"
         env:
           SMTP_SERVER: smtp.gmail.com
           SMTP_PORT: 587
@@ -76,9 +71,38 @@ jobs:
           SUBSCRIBERS_REMOTE_URL: ${{ secrets.SUBSCRIBERS_REMOTE_URL }}
         run: |
           if [ -n "$SMTP_PASSWORD" ]; then
-            python3 send_daily_summary_email.py --subscribers
+            if [ "${{ github.event.inputs.test_email_only }}" = "true" ]; then
+              echo "Dispatching test email to administrator only..."
+              python3 send_daily_summary_email.py --recipient "baronrann@gmail.com"
+            elif [ "${{ github.event.inputs.force_email }}" = "true" ]; then
+              echo "Force-dispatching daily update email to all subscribers..."
+              python3 send_daily_summary_email.py --subscribers --force
+            else
+              echo "Checking dispatch log and sending daily update email to all subscribers..."
+              python3 send_daily_summary_email.py --subscribers
+            fi
           else
             echo "Notice: SMTP_PASSWORD secret is not configured in GitHub repository secrets. Skipping email."
+          fi
+
+      - name: Commit and push updated map data
+        if: github.event.inputs.test_email_only != 'true'
+        id: commit_step
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_*.csv latest_daily_email.json latest_daily_email.html .email_dispatch_log.json "26 vs prior year analysis.ipynb"
+          if git diff --staged --quiet; then
+            echo "No changes detected to commit."
+            echo "updated=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Automated update: Early Voting Day $(date +'%Y-%m-%d %H:%M UTC')"
+            git push origin main
+            git checkout beta
+            git merge --no-edit -X theirs main || git merge --no-edit main
+            git push origin beta
+            git checkout main
+            echo "updated=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Setup Pages
