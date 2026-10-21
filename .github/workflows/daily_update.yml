@@ -91,7 +91,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_*.csv latest_daily_email.json latest_daily_email.html .email_dispatch_log.json "26 vs prior year analysis.ipynb"
+          git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_*.csv latest_daily_email.json latest_daily_email.html .email_dispatch_log.json
           if git diff --staged --quiet; then
             echo "No changes detected to commit."
             echo "updated=false" >> "$GITHUB_OUTPUT"
