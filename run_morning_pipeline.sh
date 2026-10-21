@@ -67,10 +67,10 @@ if ! git diff --staged --quiet; then
 
     # Sync to beta branch
     log "Syncing updates to origin/beta branch..."
-    git checkout beta >> "$LOG_FILE" 2>&1
+    git checkout -B beta origin/beta >> "$LOG_FILE" 2>&1
     git merge --no-edit -X theirs main >> "$LOG_FILE" 2>&1 || git merge --no-edit main >> "$LOG_FILE" 2>&1 || true
     git push origin beta >> "$LOG_FILE" 2>&1
-    git checkout main >> "$LOG_FILE" 2>&1
+    git checkout main -- >> "$LOG_FILE" 2>&1
     log "origin/beta synchronized."
 else
     log "No git changes to commit. Everything is up to date."
