@@ -17,10 +17,11 @@ import os
 import re
 import sys
 import glob
+import json
 import math
 import argparse
 import smtplib
-from datetime import datetime
+from datetime import datetime, timezone
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.utils import formatdate, make_msgid, formataddr
@@ -30,6 +31,41 @@ import vote_forecast
 import subscriptions
 
 DEFAULT_RECIPIENT = "baronrann@gmail.com"
+DISPATCH_LOG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".email_dispatch_log.json")
+
+def load_dispatch_log(log_path=DISPATCH_LOG_PATH):
+    """Loads the email dispatch tracking log."""
+    if os.path.exists(log_path):
+        try:
+            with open(log_path, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Warning: Failed to read dispatch log {log_path}: {e}")
+    return {"last_dispatched_day": 0, "last_dispatched_at": None, "dispatched_days": {}}
+
+def is_day_dispatched(day, log_path=DISPATCH_LOG_PATH):
+    """Checks whether early voting update email for a given EV day has already been dispatched."""
+    log = load_dispatch_log(log_path)
+    days_dict = log.get("dispatched_days", {})
+    return str(day) in days_dict or day in days_dict
+
+def record_day_dispatched(day, log_path=DISPATCH_LOG_PATH):
+    """Records that an EV day update email was successfully dispatched."""
+    log = load_dispatch_log(log_path)
+    now_str = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if "dispatched_days" not in log:
+        log["dispatched_days"] = {}
+    log["dispatched_days"][str(day)] = now_str
+    log["last_dispatched_day"] = max(log.get("last_dispatched_day", 0), int(day))
+    log["last_dispatched_at"] = now_str
+    try:
+        with open(log_path, 'w', encoding='utf-8') as f:
+            json.dump(log, f, indent=2)
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Recorded EV Day {day} dispatch at {now_str} in {os.path.basename(log_path)}")
+        return True
+    except Exception as e:
+        print(f"Warning: Failed to update dispatch log: {e}")
+        return False
 
 def load_env_file():
     """Load credentials from .env if present."""
@@ -799,6 +835,7 @@ def main():
     parser.add_argument("--curr-day", type=int, default=None, help="Current EV day (default: auto)")
     parser.add_argument("--recipient", default=None, help="Recipient email address")
     parser.add_argument("--subscribers", action="store_true", help="Send email to all active database subscribers")
+    parser.add_argument("--force", action="store_true", help="Force sending even if already dispatched today")
     parser.add_argument("--dry-run", action="store_true", help="Print summary without sending email")
     parser.add_argument("--save-artifacts-only", action="store_true", help="Save latest_daily_email.json/html without sending")
     parser.add_argument("--html-preview", help="Save HTML preview to specified file")
@@ -820,7 +857,14 @@ def main():
         return
 
     if args.subscribers:
+        curr_day = data['curr_day']
+        if not args.force and is_day_dispatched(curr_day):
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: EV Day {curr_day} update email was already dispatched today. Use --force to resend.")
+            return
+
         success = send_summary_email(data, send_to_subscribers=True)
+        if success:
+            record_day_dispatched(curr_day)
     else:
         success = send_summary_email(data, recipient=args.recipient or DEFAULT_RECIPIENT)
 
