@@ -23,6 +23,10 @@ import argparse
 import requests
 import pandas as pd
 from datetime import datetime
+try:
+    from precinct_friendly_names import format_precinct_name
+except ImportError:
+    format_precinct_name = lambda c, p, name=None: name or f"Precinct {p}"
 
 NCSBE_2026_URL = "https://s3.amazonaws.com/dl.ncsbe.gov/ENRS/2026_11_03/absentee_county_20261103.zip"
 EV_START_DATE = pd.to_datetime("2026-10-15")
@@ -191,17 +195,6 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
     st_black = 0
 
     durham_splits = {'30-3': '30-1', '30-4': '30-1', '33-1': '33', '33-2': '33', '35-4': '35.3', '35-5': '35.3', '56': '53-1', '57': '53-1'}
-    durham_friendly_names = {
-        '30-3': 'East Regional Library',
-        '30-4': 'Spring Valley Elementary',
-        '33-1': 'Bethesda Elementary',
-        '33-2': "Lowe's Grove Baptist",
-        '35-4': 'Lyons Farm Elementary',
-        '35-5': 'Zakat Community Center',
-        '56': "St. Stephen's Episcopal",
-        '55-11': 'Weaver Street Rec Center',
-        '55-49': 'NCCU Turner Law Building'
-    }
 
     # 1. Update Precinct Data
     for cname, plist in data['precincts'].items():
@@ -210,8 +203,7 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
         
         for pr in plist:
             pid = pr['id']
-            if cname == 'DURHAM' and pid in durham_friendly_names:
-                pr['name'] = durham_friendly_names[pid]
+            pr['name'] = format_precinct_name(cname, pid, pr.get('name'))
             key = (cname, pid)
             if key in dict_26:
                 row = dict_26[key]
