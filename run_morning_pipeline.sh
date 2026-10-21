@@ -57,7 +57,7 @@ fi
 
 # Step 4: Git Commit & Push (main & beta)
 log "[Step 4/5] Checking for file changes and committing to git..."
-git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_*.csv latest_daily_email.json latest_daily_email.html .email_dispatch_log.json "26 vs prior year analysis.ipynb" >> "$LOG_FILE" 2>&1 || true
+git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_*.csv latest_daily_email.json latest_daily_email.html .email_dispatch_log.json >> "$LOG_FILE" 2>&1 || true
 
 if ! git diff --staged --quiet; then
     COMMIT_MSG="Automated morning update: $(date +'%Y-%m-%d %H:%M')"
