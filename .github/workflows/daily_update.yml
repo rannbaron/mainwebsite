@@ -98,10 +98,10 @@ jobs:
           else
             git commit -m "Automated update: Early Voting Day $(date +'%Y-%m-%d %H:%M UTC')"
             git push origin main
-            git checkout beta
+            git checkout -B beta origin/beta
             git merge --no-edit -X theirs main || git merge --no-edit main
             git push origin beta
-            git checkout main
+            git checkout main --
             echo "updated=true" >> "$GITHUB_OUTPUT"
           fi
 
