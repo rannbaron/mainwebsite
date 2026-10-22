@@ -361,7 +361,19 @@
       0.0,
       468.7,
       374.8
-    ]
+    ],
+    "dem_candidate": "Don Davis",
+    "rep_candidate": "Laurie Buckhout",
+    "dem_short": "Davis",
+    "rep_short": "Buckhout",
+    "incumbent_party": "D",
+    "projected_winner_party": "R",
+    "projected_winner_name": "Buckhout",
+    "projected_winner_full": "Laurie Buckhout",
+    "projected_margin_str": "Buckhout (R) +10.7%",
+    "flip_status": "FLIP_D_TO_R",
+    "is_flip": true,
+    "ci_str": "R +17.1% to R +4.3%"
   },
   "NC-02": {
     "id": "NC-02",
@@ -413,7 +425,19 @@
       111.6,
       92.4,
       72.8
-    ]
+    ],
+    "dem_candidate": "Deborah Ross",
+    "rep_candidate": "Eugene F. Douglass",
+    "dem_short": "Ross",
+    "rep_short": "Douglass",
+    "incumbent_party": "D",
+    "projected_winner_party": "D",
+    "projected_winner_name": "Ross",
+    "projected_winner_full": "Deborah Ross",
+    "projected_margin_str": "Ross (D) +34.7%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "D +28.2% to D +41.1%"
   },
   "NC-03": {
     "id": "NC-03",
@@ -569,7 +593,19 @@
       121.6,
       242.0,
       269.5
-    ]
+    ],
+    "dem_candidate": "Raymond E. Smith Jr.",
+    "rep_candidate": "Greg Murphy",
+    "dem_short": "Smith",
+    "rep_short": "Murphy",
+    "incumbent_party": "R",
+    "projected_winner_party": "R",
+    "projected_winner_name": "Murphy",
+    "projected_winner_full": "Greg Murphy",
+    "projected_margin_str": "Murphy (R) +5.9%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "R +12.3% to D +0.5%"
   },
   "NC-04": {
     "id": "NC-04",
@@ -660,7 +696,19 @@
       72.4,
       100.5,
       129.5
-    ]
+    ],
+    "dem_candidate": "Valerie Foushee",
+    "rep_candidate": "Mahesh Ganorkar",
+    "dem_short": "Foushee",
+    "rep_short": "Ganorkar",
+    "incumbent_party": "D",
+    "projected_winner_party": "D",
+    "projected_winner_name": "Foushee",
+    "projected_winner_full": "Valerie Foushee",
+    "projected_margin_str": "Foushee (D) +50.5%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "D +44.1% to D +57.0%"
   },
   "NC-05": {
     "id": "NC-05",
@@ -829,7 +877,19 @@
       11.3,
       358.7,
       154.1
-    ]
+    ],
+    "dem_candidate": "Chuck Hubbard",
+    "rep_candidate": "Virginia Foxx",
+    "dem_short": "Hubbard",
+    "rep_short": "Foxx",
+    "incumbent_party": "R",
+    "projected_winner_party": "R",
+    "projected_winner_name": "Foxx",
+    "projected_winner_full": "Virginia Foxx",
+    "projected_margin_str": "Foxx (R) +14.2%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "R +20.7% to R +7.8%"
   },
   "NC-06": {
     "id": "NC-06",
@@ -946,7 +1006,19 @@
       66.8,
       147.3,
       163.7
-    ]
+    ],
+    "dem_candidate": "Cyril Jefferson",
+    "rep_candidate": "Addison McDowell",
+    "dem_short": "Jefferson",
+    "rep_short": "McDowell",
+    "incumbent_party": "R",
+    "projected_winner_party": "R",
+    "projected_winner_name": "McDowell",
+    "projected_winner_full": "Addison McDowell",
+    "projected_margin_str": "McDowell (R) +5.8%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "R +12.2% to D +0.6%"
   },
   "NC-07": {
     "id": "NC-07",
@@ -1089,7 +1161,19 @@
       208.5,
       256.6,
       287.2
-    ]
+    ],
+    "dem_candidate": "Kimberly Hardy",
+    "rep_candidate": "David Rouzer",
+    "dem_short": "Hardy",
+    "rep_short": "Rouzer",
+    "incumbent_party": "R",
+    "projected_winner_party": "R",
+    "projected_winner_name": "Rouzer",
+    "projected_winner_full": "David Rouzer",
+    "projected_margin_str": "Rouzer (R) +3.0%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "R +9.4% to D +3.4%"
   },
   "NC-08": {
     "id": "NC-08",
@@ -1245,7 +1329,19 @@
       182.1,
       290.3,
       217.8
-    ]
+    ],
+    "dem_candidate": "Colby Watson",
+    "rep_candidate": "Mark Harris",
+    "dem_short": "Watson",
+    "rep_short": "Harris",
+    "incumbent_party": "R",
+    "projected_winner_party": "R",
+    "projected_winner_name": "Harris",
+    "projected_winner_full": "Mark Harris",
+    "projected_margin_str": "Harris (R) +2.7%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "R +9.1% to D +3.7%"
   },
   "NC-09": {
     "id": "NC-09",
@@ -1375,7 +1471,19 @@
       61.5,
       175.8,
       261.7
-    ]
+    ],
+    "dem_candidate": "Richard Ojeda",
+    "rep_candidate": "Richard Hudson",
+    "dem_short": "Ojeda",
+    "rep_short": "Hudson",
+    "incumbent_party": "R",
+    "projected_winner_party": "R",
+    "projected_winner_name": "Hudson",
+    "projected_winner_full": "Richard Hudson",
+    "projected_margin_str": "Hudson (R) +3.4%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "R +9.8% to D +3.1%"
   },
   "NC-10": {
     "id": "NC-10",
@@ -1479,7 +1587,19 @@
       61.3,
       217.1,
       162.6
-    ]
+    ],
+    "dem_candidate": "Ashley Bell",
+    "rep_candidate": "Pat Harrigan",
+    "dem_short": "Bell",
+    "rep_short": "Harrigan",
+    "incumbent_party": "R",
+    "projected_winner_party": "R",
+    "projected_winner_name": "Harrigan",
+    "projected_winner_full": "Pat Harrigan",
+    "projected_margin_str": "Harrigan (R) +11.8%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "R +18.2% to R +5.3%"
   },
   "NC-11": {
     "id": "NC-11",
@@ -1726,7 +1846,19 @@
       53.0,
       397.0,
       230.4
-    ]
+    ],
+    "dem_candidate": "Jamie Ager",
+    "rep_candidate": "Jennifer Balkcom",
+    "dem_short": "Ager",
+    "rep_short": "Balkcom",
+    "incumbent_party": "R",
+    "projected_winner_party": "R",
+    "projected_winner_name": "Balkcom",
+    "projected_winner_full": "Jennifer Balkcom",
+    "projected_margin_str": "Balkcom (R) +1.7%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "R +8.1% to D +4.7%"
   },
   "NC-12": {
     "id": "NC-12",
@@ -1778,7 +1910,19 @@
       208.9,
       58.2,
       62.3
-    ]
+    ],
+    "dem_candidate": "Alma Adams",
+    "rep_candidate": "Jack Codiga",
+    "dem_short": "Adams",
+    "rep_short": "Codiga",
+    "incumbent_party": "D",
+    "projected_winner_party": "D",
+    "projected_winner_name": "Adams",
+    "projected_winner_full": "Alma Adams",
+    "projected_margin_str": "Adams (D) +47.6%",
+    "flip_status": "HOLD",
+    "is_flip": false,
+    "ci_str": "D +41.2% to D +54.0%"
   },
   "NC-13": {
     "id": "NC-13",
@@ -1921,7 +2065,19 @@
       16.5,
       227.6,
       248.9
-    ]
+    ],
+    "dem_candidate": "Paul Barringer",
+    "rep_candidate": "Brad Knott",
+    "dem_short": "Barringer",
+    "rep_short": "Knott",
+    "incumbent_party": "R",
+    "projected_winner_party": "D",
+    "projected_winner_name": "Barringer",
+    "projected_winner_full": "Paul Barringer",
+    "projected_margin_str": "Barringer (D) +1.7%",
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "ci_str": "R +4.7% to D +8.1%"
   },
   "NC-14": {
     "id": "NC-14",
@@ -2038,6 +2194,18 @@
       101.6,
       236.6,
       187.6
-    ]
+    ],
+    "dem_candidate": "Lakesha Womack",
+    "rep_candidate": "Tim Moore",
+    "dem_short": "Womack",
+    "rep_short": "Moore",
+    "incumbent_party": "R",
+    "projected_winner_party": "D",
+    "projected_winner_name": "Womack",
+    "projected_winner_full": "Lakesha Womack",
+    "projected_margin_str": "Womack (D) +3.4%",
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "ci_str": "R +3.1% to D +9.8%"
   }
 }
