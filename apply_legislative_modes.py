@@ -871,3 +871,4 @@ with open('/home/rann/src/elections/2026 analysis/beta/index.html', 'w', encodin
     f.write(html)
 
 print("Saved updated beta/index.html successfully!")
+
