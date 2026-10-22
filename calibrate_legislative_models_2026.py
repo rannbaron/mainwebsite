@@ -337,18 +337,16 @@ if m_sel_h:
 # 3. Update legend labels & supermajority stats
 # Senate
 html = re.sub(
-    r"if \(labelPos\) labelPos\.textContent = 'Dem Projected: [^']*';",
-    f"if (labelPos) labelPos.textContent = 'Dem Projected: {proj_senate_dem} Seats';",
-    html,
-    count=1
+    r"if \(currentMapMode === 'senate'\) \{[\s\S]*?if \(labelPos\) labelPos\.textContent = '[^']*';",
+    lambda m: re.sub(r"if \(labelPos\) labelPos\.textContent = '[^']*';", f"if (labelPos) labelPos.textContent = 'Dem Projected: {proj_senate_dem} Seats';", m.group(0)),
+    html
 )
 html = re.sub(
-    r"if \(labelNeg\) labelNeg\.textContent = 'Rep Projected: [^']*';",
-    f"if (labelNeg) labelNeg.textContent = 'Rep Projected: {proj_senate_rep} Seats';",
-    html,
-    count=1
+    r"if \(currentMapMode === 'senate'\) \{[\s\S]*?if \(labelNeg\) labelNeg\.textContent = '[^']*';",
+    lambda m: re.sub(r"if \(labelNeg\) labelNeg\.textContent = '[^']*';", f"if (labelNeg) labelNeg.textContent = 'Rep Projected: {proj_senate_rep} Seats';", m.group(0)),
+    html
 )
-s_flip_msg = f"Predicted Flips ({len(s_flips_r_to_d)} R→D): {', '.join(s_flips_r_to_d)} (Supermajority Broken: {proj_senate_rep}/30)"
+s_flip_msg = f"Predicted Flips ({len(s_flips_r_to_d)} R→D): {', '.join(s_flips_r_to_d) if s_flips_r_to_d else 'None'} (Supermajority Broken: {proj_senate_rep}/30)"
 html = re.sub(
     r"if \(currentMapMode === 'senate'\) \{[\s\S]*?const labelFlip = document\.getElementById\('legendLabelFlip'\);\s*if \(labelFlip\) labelFlip\.textContent = '[^']*';",
     lambda m: re.sub(r"if \(labelFlip\) labelFlip\.textContent = '[^']*';", f"if (labelFlip) labelFlip.textContent = '{s_flip_msg}';", m.group(0)),
