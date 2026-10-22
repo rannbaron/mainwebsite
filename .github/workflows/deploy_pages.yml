@@ -9,6 +9,8 @@ on:
       - 'beta/**'
       - 'nc_map_data.json'
       - 'nc_cd_data.json'
+      - 'nc_senate_data.json'
+      - 'nc_house_data.json'
   workflow_dispatch:
 
 permissions:
