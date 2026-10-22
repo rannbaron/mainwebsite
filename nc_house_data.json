@@ -43,7 +43,10 @@
       180.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 35.25,
+    "actual_2022_rep": 64.75,
+    "prior_winner_party": "R"
   },
   "HD-010": {
     "id": "HD-010",
@@ -84,7 +87,10 @@
       58.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 39.41,
+    "actual_2022_rep": 60.59,
+    "prior_winner_party": "R"
   },
   "HD-100": {
     "id": "HD-100",
@@ -125,7 +131,10 @@
       24.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 62.88,
+    "actual_2022_rep": 37.12,
+    "prior_winner_party": "D"
   },
   "HD-101": {
     "id": "HD-101",
@@ -166,7 +175,10 @@
       33.1
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 65.52,
+    "actual_2022_rep": 34.48,
+    "prior_winner_party": "D"
   },
   "HD-102": {
     "id": "HD-102",
@@ -207,7 +219,10 @@
       18.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 67.45,
+    "actual_2022_rep": 32.55,
+    "prior_winner_party": "D"
   },
   "HD-103": {
     "id": "HD-103",
@@ -248,7 +263,10 @@
       22.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 58.64,
+    "actual_2022_rep": 41.36,
+    "prior_winner_party": "D"
   },
   "HD-104": {
     "id": "HD-104",
@@ -289,7 +307,10 @@
       20.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 60.19,
+    "actual_2022_rep": 39.81,
+    "prior_winner_party": "D"
   },
   "HD-105": {
     "id": "HD-105",
@@ -330,7 +351,10 @@
       35.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 55.65,
+    "actual_2022_rep": 44.35,
+    "prior_winner_party": "D"
   },
   "HD-106": {
     "id": "HD-106",
@@ -371,7 +395,10 @@
       27.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 70.04,
+    "actual_2022_rep": 29.96,
+    "prior_winner_party": "D"
   },
   "HD-107": {
     "id": "HD-107",
@@ -412,7 +439,10 @@
       25.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 76.65,
+    "actual_2022_rep": 23.35,
+    "prior_winner_party": "D"
   },
   "HD-108": {
     "id": "HD-108",
@@ -453,7 +483,10 @@
       31.4
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 31.78,
+    "actual_2022_rep": 68.22,
+    "prior_winner_party": "R"
   },
   "HD-109": {
     "id": "HD-109",
@@ -494,7 +527,10 @@
       23.2
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 32.79,
+    "actual_2022_rep": 67.21,
+    "prior_winner_party": "R"
   },
   "HD-011": {
     "id": "HD-011",
@@ -537,7 +573,10 @@
       14.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 61.96,
+    "actual_2022_rep": 38.04,
+    "prior_winner_party": "D"
   },
   "HD-110": {
     "id": "HD-110",
@@ -579,7 +618,10 @@
       79.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 34.77,
+    "actual_2022_rep": 65.23,
+    "prior_winner_party": "R"
   },
   "HD-111": {
     "id": "HD-111",
@@ -621,7 +663,10 @@
       84.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 28.6,
+    "actual_2022_rep": 71.4,
+    "prior_winner_party": "R"
   },
   "HD-112": {
     "id": "HD-112",
@@ -662,7 +707,10 @@
       18.1
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 69.83,
+    "actual_2022_rep": 30.17,
+    "prior_winner_party": "D"
   },
   "HD-113": {
     "id": "HD-113",
@@ -706,7 +754,10 @@
       89.4
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 34.88,
+    "actual_2022_rep": 65.12,
+    "prior_winner_party": "R"
   },
   "HD-114": {
     "id": "HD-114",
@@ -747,7 +798,10 @@
       60.2
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 59.68,
+    "actual_2022_rep": 40.32,
+    "prior_winner_party": "D"
   },
   "HD-115": {
     "id": "HD-115",
@@ -788,7 +842,10 @@
       71.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 59.06,
+    "actual_2022_rep": 40.94,
+    "prior_winner_party": "D"
   },
   "HD-116": {
     "id": "HD-116",
@@ -829,7 +886,10 @@
       28.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 67.79,
+    "actual_2022_rep": 32.21,
+    "prior_winner_party": "D"
   },
   "HD-117": {
     "id": "HD-117",
@@ -870,7 +930,10 @@
       44.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 40.62,
+    "actual_2022_rep": 59.38,
+    "prior_winner_party": "R"
   },
   "HD-118": {
     "id": "HD-118",
@@ -912,7 +975,10 @@
       140.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 39.47,
+    "actual_2022_rep": 60.53,
+    "prior_winner_party": "R"
   },
   "HD-119": {
     "id": "HD-119",
@@ -955,7 +1021,10 @@
       128.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 43.59,
+    "actual_2022_rep": 56.41,
+    "prior_winner_party": "R"
   },
   "HD-012": {
     "id": "HD-012",
@@ -998,7 +1067,10 @@
       159.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 41.36,
+    "actual_2022_rep": 58.64,
+    "prior_winner_party": "R"
   },
   "HD-120": {
     "id": "HD-120",
@@ -1042,7 +1114,10 @@
       91.2
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 25.81,
+    "actual_2022_rep": 74.19,
+    "prior_winner_party": "R"
   },
   "HD-013": {
     "id": "HD-013",
@@ -1084,7 +1159,10 @@
       124.2
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 29.1,
+    "actual_2022_rep": 70.9,
+    "prior_winner_party": "R"
   },
   "HD-014": {
     "id": "HD-014",
@@ -1125,7 +1203,10 @@
       83.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 32.73,
+    "actual_2022_rep": 67.27,
+    "prior_winner_party": "R"
   },
   "HD-015": {
     "id": "HD-015",
@@ -1166,7 +1247,10 @@
       63.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 32.69,
+    "actual_2022_rep": 67.31,
+    "prior_winner_party": "R"
   },
   "HD-016": {
     "id": "HD-016",
@@ -1208,7 +1292,10 @@
       88.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 29.55,
+    "actual_2022_rep": 70.45,
+    "prior_winner_party": "R"
   },
   "HD-017": {
     "id": "HD-017",
@@ -1249,7 +1336,10 @@
       103.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 37.27,
+    "actual_2022_rep": 62.73,
+    "prior_winner_party": "R"
   },
   "HD-018": {
     "id": "HD-018",
@@ -1290,7 +1380,10 @@
       26.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 54.14,
+    "actual_2022_rep": 45.86,
+    "prior_winner_party": "D"
   },
   "HD-019": {
     "id": "HD-019",
@@ -1332,7 +1425,10 @@
       81.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 39.29,
+    "actual_2022_rep": 60.71,
+    "prior_winner_party": "R"
   },
   "HD-002": {
     "id": "HD-002",
@@ -1374,7 +1470,10 @@
       98.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 59.88,
+    "actual_2022_rep": 40.12,
+    "prior_winner_party": "D"
   },
   "HD-020": {
     "id": "HD-020",
@@ -1414,8 +1513,11 @@
       54.4,
       43.1
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 46.31,
+    "actual_2022_rep": 53.69,
+    "prior_winner_party": "R"
   },
   "HD-021": {
     "id": "HD-021",
@@ -1456,7 +1558,10 @@
       50.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 60.42,
+    "actual_2022_rep": 39.58,
+    "prior_winner_party": "D"
   },
   "HD-022": {
     "id": "HD-022",
@@ -1498,7 +1603,10 @@
       174.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 38.22,
+    "actual_2022_rep": 61.78,
+    "prior_winner_party": "R"
   },
   "HD-023": {
     "id": "HD-023",
@@ -1541,7 +1649,10 @@
       108.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 56.3,
+    "actual_2022_rep": 43.7,
+    "prior_winner_party": "D"
   },
   "HD-024": {
     "id": "HD-024",
@@ -1582,8 +1693,11 @@
       79.3,
       61.8
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 47.78,
+    "actual_2022_rep": 52.22,
+    "prior_winner_party": "R"
   },
   "HD-025": {
     "id": "HD-025",
@@ -1626,7 +1740,10 @@
       87.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 46.64,
+    "actual_2022_rep": 53.36,
+    "prior_winner_party": "R"
   },
   "HD-026": {
     "id": "HD-026",
@@ -1667,7 +1784,10 @@
       56.1
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 38.99,
+    "actual_2022_rep": 61.01,
+    "prior_winner_party": "R"
   },
   "HD-027": {
     "id": "HD-027",
@@ -1710,7 +1830,10 @@
       100.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 58.7,
+    "actual_2022_rep": 41.3,
+    "prior_winner_party": "D"
   },
   "HD-028": {
     "id": "HD-028",
@@ -1751,7 +1874,10 @@
       76.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 35.98,
+    "actual_2022_rep": 64.02,
+    "prior_winner_party": "R"
   },
   "HD-029": {
     "id": "HD-029",
@@ -1792,7 +1918,10 @@
       22.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 81.84,
+    "actual_2022_rep": 18.16,
+    "prior_winner_party": "D"
   },
   "HD-003": {
     "id": "HD-003",
@@ -1835,7 +1964,10 @@
       97.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 38.56,
+    "actual_2022_rep": 61.44,
+    "prior_winner_party": "R"
   },
   "HD-030": {
     "id": "HD-030",
@@ -1878,7 +2010,10 @@
       22.4
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 81.7,
+    "actual_2022_rep": 18.3,
+    "prior_winner_party": "D"
   },
   "HD-031": {
     "id": "HD-031",
@@ -1919,7 +2054,10 @@
       33.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 77.47,
+    "actual_2022_rep": 22.53,
+    "prior_winner_party": "D"
   },
   "HD-032": {
     "id": "HD-032",
@@ -1960,8 +2098,11 @@
       77.4,
       96.3
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 46.27,
+    "actual_2022_rep": 53.73,
+    "prior_winner_party": "R"
   },
   "HD-033": {
     "id": "HD-033",
@@ -2002,7 +2143,10 @@
       26.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 67.24,
+    "actual_2022_rep": 32.76,
+    "prior_winner_party": "D"
   },
   "HD-034": {
     "id": "HD-034",
@@ -2045,7 +2189,10 @@
       22.1
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 62.96,
+    "actual_2022_rep": 37.04,
+    "prior_winner_party": "D"
   },
   "HD-035": {
     "id": "HD-035",
@@ -2086,7 +2233,10 @@
       53.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 54.86,
+    "actual_2022_rep": 45.14,
+    "prior_winner_party": "D"
   },
   "HD-036": {
     "id": "HD-036",
@@ -2127,7 +2277,10 @@
       23.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 56.54,
+    "actual_2022_rep": 43.46,
+    "prior_winner_party": "D"
   },
   "HD-037": {
     "id": "HD-037",
@@ -2168,7 +2321,10 @@
       31.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 53.69,
+    "actual_2022_rep": 46.31,
+    "prior_winner_party": "D"
   },
   "HD-038": {
     "id": "HD-038",
@@ -2209,7 +2365,10 @@
       23.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 70.59,
+    "actual_2022_rep": 29.41,
+    "prior_winner_party": "D"
   },
   "HD-039": {
     "id": "HD-039",
@@ -2252,7 +2411,10 @@
       37.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 62.28,
+    "actual_2022_rep": 37.72,
+    "prior_winner_party": "D"
   },
   "HD-004": {
     "id": "HD-004",
@@ -2294,7 +2456,10 @@
       126.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 37.87,
+    "actual_2022_rep": 62.13,
+    "prior_winner_party": "R"
   },
   "HD-040": {
     "id": "HD-040",
@@ -2337,7 +2502,10 @@
       24.4
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 61.0,
+    "actual_2022_rep": 39.0,
+    "prior_winner_party": "D"
   },
   "HD-041": {
     "id": "HD-041",
@@ -2378,7 +2546,10 @@
       28.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 61.24,
+    "actual_2022_rep": 38.76,
+    "prior_winner_party": "D"
   },
   "HD-042": {
     "id": "HD-042",
@@ -2419,7 +2590,10 @@
       34.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 63.51,
+    "actual_2022_rep": 36.49,
+    "prior_winner_party": "D"
   },
   "HD-043": {
     "id": "HD-043",
@@ -2460,7 +2634,10 @@
       79.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 52.68,
+    "actual_2022_rep": 47.32,
+    "prior_winner_party": "D"
   },
   "HD-044": {
     "id": "HD-044",
@@ -2501,7 +2678,10 @@
       20.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 56.03,
+    "actual_2022_rep": 43.97,
+    "prior_winner_party": "D"
   },
   "HD-045": {
     "id": "HD-045",
@@ -2542,7 +2722,10 @@
       17.2
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 51.04,
+    "actual_2022_rep": 48.96,
+    "prior_winner_party": "D"
   },
   "HD-046": {
     "id": "HD-046",
@@ -2584,7 +2767,10 @@
       185.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 39.46,
+    "actual_2022_rep": 60.54,
+    "prior_winner_party": "R"
   },
   "HD-047": {
     "id": "HD-047",
@@ -2625,7 +2811,10 @@
       96.1
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 43.49,
+    "actual_2022_rep": 56.51,
+    "prior_winner_party": "R"
   },
   "HD-048": {
     "id": "HD-048",
@@ -2667,7 +2856,10 @@
       107.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 52.15,
+    "actual_2022_rep": 47.85,
+    "prior_winner_party": "D"
   },
   "HD-049": {
     "id": "HD-049",
@@ -2708,7 +2900,10 @@
       22.4
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 65.0,
+    "actual_2022_rep": 35.0,
+    "prior_winner_party": "D"
   },
   "HD-005": {
     "id": "HD-005",
@@ -2752,7 +2947,10 @@
       89.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 46.72,
+    "actual_2022_rep": 53.28,
+    "prior_winner_party": "R"
   },
   "HD-050": {
     "id": "HD-050",
@@ -2794,7 +2992,10 @@
       124.4
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 68.53,
+    "actual_2022_rep": 31.47,
+    "prior_winner_party": "D"
   },
   "HD-051": {
     "id": "HD-051",
@@ -2838,7 +3039,10 @@
       85.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 39.79,
+    "actual_2022_rep": 60.21,
+    "prior_winner_party": "R"
   },
   "HD-052": {
     "id": "HD-052",
@@ -2880,7 +3084,10 @@
       89.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 37.71,
+    "actual_2022_rep": 62.29,
+    "prior_winner_party": "R"
   },
   "HD-053": {
     "id": "HD-053",
@@ -2924,7 +3131,10 @@
       75.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 35.4,
+    "actual_2022_rep": 64.6,
+    "prior_winner_party": "R"
   },
   "HD-054": {
     "id": "HD-054",
@@ -2966,7 +3176,10 @@
       71.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 56.74,
+    "actual_2022_rep": 43.26,
+    "prior_winner_party": "D"
   },
   "HD-055": {
     "id": "HD-055",
@@ -3008,7 +3221,10 @@
       75.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 38.95,
+    "actual_2022_rep": 61.05,
+    "prior_winner_party": "R"
   },
   "HD-056": {
     "id": "HD-056",
@@ -3051,7 +3267,10 @@
       23.2
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 80.25,
+    "actual_2022_rep": 19.75,
+    "prior_winner_party": "D"
   },
   "HD-057": {
     "id": "HD-057",
@@ -3092,7 +3311,10 @@
       20.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 58.19,
+    "actual_2022_rep": 41.81,
+    "prior_winner_party": "D"
   },
   "HD-058": {
     "id": "HD-058",
@@ -3133,7 +3355,10 @@
       21.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 63.48,
+    "actual_2022_rep": 36.52,
+    "prior_winner_party": "D"
   },
   "HD-059": {
     "id": "HD-059",
@@ -3174,7 +3399,10 @@
       64.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 51.75,
+    "actual_2022_rep": 48.25,
+    "prior_winner_party": "D"
   },
   "HD-006": {
     "id": "HD-006",
@@ -3215,7 +3443,10 @@
       72.1
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 38.4,
+    "actual_2022_rep": 61.6,
+    "prior_winner_party": "R"
   },
   "HD-060": {
     "id": "HD-060",
@@ -3256,7 +3487,10 @@
       27.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 57.76,
+    "actual_2022_rep": 42.24,
+    "prior_winner_party": "D"
   },
   "HD-061": {
     "id": "HD-061",
@@ -3297,7 +3531,10 @@
       11.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 61.51,
+    "actual_2022_rep": 38.49,
+    "prior_winner_party": "D"
   },
   "HD-062": {
     "id": "HD-062",
@@ -3337,8 +3574,11 @@
       39.3,
       47.8
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 48.11,
+    "actual_2022_rep": 51.89,
+    "prior_winner_party": "R"
   },
   "HD-063": {
     "id": "HD-063",
@@ -3379,7 +3619,10 @@
       53.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 42.54,
+    "actual_2022_rep": 57.46,
+    "prior_winner_party": "R"
   },
   "HD-064": {
     "id": "HD-064",
@@ -3419,8 +3662,11 @@
       45.9,
       54.1
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 43.07,
+    "actual_2022_rep": 56.93,
+    "prior_winner_party": "R"
   },
   "HD-065": {
     "id": "HD-065",
@@ -3461,7 +3707,10 @@
       56.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 27.76,
+    "actual_2022_rep": 72.24,
+    "prior_winner_party": "R"
   },
   "HD-066": {
     "id": "HD-066",
@@ -3502,7 +3751,10 @@
       27.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 61.46,
+    "actual_2022_rep": 38.54,
+    "prior_winner_party": "D"
   },
   "HD-067": {
     "id": "HD-067",
@@ -3544,7 +3796,10 @@
       68.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 23.65,
+    "actual_2022_rep": 76.35,
+    "prior_winner_party": "R"
   },
   "HD-068": {
     "id": "HD-068",
@@ -3585,7 +3840,10 @@
       44.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 34.24,
+    "actual_2022_rep": 65.76,
+    "prior_winner_party": "R"
   },
   "HD-069": {
     "id": "HD-069",
@@ -3626,7 +3884,10 @@
       39.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 34.42,
+    "actual_2022_rep": 65.58,
+    "prior_winner_party": "R"
   },
   "HD-007": {
     "id": "HD-007",
@@ -3668,7 +3929,10 @@
       104.2
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 45.93,
+    "actual_2022_rep": 54.07,
+    "prior_winner_party": "R"
   },
   "HD-070": {
     "id": "HD-070",
@@ -3709,7 +3973,10 @@
       50.1
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 19.73,
+    "actual_2022_rep": 80.27,
+    "prior_winner_party": "R"
   },
   "HD-071": {
     "id": "HD-071",
@@ -3752,7 +4019,10 @@
       20.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 57.49,
+    "actual_2022_rep": 42.51,
+    "prior_winner_party": "D"
   },
   "HD-072": {
     "id": "HD-072",
@@ -3793,7 +4063,10 @@
       15.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 60.04,
+    "actual_2022_rep": 39.96,
+    "prior_winner_party": "D"
   },
   "HD-073": {
     "id": "HD-073",
@@ -3833,8 +4106,11 @@
       59.9,
       36.7
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 41.91,
+    "actual_2022_rep": 58.09,
+    "prior_winner_party": "R"
   },
   "HD-074": {
     "id": "HD-074",
@@ -3874,8 +4150,11 @@
       34.7,
       53.3
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 47.1,
+    "actual_2022_rep": 52.9,
+    "prior_winner_party": "R"
   },
   "HD-075": {
     "id": "HD-075",
@@ -3915,8 +4194,11 @@
       35.2,
       48.1
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 47.98,
+    "actual_2022_rep": 52.02,
+    "prior_winner_party": "R"
   },
   "HD-076": {
     "id": "HD-076",
@@ -3957,7 +4239,10 @@
       52.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 32.76,
+    "actual_2022_rep": 67.24,
+    "prior_winner_party": "R"
   },
   "HD-077": {
     "id": "HD-077",
@@ -4000,7 +4285,10 @@
       125.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 22.72,
+    "actual_2022_rep": 77.28,
+    "prior_winner_party": "R"
   },
   "HD-078": {
     "id": "HD-078",
@@ -4042,7 +4330,10 @@
       145.4
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 26.55,
+    "actual_2022_rep": 73.45,
+    "prior_winner_party": "R"
   },
   "HD-079": {
     "id": "HD-079",
@@ -4086,7 +4377,10 @@
       211.1
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 34.91,
+    "actual_2022_rep": 65.09,
+    "prior_winner_party": "R"
   },
   "HD-008": {
     "id": "HD-008",
@@ -4127,7 +4421,10 @@
       58.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 56.32,
+    "actual_2022_rep": 43.68,
+    "prior_winner_party": "D"
   },
   "HD-080": {
     "id": "HD-080",
@@ -4168,7 +4465,10 @@
       96.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 23.47,
+    "actual_2022_rep": 76.53,
+    "prior_winner_party": "R"
   },
   "HD-081": {
     "id": "HD-081",
@@ -4209,7 +4509,10 @@
       69.6
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 24.64,
+    "actual_2022_rep": 75.36,
+    "prior_winner_party": "R"
   },
   "HD-082": {
     "id": "HD-082",
@@ -4249,8 +4552,11 @@
       62.7,
       48.0
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 43.26,
+    "actual_2022_rep": 56.74,
+    "prior_winner_party": "R"
   },
   "HD-083": {
     "id": "HD-083",
@@ -4292,7 +4598,10 @@
       39.4
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 31.93,
+    "actual_2022_rep": 68.07,
+    "prior_winner_party": "R"
   },
   "HD-084": {
     "id": "HD-084",
@@ -4333,7 +4642,10 @@
       82.2
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 31.44,
+    "actual_2022_rep": 68.56,
+    "prior_winner_party": "R"
   },
   "HD-085": {
     "id": "HD-085",
@@ -4377,7 +4689,10 @@
       140.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 27.53,
+    "actual_2022_rep": 72.47,
+    "prior_winner_party": "R"
   },
   "HD-086": {
     "id": "HD-086",
@@ -4418,7 +4733,10 @@
       82.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 30.32,
+    "actual_2022_rep": 69.68,
+    "prior_winner_party": "R"
   },
   "HD-087": {
     "id": "HD-087",
@@ -4460,7 +4778,10 @@
       83.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 25.8,
+    "actual_2022_rep": 74.2,
+    "prior_winner_party": "R"
   },
   "HD-088": {
     "id": "HD-088",
@@ -4501,7 +4822,10 @@
       22.3
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 67.14,
+    "actual_2022_rep": 32.86,
+    "prior_winner_party": "D"
   },
   "HD-089": {
     "id": "HD-089",
@@ -4543,7 +4867,10 @@
       52.5
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 28.6,
+    "actual_2022_rep": 71.4,
+    "prior_winner_party": "R"
   },
   "HD-009": {
     "id": "HD-009",
@@ -4583,8 +4910,11 @@
       64.1,
       86.6
     ],
-    "flip_status": "HOLD",
-    "is_flip": false
+    "flip_status": "FLIP_R_TO_D",
+    "is_flip": true,
+    "actual_2022_dem": 47.27,
+    "actual_2022_rep": 52.73,
+    "prior_winner_party": "R"
   },
   "HD-090": {
     "id": "HD-090",
@@ -4626,7 +4956,10 @@
       68.7
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 23.91,
+    "actual_2022_rep": 76.09,
+    "prior_winner_party": "R"
   },
   "HD-091": {
     "id": "HD-091",
@@ -4668,7 +5001,10 @@
       82.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 35.92,
+    "actual_2022_rep": 64.08,
+    "prior_winner_party": "R"
   },
   "HD-092": {
     "id": "HD-092",
@@ -4709,7 +5045,10 @@
       37.1
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 66.03,
+    "actual_2022_rep": 33.97,
+    "prior_winner_party": "D"
   },
   "HD-093": {
     "id": "HD-093",
@@ -4752,7 +5091,10 @@
       87.2
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 41.27,
+    "actual_2022_rep": 58.73,
+    "prior_winner_party": "R"
   },
   "HD-094": {
     "id": "HD-094",
@@ -4794,7 +5136,10 @@
       114.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 20.2,
+    "actual_2022_rep": 79.8,
+    "prior_winner_party": "R"
   },
   "HD-095": {
     "id": "HD-095",
@@ -4835,7 +5180,10 @@
       29.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 29.58,
+    "actual_2022_rep": 70.42,
+    "prior_winner_party": "R"
   },
   "HD-096": {
     "id": "HD-096",
@@ -4876,7 +5224,10 @@
       35.0
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 29.87,
+    "actual_2022_rep": 70.13,
+    "prior_winner_party": "R"
   },
   "HD-097": {
     "id": "HD-097",
@@ -4917,7 +5268,10 @@
       32.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 26.81,
+    "actual_2022_rep": 73.19,
+    "prior_winner_party": "R"
   },
   "HD-098": {
     "id": "HD-098",
@@ -4958,7 +5312,10 @@
       20.9
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 55.35,
+    "actual_2022_rep": 44.65,
+    "prior_winner_party": "D"
   },
   "HD-099": {
     "id": "HD-099",
@@ -4999,6 +5356,9 @@
       20.8
     ],
     "flip_status": "HOLD",
-    "is_flip": false
+    "is_flip": false,
+    "actual_2022_dem": 74.96,
+    "actual_2022_rep": 25.04,
+    "prior_winner_party": "D"
   }
 }
