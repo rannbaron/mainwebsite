@@ -1,0 +1,2160 @@
+{{Short description|none}} <!-- "none" is preferred when the title is already sufficiently detailed; see [[WP:SDNONE]] -->
+{{Use American English|date=June 2026}}
+{{use mdy dates|date=October 2023}}
+{{Infobox election
+| election_name = 2024 North Carolina Senate election
+| country = North Carolina
+| type = legislative
+| ongoing = no
+| previous_election = 2022 North Carolina Senate election
+| previous_year = 2022
+| next_election = 2026 North Carolina Senate election
+| next_year = 2026
+| seats_for_election = All 50 seats in the [[North Carolina Senate]]
+| majority_seats = 26
+| election_date = {{Start date|2024|11|05}}
+| turnout = <!--      Republican Party     -->
+| image1 = File:Senator Phil Berger 2023-25 Legislative Portrait.jpg
+| image_size = 150x150px
+| leader1 = [[Phil Berger (politician)|Phil Berger]]
+| party1 = [[North Carolina Republican Party|Republican]]
+| colour1 = ff3333
+| leader_since1 = January 1, 2005
+| leaders_seat1 = [[North Carolina's 26th Senate district|26th]] - [[Eden, North Carolina|Eden]]
+| last_election1 = '''30'''
+| seats_before1 = 
+| seats1 = '''30'''
+| seat_change1 = {{Same}}
+| popular_vote1 = 2,601,321
+| percentage1 = 47.98%
+| swing1 = {{decrease}} 10.75 {{abbr|pp|Percentage points}}
+| image2 = File:Senator Dan Blue 2023-25 Legislative Portrait.jpg
+| image_size2 = 
+| leader2 = [[Dan Blue]]<br/>(retired as leader)
+| party2 = [[North Carolina Democratic Party|Democratic]]
+| colour2 = 3333ff
+| leader_since2 = March 2, 2014
+| leaders_seat2 = [[North Carolina's 14th Senate district|14th]] - [[Raleigh, North Carolina|Raleigh]]
+| last_election2 = 20
+| seats_before2 = 
+| seats2 = 20
+| seat_change2 = {{Same}}
+| popular_vote2 = '''2,719,418'''
+| percentage2 = '''50.17%'''
+| swing2 = {{increase}} 9.63 {{abbr|pp|Percentage points}}
+| title = [[President pro tempore of the North Carolina Senate|President pro tempore]]
+| before_election = [[Phil Berger (politician)|Phil Berger]]
+| before_party = [[North Carolina Republican Party|Republican]]
+| after_election = [[Phil Berger (politician)|Phil Berger]]
+| after_party = [[North Carolina Republican Party|Republican]]
+| map_image = {{switcher |[[File: 2024 North Carolina Senate election.svg|300px]]<br/>{{Legend0|#F48882|Republican hold}} {{Legend0|#92C5DE|Democratic hold}} |Results by seat gains|[[File:2024 North Carolina Senate election partisan.svg|300px]]<br/>
+'''Republican:''' {{legend0|#E27F7F|50–60%}} {{legend0|#D75D5D|60–70%}} {{legend0|#D72F30|70–80%}}<br/>'''Democratic:''' {{legend0|#A5B0FF|40–50%}} {{legend0|#7996E2|50–60%}} {{legend0|#6674DE|60-70%}} {{legend0|#584CDE|70–80%}} {{legend0|#3933E5|80–90%}} {{legend0|#0D0596|>90%}} |Results by vote share|default=1}}
+| map_size = 300px
+| map_caption = 
+}}
+{{Elections in North Carolina sidebar}}
+The '''2024 North Carolina Senate election''' was held on November 5, 2024, to elect all 50 members to [[North Carolina Senate|North Carolina's Senate]]. The election coincided with [[2024 North Carolina elections|elections]] for other offices, including for the [[2024 United States presidential election in North Carolina|U.S. President]], [[2024 United States House of Representatives elections in North Carolina|U.S. House of Representatives]], [[2024 North Carolina Council of State elections|Council of State]], and [[2024 North Carolina House of Representatives election|state house]].<ref>{{cite web|url=https://ballotpedia.org/North_Carolina_State_Senate_elections,_2024|work=Ballotpedia|title=North Carolina State Senate elections, 2024|access-date=2023-03-05}}</ref> The [[Partisan primary|primary election]] was held on March 5, 2024. Ahead of the election, districts were redrawn and passed the General Assembly in Senate Bill 758.<ref>{{cite web|url=https://webservices.ncleg.gov/ViewBillDocument/2023/7524/0/Edition%202%20-%2019%20x%2036%20Map|title=S758, 2nd Ed|publisher=North Carolina General Assembly|date=October 25, 2023}}</ref> Republicans had no change in seats, leaving their supermajority to 30 out of 50 seats.
+
+{{Horizontal TOC|nonum=yes|noparens=yes|limit=4}}
+
+==Results summary==
+{| class="sortable wikitable" style="font-size:95%;line-height:14px;"
+! class="unsortable"|District
+! class="unsortable"|[[Incumbent]]
+! colspan="2"| Party
+! class="unsortable"|Elected
+! colspan="2"|Party
+|-
+| [[North Carolina's 1st Senate district|1st]]
+| [[Bobby Hanig]]{{efn|name="Hanig"|Redistricted from the 3rd district.}}
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Bobby Hanig]]{{efn|name="Hanig"}}
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 2nd Senate district|2nd]]
+| [[Norman W. Sanderson|Norman Sanderson]]{{efn|name="Sanderson"|Redistricted from the 1st district.}}
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Norman W. Sanderson|Norman Sanderson]]{{efn|name="Sanderson"|}}
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 3rd Senate district|3rd]]
+| [[Bob Brinson]]{{efn|name="Brinson"|Redistricted from the 2nd district.}}
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Bob Brinson]]{{efn|name="Brinson"|}}
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 4th Senate district|4th]]
+| [[Buck Newton]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Buck Newton]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 5th Senate district|5th]]
+| [[Kandie Smith]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Kandie Smith]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 6th Senate district|6th]]
+| [[Michael Lazzara]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Michael Lazzara]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 7th Senate district|7th]]
+| [[Michael V. Lee|Michael Lee]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Michael V. Lee|Michael Lee]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 8th Senate district|8th]]
+| [[Bill Rabon]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Bill Rabon]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 9th Senate district|9th]]
+| [[W. Brent Jackson|Brent Jackson]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[W. Brent Jackson|Brent Jackson]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 10th Senate district|10th]]
+| [[Benton Sawrey]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Benton Sawrey]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 11th Senate district|11th]]
+| [[Lisa Stone Barnes]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Lisa Stone Barnes]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 12th Senate district|12th]]
+| [[Jim Burgin]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Jim Burgin]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 13th Senate district|13th]]
+| [[Lisa Grafstein]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Lisa Grafstein]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 14th Senate district|14th]]
+| [[Dan Blue]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Dan Blue]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 15th Senate district|15th]]
+| [[Jay Chaudhuri]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Jay Chaudhuri]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 16th Senate district|16th]]
+| [[Gale Adcock]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Gale Adcock]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 17th Senate district|17th]]
+| [[Sydney Batch]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Sydney Batch]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 18th Senate district|18th]]
+| [[Mary Wills Bode]]†
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| ''[[Terence Everitt]]''
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 19th Senate district|19th]]
+| [[Val Applewhite]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Val Applewhite]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 20th Senate district|20th]]
+| [[Natalie Murdock]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Natalie Murdock]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 21st Senate district|21st]]
+| [[Tom McInnis (North Carolina politician)|Tom McInnis]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Tom McInnis (North Carolina politician)|Tom McInnis]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 22nd Senate district|22nd]]
+| [[Mike Woodard (politician)|Mike Woodard]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| ''[[Sophia Chitlik]]''
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 23rd Senate district|23rd]]
+| [[Graig R. Meyer|Graig Meyer]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Graig R. Meyer|Graig Meyer]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 24th Senate district|24th]]
+| [[Danny Britt]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep 
+| [[Danny Britt]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep 
+|-
+| [[North Carolina's 25th Senate district|25th]]
+| [[Amy Galey]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep 
+| [[Amy Galey]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep 
+|-
+| [[North Carolina's 26th Senate district|26th]]
+| [[Phil Berger (politician)|Phil Berger]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Phil Berger (politician)|Phil Berger]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 27th Senate district|27th]]
+| [[Michael Garrett (politician)|Michael Garrett]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Michael Garrett (politician)|Michael Garrett]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 28th Senate district|28th]]
+| [[Gladys A. Robinson|Gladys Robinson]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Gladys A. Robinson|Gladys Robinson]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 29th Senate district|29th]]
+| [[Dave Craven]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Dave Craven]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 30th Senate district|30th]]
+| [[Steve Jarvis]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Steve Jarvis]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 31st Senate district|31st]]
+| [[Joyce Krawiec]]†
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| ''[[Dana Caudill Jones]]''
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 32nd Senate district|32nd]]
+| [[Paul A. Lowe Jr.|Paul Lowe Jr.]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Paul A. Lowe Jr.|Paul Lowe Jr.]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 33rd Senate district|33rd]]
+| [[Carl Ford (politician)|Carl Ford]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Carl Ford (politician)|Carl Ford]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 34th Senate district|34th]]
+| [[Paul Newton (politician)|Paul Newton]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Paul Newton (politician)|Paul Newton]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 35th Senate district|35th]]
+| [[Todd Johnson (politician)|Todd Johnson]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Todd Johnson (politician)|Todd Johnson]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 36th Senate district|36th]]
+| [[Eddie Settle]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Eddie Settle]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| rowspan=2 | [[North Carolina's 37th Senate district|37th]]
+| [[Vickie Sawyer]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| rowspan=2 | [[Vickie Sawyer]]
+| rowspan=2 style="background:{{party color|Republican Party (United States)}};"|
+| rowspan=2 | Rep
+|-
+| [[Natasha Marcus]]†{{efn|Redistricted from the 41st district.}}
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 38th Senate district|38th]]
+| [[Mujtaba A. Mohammed|Mujtaba Mohammed]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Mujtaba A. Mohammed|Mujtaba Mohammed]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 39th Senate district|39th]]
+| [[DeAndrea Salvador]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[DeAndrea Salvador]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 40th Senate district|40th]]
+| [[Joyce Waddell]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Joyce Waddell]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 41st Senate district|41st]]
+| colspan=3 align=center | ''New seat''
+| '''[[Caleb Theodros]]'''
+| style="background:{{party color|Democratic Party (United States)}};"|
+| '''Dem'''
+|-
+| [[North Carolina's 42nd Senate district|42nd]]
+| [[Rachel Hunt]]†
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| ''[[Woodson Bradley]]''
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 43rd Senate district|43rd]]
+| [[Brad Overcash]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Brad Overcash]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 44th Senate district|44th]]
+| [[W. Ted Alexander|Ted Alexander]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[W. Ted Alexander|Ted Alexander]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 45th Senate district|45th]]
+| [[H. Dean Proctor|Dean Proctor]]†
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| ''[[Mark Hollo]]''
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 46th Senate district|46th]]
+| [[Warren Daniel]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Warren Daniel]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 47th Senate district|47th]]
+| [[Ralph Hise]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Ralph Hise]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 48th Senate district|48th]]
+| [[Tim Moffitt]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Tim Moffitt]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|-
+| [[North Carolina's 49th Senate district|49th]]
+| [[Julie Mayfield]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+| [[Julie Mayfield]]
+| style="background:{{party color|Democratic Party (United States)}};"|
+| Dem
+|-
+| [[North Carolina's 50th Senate district|50th]]
+| [[Kevin Corbin]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+| [[Kevin Corbin]]
+| style="background:{{party color|Republican Party (United States)}};"|
+| Rep
+|}
+† - Incumbent not seeking re-election
+{| class="wikitable"
+|+ Summary of the November 5, 2024 [[North Carolina Senate]] election
+|-
+! rowspan="2" colspan="2" | Party
+! rowspan="2" | Candidates
+! colspan="2" | Votes
+! colspan="5" | Seats
+|-
+! {{Abbr|No.|Number}}
+! %
+! Up
+! Won
+! +/–
+|-
+! style="background-color:{{party color|Republican Party (United States)}}" |
+| '''[[North Carolina Republican Party|Republican]]'''
+| align="right" | 42
+| align="right" | 2,601,321
+| align="right" | 47.987
+| align="right" | '''30'''
+| align="center"| '''30'''
+| align="center"| {{steady}}
+|-
+! style="background-color:{{party color|Democratic Party (United States)}}" |
+| [[North Carolina Democratic Party|Democratic]]
+| align="right" | '''50'''
+| align="right" | '''2,719,418'''
+| align="right" | '''50.165'''
+| align="right" | 20
+| align="center"| 20
+| align="center"| {{steady}}
+|-
+! style="background-color:{{party color|Libertarian Party (United States)}}" |
+| [[North Carolina Libertarian Party|Libertarian]]
+| align="right" | 13
+| align="right" | 76,435
+| align="right" | 1.410
+| align="right" | 0
+| align="center"| 0
+| align="center"| {{steady}}
+|-
+! style="background-color:{{party color|We The People Party}}" |
+| [[We the People Party (United States)|We the People]]
+| align="right" | 1
+| align="right" | 17,569
+| align="right" | 0.324
+| align="right" | 0
+| align="center"| 0
+| align="center"| {{steady}}
+|-
+! style="background-color:{{party color|Constitution Party (United States)}}" |
+| [[Constitution Party of North Carolina|Constitution]]
+| align="right" | 1
+| align="right" | 6,007
+| align="right" | 0.111
+| align="right" | 0
+| align="center | 0
+| align="center"| {{steady}}
+|-
+! style="background-color:{{party color|Write-in}}" |
+| [[Write-in]]
+| align="right" | 1
+| align="right" | 193
+| align="right" | 0.004
+| align="right" | 0
+| align="center"| 0
+| align="center"| {{steady}}
+|-
+| colspan="2" align="left" | '''Total'''
+| align="right" | '''108'''
+| align="center"| '''5,420,943'''
+| align="right" | '''100'''
+| align="right" | '''50'''
+| align="center"| '''50'''
+| align="center"| '''{{steady}}'''
+|}
+
+{{bar box
+| title=Senate seats
+| titlebar=#ddd
+| width=600px
+| barwidth=410px
+| bars=
+{{bar percent|'''Republican'''|{{party color|Republican Party (United States)}}|60}}
+{{bar percent|Democratic|{{party color|Democratic Party (United States)}}|40}}
+}}
+
+{{bar box
+| title=Popular vote
+| titlebar=#ddd
+| width=600px
+| barwidth=410px
+| bars=
+{{bar percent|'''Democratic'''|{{party color|Democratic Party (United States)}}|50.165}}
+{{bar percent|Republican|{{party color|Republican Party (United States)}}|47.986}}
+{{bar percent|Libertarian|{{party color|Libertarian Party (United States)}}|1.410}}
+{{bar percent|We The People|{{party color|We The People Party}}|0.324}}
+{{bar percent|Green|{{party color|Constitution Party (United States)}}|0.111}}
+{{bar percent|Write-in|#ddd|0.004}}
+}}
+
+===Close races===
+''Districts where the margin of victory was under 10%:''
+{{columns-list|colwidth=|
+#'''{{font color|blue|District 18, 0.11%}}'''
+#'''{{font color|blue|District 42, 0.16%}}'''
+#'''{{font color|red|District 11, 2.58%}}'''
+#'''{{font color|blue|District 13, 3.32%}}'''
+#'''{{font color|red|District 7, 8.47%}}'''
+#'''{{font color|red|District 34, 8.74%}}'''
+}}
+
+==Retiring incumbents==
+
+===Democrats===
+*[[North Carolina's 18th Senate district|District 18]]: [[Mary Wills Bode]] retired.<ref name="MWBR" />
+*[[North Carolina's 41st Senate district|District 41]]: [[Natasha Marcus]] retired to [[2024 North Carolina Council of State elections#Commissioner of Insurance|run for Insurance Commissioner]].<ref name="NMIC" />
+*[[North Carolina's 42nd Senate district|District 42]]: [[Rachel Hunt]] retired to [[2024 North Carolina lieutenant gubernatorial election|run for Lieutenant Governor]].<ref name="RHLG" />
+
+===Republicans===
+*[[North Carolina's 31st Senate district|District 31]]: [[Joyce Krawiec]] retired.<ref name="JKR">{{Cite news|url=https://www.wxii12.com/article/forsyth-county-senator-joyce-krawiec-retirement/46029638#|title=Forsyth County senator Joyce Krawiec announces retirement|first=JD|last=Franklin III|date=December 4, 2023|access-date=December 16, 2023|website=[[WXII-TV]]}}</ref>
+*[[North Carolina's 45th Senate district|District 45]]: [[H. Dean Proctor|Dean Proctor]] retired.<ref name="HDPR" />
+
+==Incumbents defeated in the primary election==
+
+===Democrats===
+*[[North Carolina's 22nd Senate district|District 22]]: [[Mike Woodard (politician)|Mike Woodard]] lost renomination to [[Sophia Chitlik]].<ref name="NCPE">{{Cite news|last=Wooten|first=Alan|title=Four NC General Assembly incumbents fall on Super Tuesday|url=https://www.rockymounttelegram.com/news/state/four-nc-general-assembly-incumbents-fall-on-super-tuesday/article_c54a649a-e409-5dd2-a908-5c43c8fe3e2c.html|date=March 11, 2024|website=[[Rocky Mount Telegram]]|accessdate=March 12, 2024}}</ref>
+
+===Newly created seats===
+*[[North Carolina's 41st Senate district|District 41]] ([[Mecklenburg County, North Carolina|Mecklenburg County]])
+
+==Predictions==
+{| class="wikitable" style="text-align:center"
+!Source
+!Ranking
+!As of
+|-
+| align=left | [[Sabato's Crystal Ball]]<ref name="TU">{{Cite web |last=Jacobson |first=Louis |date=2024-10-23 |title=The State Legislatures: Several Key Battleground Chambers Remain Toss-ups |url=https://centerforpolitics.org/crystalball/the-state-legislatures-several-key-battleground-chambers-remain-toss-ups/ |access-date=2024-11-19 |website=Sabato's Crystal Ball |language=en-US}}</ref>
+<!--Sab-->| {{USRaceRating|Likely|R}}
+| October 23, 2024
+|}
+
+==Detailed results==
+<ref name="CandidateList">{{cite web|url=https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2024/Candidate%20Filing/2024_Primary_Election_Candidate_PDFs/2024_primary_candidate_detail_list_federal_and_state.pdf|title=State Board of Elections Candidate Detail List|publisher=North Carolina State Board of Elections|date=December 15, 2023|accessdate=December 17, 2023}}</ref>
+
+===Districts 1–25===
+====District 1====
+The new 1st district includes all of [[Bertie County, North Carolina|Bertie]], [[Camden County, North Carolina|Camden]], [[Currituck County, North Carolina|Currituck]], [[Dare County, North Carolina|Dare]], [[Gates County, North Carolina|Gates]], [[Hertford County, North Carolina|Hertford]], [[Northampton County, North Carolina|Northampton]], [[Pasquotank County, North Carolina|Pasquotank]], [[Perquimans County, North Carolina|Perquimans]], and [[Tyrrell County, North Carolina|Tyrrell]] counties. It includes the home of incumbent Republican [[Bobby Hanig]], who has represented the 3rd district and its predecessors since 2022.
+
+{{Election box begin no change|title=North Carolina Senate 1st district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1303] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Bobby Hanig]] (incumbent)
+ | votes = 62,805
+ | percentage = 57.21%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Susan Harman-Scott
+ | votes = 46,979
+ | percentage = 42.79%
+}}
+{{Election box total no change
+ | votes = 109,784
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 2====
+The new 2nd district includes all of [[Carteret County, North Carolina|Carteret]], [[Chowan County, North Carolina|Chowan]], [[Halifax County, North Carolina|Halifax]], [[Hyde County, North Carolina|Hyde]], [[Martin County, North Carolina|Martin]], [[Pamlico County, North Carolina|Pamlico]], [[Warren County, North Carolina|Warren]], and [[Washington County, North Carolina|Washington]] counties. It includes the home of incumbent Republican [[Norman W. Sanderson|Norman Sanderson]], who has represented the 1st district and its predecessors since 2013.
+{{Election box begin no change|title=North Carolina Senate 2nd district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1304] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Norman W. Sanderson|Norman Sanderson]] (incumbent)
+ | votes = 63,006
+ | percentage = 56.05%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Tare Davis
+ | votes = 47,001
+ | percentage = 41.81%
+}}
+{{Election box candidate with party link no change
+ | party = Libertarian Party (United States)
+ | candidate = Maria Cormos
+ | votes = 2,406
+ | percentage = 2.14%
+}}
+{{Election box total no change
+ | votes = 112,413
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 3====
+The new 3rd district includes all of [[Beaufort County, North Carolina|Beaufort]], [[Craven County, North Carolina|Craven]], and [[Lenoir County, North Carolina|Lenoir]] counties. It includes the home of incumbent Republican [[Bob Brinson]], who has represented the 2nd district since 2024. Brinson was appointed on July 23, 2024,<ref>{{Cite news|title=New Bern alderman nominated to fill term of former State Senator Jim Perry|url=https://www.witn.com/2024/07/25/new-bern-alderman-nominated-fill-term-state-senator-jim-perry/|date=July 25, 2024|website=[[WITN-TV]]|accessdate=July 27, 2024}}</ref> following the resignation of [[Jim Perry (politician)|Jim Perry]], who had previously announced his retirement on December 15, 2023.<ref>{{Cite news|url=https://wcti12.com/news/local/senator-jim-perry-will-not-seek-reelection-will-finish-out-term|title=Senator Jim Perry will not seek reelection; will finish out term|first=Amanda|last=Denise|date=December 15, 2023|access-date=December 16, 2023|website=[[WCTI-TV]]}}</ref>
+{{Election box begin no change|title=North Carolina Senate 3rd district Republican primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2573] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Bob Brinson]]
+ | votes = 13,211
+ | percentage = 54.41%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Michael Speciale]]
+ | votes = 11,069
+ | percentage = 45.59%
+}}
+{{Election box total no change
+ | votes = 24,280
+ | percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 3rd district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1305] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Bob Brinson]] (incumbent)
+ | votes = 64,025
+ | percentage = 59.99%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Charles Dudley
+ | votes = 42,704
+ | percentage = 40.01%
+}}
+{{Election box total no change
+ | votes = 106,729
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 4====
+The new 4th district includes all of [[Greene County, North Carolina|Greene]], [[Wayne County, North Carolina|Wayne]], and [[Wilson County, North Carolina|Wilson]] counties. The incumbent is Republican [[Buck Newton]], who has represented the 4th district since 2023.
+
+{{Election box begin no change|title=North Carolina Senate 4th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1306] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Buck Newton]] (incumbent)
+ | votes = 55,389
+ | percentage = 55.12%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Raymond Smith Jr.]]
+ | votes = 45,096
+ | percentage = 44.88%
+}}
+{{Election box total no change
+ | votes = 100,485
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 5====
+The new 5th district includes all of [[Edgecombe County, North Carolina|Edgecombe]] and [[Pitt County, North Carolina|Pitt]] counties. The incumbent is Democrat [[Kandie Smith]]. who has represented the 5th district since 2023.
+
+{{Election box begin no change|title=North Carolina Senate 5th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1307] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Kandie Smith]] (incumbent)
+ | votes = 59,440
+ | percentage = 55.08%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Alexander Paschall
+ | votes = 48,469
+ | percentage = 44.92%
+}}
+{{Election box total no change
+ | votes = 107,909
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 6====
+The new 6th district includes all of [[Onslow County, North Carolina|Onslow County]]. The incumbent is Republican [[Michael Lazzara]], who has represented the 6th district since 2021.
+{{Election box begin no change|title=North Carolina Senate 6th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1308] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Michael Lazzara]] (incumbent)
+ | votes = 53,923
+ | percentage = 69.63%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Andi Morrow
+ | votes = 23,519
+ | percentage = 30.37%
+}}
+{{Election box total no change
+ | votes = 77,442
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 7====
+The new 7th district includes most of [[New Hanover County, North Carolina|New Hanover County]]. The incumbent is Republican [[Michael V. Lee|Michael Lee]], who has represented the 7th district and its predecessors since 2021.
+{{Election box begin no change|title=North Carolina Senate 7th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1309] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Michael V. Lee|Michael Lee]] (incumbent)
+ | votes = 63,217
+ | percentage = 52.21%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = David Hill
+ | votes = 52,953
+ | percentage = 43.74%
+}}
+{{Election box candidate with party link no change
+ | party = Libertarian Party (United States)
+ | candidate = John Evans
+ | votes = 4,903
+ | percentage = 4.05%
+}}
+{{Election box total no change
+ | votes = 121,073
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 8====
+The new 8th district includes all of [[Brunswick County, North Carolina|Brunswick]] and [[Columbus County, North Carolina|Columbus]] counties, as well as a small portion of [[New Hanover County, North Carolina|New Hanover County]]. The incumbent is Republican [[Bill Rabon]], who has represented the 8th district since 2011.
+{{Election box begin no change|title=North Carolina Senate 8th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1310] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Bill Rabon]] (incumbent)
+ | votes = 87,026
+ | percentage = 59.90%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Katherine Randall
+ | votes = 58,259
+ | percentage = 40.10%
+}}
+{{Election box total no change
+ | votes = 145,285
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 9====
+The new 9th district includes all of [[Bladen County, North Carolina|Bladen]], [[Duplin County, North Carolina|Duplin]], [[Jones County, North Carolina|Jones]], and [[Pender County, North Carolina|Pender]] counties, as well as most of [[Sampson County, North Carolina|Sampson County]]. The incumbent is Republican [[W. Brent Jackson|Brent Jackson]], who has represented the 9th district and its predecessors since 2011.
+{{Election box begin no change|title=North Carolina Senate 9th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1311] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[W. Brent Jackson|Brent Jackson]] (incumbent)
+ | votes = 68,632
+ | percentage = 65.03%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Jamie Campbell Bowles
+ | votes = 36,900
+ | percentage = 34.97%
+}}
+{{Election box total no change
+ | votes = 105,532
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 10====
+The new 10th district includes all of [[Johnston County, North Carolina|Johnston County]]. The incumbent is Republican [[Benton Sawrey]], who has represented the 10th district since 2023.
+
+{{Election box begin no change|title=North Carolina Senate 10th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1312] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Benton Sawrey]] (incumbent)
+ | votes = 70,773
+ | percentage = 58.75%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Felicia Baxter
+ | votes = 45,346
+ | percentage = 37.64%
+}}
+{{Election box candidate with party link no change
+ | party = Libertarian Party (United States)
+ | candidate = Christopher Sessions
+ | votes = 4,351
+ | percentage = 3.61%
+}}
+{{Election box total no change
+ | votes = 120,470
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 11====
+The new 11th district includes all of [[Franklin County, North Carolina|Franklin]], [[Nash County, North Carolina|Nash]], and [[Vance County, North Carolina|Vance]] counties. The incumbent is Republican [[Lisa Stone Barnes]] has represented the 11th district since 2021.
+{{Election box begin no change|title=North Carolina Senate 11th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1313] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Lisa Stone Barnes]] (incumbent)
+ | votes = 57,713
+ | percentage = 51.29% 
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = James Mercer
+ | votes = 54,806
+ | percentage = 48.71%
+}}
+{{Election box total no change
+ | votes = 112,519
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 12====
+The new 12th district includes all of [[Harnett County, North Carolina|Harnett]] and [[Lee County, North Carolina|Lee]] counties, as well as a small portion of [[Sampson County, North Carolina|Sampson County]]. The incumbent is Republican [[Jim Burgin]], who has represented the 12th district since 2019.
+{{Election box begin no change|title=North Carolina Senate 12th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1314] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Jim Burgin]] (incumbent)
+ | votes = 57,151
+ | percentage = 61.61%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Tanya White Anderson
+ | votes = 35,611
+ | percentage = 38.39%
+}}
+{{Election box total no change
+ | votes = 92,762
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 13====
+The new 13th district includes portions of southern [[Wake County, North Carolina|Wake County]]. The incumbent is Democrat [[Lisa Grafstein]], who has represented the 13th district since 2023.
+{{Election box begin no change|title=North Carolina Senate 13th district Republican primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2260] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Scott Lassiter
+ | votes = 11,636
+ | percentage = 52.94%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Vicki Harry
+ | votes = 10,345
+ | percentage = 47.06%
+}}
+{{Election box total no change
+ | votes = 21,981
+ | percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 13th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1315] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Lisa Grafstein]] (incumbent)
+ | votes = 64,074
+ | percentage = 50.21%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Scott Lassiter
+ | votes = 59,829
+ | percentage = 46.89% 
+}}
+{{Election box candidate with party link no change
+| party = Libertarian Party (United States) 
+| candidate = Susan Hogarth
+| votes = 3,700
+| percentage = 2.90%
+}}
+{{Election box total no change
+ | votes = 127,603
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 14====
+The new 14th district includes portions of eastern [[Wake County, North Carolina|Wake County]]. The incumbent is Democratic Minority Leader [[Dan Blue]], who has represented the 14th district since 2009.
+
+{{Election box begin no change|title=North Carolina Senate 14th district Democratic primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2261] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Dan Blue]] (incumbent)
+ | votes = 16,816
+ | percentage = 85.51%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Terry Passione
+ | votes = 2,850
+ | percentage = 14.49%
+}}
+{{Election box total no change
+ | votes = 19,666
+ | percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 14th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1316] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Dan Blue]] (incumbent)
+ | votes = 74,519
+ | percentage = 73.46%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Angela McCarty
+ | votes = 23,978 
+ | percentage = 23.64%
+}}
+{{Election box candidate with party link no change
+| party = Libertarian Party (United States) 
+| candidate = Sammie Brooks
+| votes = 2,945
+| percentage = 2.90%
+}}
+{{Election box total no change
+ | votes = 101,442
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 15====
+The new 15th district includes portions of central [[Wake County, North Carolina|Wake County]]. The incumbent is Democrat [[Jay Chaudhuri]], who has represented the 15th district and its predecessors since 2016.
+{{Election box begin no change|title=North Carolina Senate district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1317] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Jay Chaudhuri]] (incumbent)
+ | votes = 67,355
+ | percentage = 65.95%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = David Bankert
+ | votes = 30,867
+ | percentage = 30.22%
+}}
+{{Election box candidate with party link no change
+| party = Libertarian Party (United States) 
+| candidate = Kat McDonald
+| votes = 3,915
+| percentage = 3.83%
+}}
+{{Election box total no change
+ | votes = 102,137
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 16====
+The new 16th district includes portions of western [[Wake County, North Carolina|Wake County]]. The incumbent is Democrat [[Gale Adcock]], who has represented the 16th district since 2023. 
+{{Election box begin no change|title=North Carolina Senate 16th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1318] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Gale Adcock]] (incumbent)
+ | votes = 84,424
+ | percentage =  100%
+}}
+{{Election box total no change
+ | votes = 84,424
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 17====
+The new 17th district includes portions of western [[Wake County, North Carolina|Wake County]]. The incumbent is Democrat [[Sydney Batch]], who has represented the 17th district since 2021.
+{{Election box begin no change|title=North Carolina Senate 17th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1319] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Sydney Batch]] (incumbent)
+ | votes = 71,610
+ | percentage = 74.38%
+}}
+{{Election box candidate with party link no change
+| party = Libertarian Party (United States) 
+| candidate = Patrick Bowersox
+| votes = 24,661
+| percentage = 25.62%
+}}
+{{Election box total no change
+ | votes = 96,271
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 18====
+The new 18th district includes all of [[Granville County, North Carolina|Granville County]], as well as portions of northern [[Wake County, North Carolina|Wake County]]. The incumbent is Democrat [[Mary Wills Bode]], who has represented the 18th district since 2023. On December 14, 2023, Bode announced she would retire after one term in office.<ref name="MWBR">{{Cite news|last=Fain|first=Travis|date=December 14, 2023|title=NC Senate scramble: Retiring House Democrat files for Senate instead|url=https://www.wral.com/story/nc-senate-scramble-retiring-house-democrat-files-for-senate-instead/21195831/|access-date=December 23, 2023|website=[[WRAL-TV]]|language=en}}</ref>
+
+{{Election box begin no change|title=North Carolina Senate 18th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1320] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Terence Everitt]]
+ | votes = 59,667  
+ | percentage = 48.47% 
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Ashlee Bryan Adams
+ | votes = 59,539
+ | percentage = 48.36%
+}}
+{{Election box candidate with party link no change
+ | party = Libertarian Party (United States) 
+ | candidate = Brad Hessel
+ | votes = 3,906
+ | percentage = 3.17%  
+}}
+{{Election box total no change
+ | votes = 123,112
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 19====
+The new 19th district includes portions of [[Cumberland County, North Carolina|Cumberland County]]. The incumbent is Democrat [[Val Applewhite]], who has represented the 19th district since 2023.
+
+{{Election box begin no change|title=North Carolina Senate 19th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1321] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Val Applewhite]] (incumbent)
+ | votes = 55,697
+ | percentage = 62.87%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Semone Pemberton
+ | votes = 30,005
+ | percentage = 33.87%
+}}
+{{Election box candidate with party link no change
+| party = Libertarian Party (United States) 
+| candidate = Steven Swinton
+| votes = 2,884
+| percentage = 3.26% 
+}}
+{{Election box total no change
+ | votes = 88,586
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 20====
+The new 20th district includes all of [[Chatham County, North Carolina|Chatham County]], as well as portions of southern [[Durham County, North Carolina|Durham County]]. The incumbent is Democrat [[Natalie Murdock]], who has represented the 20th district since 2020.
+{{Election box begin no change|title=North Carolina Senate 20th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1322] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Natalie Murdock]] (incumbent)
+ | votes = 90,128
+ | percentage = 72.28%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Christopher Partain
+ | votes = 34,570
+ | percentage = 27.72%
+}}
+{{Election box total no change
+ | votes = 124,698
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 21====
+The new 21st district includes all of [[Moore County, North Carolina|Moore County]], as well as most of [[Cumberland County, North Carolina|Cumberland County]]. The incumbent is Republican [[Tom McInnis (North Carolina politician)|Tom McInnis]], who has represented the 21st district and its predecessors since 2015.
+{{Election box begin no change|title=North Carolina Senate 21st district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1323] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Tom McInnis (North Carolina politician)|Tom McInnis]] (incumbent)
+ | votes = 67,494
+ | percentage = 62.76%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Maurice (Butch) Holland Jr.
+ | votes = 40,052
+ | percentage = 37.24%
+}}
+{{Election box total no change
+ | votes = 107,546
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 22====
+The new 22nd district includes most of [[Durham County, North Carolina|Durham County]]. The incumbent is Democrat [[Mike Woodard (politician)|Mike Woodard]], who has represented the 22nd district since 2013.
+{{Election box begin no change|title=North Carolina Senate 22nd district Democratic primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2293] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Sophia Chitlik]]
+ | votes = 17,270
+ | percentage = 57.59%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Mike Woodard (politician)|Mike Woodard]] (incumbent)
+ | votes = 12,719
+ | percentage = 42.41%
+}}
+{{Election box total no change
+ | votes = 29,989
+ | percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 22nd district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1324] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Sophia Chitlik]]
+ | votes = 83,844
+ | percentage = 85.98%
+}}
+{{Election box candidate with party link no change
+| party = Libertarian Party (United States) 
+| candidate = Ray Ubinger
+| votes = 13,674
+| percentage = 14.02%
+}}
+{{Election box total no change
+ | votes = 97,518
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 23====
+The new 23rd district includes all of [[Caswell County, North Carolina|Caswell]], [[Orange County, North Carolina|Orange]], and [[Person County, North Carolina|Person]] counties. The incumbent is Democrat [[Graig R. Meyer|Graig Meyer]], who has represented the 23rd district since 2023. 
+{{Election box begin no change|title=North Carolina Senate 23rd district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1325] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Graig R. Meyer|Graig Meyer]] (incumbent)
+ | votes = 77,146
+ | percentage = 65.85%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Laura Pichardo
+ | votes = 40,011
+ | percentage = 34.15%
+}}
+{{Election box total no change
+ | votes = 117,157
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 24====
+The new 24th district includes all of [[Hoke County, North Carolina|Hoke]], [[Robeson County, North Carolina|Robeson]], and [[Scotland County, North Carolina|Scotland]] counties. The incumbent is Republican [[Danny Britt]], who has represented the 24th district and its predecessors since 2017.
+{{Election box begin no change|title=North Carolina Senate 24th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1326] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Danny Britt]] (incumbent)
+ | votes = 47,538
+ | percentage = 58.74%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Kathy Batt
+ | votes = 33,387
+ | percentage = 41.26%
+}}
+{{Election box total no change
+ | votes = 80,925
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 25====
+The new 25th district includes all of [[Alamance County, North Carolina|Alamance County]], as well as portions of northern [[Randolph County, North Carolina|Randolph County]]. The incumbent is Republican [[Amy Galey]], who has represented the 25th district and its predecessors since 2021.
+{{Election box begin no change|title=North Carolina Senate 25th district Democratic primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2305] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Donna Vanhook
+ | votes = 7,162
+ | percentage = 76.14%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = John Coleman
+ | votes = 2,244
+ | percentage = 23.86%
+}}
+{{Election box total no change
+ | votes = 9,406
+ | percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 25th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1327] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Amy Galey]] (incumbent)
+ | votes = 67,762
+ | percentage = 60.25%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Donna Vanhook
+ | votes = 44,711
+ | percentage = 39.75%
+}}
+{{Election box total no change
+ | votes = 112,473
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+===Districts 26–50===
+
+====District 26====
+The new 26th district includes all of [[Rockingham County, North Carolina|Rockingham County]], as well as most of [[Guilford County, North Carolina|Guilford County]]. The incumbent is Republican President pro tempore [[Phil Berger (politician)|Phil Berger]], who has represented the 26th district and its predecessors since 2001.
+{{Election box begin no change|title=North Carolina Senate 26th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1328] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Phil Berger (politician)|Phil Berger]] (incumbent)
+ | votes = 67,081
+ | percentage = 54.06%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Steve Luking
+ | votes = 51,007
+ | percentage = 41.10%
+}}
+{{Election box candidate with party link no change
+ | party = Constitution Party (United States)
+ | candidate = Alvin Robinson<ref>{{Cite web|url=https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2024/Candidate%20Filing/2024_General_Election_Candidate_PDFs/Supplementary%202024%20General%20Election%20Candidates.pdf|title=Supplementary 2024 General Election Candidates Constitution and We The People Candidates|website=North Carolina State Board of Election}}</ref>
+ | votes = 6,007
+ | percentage = 4.84%
+}}
+{{Election box total no change
+ | votes = 124,095
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 27====
+The new 27th district includes portions of western [[Guilford County, North Carolina|Guilford County]]. The incumbent is Democrat [[Michael Garrett (politician)|Michael Garrett]], who has represented the 27th district since 2019.
+{{Election box begin no change|title=North Carolina Senate 27th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1329] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Michael Garrett (politician)|Michael Garrett]] (incumbent)
+ | votes = 65,146
+ | percentage = 60.79%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Paul Schumacher
+ | votes = 42,011
+ | percentage = 39.21%
+}}
+{{Election box total no change
+ | votes = 107,157
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 28====
+The new 28th district includes potions of central [[Guilford County, North Carolina|Guilford County]]. The incumbent is Democrat [[Gladys A. Robinson|Gladys Robinson]], who has represented the 28th district since 2011.
+{{Election box begin no change|title=North Carolina Senate 28th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1330] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Gladys A. Robinson|Gladys Robinson]] (incumbent)
+ | votes = 78,876
+ | percentage = 100%
+}}
+{{Election box total no change
+ | votes = 78,876
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 29====
+The new 29th district includes all of [[Anson County, North Carolina|Anson]], [[Montgomery County, North Carolina|Montgomery]], and [[Richmond County, North Carolina|Richmond]] counties, as well as most of [[Randolph County, North Carolina|Randolph County]], and portions of eastern [[Union County, North Carolina|Union County]]. The incumbent is Republican [[Dave Craven]], who has represented the 29th district and its predecessors since 2020. 
+{{Election box begin no change|title=North Carolina Senate 29th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1331] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Dave Craven]] (incumbent)
+ | votes = 70,881
+ | percentage = 68.55%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Kevin Clark
+ | votes = 32,519
+ | percentage = 31.45%
+}}
+{{Election box total no change
+ | votes = 103,400
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 30====
+The new 30th district includes all of [[Davidson County, North Carolina|Davidson]] and [[Davie County, North Carolina|Davie]] counties. The incumbent is Republican [[Steve Jarvis]], who has represented the 30th district and its predecessors since 2021.
+
+{{Election box begin no change|title=North Carolina Senate 30th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1332] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Steve Jarvis]] (incumbent)
+ | votes = 86,181
+ | percentage = 72.64%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Tina Royal
+ | votes = 29,294
+ | percentage = 24.69%
+}}
+{{Election box candidate with party link no change
+ | party = Libertarian Party (United States)
+ | candidate = Daniel Cavender
+ | votes = 3,161
+ | percentage = 2.66%
+}}
+{{Election box total no change
+ | votes = 118,636
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 31====
+The new 31st district includes all of [[Stokes County, North Carolina|Stokes County]], as well as most of [[Forsyth County, North Carolina|Forsyth County]]. The incumbent is Republican [[Joyce Krawiec]], who has represented the 31st district since 2014. On December 4, 2023, Krawiec announced she would retire after six terms.<ref name="JKR" />
+{{Election box begin no change|title=North Carolina Senate 31st district Democratic primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2329] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Ronda Mays
+ | votes = 6,241
+ | percentage = 53.78%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Laurelyn Dossett
+ | votes = 5,363
+ | percentage = 46.22%
+}}
+{{Election box total no change
+ | votes = 11,604
+ | percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 31st district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1333] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Dana Caudill Jones]]
+ | votes = 78,429
+ | percentage = 62.42%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Ronda Mays
+ | votes = 47,035
+ | percentage = 37.43%
+}}
+{{Election box write-in with party link no change
+ | votes = 186
+ | percentage = 0.15%
+}}
+{{Election box candidate with party link no change
+ | party = Independent (politician)
+ | candidate = ''Teresa Hopper Prizer (write-in)''
+ | votes = 7
+ | percentage = 0.01%
+}}
+{{Election box total no change
+ | votes = 125,657
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 32====
+The new 32nd district includes portions of southern [[Forsyth County, North Carolina|Forsyth County]]. The incumbent is Democrat [[Paul A. Lowe Jr.|Paul Lowe Jr.]], who has represented the 32nd district since 2015.
+{{Election box begin no change|title=North Carolina Senate 32nd district Democratic primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2333] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Paul A. Lowe Jr.|Paul Lowe Jr.]] (incumbent)
+ | votes = 11,794
+ | percentage = 64.58%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Gardenia Henley
+ | votes = 6,469
+ | percentage = 35.42%
+}}
+{{Election box total no change
+ | votes = 18,263
+ | percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 32nd district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1334] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Paul A. Lowe Jr.|Paul Lowe Jr.]] (incumbent)
+ | votes = 67,131
+ | percentage = 68.97%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = George Ware
+ | votes = 27,442
+ | percentage = 28.19%
+}}
+{{Election box candidate with party link no change
+ | party = Libertarian Party (United States)
+ | candidate = Zac Lentz
+ | votes = 2,758
+ | percentage = 2.83%
+}}
+{{Election box total no change
+ | votes = 97,331
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 33====
+The new 33rd district includes all of [[Rowan County, North Carolina|Rowan]] and [[Stanly County, North Carolina|Stanly]] counties. The incumbent is Republican [[Carl Ford (politician)|Carl Ford]], who has represented the 33rd district since 2019.
+{{Election box begin no change|title=North Carolina Senate 33rd district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1335] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Carl Ford (politician)|Carl Ford]] (incumbent)
+ | votes = 77,115
+ | percentage = 70.99%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Tangela (Lucy Horne) Morgan
+ | votes = 31,509
+ | percentage = 29.01%
+}}
+{{Election box total no change
+ | votes = 108,624
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 34====
+The new 34th district includes most of [[Cabarrus County, North Carolina|Cabarrus County]]. The incumbent is Republican Majority Leader [[Paul Newton (politician)|Paul Newton]], who has represented the 34th district and its predecessors since 2017.
+{{Election box begin no change|title=North Carolina Senate 34th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1336] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Paul Newton (politician)|Paul Newton]] (incumbent)
+ | votes = 58,166
+ | percentage = 52.93%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Kim Sexton-Lewter
+ | votes = 48,558
+ | percentage = 44.19%
+}}
+{{Election box candidate with party link no change
+ | party = Libertarian Party (United States)
+ | candidate = Thomas Hill
+ | votes = 3,171
+ | percentage = 2.89%
+}}
+{{Election box total no change
+ | votes = 109,895
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 35====
+The new 35th district includes most of [[Union County, North Carolina|Union County]], as well as a small portion of southern [[Cabarrus County, North Carolina|Cabarrus County]]. The incumbent is Republican [[Todd Johnson (politician)|Todd Johnson]], who has represented the 35th district since 2019.
+{{Election box begin no change|title=North Carolina Senate 35th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1337] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Todd Johnson (politician)|Todd Johnson]] (incumbent)
+ | votes = 82,030
+ | percentage = 63.34%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Robin Mann
+ | votes = 47,486
+ | percentage = 36.66%
+}}
+{{Election box total no change
+ | votes = 129,516
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 36====
+The new 36th district includes all of [[Alexander County, North Carolina|Alexander]], [[Surry County, North Carolina|Surry]], [[Wilkes County, North Carolina|Wilkes]], and [[Yadkin County, North Carolina|Yadkin]] counties. The incumbent is Republican [[Eddie Settle]], who has represented the 36th district since 2023.
+{{Election box begin no change|title=North Carolina Senate 36th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1338] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Eddie Settle]] (incumbent)
+ | votes = 88,102
+ | percentage = 78.98%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Darren Staley
+ | votes = 23,444
+ | percentage = 21.02%
+}}
+{{Election box total no change
+ | votes = 111,546
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 37====
+The new 37th district includes all of [[Iredell County, North Carolina|Iredell County]], as well as a small portion of northern [[Mecklenburg County, North Carolina|Mecklenburg County]]. It includes the homes of incumbent Republican [[Vickie Sawyer]], who has represented the 34th district since 2019, and incumbent Democrat [[Natasha Marcus]], who has represented the 41st district since 2019. On November 14, 2023, Marcus announced she would retire after three terms,<ref>{{Cite news|last=Harrison|first=Steve|date=November 14, 2023|title=Democrat Natasha Marcus will not move to stay in state Senate — but could run for another office|url=https://www.wunc.org/2023-11-14/democrat-natasha-marcus-will-not-move-to-stay-in-state-senate-but-could-run-for-another-office|access-date=December 23, 2023|website=[[WUNC (FM)]]|language=en}}</ref> announcing a run for [[2024 North Carolina Council of State elections#Commissioner of Insurance|Insurance Commissioner]] on December 19, 2023.<ref name="NMIC">{{Cite news|title=Davidson Resident, Natasha Marcus, Announces Run for N.C. Insurance Commissioner|url=https://newsofdavidson.org/2023/12/19/67772/davidson-resident-natasha-marcus-announces-run-for-n-c-insurance-commissioner/|date=December 19, 2023|website=News of Davidson|access-date=December 23, 2023|language=en-US}}</ref>
+{{Election box begin no change|title=North Carolina Senate 37th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1339] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Vickie Sawyer]] (incumbent)
+ | votes = 82,832
+ | percentage = 64.73%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Kate Compton Barr
+ | votes = 45,129
+ | percentage = 35.27%
+}}
+{{Election box total no change
+ | votes = 127,961
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 38====
+The new 38th district includes portions of northern [[Mecklenburg County, North Carolina|Mecklenburg County]]. The incumbent is Democrat [[Mujtaba A. Mohammed|Mujtaba Mohammed]], who has represented the 38th district since 2019.
+{{Election box begin no change|title=North Carolina Senate 38th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1340] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Mujtaba A. Mohammed|Mujtaba Mohammed]] (incumbent)
+ | votes = 94,162
+ | percentage = 100%
+}}
+{{Election box total no change
+ | votes = 94,162
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 39====
+The new 39th district includes portions of southwestern [[Mecklenburg County, North Carolina|Mecklenburg County]]. The incumbent is Democrat [[DeAndrea Salvador]] has represented the 39th district since 2021.
+{{Election box begin no change|title=North Carolina Senate 39th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1341] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[DeAndrea Salvador]] (incumbent)
+ | votes = 88,183
+ | percentage = 100%
+}}
+{{Election box total no change
+ | votes = 88,183
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 40====
+The new 40th district includes portions of eastern [[Mecklenburg County, North Carolina|Mecklenburg County]]. The incumbent is Democrat [[Joyce Waddell]], who has represented the 40th district since 2015.
+{{Election box begin no change|title=North Carolina Senate 40th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1342] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Joyce Waddell]] (incumbent)
+ | votes = 67,654
+ | percentage = 79.38%
+}}
+{{Election box candidate with party link no change
+ | party = We the People Party
+ | candidate = Jeff Scott<ref>{{Cite web|url=https://s3.amazonaws.com/dl.ncsbe.gov/Elections/2024/Candidate%20Filing/2024_General_Election_Candidate_PDFs/Supplementary%202024%20General%20Election%20Candidates.pdf|title=Supplementary 2024 General Election Candidates Constitution and We The People Candidates|website=North Carolina State Board of Election}}</ref>
+ | votes = 17,569
+ | percentage = 20.62%
+}}
+{{Election box total no change
+ | votes = 85,223
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 41====
+The new 41st district includes portions of central [[Mecklenburg County, North Carolina|Mecklenburg County]] and has no incumbent.
+{{Election box begin no change|title=North Carolina Senate 41st district Democratic primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2369] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Caleb Theodros]]
+ | votes = 7,230
+ | percentage = 42.84%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Lucille Puckett
+ | votes = 5,268
+ | percentage = 31.22%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Kendrick Cunningham
+ | votes = 2,784
+ | percentage = 16.50%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Robert Bruns
+ | votes = 1,593
+ | percentage = 9.44%
+}}
+{{Election box total no change
+ | votes = 16,875
+ | percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 41st district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1343] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Caleb Theodros]]
+ | votes = 95,805 
+ | percentage = 100%
+}}
+{{Election box total no change
+ | votes = 95,805 
+ | percentage = 100%
+}}
+{{Election box new seat win
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 42====
+The new 42nd district includes all of southeastern [[Mecklenburg County, North Carolina|Mecklenburg County]]. The incumbent is Democrat [[Rachel Hunt]], who has represented the 42nd district since 2023. On March 1, 2023, Hunt announced she would retire after one term to run for [[2024 North Carolina lieutenant gubernatorial election#Democratic primary|Lieutenant Governor]].<ref name="RHLG">{{Cite news|title=N.C. Sen. Rachel Hunt to run for lieutenant governor|url=https://spectrumlocalnews.com/nc/charlotte/politics/2023/03/01/n-c--sen--rachel-hunt-to-run-for-lieutenant-governor|date=March 1, 2023|access-date=December 23, 2023|website=[[Spectrum News 1 North Carolina]]|language=en}}</ref>
+{{Election box begin no change|title=North Carolina Senate 42nd district Republican primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2376] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+| party = Republican Party (United States)
+| candidate = Stacie McGinn
+| votes = 11,336
+| percentage = 51.72%
+}}
+{{Election box candidate with party link no change
+| party = Republican Party (United States)
+| candidate = Jaime Daniell
+| votes = 10,584
+| percentage = 48.28%
+}}
+{{Election box total no change
+| votes = 21,920
+| percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 42nd district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1344] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Woodson Bradley]]
+ | votes = 62,260
+ | percentage = 50.08%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Stacie McGinn
+ | votes = 62,051
+ | percentage = 49.92% 
+}}
+{{Election box total no change
+ | votes = 124,311
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 43====
+The new 43rd district includes most of [[Gaston County, North Carolina|Gaston County]]. The incumbent is Republican [[Brad Overcash]], who has represented the 43rd district since 2023.
+{{Election box begin no change|title=North Carolina Senate 43rd district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1345] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Brad Overcash]] (incumbent)
+ | votes = 66,112
+ | percentage = 61.78%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Corey Creech
+ | votes = 40,893
+ | percentage = 38.22%
+}}
+{{Election box total no change
+ | votes = 107,005
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 44====
+The new 44th district includes all of [[Cleveland County, North Carolina|Cleveland]] and [[Lincoln County, North Carolina|Lincoln]] counties, as well as portions of northwestern [[Gaston County, North Carolina|Gaston County]]. The incumbent is Republican [[W. Ted Alexander|Ted Alexander]], who has represented the 44th district since 2019.
+{{Election box begin no change|title=North Carolina Senate 44th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1346] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[W. Ted Alexander|Ted Alexander]] (incumbent)
+ | votes = 81,809
+ | percentage = 72.50%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Henry Herzberg
+ | votes = 31,033
+ | percentage = 27.50%
+}}
+{{Election box total no change
+ | votes = 112,842
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 45====
+The new 45th district includes all of [[Catawba County, North Carolina|Catawba County]], as well as portions of southern [[Caldwell County, North Carolina|Caldwell County]]. The incumbent is Republican [[H. Dean Proctor|Dean Proctor]], who has represented the 45th district and its predecessors since 2020. On November 19, 2023, Proctor announced he would retire after three terms.<ref name="HDPR">{{Cite news|last=Griffin|first=Kevin|date=November 29, 2023|title=N.C. Sen. Dean Proctor will not seek reelection|url=https://hickoryrecord.com/news/local/government-politics/dean-proctor-north-carolina-senate-catawba-county/article_1d3571f0-8ed1-11ee-8d3c-37b12d637c19.html|access-date=December 23, 2023|website=[[Hickory Daily Record]]|language=en}}</ref>
+{{Election box begin no change|title=North Carolina Senate 45th district Republican primary election, 2024<ref>[https://er.ncsbe.gov/?election_dt=03/05/2024&county_id=0&office=NCS&contest=2388] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Mark Hollo]]
+ | votes = 16,390
+ | percentage = 60.40%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Nancy Meek
+ | votes = 10,746
+ | percentage = 39.60%
+}}
+{{Election box total no change
+ | votes = 27,136
+ | percentage = 100%
+}}
+{{Election box end}}
+
+{{Election box begin no change|title=North Carolina Senate 45th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1347] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Mark Hollo]]
+ | votes = 80,033
+ | percentage = 70.28%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Kim Bost
+ | votes = 33,840
+ | percentage = 29.72%
+}}
+{{Election box total no change
+ | votes = 113,873
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 46====
+The new 46th district includes all of [[Burke County, North Carolina|Burke]] and [[McDowell County, North Carolina|McDowell]] counties, as well as portions of [[Buncombe County, North Carolina|Buncombe County]]. The incumbent Republican is [[Warren Daniel]], who has represented the 46th district and its predecessors since 2011.
+{{Election box begin no change|title=North Carolina Senate 46th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1348] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Warren Daniel]] (incumbent)
+ | votes = 68,675
+ | percentage = 65.23%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[John Ager]]
+ | votes = 36,604
+ | percentage = 34.77%
+}}
+{{Election box total no change
+ | votes = 105,279
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 47====
+The new 47th district includes all of [[Alleghany County, North Carolina|Alleghany]], [[Ashe County, North Carolina|Ashe]], [[Avery County, North Carolina|Avery]], [[Madison County, North Carolina|Madison]], [[Mitchell County, North Carolina|Mitchell]], [[Watauga County, North Carolina|Watauga]], and [[Yancey County, North Carolina|Yancey]] counties, as well as portions of [[Caldwell County, North Carolina|Caldwell]] and [[Haywood County, North Carolina|Haywood]] counties. The incumbent is Republican [[Ralph Hise]], who has represented the 47th district since 2011.
+{{Election box begin no change|title=North Carolina Senate 47th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1349] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Ralph Hise]] (incumbent)
+ | votes = 75,607
+ | percentage = 64.15%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Frank Patton Hughes III
+ | votes = 42,247
+ | percentage = 35.85%
+}}
+{{Election box total no change
+ | votes = 117,854
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 48====
+The new 48th district includes all of [[Henderson County, North Carolina|Henderson]], [[Polk County, North Carolina|Polk]], and [[Rutherford County, North Carolina|Rutherford]] counties. The incumbent is Republican [[Tim Moffitt]], who has represented the 48th district since 2023.
+{{Election box begin no change|title=North Carolina Senate 48th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1350] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Tim Moffitt]] (incumbent)
+ | votes = 73,373
+ | percentage = 63.93%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Chris Walters
+ | votes = 41,399
+ | percentage = 36.07%
+}}
+{{Election box total no change
+ | votes = 114,772
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+====District 49====
+The new 49th district includes most of [[Buncombe County, North Carolina|Buncombe County]]. The incumbent is Democrat [[Julie Mayfield]], who has represented the 49th district since 2021.
+{{Election box begin no change|title=North Carolina Senate 49th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1351] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = [[Julie Mayfield]] (incumbent)
+ | votes = 81,037
+ | percentage = 69.07%
+}}
+{{Election box candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = Kristie Tincher Sluder
+ | votes = 36,288
+ | percentage = 30.93%
+}}
+{{Election box total no change
+ | votes = 117,325
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Democratic Party (United States)
+}}
+{{Election box end}}
+
+====District 50====
+The new 50th district includes most of [[Cherokee County, North Carolina|Cherokee]], [[Clay County, North Carolina|Clay]], [[Graham County, North Carolina|Graham]], [[Jackson County, North Carolina|Jackson]], [[Macon County, North Carolina|Macon]], [[Swain County, North Carolina|Swain]], and [[Transylvania County, North Carolina|Transylvania]] counties, as well as most of [[Haywood County, North Carolina|Haywood County]]. The incumbent is Republican [[Kevin Corbin]], who has represented the 50th district since 2021.
+{{Election box begin no change|title=North Carolina Senate 50th district general election, 2024<ref>[https://er.ncsbe.gov/?election_dt=11/05/2024&county_id=0&office=NCS&contest=1352] ''North Carolina State Board of Elections''.</ref>
+}}
+{{Election box winning candidate with party link no change
+ | party = Republican Party (United States)
+ | candidate = [[Kevin Corbin]] (incumbent)
+ | votes = 83,381
+ | percentage = 66.53%
+}}
+{{Election box candidate with party link no change
+ | party = Democratic Party (United States)
+ | candidate = Adam Tebrugge
+ | votes = 41,939
+ | percentage = 33.47%
+}}
+{{Election box total no change
+ | votes = 125,320
+ | percentage = 100%
+}}
+{{Election box hold with party link no change
+| winner = Republican Party (United States)
+}}
+{{Election box end}}
+
+==See also==
+* [[2024 North Carolina elections]]
+* [[2024 North Carolina House of Representatives election]]
+* [[List of North Carolina state legislatures]]
+
+==Notes==
+{{Notelist}}
+
+==References==
+{{Reflist}}
+
+==Further reading==
+* {{citation |url=https://www.nytimes.com/2024/08/31/us/veto-override-north-carolina.html |work=[[nytimes.com]] |date=2024-08-31 |title=In North Carolina, the Math for a Supermajority May Come Down to One }}
+
+{{2024 United States elections}}
+{{North Carolina State Legislatures}}
+
+[[Category:2024 state legislature elections in the United States|North Carolina senate]]
+[[Category:2024 North Carolina elections|senate]]
+[[Category:North Carolina Senate elections|2024]]
