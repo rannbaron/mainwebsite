@@ -1,5 +1,16 @@
 import json, re, math
 
+def get_standard_rating(p_dem):
+    if p_dem >= 95.0: return 'Safe D'
+    elif p_dem >= 85.0: return 'Very Likely D'
+    elif p_dem >= 75.0: return 'Likely D'
+    elif p_dem >= 60.0: return 'Lean D'
+    elif p_dem >= 40.0: return 'Toss Up'
+    elif p_dem >= 25.0: return 'Lean R'
+    elif p_dem >= 15.0: return 'Likely R'
+    elif p_dem >= 5.0: return 'Very Likely R'
+    else: return 'Safe R'
+
 print("1. Parsing official 2024 NC House results...")
 with open('/home/rann/src/elections/2026 analysis/nc_house_2024_wiki.txt') as f:
     text = f.read()
@@ -139,18 +150,13 @@ for h_id, d in sorted(house.items(), key=lambda x: x[1]['number']):
     proj_p = 'D' if m26 > 0 else 'R'
     abs_m = abs(m26)
     
-    if abs_m >= 15: rating = f"Safe {proj_p}"
-    elif abs_m >= 8: rating = f"Likely {proj_p}"
-    elif abs_m >= 3: rating = f"Lean {proj_p}"
-    else: rating = f"Tilt {proj_p}"
-    d['rating'] = rating
-    
     # Win prob via standard normal
     z = m26 / 3.8
     p_dem = round(0.5 * (1.0 + math.erf(z / math.sqrt(2.0))) * 100.0, 1)
     p_rep = round(100.0 - p_dem, 1)
     d['p_dem'] = p_dem
     d['p_rep'] = p_rep
+    d['rating'] = get_standard_rating(p_dem)
     
     ci_low = round(m26 - 7.5, 1)
     ci_high = round(m26 + 7.5, 1)
@@ -158,7 +164,13 @@ for h_id, d in sorted(house.items(), key=lambda x: x[1]['number']):
         return f"D +{val:.1f}%" if val > 0 else (f"R +{abs(val):.1f}%" if val < 0 else "EVEN")
     d['ci_str'] = f"{fmt_m(ci_low)} to {fmt_m(ci_high)}"
     
-    d['call_confidence'] = 'very high confidence' if abs_m >= 12 else ('high confidence' if abs_m >= 6 else 'moderate confidence')
+    ratio = abs_m / 3.8
+    if ratio >= 2.0: call_conf = 'very high confidence'
+    elif ratio >= 1.0: call_conf = 'high confidence'
+    elif ratio >= 0.5: call_conf = 'moderate confidence'
+    elif ratio >= 0.2: call_conf = 'low confidence'
+    else: call_conf = 'very low confidence'
+    d['call_confidence'] = call_conf
     
     winner_cand = d['dem_candidate'] if proj_p == 'D' else d['rep_candidate']
     last_name = winner_cand.split()[-1] if winner_cand else proj_p
@@ -246,22 +258,24 @@ for s_id, d in sorted(senate.items(), key=lambda x: x[1]['number']):
     proj_p = 'D' if m26 > 0 else 'R'
     abs_m = abs(m26)
     
-    if abs_m >= 15: rating = f"Safe {proj_p}"
-    elif abs_m >= 8: rating = f"Likely {proj_p}"
-    elif abs_m >= 3: rating = f"Lean {proj_p}"
-    else: rating = f"Tilt {proj_p}"
-    d['rating'] = rating
-    
     z = m26 / 3.5
     p_dem = round(0.5 * (1.0 + math.erf(z / math.sqrt(2.0))) * 100.0, 1)
     p_rep = round(100.0 - p_dem, 1)
     d['p_dem'] = p_dem
     d['p_rep'] = p_rep
+    d['rating'] = get_standard_rating(p_dem)
     
     ci_low = round(m26 - 6.8, 1)
     ci_high = round(m26 + 6.8, 1)
     d['ci_str'] = f"{fmt_m(ci_low)} to {fmt_m(ci_high)}"
-    d['call_confidence'] = 'very high confidence' if abs_m >= 12 else ('high confidence' if abs_m >= 6 else 'moderate confidence')
+    
+    ratio = abs_m / 3.5
+    if ratio >= 2.0: call_conf = 'very high confidence'
+    elif ratio >= 1.0: call_conf = 'high confidence'
+    elif ratio >= 0.5: call_conf = 'moderate confidence'
+    elif ratio >= 0.2: call_conf = 'low confidence'
+    else: call_conf = 'very low confidence'
+    d['call_confidence'] = call_conf
     
     winner_cand = d['dem_candidate'] if proj_p == 'D' else d['rep_candidate']
     last_name = winner_cand.split()[-1] if winner_cand else proj_p
@@ -309,6 +323,15 @@ if m_s:
 m_h = re.search(r'window\.NC_HOUSE_DATA\s*=\s*\{.*?\};\n', html)
 if m_h:
     html = html[:m_h.start()] + f'    window.NC_HOUSE_DATA = {{"districts": {house_json}}};\n' + html[m_h.end():]
+
+# Update CD ratings in NC_CD_DATA
+m_cd = re.search(r'(window\.NC_CD_DATA\s*=\s*\{\"districts\":\s*)(\{[\s\S]*?\})(\s*,\s*\"county_to_cd\"[\s\S]*?\n\s*\};)', html)
+if m_cd:
+    cd_districts = json.loads(m_cd.group(2))
+    for cid, c in cd_districts.items():
+        p_d = c.get('p_dem', 50.0)
+        c['rating'] = get_standard_rating(p_d)
+    html = html[:m_cd.start(2)] + json.dumps(cd_districts, separators=(',', ':')) + html[m_cd.end(2):]
 
 # 2. Update Senate options
 senate_options = ['<option value="">All NC Senate Districts (50 Districts)...</option>']
