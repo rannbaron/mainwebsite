@@ -355,7 +355,7 @@
       </div>
 
       <!-- Arrow Style Legend (Top Right) -->
-      <div id="mapLegend" class="absolute top-3.5 right-4 z-20 glass-card px-3.5 py-2.5 rounded-xl text-xs shadow-xl flex flex-col gap-1.5 max-w-[230px] border border-slate-700/80">
+      <div id="mapLegend" class="absolute top-3.5 right-4 z-20 glass-card px-3.5 py-2.5 rounded-xl text-xs shadow-xl flex flex-col gap-1.5 max-w-[250px] border border-slate-700/80">
         <div class="font-bold text-slate-200 text-[11px] uppercase tracking-wider flex items-center justify-between pb-1 border-b border-slate-800">
           <span id="legendTitle">Swing Direction</span>
           <span class="text-[10px] text-slate-400 font-mono" id="legendSubtitle">2026 vs 2022</span>
@@ -371,6 +371,10 @@
         <div class="flex items-center gap-2 text-slate-200 font-semibold" id="legendRowFlip" style="display: none;">
           <span class="w-3.5 h-3.5 rounded-sm border border-slate-500/60 shrink-0 inline-block shadow-sm" style="background: repeating-linear-gradient(45deg, #2563eb, #2563eb 2.5px, #dc2626 2.5px, #dc2626 5px);"></span>
           <span class="text-[11px] leading-tight" id="legendLabelFlip">Predicted Flip (R &harr; D)</span>
+        </div>
+        <div class="flex items-center gap-2 text-purple-200 font-semibold" id="legendRowTossupFlip" style="display: none;">
+          <span class="w-3.5 h-3.5 rounded-sm shrink-0 inline-block shadow-sm" style="background: repeating-linear-gradient(45deg, #2563eb, #2563eb 2.5px, #9333ea 2.5px, #9333ea 5px); border: 1.5px dashed #c084fc;"></span>
+          <span class="text-[11px] leading-tight" id="legendLabelTossupFlip">Toss-Up Flip (Razor-Thin)</span>
         </div>
         <div id="legendNote" class="text-[10px] text-slate-400 pt-1 border-t border-slate-800/80 leading-normal">
           High-contrast casing arrows. Arrow length indicates percentage point shift.
@@ -390,6 +394,15 @@
             <pattern id="patternFlipDtoR" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
               <rect width="5" height="10" fill="#dc2626" />
               <rect x="5" width="5" height="10" fill="#2563eb" />
+            </pattern>
+            <!-- Tossup Flip Patterns: Purple + Party Bicolor Stripes -->
+            <pattern id="patternTossupFlipRtoD" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <rect width="5" height="10" fill="#2563eb" />
+              <rect x="5" width="5" height="10" fill="#9333ea" />
+            </pattern>
+            <pattern id="patternTossupFlipDtoR" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)">
+              <rect width="5" height="10" fill="#dc2626" />
+              <rect x="5" width="5" height="10" fill="#9333ea" />
             </pattern>
           </defs>
           <g id="countiesLayer"></g>
@@ -1701,45 +1714,37 @@
     }
 
     function updateLegendUI() {
-      if (currentMapMode === 'cd') {
-        const title = document.getElementById('legendTitle');
-        const subtitle = document.getElementById('legendSubtitle');
-        const rowPos = document.getElementById('legendRowPos');
-        const rowNeg = document.getElementById('legendRowNeg');
-        const labelPos = document.getElementById('legendLabelPos');
-        const labelNeg = document.getElementById('legendLabelNeg');
-        const note = document.getElementById('legendNote');
-        const rowFlip = document.getElementById('legendRowFlip');
-        const iconPos = rowPos ? rowPos.querySelector('span:first-child') : null;
-        const iconNeg = rowNeg ? rowNeg.querySelector('span:first-child') : null;
+      const title = document.getElementById('legendTitle');
+      const subtitle = document.getElementById('legendSubtitle');
+      const rowPos = document.getElementById('legendRowPos');
+      const rowNeg = document.getElementById('legendRowNeg');
+      const labelPos = document.getElementById('legendLabelPos');
+      const labelNeg = document.getElementById('legendLabelNeg');
+      const note = document.getElementById('legendNote');
+      const rowFlip = document.getElementById('legendRowFlip');
+      const labelFlip = document.getElementById('legendLabelFlip');
+      const rowTossupFlip = document.getElementById('legendRowTossupFlip');
+      const labelTossupFlip = document.getElementById('legendLabelTossupFlip');
+      const iconPos = rowPos ? rowPos.querySelector('span:first-child') : null;
+      const iconNeg = rowNeg ? rowNeg.querySelector('span:first-child') : null;
 
-        if (rowFlip) rowFlip.style.display = 'flex';
-        if (title) title.textContent = 'Congressional Districts Model';
+      if (rowFlip) rowFlip.style.display = 'none';
+      if (rowTossupFlip) rowTossupFlip.style.display = 'none';
+
+      if (currentMapMode === 'cd') {
+        if (title) title.textContent = 'Congressional Districts';
         if (subtitle) subtitle.textContent = '14 Districts (2026 Model)';
         if (rowPos) rowPos.style.color = '#3b82f6';
         if (rowNeg) rowNeg.style.color = '#ef4444';
         if (iconPos) iconPos.innerHTML = '&#9632;';
         if (iconNeg) iconNeg.innerHTML = '&#9632;';
-        if (labelPos) labelPos.textContent = 'Dem Projected: 54 Seats';
-        if (labelNeg) labelNeg.textContent = 'Rep Projected: 66 Seats';
-        const labelFlip = document.getElementById('legendLabelFlip');
-        if (labelFlip) labelFlip.textContent = 'Predicted Flips (5 R→D): HD-025, HD-035, HD-073, HD-074, HD-105 (Supermajority Broken: 66/72)';
-        if (note) note.textContent = 'Cross-hatching indicates seats projected to change party control. 95% Confidence Intervals calculated for all districts.';
+        if (labelPos) labelPos.textContent = 'Dem Projected: 4 Seats';
+        if (labelNeg) labelNeg.textContent = 'Rep Projected: 10 Seats';
+        if (note) note.textContent = '95% Confidence Intervals calculated for all 14 Congressional Districts.';
         return;
       }
       if (currentMapMode === 'senate') {
-        const title = document.getElementById('legendTitle');
-        const subtitle = document.getElementById('legendSubtitle');
-        const rowPos = document.getElementById('legendRowPos');
-        const rowNeg = document.getElementById('legendRowNeg');
-        const labelPos = document.getElementById('legendLabelPos');
-        const labelNeg = document.getElementById('legendLabelNeg');
-        const note = document.getElementById('legendNote');
-        const rowFlip = document.getElementById('legendRowFlip');
-        const iconPos = rowPos ? rowPos.querySelector('span:first-child') : null;
-        const iconNeg = rowNeg ? rowNeg.querySelector('span:first-child') : null;
-
-        if (rowFlip) rowFlip.style.display = 'flex';
+        if (rowTossupFlip) rowTossupFlip.style.display = 'flex';
         if (title) title.textContent = 'NC Senate Model';
         if (subtitle) subtitle.textContent = '50 Districts (2026 Model)';
         if (rowPos) rowPos.style.color = '#3b82f6';
@@ -1748,23 +1753,12 @@
         if (iconNeg) iconNeg.innerHTML = '&#9632;';
         if (labelPos) labelPos.textContent = 'Dem Projected: 22 Seats';
         if (labelNeg) labelNeg.textContent = 'Rep Projected: 28 Seats';
-        const labelFlip = document.getElementById('legendLabelFlip');
         if (labelFlip) labelFlip.textContent = 'Predicted Flips (2 R→D): SD-11, SD-34 (Supermajority Broken: 28/30)';
-        if (note) note.textContent = 'Bottom-up precinct aggregation. Cross-hatching indicates seats projected to flip control.';
+        if (labelTossupFlip) labelTossupFlip.textContent = 'Toss-Up Flips (2 R→D): SD-11, SD-34';
+        if (note) note.textContent = 'Purple/blue stripes & dashed glow highlight razor-thin tossup flips. Supermajority broken (28/30).';
         return;
       }
       if (currentMapMode === 'house') {
-        const title = document.getElementById('legendTitle');
-        const subtitle = document.getElementById('legendSubtitle');
-        const rowPos = document.getElementById('legendRowPos');
-        const rowNeg = document.getElementById('legendRowNeg');
-        const labelPos = document.getElementById('legendLabelPos');
-        const labelNeg = document.getElementById('legendLabelNeg');
-        const note = document.getElementById('legendNote');
-        const rowFlip = document.getElementById('legendRowFlip');
-        const iconPos = rowPos ? rowPos.querySelector('span:first-child') : null;
-        const iconNeg = rowNeg ? rowNeg.querySelector('span:first-child') : null;
-
         if (rowFlip) rowFlip.style.display = 'flex';
         if (title) title.textContent = 'NC House Model';
         if (subtitle) subtitle.textContent = '120 Districts (2026 Model)';
@@ -1774,21 +1768,10 @@
         if (iconNeg) iconNeg.innerHTML = '&#9632;';
         if (labelPos) labelPos.textContent = 'Dem Projected: 54 Seats';
         if (labelNeg) labelNeg.textContent = 'Rep Projected: 66 Seats';
-        const labelFlip = document.getElementById('legendLabelFlip');
         if (labelFlip) labelFlip.textContent = 'Predicted Flips (5 R→D): HD-025, HD-035, HD-073, HD-074, HD-105 (Supermajority Broken: 66/72)';
         if (note) note.textContent = 'Bottom-up precinct aggregation. Cross-hatching indicates seats projected to flip control.';
         return;
       }
-      const title = document.getElementById('legendTitle');
-      const subtitle = document.getElementById('legendSubtitle');
-      const rowPos = document.getElementById('legendRowPos');
-      const rowNeg = document.getElementById('legendRowNeg');
-      const labelPos = document.getElementById('legendLabelPos');
-      const labelNeg = document.getElementById('legendLabelNeg');
-      const note = document.getElementById('legendNote');
-      const rowFlip = document.getElementById('legendRowFlip');
-      const iconPos = rowPos ? rowPos.querySelector('span:first-child') : null;
-      const iconNeg = rowNeg ? rowNeg.querySelector('span:first-child') : null;
 
       if (rowFlip) {
         rowFlip.style.display = (currentMapMode === 'forecast' && !activeCountyId) ? 'flex' : 'none';
@@ -2669,6 +2652,16 @@
     function getCDFill(dist) {
       if (!dist) return '#1e293b';
 
+      const isFlip = dist.is_flip || (dist.flip_status && dist.flip_status !== 'HOLD');
+      const isTossUp = dist.rating === 'Toss Up';
+
+      // Tossup Flip: Purple + Party stripes
+      if (isFlip && isTossUp) {
+        return (dist.flip_status === 'FLIP_R_TO_D' || dist.projected_winner_party === 'D')
+          ? 'url(#patternTossupFlipRtoD)'
+          : 'url(#patternTossupFlipDtoR)';
+      }
+
       // Check for predicted flip first (bicolor hatching pattern)
       if (dist.flip_status === 'FLIP_R_TO_D') {
         return 'url(#patternFlipRtoD)';
@@ -2774,6 +2767,17 @@
 
     function getDistrictFill(dist) {
       if (!dist) return '#1e293b';
+
+      const isFlip = dist.is_flip || (dist.flip_status && dist.flip_status !== 'HOLD');
+      const isTossUp = dist.rating === 'Toss Up';
+
+      // Check for tossup flip first (purple + party bicolor stripes)
+      if (isFlip && isTossUp) {
+        return (dist.flip_status === 'FLIP_R_TO_D' || dist.projected_winner_party === 'D')
+          ? 'url(#patternTossupFlipRtoD)'
+          : 'url(#patternTossupFlipDtoR)';
+      }
+
       if (dist.flip_status === 'FLIP_R_TO_D') return 'url(#patternFlipRtoD)';
       if (dist.flip_status === 'FLIP_D_TO_R') return 'url(#patternFlipDtoR)';
 
@@ -2806,6 +2810,29 @@
       if (dist.rep_candidate) cands.push(`<span class="text-red-400 font-semibold">${dist.rep_candidate} (R)</span>`);
       const candsHtml = cands.length > 0 ? cands.join(' vs ') : '<span class="text-slate-400 italic">Major Party Candidates</span>';
 
+      let flipHtml = '';
+      if (dist.is_flip || (dist.flip_status && dist.flip_status !== 'HOLD')) {
+        const isTossUp = dist.rating === 'Toss Up';
+        const flipParty = dist.flip_status === 'FLIP_D_TO_R' ? 'D &rarr; R' : 'R &rarr; D';
+        if (isTossUp) {
+          flipHtml = `
+            <div class="text-[10px] font-bold text-purple-200 bg-purple-950/90 border border-purple-400/80 rounded px-2 py-1 mb-2 flex items-center justify-between shadow-sm">
+              <span class="flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-xs inline-block shrink-0" style="background: repeating-linear-gradient(45deg, ${dist.projected_winner_party === 'D' ? '#2563eb' : '#dc2626'}, ${dist.projected_winner_party === 'D' ? '#2563eb' : '#dc2626'} 2px, #9333ea 2px, #9333ea 4px); border: 1px dashed #c084fc;"></span>
+                <span>TOSSUP FLIP: ${flipParty} (${dist.projected_winner_name || ''})</span>
+              </span>
+              <span class="font-mono text-purple-300 text-[9px] uppercase tracking-wider">Razor-Thin</span>
+            </div>
+          `;
+        } else {
+          flipHtml = `
+            <div class="text-[10px] font-bold text-amber-300 bg-amber-950/80 border border-amber-500/70 rounded px-2 py-0.5 mb-2 flex items-center justify-between">
+              <span>&bull; PREDICTED FLIP: ${flipParty} (${dist.projected_winner_name || ''})</span>
+            </div>
+          `;
+        }
+      }
+
       tooltipEl.innerHTML = `
         <div class="font-bold text-sm text-white flex items-center justify-between gap-3 mb-1">
           <span>${dist.name}</span>
@@ -2814,6 +2841,7 @@
           </span>
         </div>
         <div class="text-xs text-slate-300 mb-2">${candsHtml}</div>
+        ${flipHtml}
         <div class="grid grid-cols-2 gap-2 text-xs border-t border-slate-700/60 pt-2 mb-1.5">
           <div>
             <span class="text-slate-400 block text-[10px]">Projected Outcome</span>
@@ -2852,20 +2880,35 @@
         path.setAttribute('vector-effect', 'non-scaling-stroke');
 
         const isSelected = selectedSenateId === dist.id;
+        const isTossupFlip = (dist.is_flip || (dist.flip_status && dist.flip_status !== 'HOLD')) && dist.rating === 'Toss Up';
+
         if (selectedSenateId) {
           if (isSelected) {
             path.setAttribute('stroke', '#34d399');
             path.setAttribute('stroke-width', '2.8');
+            path.removeAttribute('stroke-dasharray');
             path.style.opacity = '1.0';
             path.style.filter = 'drop-shadow(0 0 6px rgba(52, 211, 153, 0.5))';
           } else {
-            path.setAttribute('stroke', '#0f172a');
-            path.setAttribute('stroke-width', '0.75');
+            path.setAttribute('stroke', isTossupFlip ? '#c084fc' : '#0f172a');
+            path.setAttribute('stroke-width', isTossupFlip ? '1.8' : '0.75');
+            if (isTossupFlip) path.setAttribute('stroke-dasharray', '4 2');
+            else path.removeAttribute('stroke-dasharray');
             path.style.opacity = '0.35';
+            path.style.filter = '';
           }
         } else {
-          path.setAttribute('stroke', '#0f172a');
-          path.setAttribute('stroke-width', '1.0');
+          if (isTossupFlip) {
+            path.setAttribute('stroke', '#c084fc');
+            path.setAttribute('stroke-width', '2.2');
+            path.setAttribute('stroke-dasharray', '5 2.5');
+            path.style.filter = 'drop-shadow(0 0 4px rgba(192, 132, 252, 0.7))';
+          } else {
+            path.setAttribute('stroke', '#0f172a');
+            path.setAttribute('stroke-width', '1.0');
+            path.removeAttribute('stroke-dasharray');
+            path.style.filter = '';
+          }
           path.style.opacity = '0.95';
         }
 
@@ -2873,6 +2916,7 @@
           if (!selectedSenateId || isSelected) {
             path.setAttribute('stroke', '#ffffff');
             path.setAttribute('stroke-width', '2.5');
+            path.removeAttribute('stroke-dasharray');
           }
           showDistrictTooltip(dist, 'NC Senate', e);
         });
@@ -2884,13 +2928,23 @@
             if (isSelected) {
               path.setAttribute('stroke', '#34d399');
               path.setAttribute('stroke-width', '2.8');
+              path.removeAttribute('stroke-dasharray');
             } else {
-              path.setAttribute('stroke', '#0f172a');
-              path.setAttribute('stroke-width', '0.75');
+              path.setAttribute('stroke', isTossupFlip ? '#c084fc' : '#0f172a');
+              path.setAttribute('stroke-width', isTossupFlip ? '1.8' : '0.75');
+              if (isTossupFlip) path.setAttribute('stroke-dasharray', '4 2');
+              else path.removeAttribute('stroke-dasharray');
             }
           } else {
-            path.setAttribute('stroke', '#0f172a');
-            path.setAttribute('stroke-width', '1.0');
+            if (isTossupFlip) {
+              path.setAttribute('stroke', '#c084fc');
+              path.setAttribute('stroke-width', '2.2');
+              path.setAttribute('stroke-dasharray', '5 2.5');
+            } else {
+              path.setAttribute('stroke', '#0f172a');
+              path.setAttribute('stroke-width', '1.0');
+              path.removeAttribute('stroke-dasharray');
+            }
           }
           hideTooltip();
         });
@@ -3032,7 +3086,7 @@
               <span class="text-base font-bold font-mono ${isDem ? 'text-blue-400' : 'text-red-400'}">${dist.projected_margin_str}</span>
             </div>
             <div class="text-[11px] text-slate-400 mt-1 flex justify-between">
-              <span>Win Probability: <strong class="text-slate-200">${isDem ? dist.p_dem : dist.p_rep}%</strong></span>${dist.is_flip ? `<span class="ml-2 px-1.5 py-0.5 rounded font-bold text-[10px] bg-purple-600/30 text-purple-300 border border-purple-500/50">PROJECTED FLIP (${dist.flip_status === 'FLIP_R_TO_D' ? 'R &rarr; D' : 'D &rarr; R'})</span>` : ''}
+              <span>Win Probability: <strong class="text-slate-200">${isDem ? dist.p_dem : dist.p_rep}%</strong></span>${dist.is_flip ? `<span class="ml-2 px-1.5 py-0.5 rounded font-bold text-[10px] ${dist.rating === 'Toss Up' ? 'bg-purple-900/60 text-purple-200 border border-purple-400' : 'bg-purple-600/30 text-purple-300 border border-purple-500/50'}">${dist.rating === 'Toss Up' ? 'TOSSUP FLIP' : 'PROJECTED FLIP'} (${dist.flip_status === 'FLIP_R_TO_D' ? 'R &rarr; D' : 'D &rarr; R'})</span>` : ''}
               <span>95% CI: <strong class="text-slate-200">${dist.ci_str}</strong></span>
             </div>
           </div>
@@ -3078,20 +3132,35 @@
         path.setAttribute('vector-effect', 'non-scaling-stroke');
 
         const isSelected = selectedHouseId === dist.id;
+        const isTossupFlip = (dist.is_flip || (dist.flip_status && dist.flip_status !== 'HOLD')) && dist.rating === 'Toss Up';
+
         if (selectedHouseId) {
           if (isSelected) {
             path.setAttribute('stroke', '#fbbf24');
             path.setAttribute('stroke-width', '2.8');
+            path.removeAttribute('stroke-dasharray');
             path.style.opacity = '1.0';
             path.style.filter = 'drop-shadow(0 0 6px rgba(251, 191, 36, 0.5))';
           } else {
-            path.setAttribute('stroke', '#0f172a');
-            path.setAttribute('stroke-width', '0.75');
+            path.setAttribute('stroke', isTossupFlip ? '#c084fc' : '#0f172a');
+            path.setAttribute('stroke-width', isTossupFlip ? '1.8' : '0.75');
+            if (isTossupFlip) path.setAttribute('stroke-dasharray', '4 2');
+            else path.removeAttribute('stroke-dasharray');
             path.style.opacity = '0.35';
+            path.style.filter = '';
           }
         } else {
-          path.setAttribute('stroke', '#0f172a');
-          path.setAttribute('stroke-width', '0.8');
+          if (isTossupFlip) {
+            path.setAttribute('stroke', '#c084fc');
+            path.setAttribute('stroke-width', '2.0');
+            path.setAttribute('stroke-dasharray', '5 2.5');
+            path.style.filter = 'drop-shadow(0 0 4px rgba(192, 132, 252, 0.7))';
+          } else {
+            path.setAttribute('stroke', '#0f172a');
+            path.setAttribute('stroke-width', '0.8');
+            path.removeAttribute('stroke-dasharray');
+            path.style.filter = '';
+          }
           path.style.opacity = '0.95';
         }
 
@@ -3099,6 +3168,7 @@
           if (!selectedHouseId || isSelected) {
             path.setAttribute('stroke', '#ffffff');
             path.setAttribute('stroke-width', '2.2');
+            path.removeAttribute('stroke-dasharray');
           }
           showDistrictTooltip(dist, 'NC House', e);
         });
@@ -3110,13 +3180,23 @@
             if (isSelected) {
               path.setAttribute('stroke', '#fbbf24');
               path.setAttribute('stroke-width', '2.8');
+              path.removeAttribute('stroke-dasharray');
             } else {
-              path.setAttribute('stroke', '#0f172a');
-              path.setAttribute('stroke-width', '0.75');
+              path.setAttribute('stroke', isTossupFlip ? '#c084fc' : '#0f172a');
+              path.setAttribute('stroke-width', isTossupFlip ? '1.8' : '0.75');
+              if (isTossupFlip) path.setAttribute('stroke-dasharray', '4 2');
+              else path.removeAttribute('stroke-dasharray');
             }
           } else {
-            path.setAttribute('stroke', '#0f172a');
-            path.setAttribute('stroke-width', '0.8');
+            if (isTossupFlip) {
+              path.setAttribute('stroke', '#c084fc');
+              path.setAttribute('stroke-width', '2.0');
+              path.setAttribute('stroke-dasharray', '5 2.5');
+            } else {
+              path.setAttribute('stroke', '#0f172a');
+              path.setAttribute('stroke-width', '0.8');
+              path.removeAttribute('stroke-dasharray');
+            }
           }
           hideTooltip();
         });
@@ -3258,7 +3338,7 @@
               <span class="text-base font-bold font-mono ${isDem ? 'text-blue-400' : 'text-red-400'}">${dist.projected_margin_str}</span>
             </div>
             <div class="text-[11px] text-slate-400 mt-1 flex justify-between">
-              <span>Win Probability: <strong class="text-slate-200">${isDem ? dist.p_dem : dist.p_rep}%</strong></span>${dist.is_flip ? `<span class="ml-2 px-1.5 py-0.5 rounded font-bold text-[10px] bg-purple-600/30 text-purple-300 border border-purple-500/50">PROJECTED FLIP (${dist.flip_status === 'FLIP_R_TO_D' ? 'R &rarr; D' : 'D &rarr; R'})</span>` : ''}
+              <span>Win Probability: <strong class="text-slate-200">${isDem ? dist.p_dem : dist.p_rep}%</strong></span>${dist.is_flip ? `<span class="ml-2 px-1.5 py-0.5 rounded font-bold text-[10px] ${dist.rating === 'Toss Up' ? 'bg-purple-900/60 text-purple-200 border border-purple-400' : 'bg-purple-600/30 text-purple-300 border border-purple-500/50'}">${dist.rating === 'Toss Up' ? 'TOSSUP FLIP' : 'PROJECTED FLIP'} (${dist.flip_status === 'FLIP_R_TO_D' ? 'R &rarr; D' : 'D &rarr; R'})</span>` : ''}
               <span>95% CI: <strong class="text-slate-200">${dist.ci_str}</strong></span>
             </div>
           </div>
