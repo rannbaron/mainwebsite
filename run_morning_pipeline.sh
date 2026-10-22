@@ -47,6 +47,14 @@ else
     log "Warning: Papermill encountered an error. Check $LOG_FILE"
 fi
 
+# Step 2.5: Multi-Year Map Data Generation (2026, 2022, 2018 baselines)
+log "[Step 2.5/5] Running generate_map_data.py to synchronize multi-year baselines..."
+if python3 "$SCRIPT_DIR/generate_map_data.py" >> "$LOG_FILE" 2>&1; then
+    log "generate_map_data.py completed successfully. Base map datasets synchronized."
+else
+    log "Warning: generate_map_data.py encountered an error. Check $LOG_FILE"
+fi
+
 # Step 3: Server & Map Updater
 log "[Step 3/5] Running update_server.py to update base map data and forecasts..."
 if python3 update_server.py --force >> "$LOG_FILE" 2>&1; then

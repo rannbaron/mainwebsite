@@ -381,8 +381,30 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
         }])
         c_party = pd.concat([c_party, st_row], ignore_index=True)
         csv_name = f"nc_early_voting_party_ev_day_{ev_day}.csv"
-        c_party.to_csv(csv_name, index=False)
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
+        if os.path.exists(csv_name):
+            try:
+                existing_df = pd.read_csv(csv_name)
+                if 'Total 2022' in existing_df.columns:
+                    c_party_map = {r['County'].upper().strip(): r for _, r in c_party.iterrows()}
+                    for idx, row in existing_df.iterrows():
+                        c_key = str(row['County']).upper().strip()
+                        if c_key in c_party_map:
+                            up = c_party_map[c_key]
+                            existing_df.at[idx, 'Total 2026'] = up['Total 2026']
+                            existing_df.at[idx, 'Democrat (2026)'] = up['Democrat (2026)']
+                            existing_df.at[idx, 'Republican (2026)'] = up['Republican (2026)']
+                            existing_df.at[idx, 'Unaffiliated (2026)'] = up['Unaffiliated (2026)']
+                    existing_df.to_csv(csv_name, index=False)
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Updated 2026 returns in multi-year breakdown: {csv_name}")
+                else:
+                    c_party.to_csv(csv_name, index=False)
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
+            except Exception:
+                c_party.to_csv(csv_name, index=False)
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
+        else:
+            c_party.to_csv(csv_name, index=False)
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
 
         # Export latest daily email artifacts for web app immediate welcome dispatch
         try:
