@@ -378,8 +378,8 @@
       </div>
 
       <!-- SVG Map Canvas -->
-      <div id="svgContainer" class="w-full flex-1 flex items-center justify-center p-2 relative select-none">
-        <svg id="ncMapSvg" viewBox="0 0 1200 483" class="w-full h-full max-h-[760px] transition-all duration-300">
+      <div id="svgContainer" class="w-full flex-1 flex items-center justify-center p-2 relative select-none overflow-hidden">
+        <svg id="ncMapSvg" viewBox="0 0 1200 483" class="w-full h-full max-h-[760px]">
           <defs>
             <!-- Bicolor hatching / stripe pattern for Republican -> Democrat Flip -->
             <pattern id="patternFlipRtoD" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
@@ -402,6 +402,26 @@
           <g id="houseLayer" class="hidden"></g>
           <g id="houseLabelsLayer" class="hidden pointer-events-none"></g>
         </svg>
+
+        <!-- Floating Interactive Zoom Controls & Hint Dock -->
+        <div class="absolute bottom-3 left-3 z-20 pointer-events-none hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-sm border border-slate-800 text-[11px] text-slate-400 shadow-lg">
+          <span class="text-blue-400 font-bold">&#9906;</span>
+          <span>Scroll to zoom &bull; Drag to pan &bull; Double-click to zoom in</span>
+        </div>
+
+        <div id="mapZoomControls" class="absolute bottom-3 right-3 z-20 flex items-center gap-1 glass-card px-1.5 py-1 rounded-xl border border-slate-700/80 shadow-2xl">
+          <button id="btnZoomIn" type="button" title="Zoom In (or Scroll Wheel Up)" class="w-7 h-7 rounded-lg bg-slate-800/90 hover:bg-blue-600 text-slate-200 hover:text-white flex items-center justify-center font-bold text-sm transition shadow-sm active:scale-95">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"></path></svg>
+          </button>
+          <button id="btnZoomOut" type="button" title="Zoom Out (or Scroll Wheel Down)" class="w-7 h-7 rounded-lg bg-slate-800/90 hover:bg-blue-600 text-slate-200 hover:text-white flex items-center justify-center font-bold text-sm transition shadow-sm active:scale-95">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M20 12H4"></path></svg>
+          </button>
+          <div class="h-4 w-px bg-slate-700/80 mx-0.5"></div>
+          <button id="btnZoomReset" type="button" title="Fit to State View" class="px-2 h-7 rounded-lg bg-slate-800/90 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center gap-1 font-semibold text-[11px] transition shadow-sm active:scale-95">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+            <span id="zoomLevelBadge">100%</span>
+          </button>
+        </div>
       </div>
 
       <!-- Map Footer Status Bar -->
@@ -1230,6 +1250,7 @@
         ];
 
         svgEl.setAttribute('viewBox', currentViewBox.map(v => v.toFixed(2)).join(' '));
+        updateZoomBadge();
 
         if (progress < 1) {
           animFrame = requestAnimationFrame(step);
@@ -1239,6 +1260,257 @@
         }
       }
       animFrame = requestAnimationFrame(step);
+    }
+
+    // Interactive Mouse Zoom & Pan System
+    function updateZoomBadge() {
+      const badge = document.getElementById('zoomLevelBadge');
+      if (!badge) return;
+      const pct = Math.round((STATE_VIEWBOX[2] / currentViewBox[2]) * 100);
+      badge.textContent = `${pct}%`;
+    }
+
+    function getSvgCoords(e) {
+      try {
+        const pt = svgEl.createSVGPoint();
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        const ctm = svgEl.getScreenCTM();
+        if (ctm) {
+          return pt.matrixTransform(ctm.inverse());
+        }
+      } catch (err) {}
+      const rect = svgEl.getBoundingClientRect();
+      const scale = Math.min(rect.width / currentViewBox[2], rect.height / currentViewBox[3]);
+      const renderedW = currentViewBox[2] * scale;
+      const renderedH = currentViewBox[3] * scale;
+      const offX = (rect.width - renderedW) / 2;
+      const offY = (rect.height - renderedH) / 2;
+      const clickX = e.clientX - rect.left - offX;
+      const clickY = e.clientY - rect.top - offY;
+      return {
+        x: currentViewBox[0] + (clickX / (renderedW || 1)) * currentViewBox[2],
+        y: currentViewBox[1] + (clickY / (renderedH || 1)) * currentViewBox[3]
+      };
+    }
+
+    function zoomAtPoint(svgPt, factor) {
+      if (!svgPt) return;
+      if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+      hideTooltip();
+
+      const curW = currentViewBox[2];
+      const curH = currentViewBox[3];
+      const newW = curW / factor;
+      const newH = curH / factor;
+
+      // Allow zooming from 18 units (~66x zoom, perfect for inspecting small districts/precincts) to 1600 units
+      if (newW < 18 || newW > 1600) return;
+
+      const fracX = (svgPt.x - currentViewBox[0]) / curW;
+      const fracY = (svgPt.y - currentViewBox[1]) / curH;
+
+      currentViewBox[0] = svgPt.x - fracX * newW;
+      currentViewBox[1] = svgPt.y - fracY * newH;
+      currentViewBox[2] = newW;
+      currentViewBox[3] = newH;
+
+      svgEl.setAttribute('viewBox', currentViewBox.map(v => v.toFixed(2)).join(' '));
+      updateZoomBadge();
+    }
+
+    function animateZoomAtPoint(svgPt, factor, duration = 300) {
+      if (!svgPt) return;
+      hideTooltip();
+      const curW = currentViewBox[2];
+      const curH = currentViewBox[3];
+      const targetW = Math.max(18, Math.min(1600, curW / factor));
+      const targetH = Math.max(18 * (curH / curW), Math.min(1600 * (curH / curW), curH / factor));
+      const fracX = (svgPt.x - currentViewBox[0]) / curW;
+      const fracY = (svgPt.y - currentViewBox[1]) / curH;
+      const targetBox = [
+        svgPt.x - fracX * targetW,
+        svgPt.y - fracY * targetH,
+        targetW,
+        targetH
+      ];
+      animateViewBox(targetBox, duration, updateZoomBadge);
+    }
+
+    function initMapPanZoom() {
+      const container = document.getElementById('svgContainer');
+      if (!container || !svgEl) return;
+
+      let isPanning = false;
+      let startX = 0;
+      let startY = 0;
+      let startBox = null;
+      let hasDragged = false;
+      let suppressClick = false;
+
+      // 1. Mouse Wheel Zoom centered at cursor
+      container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const factor = e.deltaY < 0 ? 1.25 : (1 / 1.25);
+        const pt = getSvgCoords(e);
+        zoomAtPoint(pt, factor);
+      }, { passive: false });
+
+      // 2. Drag-to-Pan (Mouse)
+      container.addEventListener('mousedown', (e) => {
+        if (e.button !== 0 || e.target.closest('#mapZoomControls, button, a')) return;
+        isPanning = true;
+        hasDragged = false;
+        startX = e.clientX;
+        startY = e.clientY;
+        startBox = [...currentViewBox];
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isPanning || !startBox) return;
+        const dx = e.clientX - startX;
+        const dy = e.clientY - startY;
+        if (!hasDragged && Math.hypot(dx, dy) > 4) {
+          hasDragged = true;
+          container.style.cursor = 'grabbing';
+          hideTooltip();
+        }
+        if (hasDragged) {
+          const rect = svgEl.getBoundingClientRect();
+          const scale = Math.min(rect.width / startBox[2], rect.height / startBox[3]);
+          if (scale > 0) {
+            currentViewBox[0] = startBox[0] - dx / scale;
+            currentViewBox[1] = startBox[1] - dy / scale;
+            svgEl.setAttribute('viewBox', currentViewBox.map(v => v.toFixed(2)).join(' '));
+          }
+        }
+      });
+
+      window.addEventListener('mouseup', (e) => {
+        if (!isPanning) return;
+        isPanning = false;
+        container.style.cursor = '';
+        if (hasDragged) {
+          suppressClick = true;
+          setTimeout(() => { suppressClick = false; hasDragged = false; }, 60);
+        }
+      });
+
+      // Suppress district/county clicks if user dragged the map
+      window.addEventListener('click', (e) => {
+        if (suppressClick) {
+          e.stopPropagation();
+          e.stopImmediatePropagation();
+          e.preventDefault();
+        }
+      }, true);
+
+      // 3. Double-Click to Zoom In
+      container.addEventListener('dblclick', (e) => {
+        if (e.target.closest('#mapZoomControls, button, a')) return;
+        const pt = getSvgCoords(e);
+        if (pt) animateZoomAtPoint(pt, 1.8, 300);
+      });
+
+      // 4. Touch Pan & Pinch-to-Zoom
+      let touchStartDist = 0;
+      let touchStartBox = null;
+      let touchMidPt = null;
+
+      container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          const t = e.touches[0];
+          isPanning = true;
+          hasDragged = false;
+          startX = t.clientX;
+          startY = t.clientY;
+          startBox = [...currentViewBox];
+        } else if (e.touches.length === 2) {
+          isPanning = false;
+          const t1 = e.touches[0];
+          const t2 = e.touches[1];
+          touchStartDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+          touchStartBox = [...currentViewBox];
+          touchMidPt = getSvgCoords({
+            clientX: (t1.clientX + t2.clientX) / 2,
+            clientY: (t1.clientY + t2.clientY) / 2
+          });
+        }
+      }, { passive: true });
+
+      container.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1 && isPanning && startBox) {
+          const t = e.touches[0];
+          const dx = t.clientX - startX;
+          const dy = t.clientY - startY;
+          if (!hasDragged && Math.hypot(dx, dy) > 5) {
+            hasDragged = true;
+            hideTooltip();
+          }
+          if (hasDragged) {
+            e.preventDefault();
+            const rect = svgEl.getBoundingClientRect();
+            const scale = Math.min(rect.width / startBox[2], rect.height / startBox[3]);
+            if (scale > 0) {
+              currentViewBox[0] = startBox[0] - dx / scale;
+              currentViewBox[1] = startBox[1] - dy / scale;
+              svgEl.setAttribute('viewBox', currentViewBox.map(v => v.toFixed(2)).join(' '));
+            }
+          }
+        } else if (e.touches.length === 2 && touchStartBox && touchMidPt) {
+          e.preventDefault();
+          const t1 = e.touches[0];
+          const t2 = e.touches[1];
+          const currentDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+          if (touchStartDist > 0) {
+            const factor = currentDist / touchStartDist;
+            zoomAtPoint(touchMidPt, factor);
+          }
+        }
+      }, { passive: false });
+
+      container.addEventListener('touchend', () => {
+        isPanning = false;
+        touchStartBox = null;
+        if (hasDragged) {
+          suppressClick = true;
+          setTimeout(() => { suppressClick = false; hasDragged = false; }, 60);
+        }
+      });
+
+      // 5. Button Controls
+      const btnIn = document.getElementById('btnZoomIn');
+      const btnOut = document.getElementById('btnZoomOut');
+      const btnReset = document.getElementById('btnZoomReset');
+
+      if (btnIn) {
+        btnIn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const center = {
+            x: currentViewBox[0] + currentViewBox[2] / 2,
+            y: currentViewBox[1] + currentViewBox[3] / 2
+          };
+          animateZoomAtPoint(center, 1.45, 300);
+        });
+      }
+
+      if (btnOut) {
+        btnOut.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const center = {
+            x: currentViewBox[0] + currentViewBox[2] / 2,
+            y: currentViewBox[1] + currentViewBox[3] / 2
+          };
+          animateZoomAtPoint(center, 1 / 1.45, 300);
+        });
+      }
+
+      if (btnReset) {
+        btnReset.addEventListener('click', (e) => {
+          e.stopPropagation();
+          resetToStateView();
+        });
+      }
     }
 
     // Control Handlers
@@ -2196,7 +2468,23 @@
 
     function setupKeyboardShortcuts() {
       window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && activeCountyId) {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') return;
+
+        if (e.key === 'Escape') {
+          resetToStateView();
+        } else if (e.key === '+' || e.key === '=') {
+          const center = {
+            x: currentViewBox[0] + currentViewBox[2] / 2,
+            y: currentViewBox[1] + currentViewBox[3] / 2
+          };
+          animateZoomAtPoint(center, 1.45, 250);
+        } else if (e.key === '-' || e.key === '_') {
+          const center = {
+            x: currentViewBox[0] + currentViewBox[2] / 2,
+            y: currentViewBox[1] + currentViewBox[3] / 2
+          };
+          animateZoomAtPoint(center, 1 / 1.45, 250);
+        } else if (e.key === '0') {
           resetToStateView();
         }
       });
@@ -3288,6 +3576,7 @@
       updateInspectorWithState();
       updateLegendUI();
       setupKeyboardShortcuts();
+      initMapPanZoom();
       checkSubscriberStorage();
     }
 
