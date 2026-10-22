@@ -118,10 +118,10 @@ for h_id, d in sorted(house.items(), key=lambda x: x[1]['number']):
             d['is_flip'] = (inc_p != 'R')
         continue
 
-    # Down-ballot legislative swing calculation
+    # Down-ballot legislative swing calculation using empirical 2024 cross-sectional elasticity (Beta = 0.860)
     c_swings = [county_swings.get(c.upper(), 4.0) for c in d['counties']]
     avg_c_swing = sum(c_swings) / len(c_swings) if c_swings else 4.0
-    leg_swing = avg_c_swing * 0.65
+    leg_swing = avg_c_swing * 0.860
     
     # Baseline margin calibrated
     m26 = round(m24 + leg_swing, 2)
@@ -227,9 +227,10 @@ for s_id, d in sorted(senate.items(), key=lambda x: x[1]['number']):
             d['is_flip'] = (inc_p != 'R')
         continue
 
+    # Down-ballot legislative swing calculation using empirical 2024 cross-sectional elasticity (Beta = 0.911)
     c_swings = [county_swings.get(c.upper(), 4.0) for c in d['counties']]
     avg_c_swing = sum(c_swings) / len(c_swings) if c_swings else 4.0
-    leg_swing = avg_c_swing * 0.65
+    leg_swing = avg_c_swing * 0.911
     
     m26 = round(m24 + leg_swing, 2)
     dem_share = round((100.0 + m26) / 2.0, 2)
@@ -372,9 +373,15 @@ html = re.sub(
 )
 
 # 4. Update inspector overview banners
-html = html.replace(
-    '120 Seats &bull; 2026 Forecast &bull; Baseline: 49 D / 71 R &bull; 13 Projected Flips (R &rarr; D)',
-    f'120 Seats &bull; 2026 Forecast &bull; Baseline: 49 D / 71 R &bull; {len(h_flips_r_to_d)} Projected Flips (R &rarr; D)'
+html = re.sub(
+    r'120 Seats &bull; 2026 Forecast &bull; Baseline: 49 D / 71 R &bull; [^<]+',
+    f'120 Seats &bull; 2026 Forecast &bull; Baseline: 49 D / 71 R &bull; {len(h_flips_r_to_d)} Projected Flips (R &rarr; D)',
+    html
+)
+html = re.sub(
+    r'50 Seats &bull; 2026 Forecast &bull; Baseline: 20 D / 30 R &bull; [^<]+',
+    f'50 Seats &bull; 2026 Forecast &bull; Baseline: 20 D / 30 R &bull; {len(s_flips_r_to_d)} Projected Flips (R &rarr; D)',
+    html
 )
 
 # Update Dem/Rep seat counts in overview card
