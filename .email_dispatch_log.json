@@ -1,8 +1,9 @@
 {
-  "last_dispatched_day": 7,
-  "last_dispatched_at": "2026-10-22T10:02:01Z",
+  "last_dispatched_day": 8,
+  "last_dispatched_at": "2026-10-23T11:03:32Z",
   "dispatched_days": {
     "6": "2026-10-21T11:05:00Z",
-    "7": "2026-10-22T10:02:01Z"
+    "7": "2026-10-22T10:02:01Z",
+    "8": "2026-10-23T11:03:32Z"
   }
 }
