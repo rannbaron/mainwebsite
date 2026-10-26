@@ -21,16 +21,18 @@
     webhookUrl: ''                // Optional custom webhook (e.g. Google Sheets / Cloudflare Worker)
   };
 
-  // 1. Initialize GoatCounter script asynchronously
+  // 1. Initialize GoatCounter script asynchronously if not already in document
   try {
-    var gcScript = document.createElement('script');
-    gcScript.async = true;
-    gcScript.src = '//gc.zgo.at/count.js';
-    gcScript.setAttribute('data-goatcounter', 'https://' + config.goatCounterCode + '.goatcounter.com/count');
-    gcScript.setAttribute('data-goatcounter-settings', JSON.stringify({
-      allow_local: false
-    }));
-    document.head.appendChild(gcScript);
+    if (!document.querySelector('script[data-goatcounter]')) {
+      var gcScript = document.createElement('script');
+      gcScript.async = true;
+      gcScript.src = '//gc.zgo.at/count.js';
+      gcScript.setAttribute('data-goatcounter', 'https://' + config.goatCounterCode + '.goatcounter.com/count');
+      gcScript.setAttribute('data-goatcounter-settings', JSON.stringify({
+        allow_local: false
+      }));
+      document.head.appendChild(gcScript);
+    }
   } catch(e) {}
 
   // 2. Telemetry and Event Logging

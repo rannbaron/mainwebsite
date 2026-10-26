@@ -421,6 +421,8 @@ for inst in institutions:
     }}
     .font-mono {{ font-family: 'JetBrains Mono', monospace; }}
   </style>
+  <script data-goatcounter="https://rannbaron.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased" data-campus="{inst['name']}" data-key="{key}" data-county="{inst['county']}">
 
@@ -1171,6 +1173,8 @@ standrews_redirect_html = '''<!DOCTYPE html>
   <meta http-equiv="refresh" content="3; url=/campuses">
   <title>St. Andrews University Voting Information | Rann Bar-On</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script data-goatcounter="https://rannbaron.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body class="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 text-center font-sans">
   <div class="max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl">
@@ -1257,6 +1261,8 @@ campuses_template = '''<!DOCTYPE html>
     }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
   </style>
+  <script data-goatcounter="https://rannbaron.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased font-sans" data-campus="Master Directory" data-key="campuses">
 
@@ -1656,6 +1662,8 @@ vote_html = f'''<!DOCTYPE html>
     }}
     .font-mono {{ font-family: 'JetBrains Mono', monospace; }}
   </style>
+  <script data-goatcounter="https://rannbaron.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
 <body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 antialiased font-sans" data-campus="Dynamic QR Portal" data-key="vote">
 
