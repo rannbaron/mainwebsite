@@ -164,10 +164,11 @@ support_dialog_html = '''<dialog id="support-dialog">
 </dialog>'''
 
 footer_template = f'''    <footer>
-      <div>Maintained by Rann Bar-On as an open-source public service.</div>
+      <div>Maintained by Rann Bar-On as an open-source public service under the <a href="{GITHUB_REPO_URL}/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>.</div>
       <div class="footer-links">
         <a href="{GITHUB_REPO_URL}" target="_blank" rel="noopener">Source code on GitHub</a>
         <a href="{GITHUB_ISSUES_URL}" target="_blank" rel="noopener">Report an issue</a>
+        <a href="{GITHUB_REPO_URL}/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
         <a href="/campuses">All 110 campuses</a>
         <a href="#support-modal" id="support-link">Help maintain this site</a>
         <a href="/stats">Usage tracker</a>
