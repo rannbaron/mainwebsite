@@ -23,52 +23,84 @@ with open(f'{CACHE_DIR}/county_early_voting_sites.json', 'r', encoding='utf-8') 
 
 print(f"Loaded {len(institutions)} institutions, {len(boe_by_county)} counties.")
 
-# 2. Generate QR codes for all institutions
-print("2. Generating high-resolution PNG and vector SVG QR codes...")
-qr_b64_map = {}
+# 2. Local County Party URL Mappings
+county_dem_urls = {
+    'DURHAM': 'https://www.durhamdemocrats.org/',
+    'WAKE': 'https://www.wakedems.org/',
+    'ORANGE': 'https://www.orangedems.com/',
+    'MECKLENBURG': 'https://www.meckdems.org/',
+    'GUILFORD': 'https://www.guilforddems.org/',
+    'FORSYTH': 'https://www.forsythdems.org/',
+    'BUNCOMBE': 'https://www.buncombedems.org/',
+    'WATAUGA': 'https://www.wataugadems.com/',
+    'PITT': 'https://www.pittdems.com/',
+    'NEW HANOVER': 'https://www.newhanoverdems.org/',
+    'ALAMANCE': 'https://www.alamancedems.com/',
+    'CUMBERLAND': 'https://www.cumberlandcountydems.org/',
+    'CABARRUS': 'https://www.cabarrusdems.org/',
+    'CATAWBA': 'https://catawbadems.com/',
+    'ROWAN': 'https://www.rowandems.com/',
+    'UNION': 'https://www.uniondems.org/',
+    'GASTON': 'https://www.gastondems.org/',
+    'HENDERSON': 'https://www.hendersondems.com/',
+    'HARNETT': 'https://www.harnettdems.org/',
+    'JOHNSTON': 'https://www.johnstondems.org/'
+}
 
+county_rep_urls = {
+    'DURHAM': 'https://www.durhamgop.com/',
+    'WAKE': 'https://www.wakegop.org/',
+    'ORANGE': 'https://www.orangecountygop.com/',
+    'MECKLENBURG': 'https://www.meckgop.com/',
+    'GUILFORD': 'https://www.guilfordgop.org/',
+    'FORSYTH': 'https://www.forsythgop.org/',
+    'BUNCOMBE': 'https://www.buncombegop.org/',
+    'WATAUGA': 'https://www.wataugagop.com/',
+    'PITT': 'https://www.pittgop.com/',
+    'NEW HANOVER': 'https://www.newhanovergop.org/',
+    'ALAMANCE': 'https://www.alamancegop.org/',
+    'CUMBERLAND': 'https://www.cumberlandgop.com/',
+    'CABARRUS': 'https://www.cabarrusgop.org/',
+    'CATAWBA': 'https://www.catawbagop.com/',
+    'ROWAN': 'https://www.rowangop.org/',
+    'UNION': 'https://www.unioncountyncgop.com/',
+    'GASTON': 'https://www.gastongop.org/',
+    'HENDERSON': 'https://www.hendersongop.com/',
+    'HARNETT': 'https://www.harnettcountygop.com/',
+    'JOHNSTON': 'https://www.johnstoncountygop.org/'
+}
+
+# 3. Cache QR codes in Base64
+print("2. Reading QR codes...")
+qr_b64_map = {}
 for inst in institutions:
     key = inst['key']
-    url = f"https://rannbar-on.com/{key}"
     png_path = f"{MAIN_DIR}/{key}_qr.png"
-    svg_path = f"{MAIN_DIR}/{key}_qr.svg"
-    local_png = f"{LOCAL_DIR}/{key}_qr.png"
-    local_svg = f"{LOCAL_DIR}/{key}_qr.svg"
-
-    # Only generate if missing or for all
-    qr = qrcode.QRCode(box_size=10, border=2)
-    qr.add_data(url)
-    qr.make(fit=True)
-    img = qr.make_image(fill_color="black", back_color="white")
-    img.save(png_path)
-    img.save(local_png)
-
-    svg = qrcode.make(url, image_factory=qrcode.image.svg.SvgPathImage)
-    svg.save(svg_path)
-    svg.save(local_svg)
-
+    if not os.path.exists(png_path):
+        url = f"https://rannbar-on.com/{key}"
+        qr = qrcode.QRCode(box_size=10, border=2)
+        qr.add_data(url)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+        img.save(png_path)
+        img.save(f"{LOCAL_DIR}/{key}_qr.png")
     with open(png_path, 'rb') as f:
         qr_b64_map[key] = base64.b64encode(f.read()).decode('utf-8')
 
-print("All QR codes generated and saved!")
-
-# 3. Build Select Dropdown HTML for campus switching
-campus_options = []
-# Sort institutions by name
+# 4. Build Select Dropdown HTML for campus switching
 sorted_institutions = sorted(institutions, key=lambda x: x['name'])
+campus_options = []
 for inst in sorted_institutions:
     type_badge = "UNC" if inst['type'] == 'UNC System' else ("CC" if "Community" in inst['type'] else "Private")
     campus_options.append(f'<option value="/{inst["key"]}">{inst["name"]} ({inst["city"]}) - {type_badge}</option>')
 campus_options_html = '\n'.join(campus_options)
 
-# Helper for sites matching
 def get_best_site(inst, county_sites):
     if not county_sites:
         return None
     keyword = inst.get('site_keyword', '').upper()
     name_words = [w for w in re.split(r'[\s\-]+', inst['name'].upper()) if len(w) > 3 and w not in ['UNIVERSITY', 'COLLEGE', 'COMMUNITY', 'NORTH', 'CAROLINA', 'TECHNICAL', 'SYSTEM']]
     
-    # 1. Exact keyword match
     if keyword:
         for s in county_sites:
             s_name = s['Name'].upper()
@@ -76,17 +108,15 @@ def get_best_site(inst, county_sites):
             if keyword in s_name or keyword in s_addr:
                 return s
     
-    # 2. Word matches from institution name
     for w in name_words:
         for s in county_sites:
             if w in s['Name'].upper() or w in s['SiteAddressStreet'].upper():
                 return s
     
-    # 3. Default to first site (usually BOE or main library/community center)
     return county_sites[0]
 
-# 4. Generate individual voting guide pages
-print("3. Generating individual campus voting guide pages...")
+# 5. Generate individual voting guide pages
+print("3. Generating individual campus voting guide pages with 3 balanced voter guides...")
 
 for inst in institutions:
     key = inst['key']
@@ -100,6 +130,9 @@ for inst in institutions:
     boe_addr = boe.get('FullAddress', f'{c_display} Board of Elections, NC')
     boe_web = boe.get('WebsiteAddr', f'https://vt.ncsbe.gov/BOEInfo/?county={cname}')
     boe_name = boe.get('OfficeName', f'{c_display} Board of Elections').title()
+
+    dem_county_url = county_dem_urls.get(cname, 'https://www.ncdp.org/county-parties/')
+    rep_county_url = county_rep_urls.get(cname, 'https://www.ncgop.org/county_parties')
 
     if primary_site:
         p_name = primary_site['Name'].title()
@@ -193,12 +226,12 @@ for inst in institutions:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{inst['short_name']} Student Guide to Early Voting in {c_display} | Rann Bar-On</title>
-  <meta name="description" content="Complete early voting guide for {inst['name']} students in {c_display}, NC: voting sites, voter ID rules, same-day registration, and hours.">
+  <meta name="description" content="Complete early voting guide for {inst['name']} students in {c_display}, NC: voting sites, voter ID rules, local voter guides (Democratic, Republican, Independent), same-day registration, and hours.">
   
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rannbar-on.com/{key}">
   <meta property="og:title" content="{inst['short_name']} Student Guide to Early Voting in {c_display}">
-  <meta property="og:description" content="Everything {inst['name']} students need to cast their ballot early in {c_display}: polling locations, voter ID rules, and same-day registration.">
+  <meta property="og:description" content="Everything {inst['name']} students need to cast their ballot early in {c_display}: polling locations, voter ID rules, candidate guides, and same-day registration.">
   <meta property="og:image" content="https://rannbar-on.com/{key}_qr.png">
 
   <!-- Tailwind CSS -->
@@ -268,10 +301,9 @@ for inst in institutions:
           <span class="text-[11px] text-slate-400 font-mono">rannbar-on.com</span>
         </div>
       </a>
-      <div class="flex items-center gap-2.5">
-        <a href="/campuses" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
-          <span>🏛️</span>
-          <span class="hidden sm:inline">All NC Campuses</span>
+      <div class="flex items-center gap-2 sm:gap-2.5">
+        <a href="#voter-guides" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
+          🗳️ Voter Guides
         </a>
         <a href="#voter-id" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 hover:bg-amber-500/20 transition">
           ⚠️ Voter ID
@@ -317,7 +349,7 @@ for inst in institutions:
         <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">to Early Voting in {c_display}</span>
       </h1>
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Everything {inst['name']} undergraduate and graduate students need to cast their ballot early. Vote on campus or nearby, register on the spot, and make sure your voice is heard!
+        Everything {inst['name']} undergraduate and graduate students need to cast their ballot early. Vote on campus or nearby, compare candidate guides from all perspectives, and make sure your voice is heard!
       </p>
 
       <!-- Key Stat Pills -->
@@ -444,7 +476,119 @@ for inst in institutions:
       </div>
     </section>
 
-    <!-- Section 2: Same-Day Registration -->
+    <!-- Section 2: Local Candidate Voter Guides (Democratic, Republican & Independent) -->
+    <section id="voter-guides" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
+      <div class="max-w-3xl mb-8">
+        <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Candidate Research & Endorsements</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">Local Candidate Guides for {inst['short_name']} Students</h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          Before casting your ballot in {c_display}, review candidate questionnaires, voting records, and endorsements from multiple political perspectives. Compare trusted Democratic, Republican, and non-partisan sources below:
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- 1. Democratic-Leaning Guide -->
+        <div class="bg-slate-950/80 border border-blue-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-md">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 mb-3">
+              <span>🔵 Democratic / Progressive</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Blue Voter Guide & NC Dems</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+              Enter your local {c_display} address to see customized candidate recommendations and slates endorsed by Democratic, labor, reproductive rights, and environmental organizations across North Carolina.
+            </p>
+            <ul class="text-xs text-slate-400 space-y-1.5 mb-4">
+              <li class="flex items-center gap-2">
+                <span class="text-blue-400 font-bold">✓</span>
+                <span>Endorsements from 40+ progressive orgs</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-blue-400 font-bold">✓</span>
+                <span>Local legislative, judicial & county races</span>
+              </li>
+            </ul>
+          </div>
+          <div class="space-y-2 pt-2 border-t border-slate-800/80">
+            <a href="https://bluevoterguide.org/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
+              <span>Open Blue Voter Guide (NC)</span>
+              <span>↗</span>
+            </a>
+            <a href="{dem_county_url}" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-blue-300 border border-slate-800 font-medium text-xs transition">
+              <span>{c_display} Democratic Party</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2. Republican-Leaning Guide -->
+        <div class="bg-slate-950/80 border border-red-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-md">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-500/20 text-red-400 border border-red-500/30 mb-3">
+              <span>🔴 Republican / Conservative</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">iVoterGuide & NC Values</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+              Comprehensive candidate ratings, policy scorecards, and evaluations based on conservative constitutional principles, fiscal policies, and traditional values across {c_display}.
+            </p>
+            <ul class="text-xs text-slate-400 space-y-1.5 mb-4">
+              <li class="flex items-center gap-2">
+                <span class="text-red-400 font-bold">✓</span>
+                <span>Detailed candidate ratings & questionnaires</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-red-400 font-bold">✓</span>
+                <span>Covers statewide, judicial & local offices</span>
+              </li>
+            </ul>
+          </div>
+          <div class="space-y-2 pt-2 border-t border-slate-800/80">
+            <a href="https://ivoterguide.com/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-xs transition shadow-sm">
+              <span>Open iVoterGuide (NC)</span>
+              <span>↗</span>
+            </a>
+            <a href="{rep_county_url}" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-red-300 border border-slate-800 font-medium text-xs transition">
+              <span>{c_display} Republican Party (GOP)</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 3. Independent / Non-Partisan Guide -->
+        <div class="bg-slate-950/80 border border-emerald-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-md">
+          <div>
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 mb-3">
+              <span>⚖️ Independent / Non-Partisan</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Vote411 (League of Women Voters)</h3>
+            <p class="text-xs text-slate-300 leading-relaxed mb-4">
+              Strictly non-partisan, unbiased candidate comparisons produced by the League of Women Voters of NC. Candidates answer identical policy questions directly in their own unedited words.
+            </p>
+            <ul class="text-xs text-slate-400 space-y-1.5 mb-4">
+              <li class="flex items-center gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span>Side-by-side unedited candidate responses</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span>Zero party bias or endorsements</span>
+              </li>
+            </ul>
+          </div>
+          <div class="space-y-2 pt-2 border-t border-slate-800/80">
+            <a href="https://www.vote411.org/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition shadow-sm">
+              <span>Open Vote411 NC Guide</span>
+              <span>↗</span>
+            </a>
+            <a href="https://vt.ncsbe.gov/RegLkup/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-emerald-300 border border-slate-800 font-medium text-xs transition">
+              <span>NCSBE Official Sample Ballot</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Same-Day Registration -->
     <section id="registration" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 scroll-mt-20">
       <div class="max-w-3xl">
         <span class="text-xs font-mono font-semibold text-purple-400 uppercase tracking-wider">Missed the Voter Registration Deadline?</span>
@@ -497,7 +641,7 @@ for inst in institutions:
       </div>
     </section>
 
-    <!-- Section 3: All Early Voting Sites in County -->
+    <!-- Section 4: All Early Voting Sites in County -->
     <section id="sites" class="scroll-mt-20">
       <div class="mb-6">
         <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Countywide Flexibility</span>
@@ -510,7 +654,7 @@ for inst in institutions:
       </div>
     </section>
 
-    <!-- Section 4: Official Resources -->
+    <!-- Section 5: Official Resources & County BOE -->
     <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
@@ -566,7 +710,7 @@ for inst in institutions:
       </div>
     </section>
 
-    <!-- Section 5: QR Code Card -->
+    <!-- Section 6: QR Code Card -->
     <section id="qr-code" class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
       <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-between">
         <div class="max-w-xl text-center sm:text-left">
@@ -633,10 +777,10 @@ for inst in institutions:
     with open(f"{LOCAL_DIR}/{key}.html", 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print(f"Generated {len(institutions)} individual campus pages in mainwebsite and Fall26.")
+print(f"Generated {len(institutions)} individual campus pages with voter guides.")
 
-# 5. Build Master Directory page (campuses.html)
-print("4. Generating Master Directory page (campuses.html)...")
+# 6. Master Directory page (campuses.html) with voter guide hub
+print("4. Updating Master Directory page (campuses.html)...")
 
 cards_json = []
 for inst in institutions:
@@ -663,12 +807,12 @@ campuses_html = f'''<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>North Carolina Colleges & Universities Student Voting Directory | Rann Bar-On</title>
-  <meta name="description" content="Complete directory of early voting guides for all 111 colleges, universities, and community colleges across North Carolina. Voter ID rules, polling sites, and QR codes.">
+  <meta name="description" content="Complete directory of early voting guides for all 111 colleges, universities, and community colleges across North Carolina. Voter ID rules, candidate guides (Dem, Rep, Ind), polling sites, and QR codes.">
   
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rannbar-on.com/campuses">
   <meta property="og:title" content="NC Colleges & Universities Student Early Voting Directory">
-  <meta property="og:description" content="Find your campus early voting guide, approved voter ID rules, polling places, and scannable QR codes for all 111 NC colleges and universities.">
+  <meta property="og:description" content="Find your campus early voting guide, candidate guides (Democratic, Republican, Independent), approved voter ID rules, and scannable QR codes for all 111 NC colleges and universities.">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -726,6 +870,9 @@ campuses_html = f'''<!DOCTYPE html>
         </div>
       </a>
       <div class="flex items-center gap-3">
+        <a href="#statewide-guides" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
+          🗳️ Voter Guides
+        </a>
         <a href="https://rannbar-on.com/" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
           ← Main Website
         </a>
@@ -746,8 +893,38 @@ campuses_html = f'''<!DOCTYPE html>
         <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">Early Voting Guides & QR Directory</span>
       </h1>
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Select your campus below to view your local polling site, official voter ID rules, same-day registration guidelines, and download scannable QR codes for flyers and dorm group chats.
+        Select your campus below to view your local polling site, candidate guides from Democratic, Republican, and Independent sources, official voter ID rules, and download scannable QR codes.
       </p>
+
+      <!-- Statewide Voter Guides Quick Row -->
+      <div id="statewide-guides" class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-10 text-left">
+        <a href="https://bluevoterguide.org/" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-blue-950/40 border border-blue-500/30 hover:border-blue-400 transition group">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">🔵 Democratic / Prog</span>
+            <span class="text-blue-400 group-hover:translate-x-0.5 transition">↗</span>
+          </div>
+          <div class="font-bold text-white text-sm">Blue Voter Guide</div>
+          <div class="text-[11px] text-slate-300 mt-1">Aggregates progressive & Democratic endorsements across NC.</div>
+        </a>
+
+        <a href="https://ivoterguide.com/" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-red-950/40 border border-red-500/30 hover:border-red-400 transition group">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-red-400 uppercase tracking-wider">🔴 Republican / Cons</span>
+            <span class="text-red-400 group-hover:translate-x-0.5 transition">↗</span>
+          </div>
+          <div class="font-bold text-white text-sm">iVoterGuide & NC Values</div>
+          <div class="text-[11px] text-slate-300 mt-1">Research-backed conservative ratings & candidate evaluations.</div>
+        </a>
+
+        <a href="https://www.vote411.org/" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 hover:border-emerald-400 transition group">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">⚖️ Independent / Nonpartisan</span>
+            <span class="text-emerald-400 group-hover:translate-x-0.5 transition">↗</span>
+          </div>
+          <div class="font-bold text-white text-sm">Vote411 (LWVNC)</div>
+          <div class="text-[11px] text-slate-300 mt-1">Non-partisan side-by-side unedited candidate responses.</div>
+        </a>
+      </div>
 
       <!-- Search & Filters Container -->
       <div class="max-w-3xl mx-auto space-y-4">
@@ -925,91 +1102,5 @@ with open(f"{MAIN_DIR}/campuses/index.html", 'w', encoding='utf-8') as f:
 with open(f"{LOCAL_DIR}/campuses.html", 'w', encoding='utf-8') as f:
     f.write(campuses_html)
 
-print("Master campuses.html generated successfully!")
-
-# 6. Update index.html to feature the Campus Voting Portal
-print("5. Updating index.html with NC Campus Early Voting banner & links...")
-with open(f"{MAIN_DIR}/index.html", 'r', encoding='utf-8') as f:
-    index_content = f.read()
-
-# Check if campus link is in index.html
-if 'campuses' not in index_content:
-    # Add a link to /campuses
-    index_content = index_content.replace(
-        'Campus Guides:',
-        '<a href="/campuses" class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-600/30 hover:bg-indigo-600/50 border border-indigo-500/40 text-indigo-300 font-bold text-xs transition" title="All 111 NC Colleges & Universities Voting Guides"><span>🏛️ All 111 NC Campuses</span></a>'
-    )
-    with open(f"{MAIN_DIR}/index.html", 'w', encoding='utf-8') as f:
-        f.write(index_content)
-    print("Updated index.html successfully!")
-
-# 7. Update .github/workflows/deploy_pages.yml
-print("6. Updating .github/workflows/deploy_pages.yml to trigger on all HTML/PNG/SVG...")
-deploy_yml = '''name: Deploy GitHub Pages
-
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - '**/*.html'
-      - '**/*.png'
-      - '**/*.svg'
-      - '*.html'
-      - '*.png'
-      - '*.svg'
-      - 'index.html'
-      - 'campuses/**'
-      - 'vote/**'
-      - 'dukevote/**'
-      - 'uncvote/**'
-      - 'nccuvote/**'
-      - 'ncsuvote/**'
-      - 'beta/**'
-      - 'nc_map_data.json'
-      - 'nc_cd_data.json'
-      - 'nc_senate_data.json'
-      - 'nc_house_data.json'
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-'''
-
-with open(f"{MAIN_DIR}/.github/workflows/deploy_pages.yml", 'w', encoding='utf-8') as f:
-    f.write(deploy_yml)
-
-print("Updated deploy_pages.yml successfully!")
+print("Master campuses.html updated successfully!")
 print("ALL DONE!")

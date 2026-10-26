@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>North Carolina Colleges & Universities Student Voting Directory | Rann Bar-On</title>
-  <meta name="description" content="Complete directory of early voting guides for all 111 colleges, universities, and community colleges across North Carolina. Voter ID rules, polling sites, and QR codes.">
+  <meta name="description" content="Complete directory of early voting guides for all 111 colleges, universities, and community colleges across North Carolina. Voter ID rules, candidate guides (Dem, Rep, Ind), polling sites, and QR codes.">
   
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rannbar-on.com/campuses">
   <meta property="og:title" content="NC Colleges & Universities Student Early Voting Directory">
-  <meta property="og:description" content="Find your campus early voting guide, approved voter ID rules, polling places, and scannable QR codes for all 111 NC colleges and universities.">
+  <meta property="og:description" content="Find your campus early voting guide, candidate guides (Democratic, Republican, Independent), approved voter ID rules, and scannable QR codes for all 111 NC colleges and universities.">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -67,6 +67,9 @@
         </div>
       </a>
       <div class="flex items-center gap-3">
+        <a href="#statewide-guides" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
+          🗳️ Voter Guides
+        </a>
         <a href="https://rannbar-on.com/" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
           ← Main Website
         </a>
@@ -87,8 +90,38 @@
         <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">Early Voting Guides & QR Directory</span>
       </h1>
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Select your campus below to view your local polling site, official voter ID rules, same-day registration guidelines, and download scannable QR codes for flyers and dorm group chats.
+        Select your campus below to view your local polling site, candidate guides from Democratic, Republican, and Independent sources, official voter ID rules, and download scannable QR codes.
       </p>
+
+      <!-- Statewide Voter Guides Quick Row -->
+      <div id="statewide-guides" class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-10 text-left">
+        <a href="https://bluevoterguide.org/" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-blue-950/40 border border-blue-500/30 hover:border-blue-400 transition group">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">🔵 Democratic / Prog</span>
+            <span class="text-blue-400 group-hover:translate-x-0.5 transition">↗</span>
+          </div>
+          <div class="font-bold text-white text-sm">Blue Voter Guide</div>
+          <div class="text-[11px] text-slate-300 mt-1">Aggregates progressive & Democratic endorsements across NC.</div>
+        </a>
+
+        <a href="https://ivoterguide.com/" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-red-950/40 border border-red-500/30 hover:border-red-400 transition group">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-red-400 uppercase tracking-wider">🔴 Republican / Cons</span>
+            <span class="text-red-400 group-hover:translate-x-0.5 transition">↗</span>
+          </div>
+          <div class="font-bold text-white text-sm">iVoterGuide & NC Values</div>
+          <div class="text-[11px] text-slate-300 mt-1">Research-backed conservative ratings & candidate evaluations.</div>
+        </a>
+
+        <a href="https://www.vote411.org/" target="_blank" rel="noopener" class="p-4 rounded-2xl bg-emerald-950/40 border border-emerald-500/30 hover:border-emerald-400 transition group">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">⚖️ Independent / Nonpartisan</span>
+            <span class="text-emerald-400 group-hover:translate-x-0.5 transition">↗</span>
+          </div>
+          <div class="font-bold text-white text-sm">Vote411 (LWVNC)</div>
+          <div class="text-[11px] text-slate-300 mt-1">Non-partisan side-by-side unedited candidate responses.</div>
+        </a>
+      </div>
 
       <!-- Search & Filters Container -->
       <div class="max-w-3xl mx-auto space-y-4">
