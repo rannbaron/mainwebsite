@@ -16,6 +16,8 @@ import qrcode.image.svg
 MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
 LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
+GITLAB_ISSUES_URL = os.environ.get('GITLAB_ISSUES_URL') or (f"{os.environ['CI_PROJECT_URL']}/-/issues" if 'CI_PROJECT_URL' in os.environ else 'https://gitlab.oit.duke.edu/rb6/mainwebsite/-/issues')
+
 
 print("1. Loading cached NC election data...")
 with open(f'{CACHE_DIR}/all_institutions.json', 'r', encoding='utf-8') as f:
@@ -567,9 +569,14 @@ for inst in institutions:
         <p class="font-medium text-slate-300">Non-partisan student voting guide prepared by Rann Bar-On.</p>
         <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the {boe_name} and the North Carolina State Board of Elections.</p>
       </div>
-      <div class="flex items-center gap-4 text-xs">
+      <div class="flex flex-wrap items-center justify-center sm:justify-end gap-4 text-xs">
         <a href="/campuses" class="text-blue-400 hover:underline">All NC Campuses</a>
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+        <a href="{GITLAB_ISSUES_URL}" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>🦊</span>
+          <span>GitLab Bug Tracker</span>
+          <span class="text-[10px]">↗</span>
+        </a>
       </div>
     </div>
   </footer>
@@ -844,8 +851,13 @@ campuses_template = '''<!DOCTYPE html>
         <p class="font-medium text-slate-300">Non-partisan student voting guide directory prepared by Rann Bar-On.</p>
         <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the North Carolina State Board of Elections and all 100 County Boards of Elections.</p>
       </div>
-      <div class="flex items-center gap-4 text-xs">
+      <div class="flex flex-wrap items-center justify-center sm:justify-end gap-4 text-xs">
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+        <a href="%%GITLAB_ISSUES_URL%%" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>🦊</span>
+          <span>GitLab Bug Tracker</span>
+          <span class="text-[10px]">↗</span>
+        </a>
       </div>
     </div>
   </footer>
@@ -1033,7 +1045,7 @@ campuses_template = '''<!DOCTYPE html>
 </html>
 '''
 
-campuses_html = campuses_template.replace('%%CARDS_JSON%%', cards_json_str)
+campuses_html = campuses_template.replace('%%CARDS_JSON%%', cards_json_str).replace('%%GITLAB_ISSUES_URL%%', GITLAB_ISSUES_URL)
 
 with open(f"{MAIN_DIR}/campuses.html", 'w', encoding='utf-8') as f:
     f.write(campuses_html)
@@ -1267,9 +1279,14 @@ vote_template = '''<!DOCTYPE html>
   <footer class="border-t border-slate-800/80 bg-slate-950 py-6 px-4 text-center text-xs text-slate-500">
     <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
       <span>Non-partisan student voting guide portal prepared by Rann Bar-On.</span>
-      <div class="flex items-center gap-4">
+      <div class="flex flex-wrap items-center justify-center gap-4">
         <a href="/campuses" class="text-blue-400 hover:underline">All 111 NC Campuses</a>
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+        <a href="%%GITLAB_ISSUES_URL%%" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>🦊</span>
+          <span>GitLab Bug Tracker</span>
+          <span class="text-[10px]">↗</span>
+        </a>
       </div>
     </div>
   </footer>
@@ -1444,7 +1461,7 @@ vote_template = '''<!DOCTYPE html>
 </html>
 '''
 
-vote_html = vote_template.replace('%%DUKE_QR_B64%%', duke_qr_b64)
+vote_html = vote_template.replace('%%GITLAB_ISSUES_URL%%', GITLAB_ISSUES_URL).replace('%%DUKE_QR_B64%%', duke_qr_b64)
 vote_html = vote_html.replace('%%CAMPUS_OPTIONS%%', campus_options_html)
 vote_html = vote_html.replace('%%QR_B64_MAP%%', qr_b64_map_json_str)
 vote_html = vote_html.replace('%%CAMPUS_GEO%%', campus_geo_json_str)
