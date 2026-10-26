@@ -174,6 +174,9 @@ universities = [
     }
 ]
 
+# Preload all QR codes in Base64
+qr_b64_map = {u['key']: get_b64(f'{MAIN_DIR}/{u["key"]}_qr.png') for u in universities}
+
 def render_switcher(active_key):
     items = []
     for u in universities:
@@ -184,7 +187,7 @@ def render_switcher(active_key):
         else:
             cls += 'bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700 hover:text-white'
         items.append(f'<a href="/{u["key"]}" class="{cls}"><span>{u["badge_icon"]}</span><span>{u["short_name"]}</span></a>')
-    return '\\n'.join(items)
+    return '\n'.join(items)
 
 def render_all_sites_html(sites):
     cards = []
@@ -199,13 +202,65 @@ def render_all_sites_html(sites):
           <div class="text-[11px] text-emerald-400 mt-2 font-mono">{note}</div>
         </div>
         ''')
-    return '\\n'.join(cards)
+    return '\n'.join(cards)
+
+def render_all_qr_cards(current_key):
+    cards = []
+    for u in universities:
+        is_current = (u['key'] == current_key)
+        b64_img = qr_b64_map[u['key']]
+        
+        if is_current:
+            card_border = f"border-2 {u['accent_border']} ring-2 ring-blue-500/20 bg-slate-900 shadow-xl"
+            badge = '<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white text-slate-950 shadow-sm">Current Page</span>'
+        else:
+            card_border = "border border-slate-800 bg-slate-900/70 hover:border-slate-700 hover:bg-slate-900/90"
+            badge = f'<a href="/{u["key"]}" class="px-2 py-0.5 rounded text-[10px] font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white transition">Visit Guide →</a>'
+
+        cards.append(f'''
+        <div class="rounded-2xl p-4 flex flex-col justify-between {card_border} transition">
+          <div>
+            <div class="flex items-center justify-between gap-1.5 mb-1.5">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <span class="text-lg">{u['badge_icon']}</span>
+                <span class="font-bold text-white text-sm truncate">{u['short_name']}</span>
+              </div>
+              {badge}
+            </div>
+            <div class="text-[11px] text-slate-400 mb-3 font-medium truncate">{u['county']}</div>
+
+            <div class="bg-white p-3 rounded-xl shadow-md border border-slate-200/10 mb-3 flex items-center justify-center">
+              <img src="data:image/png;base64,{b64_img}" alt="QR code for {u['school_name']} early voting guide" class="w-36 h-36 sm:w-40 sm:h-40 object-contain mx-auto" />
+            </div>
+
+            <div class="text-center font-mono text-[11px] text-slate-300 font-medium py-1.5 px-2 rounded-lg bg-slate-950/80 border border-slate-800/80 mb-3 select-all truncate">
+              rannbar-on.com/{u['key']}
+            </div>
+          </div>
+
+          <div class="space-y-1.5 pt-1">
+            <button onclick="navigator.clipboard.writeText('{u['url']}'); alert('Copied {u['short_name']} voting guide link to clipboard!');" class="w-full py-2 px-3 rounded-xl {u['btn_color']} text-white font-semibold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
+              <span>📋</span>
+              <span>Copy Link</span>
+            </button>
+            <div class="grid grid-cols-2 gap-1.5">
+              <a href="/{u['key']}_qr.png" download="{u['short_name']}_Vote_QR.png" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
+                <span>📥</span><span>PNG</span>
+              </a>
+              <a href="/{u['key']}_qr.svg" download="{u['short_name']}_Vote_QR.svg" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
+                <span>📥</span><span>SVG</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        ''')
+    return '\n'.join(cards)
 
 for u in universities:
     key = u['key']
-    qr_b64 = get_b64(f'{MAIN_DIR}/{key}_qr.png')
     switcher_html = render_switcher(key)
     sites_html = render_all_sites_html(u['all_sites'])
+    all_qr_cards_html = render_all_qr_cards(key)
 
     html = f'''<!DOCTYPE html>
 <html lang="en" class="dark">
@@ -297,7 +352,7 @@ for u in universities:
           ⚠️ Voter ID Rules
         </a>
         <a href="#qr-code" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
-          📱 QR Code
+          📱 QR Codes
         </a>
       </div>
     </div>
@@ -602,36 +657,18 @@ for u in universities:
       </div>
     </section>
 
-    <!-- Section 5: QR Code & Sharing Card -->
-    <section id="qr-code" class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border {u['accent_border']}/40 rounded-2xl p-6 sm:p-8 scroll-mt-20">
-      <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-between">
-        <div class="max-w-xl text-center sm:text-left">
-          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Share with Classmates & Dorms</span>
-          <h2 class="text-2xl font-bold text-white mt-1 mb-2">Scan or Share this {u['short_name']} Voting Guide</h2>
-          <p class="text-sm text-slate-300 leading-relaxed mb-4">
-            Scan the QR code with your phone camera or share the direct link with friends, group chats, dorms, and student orgs to help every {u['short_name']} student get their vote in before Saturday!
-          </p>
-          <div class="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
-            <div class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm text-blue-300 select-all">
-              {u['url']}
-            </div>
-            <button onclick="navigator.clipboard.writeText('{u['url']}'); alert('Link copied to clipboard!');" class="px-4 py-2 rounded-xl {u['btn_color']} text-white font-semibold text-xs transition shadow-sm">
-              Copy Link
-            </button>
-            <a href="/{key}_qr.png" download="{u['short_name']}_Vote_Early_QR.png" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
-              Download PNG
-            </a>
-            <a href="/{key}_qr.svg" download="{u['short_name']}_Vote_Early_QR.svg" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
-              Download SVG
-            </a>
-          </div>
-        </div>
+    <!-- Section 5: QR Codes for All Schools -->
+    <section id="qr-code" class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
+      <div class="max-w-3xl mb-8">
+        <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Campus Early Voting QR Codes</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">QR Codes for All Triangle Campuses</h2>
+        <p class="text-sm text-slate-300 leading-relaxed">
+          Spread the word across the Triangle! Scan any campus QR code directly with your phone camera, copy links for dorm group chats and student orgs, or download high-resolution PNG & vector SVG graphics for printing flyers and posters.
+        </p>
+      </div>
 
-        <!-- QR Code Visual -->
-        <div class="bg-white p-4 rounded-2xl shadow-2xl border-4 {u['accent_border']}/30 shrink-0 text-center">
-          <img src="data:image/png;base64,{qr_b64}" alt="QR code for {u['short_name']} student early voting guide" class="w-48 h-48 sm:w-52 sm:h-52 object-contain mx-auto" />
-          <div class="text-[11px] font-bold text-slate-900 mt-2 font-mono">rannbar-on.com/{key}</div>
-        </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {all_qr_cards_html}
       </div>
     </section>
 
