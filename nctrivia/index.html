@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NC Bee Study Flashcards | North Carolina Trivia</title>
+  <meta name="description" content="Complete interactive flashcard study site for the North Carolina Bee, covering all 180 questions across 11 categories: Cities, State Symbols, Geography, History, Nature, and Government.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-icon">🐝</div>
+        <div class="brand-text">
+          <h1>NC Bee Study Deck <span class="brand-badge">Dec 16</span></h1>
+          <p>Official North Carolina Trivia & Study Guide • 180 Questions</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-theme" class="btn-icon" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
+          <span id="theme-icon">🌙</span>
+        </button>
+        <button id="btn-reset" class="btn-icon" title="Reset Study Progress" aria-label="Reset Progress">
+          🔄
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main>
+    <!-- Mode Switcher -->
+    <nav class="mode-nav" aria-label="Study Mode Selection">
+      <button class="mode-tab active" data-mode="flashcard">
+        <span>🃏</span> Flashcards
+      </button>
+      <button class="mode-tab" data-mode="quiz">
+        <span>🎯</span> Quiz Practice
+      </button>
+      <button class="mode-tab" data-mode="guide">
+        <span>📖</span> Full Study List
+      </button>
+    </nav>
+
+    <!-- Controls & Filters Panel -->
+    <section class="controls-panel">
+      <div class="controls-row">
+        <div class="filter-group">
+          <select id="category-select" class="select-custom" aria-label="Filter by Category">
+            <option value="all">All Categories (180)</option>
+          </select>
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-input" placeholder="Search questions or answers..." aria-label="Search questions or answers">
+          </div>
+        </div>
+        <button id="btn-shuffle" class="pill-btn" title="Toggle Random Shuffle Order">
+          🔀 Shuffle
+        </button>
+      </div>
+
+      <div class="controls-row">
+        <div class="filter-pills" role="group" aria-label="Filter by status">
+          <button class="pill-btn active" data-filter="all">All <span class="pill-count" id="count-all">180</span></button>
+          <button class="pill-btn" data-filter="unmastered">To Learn <span class="pill-count" id="count-unmastered">180</span></button>
+          <button class="pill-btn" data-filter="mastered">Mastered <span class="pill-count" id="count-mastered">0</span></button>
+          <button class="pill-btn" data-filter="starred">★ Starred <span class="pill-count" id="count-starred">0</span></button>
+        </div>
+      </div>
+
+      <!-- Overall Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="progress-stats" id="progress-stats">0 / 180 Mastered (0%)</div>
+      </div>
+    </section>
+
+    <!-- 1. Flashcard Mode Section -->
+    <section id="flashcard-section">
+      <div class="card-scene" id="card-scene">
+        <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Flashcard. Click or press space to flip.">
+          <!-- Front Face (Question) -->
+          <div class="card-face card-front">
+            <div class="card-header">
+              <span class="category-tag" id="card-category">Cities</span>
+              <div class="card-tools">
+                <button class="tool-btn" id="btn-speak" title="Read question aloud (Text-to-speech)" aria-label="Read Question Aloud">🔊</button>
+                <button class="tool-btn" id="btn-star" title="Star question" aria-label="Star question">☆</button>
+                <span class="card-number" id="card-number">1 of 180</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-question" id="card-question">What is the capital of NC?</div>
+            </div>
+            <div class="card-footer">
+              <span class="tap-hint">👆 Click or press <span class="kbd">Space</span> to reveal answer</span>
+            </div>
+          </div>
+
+          <!-- Back Face (Answer) -->
+          <div class="card-face card-back">
+            <div class="card-header">
+              <span class="category-tag" id="card-category-back">Cities</span>
+              <div class="card-tools">
+                <span class="card-number">Answer</span>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="card-answer-label">Official Answer</div>
+              <div class="card-answer" id="card-answer">Raleigh</div>
+            </div>
+            <div class="card-footer">
+              <span class="tap-hint">👆 Click or press <span class="kbd">Space</span> to flip back</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons Bar -->
+      <div class="card-actions-bar" id="card-actions">
+        <div class="grading-buttons">
+          <button class="grade-btn btn-again" id="btn-again" title="Study Again (Shortcut: 1)">
+            ❌ Still Learning <span class="kbd">1</span>
+          </button>
+          <button class="grade-btn btn-mastered" id="btn-mastered" title="Mark Mastered (Shortcut: 2)">
+            ✅ Mastered <span class="kbd">2</span>
+          </button>
+        </div>
+        <div class="nav-buttons">
+          <button class="btn-nav" id="btn-prev" title="Previous Card (Left Arrow)">
+            ◀ Previous
+          </button>
+          <button class="btn-flip" id="btn-flip">
+            Flip Card <span class="kbd">Space</span>
+          </button>
+          <button class="btn-nav" id="btn-next" title="Next Card (Right Arrow)">
+            Next ▶
+          </button>
+        </div>
+      </div>
+
+      <div class="keyboard-hint" id="keyboard-hint">
+        Shortcuts: <span class="kbd">Space</span> flip • <span class="kbd">←</span> <span class="kbd">→</span> navigate • <span class="kbd">1</span> review • <span class="kbd">2</span> master • <span class="kbd">S</span> star • <span class="kbd">R</span> shuffle
+      </div>
+
+      <!-- Empty state for zero cards -->
+      <div class="empty-state" id="empty-scene" style="display: none;">
+        <div class="empty-icon">🎉</div>
+        <h3>No cards in this view</h3>
+        <p>You have mastered all cards in this filter or no questions matched your search!</p>
+      </div>
+    </section>
+
+    <!-- 2. Quiz Mode Section -->
+    <section id="quiz-section" style="display: none;">
+      <div class="quiz-container" id="quiz-container">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- 3. Study Guide / Full List Section -->
+    <section id="guide-section" style="display: none;">
+      <div class="guide-container">
+        <div class="guide-toolbar">
+          <div>
+            <strong>Complete Study Deck</strong> (180 Questions)
+          </div>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="pill-btn" id="btn-show-all">Show All Answers</button>
+            <button class="pill-btn" id="btn-hide-all">Hide All Answers</button>
+            <button class="pill-btn" id="btn-print">🖨️ Print Sheet</button>
+          </div>
+        </div>
+        <div id="guide-content">
+          <!-- Rendered dynamically by app.js -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
+      <div>Created for the <strong>North Carolina Bee</strong> study team • Dec 16, 2025</div>
+      <div>Hosted at <a href="https://rannbar-on.com/nctrivia">rannbar-on.com/nctrivia</a> • Open Source</div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
