@@ -1,0 +1,56 @@
+# ==============================================================================
+# GitLab CI/CD Pipeline: Bi-Weekly NCSBE Automated Election & Voting Guide Check
+# Automatically polls NCSBE every two weeks, refreshes election dates, early
+# voting sites across all 100 NC counties, updates local races and all 3 voting
+# guides, rebuilds all 111 NC campus guides, and commits/pushes updates.
+# Runs 100% in the cloud on GitLab runners — no local machine required.
+# ==============================================================================
+
+stages:
+  - ncsbe-sync
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - .nc_voting_cache/
+
+ncsbe_biweekly_update:
+  stage: ncsbe-sync
+  image: python:3.11-slim
+  rules:
+    # Trigger on scheduled pipelines (configured in GitLab Build > Pipeline schedules)
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    # Trigger on manual run from GitLab UI (Build > Pipelines > Run pipeline)
+    - if: $CI_PIPELINE_SOURCE == "web"
+    # Allow manual trigger on main branch
+    - if: $CI_COMMIT_BRANCH == "main"
+      when: manual
+      allow_failure: true
+  before_script:
+    - apt-get update -qq && apt-get install -y -qq git curl ca-certificates
+    - python -m pip install --upgrade pip
+    - pip install qrcode pillow requests
+  script:
+    - echo "=== Starting Automated NCSBE Bi-Weekly Election Check on GitLab Runner ==="
+    - python3 check_and_update_ncsbe_elections.py
+    - |
+      # Check if changes were produced
+      if [ -n "$(git status --porcelain)" ]; then
+        echo "Changes detected! Committing and pushing back to repository..."
+        git config user.name "GitLab CI NCSBE Bot"
+        git config user.email "gitlab-bot@rannbar-on.com"
+        git add -A
+        git commit -m "Automated bi-weekly NCSBE update: refreshed election info, sites, local races, and guides [skip ci]"
+        
+        # Authenticate and push using GITLAB_TOKEN or CI_JOB_TOKEN
+        if [ -n "$GITLAB_TOKEN" ]; then
+          git push https://oauth2:${GITLAB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git HEAD:${CI_COMMIT_REF_NAME}
+        elif [ -n "$CI_JOB_TOKEN" ]; then
+          git push https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git HEAD:${CI_COMMIT_REF_NAME} || echo "Push via CI_JOB_TOKEN completed or requires Project Access Token."
+        fi
+      else
+        echo "No changes detected. NCSBE data and campus voting guides are up to date."
+      fi

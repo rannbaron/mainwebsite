@@ -1,0 +1,46 @@
+name: Bi-Weekly NCSBE Election & Voting Guide Check
+
+on:
+  schedule:
+    # Runs at 09:00 UTC on the 1st and 15th of every month (Every two weeks)
+    - cron: '0 9 1,15 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "ncsbe-sync"
+  cancel-in-progress: false
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install qrcode pillow requests
+
+      - name: Run NCSBE Bi-Weekly Checker & Rebuilder
+        run: |
+          python3 check_and_update_ncsbe_elections.py
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action NCSBE Bot"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Automated bi-weekly NCSBE update: refreshed election info, sites, local races, and guides [skip ci]" && git push origin main)

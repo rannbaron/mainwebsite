@@ -6,8 +6,8 @@ import re
 import qrcode
 import qrcode.image.svg
 
-MAIN_DIR = '/home/rann/Documents/mainwebsite'
-LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26'
+MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
+LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
 
 print("1. Loading cached NC election data...")
@@ -88,7 +88,7 @@ for inst in institutions:
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
         img.save(png_path)
-        img.save(f"{LOCAL_DIR}/{key}_qr.png")
+        if LOCAL_DIR: img.save(f"{LOCAL_DIR}/{key}_qr.png")
     with open(png_path, 'rb') as f:
         qr_b64_map[key] = base64.b64encode(f.read()).decode('utf-8')
 
@@ -1038,8 +1038,9 @@ for inst in institutions:
         f.write(html_content)
 
     # Mirror to local Fall26 workspace
-    with open(f"{LOCAL_DIR}/{key}.html", 'w', encoding='utf-8') as f:
-        f.write(html_content)
+    if LOCAL_DIR:
+        with open(f"{LOCAL_DIR}/{key}.html", 'w', encoding='utf-8') as f:
+            f.write(html_content)
 
 print(f"Generated {len(institutions)} individual campus pages with geolocation.")
 
@@ -1491,8 +1492,9 @@ os.makedirs(f"{MAIN_DIR}/campuses", exist_ok=True)
 with open(f"{MAIN_DIR}/campuses/index.html", 'w', encoding='utf-8') as f:
     f.write(campuses_html)
 
-with open(f"{LOCAL_DIR}/campuses.html", 'w', encoding='utf-8') as f:
-    f.write(campuses_html)
+if LOCAL_DIR:
+    with open(f"{LOCAL_DIR}/campuses.html", 'w', encoding='utf-8') as f:
+        f.write(campuses_html)
 
 print("Master campuses.html updated with geolocation!")
 
@@ -1926,8 +1928,9 @@ os.makedirs(f"{MAIN_DIR}/vote", exist_ok=True)
 with open(f"{MAIN_DIR}/vote/index.html", 'w', encoding='utf-8') as f:
     f.write(vote_html)
 
-with open(f"{LOCAL_DIR}/vote.html", 'w', encoding='utf-8') as f:
-    f.write(vote_html)
+if LOCAL_DIR:
+    with open(f"{LOCAL_DIR}/vote.html", 'w', encoding='utf-8') as f:
+        f.write(vote_html)
 
 print("Updated /vote with dynamic Main QR code and Zip Code lookup!")
 print("ALL DONE!")

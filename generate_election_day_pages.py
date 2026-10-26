@@ -13,8 +13,8 @@ import re
 import qrcode
 import qrcode.image.svg
 
-MAIN_DIR = '/home/rann/Documents/mainwebsite'
-LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26'
+MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
+LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
 
 print("1. Loading cached NC election data...")
@@ -584,8 +584,9 @@ for inst in institutions:
     with open(f"{MAIN_DIR}/{key}/index.html", 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-    with open(f"{LOCAL_DIR}/{key}.html", 'w', encoding='utf-8') as f:
-        f.write(html_content)
+    if LOCAL_DIR:
+        with open(f"{LOCAL_DIR}/{key}.html", 'w', encoding='utf-8') as f:
+            f.write(html_content)
 
 print(f"Generated {len(institutions)} Election Day campus pages.")
 
@@ -1039,8 +1040,9 @@ with open(f"{MAIN_DIR}/campuses.html", 'w', encoding='utf-8') as f:
 os.makedirs(f"{MAIN_DIR}/campuses", exist_ok=True)
 with open(f"{MAIN_DIR}/campuses/index.html", 'w', encoding='utf-8') as f:
     f.write(campuses_html)
-with open(f"{LOCAL_DIR}/campuses.html", 'w', encoding='utf-8') as f:
-    f.write(campuses_html)
+if LOCAL_DIR:
+    with open(f"{LOCAL_DIR}/campuses.html", 'w', encoding='utf-8') as f:
+        f.write(campuses_html)
 
 print("Master campuses.html updated for Election Day!")
 
@@ -1453,7 +1455,8 @@ with open(f"{MAIN_DIR}/vote.html", 'w', encoding='utf-8') as f:
 os.makedirs(f"{MAIN_DIR}/vote", exist_ok=True)
 with open(f"{MAIN_DIR}/vote/index.html", 'w', encoding='utf-8') as f:
     f.write(vote_html)
-with open(f"{LOCAL_DIR}/vote.html", 'w', encoding='utf-8') as f:
-    f.write(vote_html)
+if LOCAL_DIR:
+    with open(f"{LOCAL_DIR}/vote.html", 'w', encoding='utf-8') as f:
+        f.write(vote_html)
 
 print("Dynamic vote.html updated for Election Day!")
