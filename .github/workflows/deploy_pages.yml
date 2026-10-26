@@ -5,7 +5,19 @@ on:
     branches:
       - main
     paths:
+      - '**/*.html'
+      - '**/*.png'
+      - '**/*.svg'
+      - '*.html'
+      - '*.png'
+      - '*.svg'
       - 'index.html'
+      - 'campuses/**'
+      - 'vote/**'
+      - 'dukevote/**'
+      - 'uncvote/**'
+      - 'nccuvote/**'
+      - 'ncsuvote/**'
       - 'beta/**'
       - 'nc_map_data.json'
       - 'nc_cd_data.json'
