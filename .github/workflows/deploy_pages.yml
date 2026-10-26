@@ -6,6 +6,11 @@ on:
       - main
     paths:
       - 'index.html'
+      - 'vote.html'
+      - 'vote/**'
+      - '*.html'
+      - '*.png'
+      - '*.svg'
       - 'beta/**'
       - 'nc_map_data.json'
       - 'nc_cd_data.json'
