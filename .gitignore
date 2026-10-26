@@ -37,3 +37,8 @@ __pycache__/
 .venv/
 venv/
 .ipynb_checkpoints/
+
+!vote_qr.png
+!vote_qr.svg
+!vote/vote_qr.png
+!vote/vote_qr.svg
