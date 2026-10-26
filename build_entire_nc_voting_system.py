@@ -14,7 +14,8 @@ import urllib.parse
 MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
 LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
-GITLAB_ISSUES_URL = os.environ.get('GITLAB_ISSUES_URL') or (f"{os.environ['CI_PROJECT_URL']}/-/issues" if 'CI_PROJECT_URL' in os.environ else 'https://gitlab.oit.duke.edu/rb6/mainwebsite/-/issues')
+GITLAB_REPO_URL = os.environ.get('CI_PROJECT_URL') or 'https://gitlab.oit.duke.edu/rb6/mainwebsite'
+GITLAB_ISSUES_URL = os.environ.get('GITLAB_ISSUES_URL') or (f"{GITLAB_REPO_URL}/-/issues" if 'CI_PROJECT_URL' in os.environ else 'https://gitlab.oit.duke.edu/rb6/mainwebsite/-/issues')
 VERIFIED_UPDATE_TIME = "October 26, 2026 at 1:45 PM EDT"
 
 print("1. Loading cached NC election data...")
@@ -475,6 +476,8 @@ for inst in institutions:
           <span>Last Verified Update: <b class="text-slate-200 font-mono">{VERIFIED_UPDATE_TIME}</b></span>
           <span>•</span>
           <a href="{boe_web}" target="_blank" rel="noopener" class="text-blue-400 hover:underline">Information Sources &amp; BOE Portal ↗</a>
+          <span>•</span>
+          <a href="{GITLAB_REPO_URL}" target="_blank" rel="noopener" class="text-indigo-400 hover:underline">GitLab Source ↗</a>
         </div>
       </div>
 
@@ -810,6 +813,10 @@ for inst in institutions:
       <div class="flex flex-wrap items-center justify-center sm:justify-end gap-4 text-xs">
         <a href="/campuses" class="text-blue-400 hover:underline">All 110 NC Campuses</a>
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+        <a href="{GITLAB_REPO_URL}" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>GitLab Source</span>
+          <span class="text-[10px]">↗</span>
+        </a>
         <a href="{GITLAB_ISSUES_URL}" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
           <span>GitLab Bug Tracker</span>
           <span class="text-[10px]">↗</span>
@@ -1336,6 +1343,10 @@ campuses_template = '''<!DOCTYPE html>
       <div class="flex flex-wrap items-center justify-center gap-4">
         <a href="/vote" class="text-blue-400 hover:underline">Dynamic QR Portal</a>
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+        <a href="%%GITLAB_REPO_URL%%" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>GitLab Source</span>
+          <span class="text-[10px]">↗</span>
+        </a>
         <a href="%%GITLAB_ISSUES_URL%%" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
           <span>GitLab Bug Tracker</span>
           <span class="text-[10px]">↗</span>
@@ -1550,7 +1561,7 @@ campuses_template = '''<!DOCTYPE html>
 </html>
 '''
 
-campuses_html = campuses_template.replace('%%CARDS_JSON%%', cards_json_str).replace('%%GITLAB_ISSUES_URL%%', GITLAB_ISSUES_URL).replace('%%VERIFIED_UPDATE_TIME%%', VERIFIED_UPDATE_TIME)
+campuses_html = campuses_template.replace('%%CARDS_JSON%%', cards_json_str).replace('%%GITLAB_REPO_URL%%', GITLAB_REPO_URL).replace('%%GITLAB_ISSUES_URL%%', GITLAB_ISSUES_URL).replace('%%VERIFIED_UPDATE_TIME%%', VERIFIED_UPDATE_TIME)
 with open(f"{MAIN_DIR}/campuses.html", 'w', encoding='utf-8') as f:
     f.write(campuses_html)
 os.makedirs(f"{MAIN_DIR}/campuses", exist_ok=True)
@@ -1800,6 +1811,10 @@ vote_html = f'''<!DOCTYPE html>
       <div class="flex flex-wrap items-center justify-center gap-4">
         <a href="/campuses" class="text-blue-400 hover:underline">All 110 NC Campuses</a>
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+        <a href="{GITLAB_REPO_URL}" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>GitLab Source</span>
+          <span class="text-[10px]">↗</span>
+        </a>
         <a href="{GITLAB_ISSUES_URL}" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
           <span>GitLab Bug Tracker</span>
           <span class="text-[10px]">↗</span>

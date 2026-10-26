@@ -18,7 +18,8 @@ import urllib.parse
 MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
 LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
-GITLAB_ISSUES_URL = os.environ.get('GITLAB_ISSUES_URL') or (f"{os.environ['CI_PROJECT_URL']}/-/issues" if 'CI_PROJECT_URL' in os.environ else 'https://gitlab.oit.duke.edu/rb6/mainwebsite/-/issues')
+GITLAB_REPO_URL = os.environ.get('CI_PROJECT_URL') or 'https://gitlab.oit.duke.edu/rb6/mainwebsite'
+GITLAB_ISSUES_URL = os.environ.get('GITLAB_ISSUES_URL') or (f"{GITLAB_REPO_URL}/-/issues" if 'CI_PROJECT_URL' in os.environ else 'https://gitlab.oit.duke.edu/rb6/mainwebsite/-/issues')
 VERIFIED_UPDATE_TIME = "October 26, 2026 at 1:45 PM EDT"
 
 print("1. Loading cached NC election and precinct data...")
@@ -656,6 +657,7 @@ for inst in institutions:
         <a href="/campuses" class="hover:text-white transition">All 110 Campuses</a>
         <a href="/vote" class="hover:text-white transition">Dynamic QR Portal</a>
         <a href="https://www.ncsbe.gov" target="_blank" rel="noopener" class="hover:text-white transition">NCSBE Official</a>
+        <a href="{GITLAB_REPO_URL}" target="_blank" rel="noopener" class="hover:text-white transition">GitLab Source</a>
         <a href="{GITLAB_ISSUES_URL}" target="_blank" rel="noopener" class="hover:text-white transition">GitLab Bug Tracker</a>
         <a href="/stats" class="hover:text-white transition">Usage Tracker</a>
       </div>
