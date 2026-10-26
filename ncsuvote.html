@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NC State Student Guide to Early Voting in Wake County | Rann Bar-On</title>
+  <meta name="description" content="Complete early voting guide for NC State University students in Wake County, NC: on-campus site, voter ID rules, same-day registration, hours, and polling locations.">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rannbar-on.com/ncsuvote">
+  <meta property="og:title" content="NC State Student Guide to Early Voting in Wake County">
+  <meta property="og:description" content="Everything NC State University students need to vote early: on-campus voting site, physical student ID requirements, same-day registration, and hours.">
+  <meta property="og:image" content="https://rannbar-on.com/ncsuvote_qr.png">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>');
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    
+    :root {
+      --bg: #070b14;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b1120;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-gradient-to-r from-red-950 via-slate-900 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
+    <span class="inline-flex items-center gap-1.5">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+      <span>Early Voting in Wake County is <b>OPEN NOW</b> through <b>Saturday, October 31, 2026</b></span>
+    </span>
+  </div>
+
+  <!-- Header / Navigation -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="https://rannbar-on.com/" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center font-bold text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition">
+          R
+        </div>
+        <div>
+          <span class="font-bold tracking-tight text-white block text-sm sm:text-base leading-none">Rann Bar-On</span>
+          <span class="text-[11px] text-slate-400 font-mono">rannbar-on.com</span>
+        </div>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="#polling-site" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full text-red-400 bg-red-500/10 border-red-500/20 hover:opacity-80 transition">
+          📍 Campus Site
+        </a>
+        <a href="#voter-id" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 hover:bg-amber-500/20 transition">
+          ⚠️ Voter ID Rules
+        </a>
+        <a href="#qr-code" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
+          📱 QR Code
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- University Switcher Nav -->
+  <nav class="bg-slate-900/90 border-b border-slate-800/80 py-2.5 px-4 overflow-x-auto shadow-inner">
+    <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
+      <span class="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5">
+        <span>🏛️</span>
+        <span class="hidden sm:inline">Triangle Campus Guides:</span>
+        <span class="sm:hidden">Campuses:</span>
+      </span>
+      <div class="flex items-center gap-2 overflow-x-auto text-xs font-semibold py-0.5">
+        <a href="/dukevote" class="px-3 py-1.5 rounded-lg border font-semibold text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700 hover:text-white"><span>🔵</span><span>Duke</span></a>\n<a href="/uncvote" class="px-3 py-1.5 rounded-lg border font-semibold text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700 hover:text-white"><span>🩵</span><span>UNC-CH</span></a>\n<a href="/nccuvote" class="px-3 py-1.5 rounded-lg border font-semibold text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700 hover:text-white"><span>🦅</span><span>NCCU</span></a>\n<a href="/ncsuvote" class="px-3 py-1.5 rounded-lg border font-semibold text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 bg-white text-slate-950 border-white font-bold"><span>🐺</span><span>NC State</span></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative py-12 sm:py-16 px-4 sm:px-6 border-b border-slate-800/80 overflow-hidden">
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold text-red-400 bg-red-500/10 border-red-500/20 mb-4">
+        <span>🐺 NC State University Voter Guide</span>
+        <span class="text-slate-600">•</span>
+        <span>Wake County, NC</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+        NC State Student Guide <br class="hidden sm:inline"/>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">to Early Voting in Wake County</span>
+      </h1>
+      <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+        Everything NC State University undergraduate and graduate students need to cast their ballot early. Vote on campus, register on the spot, and make sure your vote counts!
+      </p>
+
+      <!-- Key Stat Pills -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
+          <div class="text-xs text-slate-400 font-medium">Early Voting Window</div>
+          <div class="text-base font-bold text-white mt-0.5">Oct 15 – Oct 31</div>
+          <div class="text-[11px] text-emerald-400 mt-1 font-mono">Open 7 days/wk</div>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
+          <div class="text-xs text-slate-400 font-medium">Campus Polling Site</div>
+          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">1220 Varsity Drive</div>
+          <div class="text-[11px] text-blue-400 mt-1 font-mono">Walk or Free Shuttle</div>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
+          <div class="text-xs text-slate-400 font-medium">Missed Registration?</div>
+          <div class="text-base font-bold text-white mt-0.5">Same-Day Reg</div>
+          <div class="text-[11px] text-purple-400 mt-1 font-mono">Register & vote at once</div>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
+          <div class="text-xs text-slate-400 font-medium">Approved Student ID</div>
+          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Physical Wolfpack One Card</div>
+          <div class="text-[11px] text-amber-300 mt-1 font-mono">Physical card only!</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRITICAL ALERT: PHYSICAL CARD ONLY -->
+  <section id="voter-id" class="py-8 px-4 sm:px-6 bg-amber-950/20 border-b border-amber-900/40">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-amber-950/40 border-2 border-amber-500/60 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-start gap-4">
+        <div class="p-3 rounded-xl bg-amber-500/20 text-amber-400 text-2xl shrink-0">
+          ⚠️
+        </div>
+        <div>
+          <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 mb-2">Mandatory NC State Law Requirement</span>
+          <h2 class="text-xl font-bold text-white mb-2">You MUST Bring a PHYSICAL Photo ID (No Phone/Digital Cards!)</h2>
+          <p class="text-sm text-amber-100/90 leading-relaxed mb-3">
+            <b>PHYSICAL PHOTO ID REQUIRED:</b> Under NC voting law, all voters must show an acceptable photo ID. The <b>NC State Wolfpack One Card is officially approved</b> by the State Board of Elections. You must present your physical plastic card (mobile/phone IDs are not accepted under NC law). NC Driver's License, state ID, or US Passport are also accepted.
+          </p>
+          <div class="p-3.5 rounded-xl bg-amber-900/30 border border-amber-700/50 text-xs text-amber-200/90 space-y-1.5 font-medium">
+            <p>🚫 <b>Mobile digital IDs on your phone are NOT ACCEPTED</b> at polling sites under North Carolina law.</p>
+            <p>✅ <b>ACCEPTED:</b> Physical Wolfpack One Card, NC Driver's License, US Passport, Military/Veteran ID.</p>
+            <p>💡 <b>Need an ID on the spot?</b> You can still vote! Fill out a Photo ID Exception Form at the polling place or obtain a free voter photo ID from the Wake County Board of Elections.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+
+    <!-- Section 1: Campus Polling Site -->
+    <section id="polling-site" class="scroll-mt-20">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Campus Early Voting Site</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">1220 Varsity Drive (Campus Polling Site)</h2>
+        </div>
+        <span class="hidden sm:inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          Open to all Wake County Voters
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Left: Address & Directions -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:col-span-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-slate-300 mb-2">
+              <span>📍 Address & Getting There</span>
+            </div>
+            <p class="text-base font-bold text-white leading-snug">
+              Western Boulevard Business Services<br/>1220 Varsity Dr, Raleigh, NC 27606
+            </p>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              Official NC State campus early voting site for Wake County. Located near the corner of Western Blvd & Varsity Dr.
+            </p>
+
+            <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-2 text-xs text-slate-300 leading-relaxed">
+              <b>FREE Pack the Polls Shuttles:</b> Free continuous shuttles run between Talley Student Union (Reynolds Coliseum loop), Centennial Campus, and 1220 Varsity Drive!<br/><b>Voter Parking:</b> Free designated parking available on-site
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4">
+            <a href="https://maps.google.com/?q=1220+Varsity+Dr+Raleigh+NC" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-700 hover:bg-red-600 text-white font-semibold text-xs transition shadow-sm">
+              <span>Open in Google Maps</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Early Voting Hours Schedule -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:col-span-2">
+          <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider mb-3">Wake County Early Voting Hours Schedule</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="border-b border-slate-800 text-xs text-slate-400 font-mono">
+                  <th class="py-2.5 font-semibold">Days</th>
+                  <th class="py-2.5 font-semibold">Dates</th>
+                  <th class="py-2.5 font-semibold">Hours</th>
+                  <th class="py-2.5 font-semibold text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60">
+                <tr>
+                  <td class="py-3 font-medium text-white">Mondays – Fridays</td>
+                  <td class="py-3 text-slate-400 text-xs">Oct 15 – Oct 30</td>
+                  <td class="py-3 font-mono text-emerald-400 font-semibold">8:00 AM – 7:30 PM</td>
+                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Extended</span></td>
+                </tr>
+                <tr>
+                  <td class="py-3 font-medium text-white">Saturdays</td>
+                  <td class="py-3 text-slate-400 text-xs">Oct 17 & Oct 24</td>
+                  <td class="py-3 font-mono text-blue-300 font-semibold">8:00 AM – 3:00 PM</td>
+                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Weekend</span></td>
+                </tr>
+                <tr>
+                  <td class="py-3 font-medium text-white">Sundays</td>
+                  <td class="py-3 text-slate-400 text-xs">Oct 18 & Oct 25</td>
+                  <td class="py-3 font-mono text-blue-300 font-semibold">1:00 PM – 6:00 PM</td>
+                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Afternoon</span></td>
+                </tr>
+                <tr class="bg-amber-500/5 font-semibold">
+                  <td class="py-3 text-amber-300">Final Saturday (Last Day!)</td>
+                  <td class="py-3 text-amber-200 text-xs">Saturday, Oct 31</td>
+                  <td class="py-3 font-mono text-amber-300 font-bold">8:00 AM – 3:00 PM</td>
+                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Closes 3 PM</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-slate-400 mt-4 leading-relaxed">
+            💡 <i>During early voting, you can vote at <b>any</b> early voting location in Wake County, regardless of your assigned voting precinct!</i>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Same-Day Registration -->
+    <section id="registration" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 scroll-mt-20">
+      <div class="max-w-3xl">
+        <span class="text-xs font-mono font-semibold text-purple-400 uppercase tracking-wider">Missed the Voter Registration Deadline?</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-3">Same-Day Voter Registration is Available!</h2>
+        <p class="text-sm text-slate-300 leading-relaxed mb-6">
+          In North Carolina, if you are not yet registered to vote in Wake County, or if you moved to a new local address, you can <b>register and vote on the same visit</b> exclusively during Early Voting. (Same-day registration is <i>not</i> allowed on Election Day).
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- On Campus Students -->
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 font-bold text-xs mb-3">
+              <span>🏠 On-Campus Residents</span>
+            </div>
+            <h4 class="text-sm font-bold text-white mb-1.5">What to Bring:</h4>
+            <ul class="text-xs text-slate-300 space-y-2">
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><b>Physical Wolfpack One Card</b> (physical card).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span>On-campus NC State students can use their physical Wolfpack One Card along with NC State housing verification (accessible via MyPack Portal or housing agreement).</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Off Campus Students -->
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 font-bold text-xs mb-3">
+              <span>🏢 Off-Campus Residents</span>
+            </div>
+            <h4 class="text-sm font-bold text-white mb-1.5">What to Bring:</h4>
+            <ul class="text-xs text-slate-300 space-y-2">
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><b>Approved Photo ID:</b> Physical Wolfpack One Card, NC Driver’s License, or US Passport.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><b>Proof of Residence:</b> Document showing your name and current local Wake County address (university official portal/letter, utility bill, bank statement, paycheck, or lease; can be electronic on your phone).</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-400 leading-relaxed">
+          ⚖️ <b>Student Voting Rights:</b> College students have the established legal right to choose whether to register and vote at their college address or their permanent home address. You must choose one and vote only once per election.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: All Early Voting Sites in County -->
+    <section id="sites" class="scroll-mt-20">
+      <div class="mb-6">
+        <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Countywide Flexibility</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All 9 Wake County Early Voting Sites</h2>
+        <p class="text-sm text-slate-400 mt-1">Any registered Wake County voter can cast a ballot at any of these sites during early voting hours.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <div class="bg-slate-900 border-2 border-blue-500/60 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          <span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500 text-white">Campus Site</span>
+          <h4 class="font-bold text-white text-base pr-20">1220 Varsity Dr (NC State Campus Site)</h4>
+          <p class="text-xs text-slate-300 mt-1">1220 Varsity Dr, Raleigh 27606</p>
+          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Free shuttles from Talley / Reynolds</div>
+        </div>
+        \n
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          
+          <h4 class="font-bold text-white text-base pr-20">Chavis Community Center</h4>
+          <p class="text-xs text-slate-300 mt-1">505 Martin Luther King Jr Blvd, Raleigh 27601</p>
+          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Near Downtown Raleigh</div>
+        </div>
+        \n
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          
+          <h4 class="font-bold text-white text-base pr-20">Wake BOE Operations Center</h4>
+          <p class="text-xs text-slate-300 mt-1">1200 N. New Hope Rd, Raleigh 27610</p>
+          <div class="text-[11px] text-emerald-400 mt-2 font-mono">East Raleigh</div>
+        </div>
+        \n
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          
+          <h4 class="font-bold text-white text-base pr-20">Optimist Park Community Center</h4>
+          <p class="text-xs text-slate-300 mt-1">5900 Whittier Dr, Raleigh 27609</p>
+          <div class="text-[11px] text-emerald-400 mt-2 font-mono">North Raleigh</div>
+        </div>
+        \n
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          
+          <h4 class="font-bold text-white text-base pr-20">Cary Senior Center</h4>
+          <p class="text-xs text-slate-300 mt-1">120 Maury O'Dell Pl, Cary 27519</p>
+          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Bond Park, Cary</div>
+        </div>
+        \n
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          
+          <h4 class="font-bold text-white text-base pr-20">Green Road Community Center</h4>
+          <p class="text-xs text-slate-300 mt-1">4201 Green Rd, Raleigh 27604</p>
+          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Northeast Raleigh</div>
+        </div>
+        \n
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          
+          <h4 class="font-bold text-white text-base pr-20">Herbert C. Young Community Center</h4>
+          <p class="text-xs text-slate-300 mt-1">101 Wilkinson Ave, Cary 27513</p>
+          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Downtown Cary</div>
+        </div>
+        \n
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          
+          <h4 class="font-bold text-white text-base pr-20">Garner Senior Center</h4>
+          <p class="text-xs text-slate-300 mt-1">205 E. Garner Rd, Garner 27529</p>
+          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Garner</div>
+        </div>
+        \n
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
+          
+          <h4 class="font-bold text-white text-base pr-20">Wake Forest Town Hall</h4>
+          <p class="text-xs text-slate-300 mt-1">301 S. Brooks St, Wake Forest 27587</p>
+          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Wake Forest</div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- Section 4: Checklist & Resources -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Checklist -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+          <span>📋</span>
+          <span>Pre-Voting Checklist</span>
+        </h3>
+        <ul class="space-y-3 text-xs sm:text-sm text-slate-300">
+          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
+            <span class="text-blue-400 font-bold shrink-0">1.</span>
+            <span><b>Physical Photo ID:</b> Physical Wolfpack One Card, NC Driver’s License, or US Passport. <i>Double-check you have the plastic card, not your phone!</i></span>
+          </li>
+          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
+            <span class="text-blue-400 font-bold shrink-0">2.</span>
+            <span><b>Proof of Residence (If Registering):</b> Physical campus ID (on campus) or local address document (off campus).</span>
+          </li>
+          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
+            <span class="text-blue-400 font-bold shrink-0">3.</span>
+            <span><b>Check Sample Ballot:</b> Look up your sample ballot on <a href="https://www.wake.gov/elections" target="_blank" class="text-blue-400 underline">Wake County Board of Elections</a> to preview candidates before you vote.</span>
+          </li>
+          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
+            <span class="text-blue-400 font-bold shrink-0">4.</span>
+            <span><b>You Can Bring Notes:</b> You are legally permitted to bring a written list or notes into the voting booth (just do not take photos while voting).</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Quick Helpful Links -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <span>🔗</span>
+            <span>Official Resources & Support</span>
+          </h3>
+          <div class="space-y-2.5 text-xs sm:text-sm">
+            <a href="https://www.wake.gov/elections" target="_blank" rel="noopener" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-200 transition">
+              <div>
+                <div class="font-semibold text-white">Wake County Board of Elections</div>
+                <div class="text-xs text-slate-400 mt-0.5">Live site wait times & sample ballots</div>
+              </div>
+              <span class="text-slate-400">↗</span>
+            </a>
+            <a href="https://vt.ncsbe.gov/RegLkup/" target="_blank" rel="noopener" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-200 transition">
+              <div>
+                <div class="font-semibold text-white">NC Voter Search (NCSBE)</div>
+                <div class="text-xs text-slate-400 mt-0.5">Verify registration status & view district ballot</div>
+              </div>
+              <span class="text-slate-400">↗</span>
+            </a>
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200">
+              <div class="font-semibold text-white">Pack the Polls (NC State Civic Engagement)</div>
+              <div class="text-xs text-slate-400 mt-1">Free shuttle info & student voter support: <a href="mailto:packthepolls@ncsu.edu" class="text-red-400 underline">packthepolls@ncsu.edu</a> | <a href="https://dasa.ncsu.edu/pack-the-polls/" target="_blank" class="text-red-400 underline">dasa.ncsu.edu/pack-the-polls</a></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+          <span>Need help? Call Wake County BOE:</span>
+          <a href="tel:9194044040" class="font-mono font-bold text-blue-400 hover:underline">(919) 404-4040</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: QR Code & Sharing Card -->
+    <section id="qr-code" class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-red-600/40 rounded-2xl p-6 sm:p-8 scroll-mt-20">
+      <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-between">
+        <div class="max-w-xl text-center sm:text-left">
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Share with Classmates & Dorms</span>
+          <h2 class="text-2xl font-bold text-white mt-1 mb-2">Scan or Share this NC State Voting Guide</h2>
+          <p class="text-sm text-slate-300 leading-relaxed mb-4">
+            Scan the QR code with your phone camera or share the direct link with friends, group chats, dorms, and student orgs to help every NC State student get their vote in before Saturday!
+          </p>
+          <div class="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
+            <div class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm text-blue-300 select-all">
+              https://rannbar-on.com/ncsuvote
+            </div>
+            <button onclick="navigator.clipboard.writeText('https://rannbar-on.com/ncsuvote'); alert('Link copied to clipboard!');" class="px-4 py-2 rounded-xl bg-red-700 hover:bg-red-600 text-white font-semibold text-xs transition shadow-sm">
+              Copy Link
+            </button>
+            <a href="/ncsuvote_qr.png" download="NC State_Vote_Early_QR.png" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+              Download PNG
+            </a>
+            <a href="/ncsuvote_qr.svg" download="NC State_Vote_Early_QR.svg" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+              Download SVG
+            </a>
+          </div>
+        </div>
+
+        <!-- QR Code Visual -->
+        <div class="bg-white p-4 rounded-2xl shadow-2xl border-4 border-red-600/30 shrink-0 text-center">
+          <img src="data:image/png;base64,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" alt="QR code for NC State student early voting guide" class="w-48 h-48 sm:w-52 sm:h-52 object-contain mx-auto" />
+          <div class="text-[11px] font-bold text-slate-900 mt-2 font-mono">rannbar-on.com/ncsuvote</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-8 px-4 sm:px-6 mt-16 text-xs text-slate-400">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div>
+        <p class="font-medium text-slate-300">Non-partisan student voting guide prepared by Rann Bar-On.</p>
+        <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the Wake County Board of Elections and the NC State Board of Elections.</p>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

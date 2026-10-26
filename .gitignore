@@ -42,3 +42,8 @@ venv/
 !vote_qr.svg
 !vote/vote_qr.png
 !vote/vote_qr.svg
+
+!*_qr.png
+!*_qr.svg
+!*/*_qr.png
+!*/*_qr.svg
