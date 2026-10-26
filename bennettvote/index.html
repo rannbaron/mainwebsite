@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bennett Student Guide to Early Voting in Guilford County | Rann Bar-On</title>
-  <meta name="description" content="Complete early voting guide for Bennett College students in Guilford County, NC: voting sites, dynamic geolocation, voter ID rules, candidate guides (Dem, Rep, Ind), and hours.">
+  <title>Bennett Student Voting Guide | Rann Bar-On</title>
+  <meta name="description" content="Complete voting guide for Bennett College students in Guilford County, NC: voting sites, dynamic geolocation, voter ID rules, candidate guides, and hours.">
   
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rannbar-on.com/bennettvote">
-  <meta property="og:title" content="Bennett Student Guide to Early Voting in Guilford County">
-  <meta property="og:description" content="Everything Bennett College students need to cast their ballot early in Guilford County: dynamic nearest site detection, voter ID rules, and same-day registration.">
+  <meta property="og:title" content="Bennett Student Voting Guide">
+  <meta property="og:description" content="Everything Bennett College students need to vote in Guilford County: dynamic nearest site detection, voter ID rules, and candidate guides.">
   <meta property="og:image" content="https://rannbar-on.com/bennettvote_qr.png">
 
   <!-- Tailwind CSS -->
@@ -21,7 +21,6 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-    
     :root {
       --bg: #070b14;
       --card-bg: #0f172a;
@@ -29,59 +28,24 @@
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
     }
-
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg);
       color: var(--text-main);
       overflow-x: hidden;
     }
-
-    .font-mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0b1120;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 3px;
-    }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
   </style>
+  <script data-goatcounter="https://rannbaron.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
-
-  <!-- Auto-Location Redirect Banner (Hidden by default, shown if user is closer to another campus) -->
-  <div id="cross-campus-banner" class="hidden bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 text-white px-4 py-3 text-center text-xs sm:text-sm font-semibold shadow-xl border-b border-indigo-500/40 relative z-50">
-    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div class="flex items-center gap-2">
-        <span class="text-lg">📍</span>
-        <span id="cross-campus-text">Location detected: You are closer to another campus.</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <a id="cross-campus-link" href="#" class="px-3.5 py-1.5 rounded-lg bg-white text-slate-950 font-bold text-xs hover:bg-slate-100 transition shadow-sm">
-          Switch Guide Now →
-        </a>
-        <button onclick="cancelRedirect()" class="px-2.5 py-1.5 rounded-lg bg-black/20 hover:bg-black/40 text-white text-xs transition">
-          Stay on this page
-        </button>
-      </div>
-    </div>
-  </div>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased" data-campus="Bennett College" data-key="bennettvote" data-county="GUILFORD">
 
   <!-- Top Announcement Bar -->
-  <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
-    <span class="inline-flex items-center gap-1.5">
-      <span class="relative flex h-2 w-2">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-      </span>
-      <span>Early Voting in Guilford County is <b>OPEN NOW</b> through <b>Saturday, October 31, 2026</b></span>
+  <div id="top-announcement-bar" class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
+    <span class="inline-flex items-center gap-2">
+      <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+      <span>Early Voting is <b>OPEN STATEWIDE</b> through <b>Saturday, October 31, 2026</b></span>
     </span>
   </div>
 
@@ -98,18 +62,17 @@
         </div>
       </a>
       <div class="flex items-center gap-2 sm:gap-2.5">
-        <button onclick="detectNearestSite()" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 hover:bg-blue-500/30 transition">
-          <span>📍</span>
-          <span class="hidden sm:inline">Detect Nearest Site</span>
-        </button>
+        <a href="#polling-site" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm">
+          Voting Sites
+        </a>
         <a href="#voter-guides" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
-          🗳️ Guides
+          Guides
         </a>
         <a href="#voter-id" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 hover:bg-amber-500/20 transition">
-          ⚠️ Voter ID
+          Voter ID
         </a>
-        <a href="#qr-code" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm">
-          📱 QR
+        <a href="#qr-code" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          QR
         </a>
       </div>
     </div>
@@ -120,12 +83,10 @@
     <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-2">
         <a href="/campuses" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 font-bold text-xs transition">
-          <span>🏛️</span>
-          <span>Browse All 111 NC Campuses</span>
+          <span>Browse All 110 NC Campuses</span>
         </a>
       </div>
       
-      <!-- Quick Jump Campus Selector -->
       <div class="flex items-center gap-2">
         <label for="campus-quick-jump" class="text-xs text-slate-400 font-medium hidden sm:inline">Switch Campus:</label>
         <select id="campus-quick-jump" onchange="if(this.value) window.location.href=this.value;" class="bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-blue-500 font-medium">
@@ -217,7 +178,6 @@
 <option value="/spccvote">South Piedmont Community College (Polkton) - CC</option>
 <option value="/southeasternccvote">Southeastern Community College (Whiteville) - CC</option>
 <option value="/southwesternccvote">Southwestern Community College (Sylva) - CC</option>
-<option value="/standrewsvote">St. Andrews University (Laurinburg) - Private</option>
 <option value="/stanlyccvote">Stanly Community College (Albemarle) - CC</option>
 <option value="/surryccvote">Surry Community College (Dobson) - CC</option>
 <option value="/tricountyccvote">Tri-County Community College (Murphy) - CC</option>
@@ -247,19 +207,39 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="relative py-12 sm:py-16 px-4 sm:px-6 border-b border-slate-800/80 overflow-hidden">
+  <section class="relative py-10 sm:py-14 px-4 sm:px-6 border-b border-slate-800/80 overflow-hidden">
     <div class="max-w-4xl mx-auto text-center relative z-10">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
-        <span>Belles Bennett College</span>
+      
+      <!-- Verified Source & Verification Status Banner -->
+      <div class="mb-6 p-4 rounded-2xl bg-slate-900/90 border border-slate-800 text-left shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+        <div class="flex items-center gap-2.5">
+          <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            Verified Source
+          </span>
+          <span class="text-slate-200">
+            Official NC State Board of Elections (NCSBE) &amp; Guilford County Board of Elections
+          </span>
+        </div>
+        <div class="flex flex-wrap items-center gap-3 text-slate-400 text-[11px]">
+          <span>Last Verified Update: <b class="text-slate-200 font-mono">October 26, 2026 at 1:45 PM EDT</b></span>
+          <span>•</span>
+          <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="text-blue-400 hover:underline">Information Sources &amp; BOE Portal ↗</a>
+          <span>•</span>
+          <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener" class="text-indigo-400 hover:underline">GitHub Source ↗</a>
+        </div>
+      </div>
+
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/30 mb-4">
+        <span>Bennett College</span>
         <span class="text-slate-600">•</span>
-        <span>Guilford County, NC</span>
+        <span>Student Voting Guide</span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
         Bennett Student Guide <br class="hidden sm:inline"/>
-        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">to Early Voting in Guilford County</span>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-300">to Early Voting in Guilford County</span>
       </h1>
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Everything Bennett College undergraduate and graduate students need to cast their ballot early. Detect your nearest polling location, compare candidate guides from all perspectives, and make sure your voice is heard!
+        Everything you need to cast your ballot in North Carolina: campus early voting locations, dynamic GPS nearest site detection, student voter ID rules, and non-partisan voting info.
       </p>
 
       <!-- Key Stat Pills -->
@@ -267,17 +247,17 @@
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div class="text-xs text-slate-400 font-medium">Early Voting Window</div>
           <div class="text-base font-bold text-white mt-0.5">Oct 15 – Oct 31</div>
-          <div class="text-[11px] text-emerald-400 mt-1 font-mono">Open 7 days/wk</div>
+          <div class="text-[11px] text-emerald-400 mt-1 font-mono">Open through 3 PM Sat</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
-          <div class="text-xs text-slate-400 font-medium">Primary Voting Site</div>
+          <div class="text-xs text-slate-400 font-medium">Primary Site</div>
           <div id="stat-primary-site" class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Washington Terrace Park</div>
           <div id="stat-primary-dist" class="text-[11px] text-blue-400 mt-1 font-mono">Greensboro, NC</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div class="text-xs text-slate-400 font-medium">Missed Registration?</div>
           <div class="text-base font-bold text-white mt-0.5">Same-Day Reg</div>
-          <div class="text-[11px] text-purple-400 mt-1 font-mono">Register & vote at once</div>
+          <div class="text-[11px] text-purple-400 mt-1 font-mono">Register &amp; vote at once</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div class="text-xs text-slate-400 font-medium">Voter ID Rule</div>
@@ -288,28 +268,43 @@
     </div>
   </section>
 
+  <!-- Cross-Campus Proximity Alert Banner -->
+  <div id="cross-campus-banner" class="hidden bg-indigo-950 border-b border-indigo-500/40 px-4 py-3 text-center text-xs sm:text-sm font-medium text-indigo-200">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <span id="cross-campus-text"></span>
+      <div class="flex items-center gap-2">
+        <a id="cross-campus-link" href="#" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition">
+          Switch Guide →
+        </a>
+        <button onclick="cancelRedirect()" class="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs">
+          Stay on this page
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- CRITICAL VOTER ID RULE SECTION -->
-  <section id="voter-id" class="py-8 px-4 sm:px-6 border-amber-500/40 bg-amber-950/20 border-b">
+  <section id="voter-id" class="py-8 px-4 sm:px-6 bg-slate-950 border-b border-slate-800/80">
     <div class="max-w-4xl mx-auto">
       
         <div class="bg-amber-950/40 border-2 border-amber-500/60 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-start gap-4">
-          <div class="p-3 rounded-xl bg-amber-500/20 text-amber-300 text-2xl shrink-0">
-            ⚠️
+          <div class="p-3 rounded-xl bg-amber-500/20 text-amber-300 font-bold shrink-0">
+            [Notice]
           </div>
           <div>
             <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 mb-2">Student Photo ID Not On State Approved List</span>
             <h2 class="text-xl font-bold text-white mb-2">Student ID Card is NOT Accepted for Voting</h2>
             <p class="text-sm text-amber-100/90 leading-relaxed mb-3">
-              Under North Carolina law, student IDs cannot be used for voting unless the institution applied for and received approval from the State Board of Elections. Bennett College student IDs are <b>not approved</b> for voting purposes.
+              Under North Carolina law, Bennett College student IDs are <b>not approved</b> for voting. You must present an approved alternative photo ID.
             </p>
             <div class="p-3.5 rounded-xl bg-amber-900/30 border border-amber-700/50 text-xs text-amber-200/90 space-y-1.5 font-medium">
-              <p>✅ <b>WHAT YOU CAN USE INSTEAD:</b></p>
+              <p><b>WHAT YOU CAN USE INSTEAD:</b></p>
               <ul class="list-disc pl-5 space-y-1 text-slate-200">
-                <li><b>North Carolina Driver’s License</b> or NC DMV State ID (can be expired up to 1 year, or unexpired).</li>
+                <li><b>North Carolina Driver’s License</b> or NC DMV State ID (unexpired or expired up to 1 year).</li>
                 <li><b>U.S. Passport</b> or U.S. Passport Card (must be unexpired).</li>
                 <li><b>Out-of-State Driver’s License</b> (accepted only if you registered to vote in NC within 90 days of the election).</li>
-                <li><b>Free Voter Photo ID Card:</b> Issued on the spot for free at the Guilford County Board of Elections office!</li>
-                <li><b>Photo ID Exception Form:</b> If you lack an approved ID due to a reasonable impediment, you can complete an Exception Form at the polling site and cast a ballot that counts.</li>
+                <li><b>Free Voter Photo ID Card:</b> Issued by your county Board of Elections.</li>
+                <li><b>Photo ID Exception Form:</b> If you lack an ID due to an allowable exception, you can complete an Exception Form at the check-in desk.</li>
               </ul>
             </div>
           </div>
@@ -328,18 +323,14 @@
       <div class="bg-gradient-to-r from-blue-950/40 via-indigo-950/30 to-slate-900 border border-blue-500/30 rounded-2xl p-4 sm:p-5 mb-6 shadow-md">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <div class="flex items-center gap-2">
-              <span class="text-lg">📍</span>
-              <h3 class="text-sm font-bold text-white">Find Your Nearest Polling Location Dynamically</h3>
-            </div>
+            <h3 class="text-sm font-bold text-white">Find Your Nearest Polling Location Dynamically</h3>
             <p class="text-xs text-slate-300 mt-1">
-              Allow location access to update this page with exact distances to all Guilford County early voting sites and locate your closest voting site.
+              Allow location access to update this page with exact distances to all Guilford County early voting sites and find your closest voting location.
             </p>
           </div>
           <div class="flex items-center gap-2 shrink-0">
-            <button onclick="detectNearestSite()" id="btn-detect-loc" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm flex items-center gap-1.5">
-              <span>📍</span>
-              <span>Detect My Location</span>
+            <button onclick="detectNearestSite()" id="btn-detect-loc" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm">
+              Detect My Location
             </button>
           </div>
         </div>
@@ -360,109 +351,108 @@
         <!-- Left: Address & Directions -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:col-span-1 flex flex-col justify-between">
           <div>
-            <div class="flex items-center gap-2 text-sm font-semibold text-slate-300 mb-2">
-              <span>📍 Address & Getting There</span>
-            </div>
+            <div class="text-sm font-semibold text-slate-300 mb-2">Address &amp; Directions</div>
             <p id="main-site-addr" class="text-base font-bold text-white leading-snug">
-              101 Gordon St High Point, Nc 27260
+              101 Gordon St High Point, NC 27260
             </p>
-            <p id="main-site-desc" class="text-xs text-slate-400 mt-2 leading-relaxed">
-              Official Early Voting location serving Bennett College students, faculty, staff, and all residents of Guilford County.
+            <p class="text-xs text-slate-400 mt-2">
+              Located in Guilford County, NC. Any registered county voter can cast their ballot here during early voting.
             </p>
-
-            <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-2 text-xs text-slate-300 leading-relaxed">
-              <p><b>Free Voter Parking:</b> Available at or near the facility during voting hours.</p>
-              <p><b>Flexibility:</b> You can cast your early ballot at <b>any</b> early voting site in Guilford County.</p>
-            </div>
+            
           </div>
-
-          <div class="mt-6 pt-4">
-            <a id="main-site-maps" href="https://maps.google.com/?q=101+GORDON+ST+HIGH+POINT,+NC+27260" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
+          <div class="mt-6 pt-4 border-t border-slate-800">
+            <a id="main-site-maps" href="https://www.google.com/maps/dir/?api=1&destination=101%20GORDON%20ST%20HIGH%20POINT%2C%20NC%2027260" target="_blank" rel="noopener" class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs text-center transition shadow-md flex items-center justify-center gap-1.5">
               <span>Open in Google Maps</span>
               <span>↗</span>
             </a>
           </div>
         </div>
 
-        <!-- Right: Early Voting Hours Schedule -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:col-span-2">
-          <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider mb-3">Guilford County Early Voting Hours Schedule</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <thead>
-                <tr class="border-b border-slate-800 text-xs text-slate-400 font-mono">
-                  <th class="py-2.5 font-semibold">Days</th>
-                  <th class="py-2.5 font-semibold">Dates</th>
-                  <th class="py-2.5 font-semibold">Hours</th>
-                  <th class="py-2.5 font-semibold text-right">Status</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-800/60">
-                <tr>
-                  <td class="py-3 font-medium text-white">Mondays – Fridays</td>
-                  <td class="py-3 text-slate-400 text-xs">Oct 15 – Oct 30</td>
-                  <td class="py-3 font-mono text-emerald-400 font-semibold">8:00 AM – 7:30 PM</td>
-                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Extended</span></td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-medium text-white">Saturdays</td>
-                  <td class="py-3 text-slate-400 text-xs">Oct 17 & Oct 24</td>
-                  <td class="py-3 font-mono text-blue-300 font-semibold">8:00 AM – 3:00 PM</td>
-                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Weekend</span></td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-medium text-white">Sundays</td>
-                  <td class="py-3 text-slate-400 text-xs">Oct 18 & Oct 25</td>
-                  <td class="py-3 font-mono text-blue-300 font-semibold">1:00 PM – 5:00 PM</td>
-                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Afternoon</span></td>
-                </tr>
-                <tr class="bg-amber-500/5 font-semibold">
-                  <td class="py-3 text-amber-300">Final Saturday (Last Day!)</td>
-                  <td class="py-3 text-amber-200 text-xs">Saturday, Oct 31</td>
-                  <td class="py-3 font-mono text-amber-300 font-bold">8:00 AM – 3:00 PM</td>
-                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Closes 3 PM</span></td>
-                </tr>
-              </tbody>
-            </table>
+        <!-- Right: Official Hours Table (Accurate Sunday Hours) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:col-span-2 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm font-semibold text-slate-300">Official Daily Voting Hours</span>
+              <span class="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2.5 py-0.5 rounded border border-emerald-500/20">
+                Guilford County Approved Schedule
+              </span>
+            </div>
+            
+            
+    <div class="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/60">
+      <table class="w-full text-left text-xs">
+        <thead class="bg-slate-900/90 text-slate-400 uppercase tracking-wider text-[10px] font-semibold border-b border-slate-800">
+          <tr>
+            <th class="py-2.5 px-3">Date / Window</th>
+            <th class="py-2.5 px-3">Voting Hours</th>
+            <th class="py-2.5 px-3 text-right">Schedule Type</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800/40">
+          
+        <tr class=" border-b border-slate-800/60">
+          <td class="py-2.5 px-3 text-slate-200 text-xs font-medium">Thursday, October 15 - Friday, October 16</td>
+          <td class="py-2.5 px-3 font-mono text-slate-200 font-mono text-xs">8:00 AM – 7:30 PM</td>
+          <td class="py-2.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800/60 text-slate-400">Weekday</span></td>
+        </tr>
+        
+        <tr class=" border-b border-slate-800/60">
+          <td class="py-2.5 px-3 text-slate-200 text-xs font-medium">Monday, October 19 - Friday, October 23</td>
+          <td class="py-2.5 px-3 font-mono text-slate-200 font-mono text-xs">8:00 AM – 7:30 PM</td>
+          <td class="py-2.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800/60 text-slate-400">Weekday</span></td>
+        </tr>
+        
+        <tr class="bg-slate-900/40 border-b border-slate-800/60">
+          <td class="py-2.5 px-3 text-slate-200 text-xs font-medium">Saturday, October 24 - Sunday, October 25</td>
+          <td class="py-2.5 px-3 font-mono text-blue-300 font-semibold text-xs">10:00 AM – 5:00 PM</td>
+          <td class="py-2.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/20">Sunday</span></td>
+        </tr>
+        
+        <tr class=" border-b border-slate-800/60">
+          <td class="py-2.5 px-3 text-slate-200 text-xs font-medium">Monday, October 26 - Friday, October 30</td>
+          <td class="py-2.5 px-3 font-mono text-slate-200 font-mono text-xs">8:00 AM – 7:30 PM</td>
+          <td class="py-2.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800/60 text-slate-400">Weekday</span></td>
+        </tr>
+        
+        <tr class="bg-amber-500/10 font-bold border-t border-amber-500/30 border-b border-slate-800/60">
+          <td class="py-2.5 px-3 text-slate-200 text-xs font-medium">Saturday, October 31</td>
+          <td class="py-2.5 px-3 font-mono text-amber-300 font-bold text-xs">8:00 AM – 3:00 PM</td>
+          <td class="py-2.5 px-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Closes 3 PM</span></td>
+        </tr>
+        
+        </tbody>
+      </table>
+    </div>
+    
           </div>
           <p class="text-xs text-slate-400 mt-4 leading-relaxed">
-            💡 <i>During early voting, you can vote at <b>any</b> early voting location in Guilford County, regardless of your precinct!</i>
+            Note: During early voting, you can vote at <b>any</b> early voting location in Guilford County, regardless of your precinct!
           </p>
         </div>
       </div>
     </section>
 
-    <!-- Section 2: Local Candidate Voter Guides (Democratic, Republican & Independent) -->
+    <!-- Section 2: Local Candidate Voter Guides (Democratic & Non-Partisan) -->
     <section id="voter-guides" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
       <div class="max-w-3xl mb-8">
-        <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Candidate Research & Endorsements</span>
+        <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Candidate Research &amp; Endorsements</span>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">Local Candidate Guides for Bennett Students</h2>
         <p class="text-sm text-slate-300 leading-relaxed">
-          Before casting your ballot in Guilford County, review candidate questionnaires, voting records, and endorsements from multiple political perspectives. Compare trusted Democratic, Republican, and non-partisan sources below:
+          Before heading to the ballot box in Guilford County, review questionnaires, policy scorecards, and endorsements:
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- 1. Democratic-Leaning Guide -->
         <div class="bg-slate-950/80 border border-blue-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-md">
           <div>
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 mb-3">
-              <span>🔵 Democratic / Progressive</span>
+            <div class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30 mb-3">
+              <span>Democratic / Progressive</span>
             </div>
-            <h3 class="text-lg font-bold text-white mb-2">Blue Voter Guide & NC Dems</h3>
+            <h3 class="text-lg font-bold text-white mb-2">Blue Voter Guide &amp; NC Dems</h3>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
-              Enter your local Guilford County address to see customized candidate recommendations and slates endorsed by Democratic, labor, reproductive rights, and environmental organizations across North Carolina.
+              Personalized candidate recommendations endorsed by labor, reproductive rights, environmental, and progressive organizations in North Carolina.
             </p>
-            <ul class="text-xs text-slate-400 space-y-1.5 mb-4">
-              <li class="flex items-center gap-2">
-                <span class="text-blue-400 font-bold">✓</span>
-                <span>Endorsements from 40+ progressive orgs</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <span class="text-blue-400 font-bold">✓</span>
-                <span>Local legislative, judicial & county races</span>
-              </li>
-            </ul>
           </div>
           <div class="space-y-2 pt-2 border-t border-slate-800/80">
             <a href="https://bluevoterguide.org/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
@@ -476,59 +466,16 @@
           </div>
         </div>
 
-        <!-- 2. Republican-Leaning Guide -->
-        <div class="bg-slate-950/80 border border-red-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-md">
-          <div>
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-500/20 text-red-400 border border-red-500/30 mb-3">
-              <span>🔴 Republican / Conservative</span>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2">iVoterGuide & NC Values</h3>
-            <p class="text-xs text-slate-300 leading-relaxed mb-4">
-              Comprehensive candidate ratings, policy scorecards, and evaluations based on conservative constitutional principles, fiscal policies, and traditional values across Guilford County.
-            </p>
-            <ul class="text-xs text-slate-400 space-y-1.5 mb-4">
-              <li class="flex items-center gap-2">
-                <span class="text-red-400 font-bold">✓</span>
-                <span>Detailed candidate ratings & questionnaires</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <span class="text-red-400 font-bold">✓</span>
-                <span>Covers statewide, judicial & local offices</span>
-              </li>
-            </ul>
-          </div>
-          <div class="space-y-2 pt-2 border-t border-slate-800/80">
-            <a href="https://ivoterguide.com/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-xs transition shadow-sm">
-              <span>Open iVoterGuide (NC)</span>
-              <span>↗</span>
-            </a>
-            <a href="https://www.guilfordgop.org/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-red-300 border border-slate-800 font-medium text-xs transition">
-              <span>Guilford County Republican Party (GOP)</span>
-              <span>↗</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- 3. Independent / Non-Partisan Guide -->
+        <!-- 2. Independent / Non-Partisan Guide -->
         <div class="bg-slate-950/80 border border-emerald-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-md">
           <div>
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 mb-3">
-              <span>⚖️ Independent / Non-Partisan</span>
+            <div class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 mb-3">
+              <span>Independent / Non-Partisan</span>
             </div>
             <h3 class="text-lg font-bold text-white mb-2">Vote411 (League of Women Voters)</h3>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
-              Strictly non-partisan, unbiased candidate comparisons produced by the League of Women Voters of NC. Candidates answer identical policy questions directly in their own unedited words.
+              Non-partisan candidate questionnaires and unbiased comparisons by the League of Women Voters of North Carolina.
             </p>
-            <ul class="text-xs text-slate-400 space-y-1.5 mb-4">
-              <li class="flex items-center gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span>Side-by-side unedited candidate responses</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span>Zero party bias or endorsements</span>
-              </li>
-            </ul>
           </div>
           <div class="space-y-2 pt-2 border-t border-slate-800/80">
             <a href="https://www.vote411.org/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition shadow-sm">
@@ -556,43 +503,43 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <!-- On Campus Students -->
           <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5">
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 font-bold text-xs mb-3">
-              <span>🏠 On-Campus Residents</span>
+            <div class="inline-flex items-center px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 font-bold text-xs mb-3">
+              <span>On-Campus Residents</span>
             </div>
             <h4 class="text-sm font-bold text-white mb-1.5">What to Bring:</h4>
-            <ul class="text-xs text-slate-300 space-y-2">
+            <ul class="text-xs text-slate-300 space-y-2.5">
               <li class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Photo ID:</b> An approved photo ID (or Student ID (Not Approved by State Board) if approved, NC Driver's License, or US Passport).</span>
+                <span class="text-emerald-400 font-bold shrink-0">[Photo ID]</span>
+                <span><b>Photo ID Requirement:</b> Under NCSBE Numbered Memo 2023-05, because Bennett College is a private university, on-campus students relying on the university housing roster MUST present their physical <b>Student ID (Not Approved by State Board)</b>. Alternative photo IDs (such as an out-of-state driver's license or passport) cannot be paired with a private university housing roster. (Confirmed with Guilford County Board of Elections).</span>
               </li>
               <li class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Proof of Residence:</b> Campus housing verification (residential roster provided to election officials, or housing contract on student portal).</span>
+                <span class="text-emerald-400 font-bold shrink-0">[Roster]</span>
+                <span><b>Housing Roster Separation Rule:</b> Under NCSBE rules, an approved campus housing roster provided to the County Board of Elections serves as proof of residency <b>only if</b> it explicitly separates and identifies residents by individual campus housing facility / dormitory, and is presented alongside the student's photo ID.</span>
               </li>
             </ul>
           </div>
 
           <!-- Off Campus Students -->
           <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5">
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 font-bold text-xs mb-3">
-              <span>🏢 Off-Campus Residents</span>
+            <div class="inline-flex items-center px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 font-bold text-xs mb-3">
+              <span>Off-Campus Residents</span>
             </div>
             <h4 class="text-sm font-bold text-white mb-1.5">What to Bring:</h4>
-            <ul class="text-xs text-slate-300 space-y-2">
+            <ul class="text-xs text-slate-300 space-y-2.5">
               <li class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Photo ID:</b> Approved photo identification.</span>
+                <span class="text-emerald-400 font-bold shrink-0">[Photo ID]</span>
+                <span><b>Photo ID:</b> Any approved photo identification.</span>
               </li>
               <li class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Proof of Residence:</b> Document showing your name and current local Guilford County address (utility bill, bank statement, paycheck, lease, or university official letter; can be digital on your phone).</span>
+                <span class="text-emerald-400 font-bold shrink-0">[Proof]</span>
+                <span><b>Proof of Residence:</b> A document showing your name and current local Guilford County address (utility bill, bank statement, paycheck, lease, or university official letter; digital on smartphone is accepted).</span>
               </li>
             </ul>
           </div>
         </div>
 
         <div class="mt-6 p-4 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-400 leading-relaxed">
-          ⚖️ <b>Student Voting Rights:</b> College students have the established legal right to choose whether to register and vote at their college address or their permanent home address. You must choose one and vote only once per election.
+          <b>Student Voting Rights:</b> College students have the established legal right to choose whether to register and vote at their college address or their permanent home address. You must choose one and vote only once per election.
         </div>
       </div>
     </section>
@@ -605,315 +552,377 @@
           <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All 17 Guilford County Early Voting Sites</h2>
           <p class="text-sm text-slate-400 mt-1">Any registered Guilford County voter can cast a ballot at any of these sites during early voting hours.</p>
         </div>
-        <div id="sites-sort-status" class="text-xs text-emerald-400 font-medium"></div>
       </div>
 
-      <div id="all-sites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div id="voting-sites" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         
-        <div id="site-card-0" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.054025" data-lon="-79.751959" data-index="0">
+        <div id="site-card-0" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
           <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Barber Park</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">1500 Dans Rd Greensboro, Nc 27401</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=1500+DANS+RD+GREENSBORO,+NC+27401" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-1" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.014753" data-lon="-79.784755" data-index="1">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Brown Recreation Center</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">302 E Vandalia Rd Greensboro, Nc 27406</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=302+E+VANDALIA+RD+GREENSBORO,+NC+27406" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-2" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.161732" data-lon="-79.8711" data-index="2">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Bur-Mil Club</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">5834 Bur-Mill Club Rd Greensboro, Nc 27410</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=5834+BUR-MILL+CLUB+RD+GREENSBORO,+NC+27410" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-3" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.067925" data-lon="-79.624279" data-index="3">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Charlotte Hawkins Brown Museum</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">6136 Burlington Rd Gibsonville, Nc 27249</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=6136+BURLINGTON+RD+GIBSONVILLE,+NC+27249" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-4" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.136502" data-lon="-79.777092" data-index="4">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Craft Recreation Center</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">3911 Yanceyville St Greensboro, Nc 27405</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=3911+YANCEYVILLE+ST+GREENSBORO,+NC+27405" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-5" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.038823" data-lon="-79.980115" data-index="5">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Deep River Recreation Center</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">1529 Skeet Club Rd High Point, Nc 27265</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=1529+SKEET+CLUB+RD+HIGH+POINT,+NC+27265" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-6" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.084948" data-lon="-79.738411" data-index="6">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Guilford Ag Center</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">3309 Burlington Rd Greensboro, Nc 27405</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=3309+BURLINGTON+RD+GREENSBORO,+NC+27405" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-7" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.072121" data-lon="-79.79275" data-index="7">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Guilford County Board Of Elections Office</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">301 W Market St Greensboro, Nc 27401</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=301+W+MARKET+ST+GREENSBORO,+NC+27401" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-8" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.997311" data-lon="-79.935079" data-index="8">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Jamestown Town Hall</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">301 E Main St Jamestown, Nc 27282</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=301+E+MAIN+ST+JAMESTOWN,+NC+27282" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-9" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.10377" data-lon="-79.909906" data-index="9">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Leonard Recreation Center</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">6324 Ballinger Rd Greensboro, Nc 27410</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=6324+BALLINGER+RD+GREENSBORO,+NC+27410" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-10" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.118" data-lon="-79.835139" data-index="10">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Lewis Recreation Cntr</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">3110 Forest Lawn Dr Greensboro, Nc 27455</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=3110+FOREST+LAWN+DR+GREENSBORO,+NC+27455" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-11" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.171111" data-lon="-79.998285" data-index="11">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Oak Ridge Town Hall</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">8315 Linville Rd Oak Ridge, Nc 27310</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=8315+LINVILLE+RD+OAK+RIDGE,+NC+27310" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-12" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.968272" data-lon="-79.754322" data-index="12">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Pleasant Garden</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">5024 Alliance Church Rd Pleasant Garden, Nc 27313</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=5024+ALLIANCE+CHURCH+RD+PLEASANT+GARDEN,+NC+27313" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-13" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.99141" data-lon="-80.00727" data-index="13">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Roy Culler Center</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">921 Eastchester Dr High Point, Nc 27262</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=921+EASTCHESTER+DR+HIGH+POINT,+NC+27262" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-14" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.232493" data-lon="-79.976438" data-index="14">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Stokesdale</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">8325 Angel-Pardue Rd Stokesdale, Nc 27357</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=8325+ANGEL-PARDUE+RD+STOKESDALE,+NC+27357" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-15" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="36.06421" data-lon="-79.789791" data-index="15">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Union Square Campus</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">124 E Gate City Blvd Greensboro, Nc 27406</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=124+E+GATE+CITY+BLVD+GREENSBORO,+NC+27406" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-16" class="site-card rounded-xl p-4 border-2 border-blue-500/70 bg-slate-900 shadow-md relative overflow-hidden flex flex-col justify-between" data-lat="35.968303" data-lon="-79.983827" data-index="16">
-          <div>
-            <span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-600 text-white default-campus-badge">Campus / Nearest Site</span>
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Washington Terrace Park</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">101 Gordon St High Point, Nc 27260</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=101+GORDON+ST+HIGH+POINT,+NC+27260" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-      </div>
-    </section>
-
-    <!-- Section 5: Official Resources & County BOE -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-          <span>📋</span>
-          <span>Pre-Voting Checklist</span>
-        </h3>
-        <ul class="space-y-3 text-xs sm:text-sm text-slate-300">
-          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
-            <span class="text-blue-400 font-bold shrink-0">1.</span>
-            <span><b>Physical Photo ID:</b> Bring a physical acceptable photo ID. Remember: digital phone images are not permitted.</span>
-          </li>
-          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
-            <span class="text-blue-400 font-bold shrink-0">2.</span>
-            <span><b>Proof of Residence (If Registering):</b> Proof of your current address in Guilford County.</span>
-          </li>
-          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
-            <span class="text-blue-400 font-bold shrink-0">3.</span>
-            <span><b>Check Sample Ballot:</b> Look up your sample ballot on the <a href="http://www.guilfordelections.org" target="_blank" class="text-blue-400 underline">Guilford County Board Of Elections</a> portal.</span>
-          </li>
-          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
-            <span class="text-blue-400 font-bold shrink-0">4.</span>
-            <span><b>Notes Allowed:</b> You can bring a printed voter guide or written notes into the voting booth.</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Board of Elections Contact Card -->
-      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
-        <div>
-          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <span>🏛️</span>
-            <span>Guilford County Board Of Elections</span>
-          </h3>
-          <div class="space-y-2.5 text-xs sm:text-sm">
-            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200">
-              <div class="font-semibold text-white">Physical Office</div>
-              <div class="text-xs text-slate-400 mt-1">301 W. MARKET ST, ROOM 115 GREENSBORO, NC 27401</div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #1</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
             </div>
-            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-200 transition">
-              <div>
-                <div class="font-semibold text-white">Official County Election Website</div>
-                <div class="text-xs text-slate-400 mt-0.5">Sample ballots, wait times & office info</div>
-              </div>
-              <span class="text-slate-400">↗</span>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Barber Park</h3>
+            <p class="text-xs text-slate-300 mb-4">1500 Dans Rd Greensboro, NC 27401</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=1500%20DANS%20RD%20GREENSBORO%2C%20NC%2027401" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
             </a>
           </div>
         </div>
+        
 
-        <div class="mt-4 pt-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-          <span>Need help? Call Election Office:</span>
-          <a href="tel:3366413836" class="font-mono font-bold text-blue-400 hover:underline">336-641-3836</a>
+        <div id="site-card-1" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #2</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Brown Recreation Center</h3>
+            <p class="text-xs text-slate-300 mb-4">302 E Vandalia Rd Greensboro, NC 27406</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=302%20E%20VANDALIA%20RD%20GREENSBORO%2C%20NC%2027406" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
         </div>
+        
+
+        <div id="site-card-2" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #3</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Bur-mil Club</h3>
+            <p class="text-xs text-slate-300 mb-4">5834 Bur-Mill Club Rd Greensboro, NC 27410</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=5834%20BUR-MILL%20CLUB%20RD%20GREENSBORO%2C%20NC%2027410" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-3" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #4</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Charlotte Hawkins Brown Museum</h3>
+            <p class="text-xs text-slate-300 mb-4">6136 Burlington Rd Gibsonville, NC 27249</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=6136%20BURLINGTON%20RD%20GIBSONVILLE%2C%20NC%2027249" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-4" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #5</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Craft Recreation Center</h3>
+            <p class="text-xs text-slate-300 mb-4">3911 Yanceyville St Greensboro, NC 27405</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=3911%20YANCEYVILLE%20ST%20GREENSBORO%2C%20NC%2027405" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-5" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #6</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Deep River Recreation Center</h3>
+            <p class="text-xs text-slate-300 mb-4">1529 Skeet Club Rd High Point, NC 27265</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=1529%20SKEET%20CLUB%20RD%20HIGH%20POINT%2C%20NC%2027265" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-6" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #7</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Guilford Ag Center</h3>
+            <p class="text-xs text-slate-300 mb-4">3309 Burlington Rd Greensboro, NC 27405</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=3309%20BURLINGTON%20RD%20GREENSBORO%2C%20NC%2027405" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-7" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #8</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Guilford County Board of Elections Office</h3>
+            <p class="text-xs text-slate-300 mb-4">301 W Market St Greensboro, NC 27401</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=301%20W%20MARKET%20ST%20GREENSBORO%2C%20NC%2027401" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-8" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #9</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Jamestown Town Hall</h3>
+            <p class="text-xs text-slate-300 mb-4">301 E Main St Jamestown, NC 27282</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=301%20E%20MAIN%20ST%20JAMESTOWN%2C%20NC%2027282" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-9" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #10</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Leonard Recreation Center</h3>
+            <p class="text-xs text-slate-300 mb-4">6324 Ballinger Rd Greensboro, NC 27410</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=6324%20BALLINGER%20RD%20GREENSBORO%2C%20NC%2027410" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-10" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #11</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Lewis Recreation Cntr</h3>
+            <p class="text-xs text-slate-300 mb-4">3110 Forest Lawn Dr Greensboro, NC 27455</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=3110%20FOREST%20LAWN%20DR%20GREENSBORO%2C%20NC%2027455" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-11" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #12</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Oak Ridge Town Hall</h3>
+            <p class="text-xs text-slate-300 mb-4">8315 Linville Rd Oak Ridge, NC 27310</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=8315%20LINVILLE%20RD%20OAK%20RIDGE%2C%20NC%2027310" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-12" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #13</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Pleasant Garden</h3>
+            <p class="text-xs text-slate-300 mb-4">5024 Alliance Church Rd Pleasant Garden, NC 27313</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=5024%20ALLIANCE%20CHURCH%20RD%20PLEASANT%20GARDEN%2C%20NC%2027313" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-13" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #14</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Roy Culler Center</h3>
+            <p class="text-xs text-slate-300 mb-4">921 Eastchester Dr High Point, NC 27262</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=921%20EASTCHESTER%20DR%20HIGH%20POINT%2C%20NC%2027262" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-14" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #15</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Stokesdale</h3>
+            <p class="text-xs text-slate-300 mb-4">8325 Angel-Pardue Rd Stokesdale, NC 27357</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=8325%20ANGEL-PARDUE%20RD%20STOKESDALE%2C%20NC%2027357" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-15" class="site-card bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #16</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-400">Early Voting Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Union Square Campus</h3>
+            <p class="text-xs text-slate-300 mb-4">124 E Gate City Blvd Greensboro, NC 27406</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=124%20E%20GATE%20CITY%20BLVD%20GREENSBORO%2C%20NC%2027406" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
+
+        <div id="site-card-16" class="site-card bg-slate-900 border-2 border-blue-500/80 shadow-lg rounded-2xl p-5 flex flex-col justify-between transition hover:border-slate-700">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-xs font-mono font-bold text-slate-400">Site #17</span>
+              <span class="distance-tag"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">Primary Campus Site</span></span>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1.5 leading-snug">Washington Terrace Park</h3>
+            <p class="text-xs text-slate-300 mb-4">101 Gordon St High Point, NC 27260</p>
+          </div>
+          <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=101%20GORDON%20ST%20HIGH%20POINT%2C%20NC%2027260" target="_blank" rel="noopener" class="flex-1 py-2 px-3 rounded-xl bg-blue-600/20 hover:bg-blue-600 text-blue-300 hover:text-white border border-blue-500/30 text-xs font-semibold text-center transition flex items-center justify-center gap-1">
+              <span>Directions</span>
+              <span>↗</span>
+            </a>
+            <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="py-2 px-3 rounded-xl bg-slate-950 hover:bg-slate-800 text-slate-400 text-xs font-medium text-center border border-slate-800 transition">
+              <span>County BOE ↗</span>
+            </a>
+          </div>
+        </div>
+        
       </div>
     </section>
 
-    <!-- Section 6: QR Code Card -->
+    <!-- Section 5: QR Code Card -->
     <section id="qr-code" class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
       <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-between">
         <div class="max-w-xl text-center sm:text-left">
-          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Share with Classmates & Dorms</span>
-          <h2 class="text-2xl font-bold text-white mt-1 mb-2">Scan or Share this Bennett Voting Guide</h2>
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Share with Classmates &amp; Dorms</span>
+          <h2 class="text-2xl font-bold text-white mt-1 mb-2">Share this Bennett Voting Guide</h2>
           <p class="text-sm text-slate-300 leading-relaxed mb-4">
-            Scan with your phone or copy the direct link for dorm group chats, social media, dining hall flyers, and student organizations across Bennett College!
+            Spread the word across your campus! Share this link in group chats, dorm channels, and student organization social media.
           </p>
           <div class="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
             <div class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm text-blue-300 select-all">
@@ -922,21 +931,21 @@
             <button onclick="navigator.clipboard.writeText('https://rannbar-on.com/bennettvote'); alert('Link copied to clipboard!');" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
               Copy Link
             </button>
-            <a href="/bennettvote_qr.png" download="Bennett_Vote_Early_QR.png" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+            <a href="/bennettvote_qr.png" download="Bennett_Vote_QR.png" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
               Download PNG
             </a>
-            <a href="/bennettvote_qr.svg" download="Bennett_Vote_Early_QR.svg" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+            <a href="/bennettvote_qr.svg" download="Bennett_Vote_QR.svg" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
               Download SVG
             </a>
             <a href="/campuses" class="px-4 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 font-semibold text-xs transition">
-              All 111 NC Campuses →
+              All 110 NC Campuses →
             </a>
           </div>
         </div>
 
-        <!-- QR Code Visual -->
+        <!-- QR Code Box -->
         <div class="bg-white p-4 rounded-2xl shadow-2xl border-4 border-blue-500/30 shrink-0 text-center">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACYklEQVR4nO2bQYrjMBBFX7UMvbQhB+ijKDeYIw1zpL6BfZQcYMBaBmT+LCQ56cVA0mAi6NIqWG/x4VOlqpJi4sG1vD1KgqOOOvoGyeo6sxmLmbVvA21r6ESrowRJUk2JcQWzD4m4AlGStB4rwNGn0Bo9bUkXM81AibLz4QIc/R66TDW27DzmVwhw9Ak0KkO8DA+gxwhw9P+ruFLPrHSSMf4FxqtpmVZgFJCOE+Dok25tdvchfr7LSCdZvAyZpeyFwwQ4+pxb461BzrBMgRZbgfve+eVaHX2DNMAybWbnNABjRn/sXTBejWU6XoCjDy9JGc0EaR7VOq8xU7qsqIy0Bml+uVZHKfbE4pFUfCv2FPMydePlWh0dIJ1KX6Xl11ZKRIOAxYsBBNmRAhz9BpoG7HfrsqR1q7OMqKtpTj4n7ALdzy24S4KSVL7dlmfC16PVrTK3HXOzZ90nvWX85FVGFyjNmUyrKPKXjRVKveFudYOWWe4E0mUo1yaUIcfYrlK60fqD0RZR+6/9Qktaw955eSbsAq2mlJvHPfWp9cSUI8vPrT7QWlaUTniFO7dm9iPL3eoDbbGlXGNr5hZRAIQy6XC3OkCHcjJBECQw2EykyQQhQzrBYiF3oNXR1mpBuza+KzWCarx5Bd8HOlBCCCh3kKQJkU7Z4ieItBkweGz1gN7GuLncQYKwOF+tGdXS4eu1OvrltUx9l7E7CNQWOR8mwNHvouPVpMu7IA37kJf2BKovrT8S/fLmCWoS3O/3S4pcPjy2ukG38tYdUg0r+70Ccd3srmLsQ+vPRs3/EeSoo4eg/wAS7K2VNy5EbQAAAABJRU5ErkJggg==" alt="QR code for Bennett College student early voting guide" class="w-48 h-48 sm:w-52 sm:h-52 object-contain mx-auto" />
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACYklEQVR4nO2bQYrjMBBFX7UMvbQhB+ijKDeYIw1zpL6BfZQcYMBaBmT+LCQ56cVA0mAi6NIqWG/x4VOlqpJi4sG1vD1KgqOOOvoGyeo6sxmLmbVvA21r6ESrowRJUk2JcQWzD4m4AlGStB4rwNGn0Bo9bUkXM81AibLz4QIc/R66TDW27DzmVwhw9Ak0KkO8DA+gxwhw9P+ruFLPrHSSMf4FxqtpmVZgFJCOE+Dok25tdvchfr7LSCdZvAyZpeyFwwQ4+pxb461BzrBMgRZbgfve+eVaHX2DNMAybWbnNABjRn/sXTBejWU6XoCjDy9JGc0EaR7VOq8xU7qsqIy0Bml+uVZHKfbE4pFUfCv2FPMydePlWh0dIJ1KX6Xl11ZKRIOAxYsBBNmRAhz9BpoG7HfrsqR1q7OMqKtpTj4n7ALdzy24S4KSVL7dlmfC16PVrTK3HXOzZ90nvWX85FVGFyjNmUyrKPKXjRVKveFudYOWWe4E0mUo1yaUIcfYrlK60fqD0RZR+6/9Qktaw955eSbsAq2mlJvHPfWp9cSUI8vPrT7QWlaUTniFO7dm9iPL3eoDbbGlXGNr5hZRAIQy6XC3OkCHcjJBECQw2EykyQQhQzrBYiF3oNXR1mpBuza+KzWCarx5Bd8HOlBCCCh3kKQJkU7Z4ieItBkweGz1gN7GuLncQYKwOF+tGdXS4eu1OvrltUx9l7E7CNQWOR8mwNHvouPVpMu7IA37kJf2BKovrT8S/fLmCWoS3O/3S4pcPjy2ukG38tYdUg0r+70Ccd3srmLsQ+vPRs3/EeSoo4eg/wAS7K2VNy5EbQAAAABJRU5ErkJggg==" alt="QR code for Bennett College student voting guide" class="w-48 h-48 sm:w-52 sm:h-52 object-contain mx-auto" />
           <div class="text-[11px] font-bold text-slate-900 mt-2 font-mono">rannbar-on.com/bennettvote</div>
         </div>
       </div>
@@ -948,22 +957,25 @@
   <footer class="border-t border-slate-800/80 bg-slate-950 py-8 px-4 sm:px-6 mt-16 text-xs text-slate-400">
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
       <div>
-        <p class="font-medium text-slate-300">Non-partisan student voting guide prepared by Rann Bar-On.</p>
-        <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the Guilford County Board Of Elections and the North Carolina State Board of Elections.</p>
+        <p class="font-medium text-slate-300">Non-partisan student voting guide prepared by Rann Bar-On under the <a href="https://github.com/rannbaron/mainwebsite/blob/main/LICENSE" target="_blank" rel="noopener" class="text-blue-400 hover:underline">MIT License</a>.</p>
+        <p class="text-[11px] text-slate-500 mt-0.5">Verified Source: Official voting data sourced from the Guilford County Board of Elections and the North Carolina State Board of Elections. Last Verified Update: October 26, 2026 at 1:45 PM EDT. <a href="http://www.guilfordelections.org" target="_blank" rel="noopener" class="text-blue-400 hover:underline ml-1">Information Sources ↗</a></p>
       </div>
       <div class="flex flex-wrap items-center justify-center sm:justify-end gap-4 text-xs">
-        <a href="/campuses" class="text-blue-400 hover:underline">All NC Campuses</a>
+        <a href="/campuses" class="text-blue-400 hover:underline">All 110 NC Campuses</a>
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
-        <a href="https://gitlab.oit.duke.edu/rb6/mainwebsite/-/issues" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
-          <span>🦊</span>
-          <span>GitLab Bug Tracker</span>
+        <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>GitHub Source</span>
           <span class="text-[10px]">↗</span>
         </a>
+        <a href="https://github.com/rannbaron/mainwebsite/issues" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>GitHub Issues</span>
+          <span class="text-[10px]">↗</span>
+        </a>
+        <a href="https://github.com/rannbaron/mainwebsite/blob/main/LICENSE" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline">MIT License</a>
+        <a href="/stats" class="text-slate-400 hover:text-slate-200 hover:underline">Usage Tracker</a>
         <a href="#support-site" onclick="openSupportModal(); return false;" class="text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-medium">
-          <span>☕</span>
           <span>Help Rann Bar-On maintain this site</span>
         </a>
-
       </div>
     </div>
   </footer>
@@ -972,8 +984,10 @@
   <script>
     const currentCampusKey = "bennettvote";
     const currentCampusName = "Bennett College";
-    const allCampuses = [{"key": "dukevote", "name": "Duke University", "short_name": "Duke", "city": "Durham", "county": "Durham County", "lat": 35.9985, "lon": -78.933109}, {"key": "uncvote", "name": "UNC-Chapel Hill", "short_name": "UNC-CH", "city": "Chapel Hill", "county": "Orange County", "lat": 35.9146, "lon": -79.050048}, {"key": "nccuvote", "name": "North Carolina Central University", "short_name": "NCCU", "city": "Durham", "county": "Durham County", "lat": 35.97179, "lon": -78.895268}, {"key": "ncsuvote", "name": "North Carolina State University", "short_name": "NC State", "city": "Raleigh", "county": "Wake County", "lat": 35.784342, "lon": -78.685202}, {"key": "appstatevote", "name": "Appalachian State University", "short_name": "App State", "city": "Boone", "county": "Watauga County", "lat": 36.214799, "lon": -81.678922}, {"key": "ecuvote", "name": "East Carolina University", "short_name": "ECU", "city": "Greenville", "county": "Pitt County", "lat": 35.605615, "lon": -77.369303}, {"key": "ecsuvote", "name": "Elizabeth City State University", "short_name": "ECSU", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "fsuvote", "name": "Fayetteville State University", "short_name": "FSU", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "ncatvote", "name": "North Carolina A&T State University", "short_name": "NC A&T", "city": "Greensboro", "county": "Guilford County", "lat": 35.968303, "lon": -79.983827}, {"key": "uncavote", "name": "UNC Asheville", "short_name": "UNC Asheville", "city": "Asheville", "county": "Buncombe County", "lat": 35.577974, "lon": -82.56224}, {"key": "unccvote", "name": "UNC Charlotte", "short_name": "UNC Charlotte", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.30309, "lon": -80.746478}, {"key": "uncgvote", "name": "UNC Greensboro", "short_name": "UNCG", "city": "Greensboro", "county": "Guilford County", "lat": 36.06421, "lon": -79.789791}, {"key": "uncpvote", "name": "UNC Pembroke", "short_name": "UNC Pembroke", "city": "Pembroke", "county": "Robeson County", "lat": 34.676159, "lon": -79.193097}, {"key": "uncsavote", "name": "UNC School of the Arts", "short_name": "UNCSA", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.05471, "lon": -80.252848}, {"key": "uncwvote", "name": "UNC Wilmington", "short_name": "UNCW", "city": "Wilmington", "county": "New Hanover County", "lat": 34.23293, "lon": -77.828256}, {"key": "wcuvote", "name": "Western Carolina University", "short_name": "WCU", "city": "Cullowhee", "county": "Jackson County", "lat": 35.290995, "lon": -83.181647}, {"key": "wssuvote", "name": "Winston-Salem State University", "short_name": "WSSU", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.086876, "lon": -80.223984}, {"key": "wfuvote", "name": "Wake Forest University", "short_name": "Wake Forest", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.130275, "lon": -80.292407}, {"key": "elonvote", "name": "Elon University", "short_name": "Elon", "city": "Elon", "county": "Alamance County", "lat": 36.106958, "lon": -79.442531}, {"key": "davidsonvote", "name": "Davidson College", "short_name": "Davidson", "city": "Davidson", "county": "Mecklenburg County", "lat": 35.481877, "lon": -80.858925}, {"key": "campbellvote", "name": "Campbell University", "short_name": "Campbell", "city": "Buies Creek", "county": "Harnett County", "lat": 35.420412, "lon": -78.811616}, {"key": "highpointvote", "name": "High Point University", "short_name": "High Point", "city": "High Point", "county": "Guilford County", "lat": 35.99141, "lon": -80.00727}, {"key": "meredithvote", "name": "Meredith College", "short_name": "Meredith", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "peacevote", "name": "William Peace University", "short_name": "William Peace", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "shawvote", "name": "Shaw University", "short_name": "Shaw", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "staugustinesvote", "name": "Saint Augustine's University", "short_name": "St. Augustine's", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "queensvote", "name": "Queens University of Charlotte", "short_name": "Queens Charlotte", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.160511, "lon": -80.85762}, {"key": "jcsuvote", "name": "Johnson C. Smith University", "short_name": "JCSU", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.267703, "lon": -80.853434}, {"key": "bartonvote", "name": "Barton College", "short_name": "Barton", "city": "Wilson", "county": "Wilson County", "lat": 35.706725, "lon": -77.927636}, {"key": "belmontabbeyvote", "name": "Belmont Abbey College", "short_name": "Belmont Abbey", "city": "Belmont", "county": "Gaston County", "lat": 35.262841, "lon": -81.187914}, {"key": "bennettvote", "name": "Bennett College", "short_name": "Bennett", "city": "Greensboro", "county": "Guilford County", "lat": 35.968303, "lon": -79.983827}, {"key": "brevardvote", "name": "Brevard College", "short_name": "Brevard", "city": "Brevard", "county": "Transylvania County", "lat": 35.231357, "lon": -82.73485}, {"key": "cabarrusvote", "name": "Cabarrus College of Health Sciences", "short_name": "Cabarrus Health", "city": "Concord", "county": "Cabarrus County", "lat": 35.419006, "lon": -80.679197}, {"key": "catawbavote", "name": "Catawba College", "short_name": "Catawba", "city": "Salisbury", "county": "Rowan County", "lat": 35.692328, "lon": -80.513605}, {"key": "chowanvote", "name": "Chowan University", "short_name": "Chowan", "city": "Murfreesboro", "county": "Hertford County", "lat": 36.278202, "lon": -76.980603}, {"key": "gardnerwebbvote", "name": "Gardner-Webb University", "short_name": "Gardner-Webb", "city": "Boiling Springs", "county": "Cleveland County", "lat": 35.292333, "lon": -81.556195}, {"key": "greensborovote", "name": "Greensboro College", "short_name": "Greensboro College", "city": "Greensboro", "county": "Guilford County", "lat": 36.084948, "lon": -79.738411}, {"key": "guilfordvote", "name": "Guilford College", "short_name": "Guilford College", "city": "Greensboro", "county": "Guilford County", "lat": 36.10377, "lon": -79.909906}, {"key": "leesmcraevote", "name": "Lees-McRae College", "short_name": "Lees-McRae", "city": "Banner Elk", "county": "Avery County", "lat": 36.082276, "lon": -81.924143}, {"key": "lenoirrhynevote", "name": "Lenoir-Rhyne University", "short_name": "Lenoir-Rhyne", "city": "Hickory", "county": "Catawba County", "lat": 35.70178, "lon": -81.218879}, {"key": "livingstonevote", "name": "Livingstone College", "short_name": "Livingstone", "city": "Salisbury", "county": "Rowan County", "lat": 35.692328, "lon": -80.513605}, {"key": "louisburgvote", "name": "Louisburg College", "short_name": "Louisburg", "city": "Louisburg", "county": "Franklin County", "lat": 36.090876, "lon": -78.298034}, {"key": "marshillvote", "name": "Mars Hill University", "short_name": "Mars Hill", "city": "Mars Hill", "county": "Madison County", "lat": 35.804638, "lon": -82.660152}, {"key": "methodistvote", "name": "Methodist University", "short_name": "Methodist", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "macuvote", "name": "Mid-Atlantic Christian University", "short_name": "MACU", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "montreatvote", "name": "Montreat College", "short_name": "Montreat", "city": "Montreat", "county": "Buncombe County", "lat": 35.616143, "lon": -82.322796}, {"key": "ncwesleyanvote", "name": "North Carolina Wesleyan University", "short_name": "NC Wesleyan", "city": "Rocky Mount", "county": "Nash County", "lat": 35.97199, "lon": -77.946848}, {"key": "pfeiffervote", "name": "Pfeiffer University", "short_name": "Pfeiffer", "city": "Misenheimer", "county": "Stanly County", "lat": 35.366337, "lon": -80.196747}, {"key": "salemvote", "name": "Salem College", "short_name": "Salem College", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.05471, "lon": -80.252848}, {"key": "standrewsvote", "name": "St. Andrews University", "short_name": "St. Andrews", "city": "Laurinburg", "county": "Scotland County", "lat": 34.774638, "lon": -79.459863}, {"key": "mountolivevote", "name": "University of Mount Olive", "short_name": "Mount Olive", "city": "Mount Olive", "county": "Wayne County", "lat": 35.405461, "lon": -77.944283}, {"key": "warrenwilsonvote", "name": "Warren Wilson College", "short_name": "Warren Wilson", "city": "Swannanoa", "county": "Buncombe County", "lat": 35.588254, "lon": -82.503312}, {"key": "wingatevote", "name": "Wingate University", "short_name": "Wingate", "city": "Wingate", "county": "Union County", "lat": 34.980897, "lon": -80.546006}, {"key": "alamanceccvote", "name": "Alamance Community College", "short_name": "Alamance CC", "city": "Graham", "county": "Alamance County", "lat": 36.106958, "lon": -79.442531}, {"key": "abtechvote", "name": "Asheville-Buncombe Technical Community College", "short_name": "A-B Tech", "city": "Asheville", "county": "Buncombe County", "lat": 35.612178, "lon": -82.420644}, {"key": "beaufortccvote", "name": "Beaufort County Community College", "short_name": "Beaufort CC", "city": "Washington", "county": "Beaufort County", "lat": 35.549611, "lon": -77.036244}, {"key": "bladenccvote", "name": "Bladen Community College", "short_name": "Bladen CC", "city": "Dublin", "county": "Bladen County", "lat": 34.382924, "lon": -78.3277}, {"key": "blueridgeccvote", "name": "Blue Ridge Community College", "short_name": "Blue Ridge CC", "city": "Flat Rock", "county": "Henderson County", "lat": 35.382841, "lon": -82.357051}, {"key": "brunswickccvote", "name": "Brunswick Community College", "short_name": "Brunswick CC", "city": "Bolivia", "county": "Brunswick County", "lat": 34.016602, "lon": -78.268877}, {"key": "caldwellccvote", "name": "Caldwell Community College & Technical Institute", "short_name": "Caldwell CC", "city": "Hudson", "county": "Caldwell County", "lat": 35.922058, "lon": -81.523627}, {"key": "capefearccvote", "name": "Cape Fear Community College", "short_name": "Cape Fear CC", "city": "Wilmington", "county": "New Hanover County", "lat": 34.045063, "lon": -77.899908}, {"key": "carteretccvote", "name": "Carteret Community College", "short_name": "Carteret CC", "city": "Morehead City", "county": "Carteret County", "lat": 34.72871, "lon": -76.639023}, {"key": "cvccvote", "name": "Catawba Valley Community College", "short_name": "Catawba Valley CC", "city": "Hickory", "county": "Catawba County", "lat": 35.70178, "lon": -81.218879}, {"key": "ccccvote", "name": "Central Carolina Community College", "short_name": "Central Carolina CC", "city": "Sanford", "county": "Lee County", "lat": 35.481093, "lon": -79.175067}, {"key": "cpccvote", "name": "Central Piedmont Community College", "short_name": "CPCC", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.392892, "lon": -80.840476}, {"key": "clevelandccvote", "name": "Cleveland Community College", "short_name": "Cleveland CC", "city": "Shelby", "county": "Cleveland County", "lat": 35.292333, "lon": -81.556195}, {"key": "coastalcarolinaccvote", "name": "Coastal Carolina Community College", "short_name": "Coastal Carolina CC", "city": "Jacksonville", "county": "Onslow County", "lat": 34.793989, "lon": -77.397753}, {"key": "albemarleccvote", "name": "College of The Albemarle", "short_name": "College of Albemarle", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "cravenccvote", "name": "Craven Community College", "short_name": "Craven CC", "city": "New Bern", "county": "Craven County", "lat": 35.108227, "lon": -77.037331}, {"key": "davidsondavieccvote", "name": "Davidson-Davie Community College", "short_name": "Davidson-Davie CC", "city": "Thomasville", "county": "Davidson County", "lat": 35.954823, "lon": -80.292712}, {"key": "durhamtechvote", "name": "Durham Technical Community College", "short_name": "Durham Tech", "city": "Durham", "county": "Durham County", "lat": 35.948836, "lon": -78.922106}, {"key": "edgecombeccvote", "name": "Edgecombe Community College", "short_name": "Edgecombe CC", "city": "Tarboro", "county": "Edgecombe County", "lat": 35.896546, "lon": -77.532115}, {"key": "faytechccvote", "name": "Fayetteville Technical Community College", "short_name": "Fayetteville Tech", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "forsythtechvote", "name": "Forsyth Technical Community College", "short_name": "Forsyth Tech", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.155829, "lon": -80.270804}, {"key": "gastonvote", "name": "Gaston College", "short_name": "Gaston College", "city": "Dallas", "county": "Gaston County", "lat": 35.262841, "lon": -81.187914}, {"key": "gtccvote", "name": "Guilford Technical Community College", "short_name": "GTCC", "city": "Jamestown", "county": "Guilford County", "lat": 36.054025, "lon": -79.751959}, {"key": "halifaxccvote", "name": "Halifax Community College", "short_name": "Halifax CC", "city": "Weldon", "county": "Halifax County", "lat": 36.322386, "lon": -77.589158}, {"key": "haywoodccvote", "name": "Haywood Community College", "short_name": "Haywood CC", "city": "Clyde", "county": "Haywood County", "lat": 35.518414, "lon": -82.98872}, {"key": "isothermalccvote", "name": "Isothermal Community College", "short_name": "Isothermal CC", "city": "Spindale", "county": "Rutherford County", "lat": 35.337435, "lon": -81.911191}, {"key": "jamesspruntccvote", "name": "James Sprunt Community College", "short_name": "James Sprunt CC", "city": "Kenansville", "county": "Duplin County", "lat": 34.738645, "lon": -77.988884}, {"key": "johnstonccvote", "name": "Johnston Community College", "short_name": "Johnston CC", "city": "Smithfield", "county": "Johnston County", "lat": 35.693855, "lon": -78.376312}, {"key": "lenoirccvote", "name": "Lenoir Community College", "short_name": "Lenoir CC", "city": "Kinston", "county": "Lenoir County", "lat": 35.241249, "lon": -77.6192}, {"key": "martinccvote", "name": "Martin Community College", "short_name": "Martin CC", "city": "Williamston", "county": "Martin County", "lat": 35.856397, "lon": -77.051819}, {"key": "maylandccvote", "name": "Mayland Community College", "short_name": "Mayland CC", "city": "Spruce Pine", "county": "Mitchell County", "lat": 36.015447, "lon": -82.158381}, {"key": "mcdowelltechvote", "name": "McDowell Technical Community College", "short_name": "McDowell Tech", "city": "Marion", "county": "Mcdowell County", "lat": 35.663264, "lon": -81.977045}, {"key": "mitchellccvote", "name": "Mitchell Community College", "short_name": "Mitchell CC", "city": "Statesville", "county": "Iredell County", "lat": 35.942344, "lon": -80.776667}, {"key": "montgomeryccvote", "name": "Montgomery Community College", "short_name": "Montgomery CC", "city": "Troy", "county": "Montgomery County", "lat": 35.360174, "lon": -79.782085}, {"key": "nashccvote", "name": "Nash Community College", "short_name": "Nash CC", "city": "Rocky Mount", "county": "Nash County", "lat": 35.97199, "lon": -77.946848}, {"key": "pamlicoccvote", "name": "Pamlico Community College", "short_name": "Pamlico CC", "city": "Grantsboro", "county": "Pamlico County", "lat": 35.143237, "lon": -76.771045}, {"key": "piedmontccvote", "name": "Piedmont Community College", "short_name": "Piedmont CC", "city": "Roxboro", "county": "Person County", "lat": 36.395993, "lon": -78.994187}, {"key": "pittccvote", "name": "Pitt Community College", "short_name": "Pitt CC", "city": "Winterville", "county": "Pitt County", "lat": 35.549076, "lon": -77.34883}, {"key": "randolphccvote", "name": "Randolph Community College", "short_name": "Randolph CC", "city": "Asheboro", "county": "Randolph County", "lat": 35.893725, "lon": -79.934697}, {"key": "richmondccvote", "name": "Richmond Community College", "short_name": "Richmond CC", "city": "Hamlet", "county": "Richmond County", "lat": 34.932393, "lon": -79.782669}, {"key": "roanokechowanccvote", "name": "Roanoke-Chowan Community College", "short_name": "Roanoke-Chowan CC", "city": "Ahoskie", "county": "Hertford County", "lat": 36.278202, "lon": -76.980603}, {"key": "robesonccvote", "name": "Robeson Community College", "short_name": "Robeson CC", "city": "Lumberton", "county": "Robeson County", "lat": 34.494386, "lon": -79.113837}, {"key": "rockinghamccvote", "name": "Rockingham Community College", "short_name": "Rockingham CC", "city": "Wentworth", "county": "Rockingham County", "lat": 36.393531, "lon": -79.749993}, {"key": "rcccvote", "name": "Rowan-Cabarrus Community College", "short_name": "Rowan-Cabarrus CC", "city": "Salisbury", "county": "Rowan County", "lat": 35.565516, "lon": -80.418345}, {"key": "sampsonccvote", "name": "Sampson Community College", "short_name": "Sampson CC", "city": "Clinton", "county": "Sampson County", "lat": 34.997388, "lon": -78.31102}, {"key": "sandhillsccvote", "name": "Sandhills Community College", "short_name": "Sandhills CC", "city": "Pinehurst", "county": "Moore County", "lat": 35.135607, "lon": -79.428411}, {"key": "spccvote", "name": "South Piedmont Community College", "short_name": "South Piedmont CC", "city": "Polkton", "county": "Union County", "lat": 34.991177, "lon": -80.3637}, {"key": "southeasternccvote", "name": "Southeastern Community College", "short_name": "Southeastern CC", "city": "Whiteville", "county": "Columbus County", "lat": 34.323492, "lon": -78.824376}, {"key": "southwesternccvote", "name": "Southwestern Community College", "short_name": "Southwestern CC", "city": "Sylva", "county": "Jackson County", "lat": 35.110468, "lon": -83.10432}, {"key": "stanlyccvote", "name": "Stanly Community College", "short_name": "Stanly CC", "city": "Albemarle", "county": "Stanly County", "lat": 35.366337, "lon": -80.196747}, {"key": "surryccvote", "name": "Surry Community College", "short_name": "Surry CC", "city": "Dobson", "county": "Surry County", "lat": 36.392873, "lon": -80.706974}, {"key": "tricountyccvote", "name": "Tri-County Community College", "short_name": "Tri-County CC", "city": "Murphy", "county": "Cherokee County", "lat": 35.087131, "lon": -84.033986}, {"key": "vgccvote", "name": "Vance-Granville Community College", "short_name": "Vance-Granville CC", "city": "Henderson", "county": "Vance County", "lat": 36.338143, "lon": -78.401642}, {"key": "waketechvote", "name": "Wake Technical Community College", "short_name": "Wake Tech", "city": "Raleigh", "county": "Wake County", "lat": 35.771631, "lon": -78.570208}, {"key": "wayneccvote", "name": "Wayne Community College", "short_name": "Wayne CC", "city": "Goldsboro", "county": "Wayne County", "lat": 35.405461, "lon": -77.944283}, {"key": "wpccvote", "name": "Western Piedmont Community College", "short_name": "Western Piedmont CC", "city": "Morganton", "county": "Burke County", "lat": 35.724735, "lon": -81.661102}, {"key": "wilkesccvote", "name": "Wilkes Community College", "short_name": "Wilkes CC", "city": "Wilkesboro", "county": "Wilkes County", "lat": 36.149105, "lon": -81.153576}, {"key": "wilsonccvote", "name": "Wilson Community College", "short_name": "Wilson CC", "city": "Wilson", "county": "Wilson County", "lat": 35.706725, "lon": -77.927636}];
-    const countySites = [{"name": "Barber Park", "addr": "1500 Dans Rd Greensboro, Nc 27401", "lat": 36.054025, "lon": -79.751959, "maps": "https://maps.google.com/?q=1500+DANS+RD+GREENSBORO,+NC+27401"}, {"name": "Brown Recreation Center", "addr": "302 E Vandalia Rd Greensboro, Nc 27406", "lat": 36.014753, "lon": -79.784755, "maps": "https://maps.google.com/?q=302+E+VANDALIA+RD+GREENSBORO,+NC+27406"}, {"name": "Bur-Mil Club", "addr": "5834 Bur-Mill Club Rd Greensboro, Nc 27410", "lat": 36.161732, "lon": -79.8711, "maps": "https://maps.google.com/?q=5834+BUR-MILL+CLUB+RD+GREENSBORO,+NC+27410"}, {"name": "Charlotte Hawkins Brown Museum", "addr": "6136 Burlington Rd Gibsonville, Nc 27249", "lat": 36.067925, "lon": -79.624279, "maps": "https://maps.google.com/?q=6136+BURLINGTON+RD+GIBSONVILLE,+NC+27249"}, {"name": "Craft Recreation Center", "addr": "3911 Yanceyville St Greensboro, Nc 27405", "lat": 36.136502, "lon": -79.777092, "maps": "https://maps.google.com/?q=3911+YANCEYVILLE+ST+GREENSBORO,+NC+27405"}, {"name": "Deep River Recreation Center", "addr": "1529 Skeet Club Rd High Point, Nc 27265", "lat": 36.038823, "lon": -79.980115, "maps": "https://maps.google.com/?q=1529+SKEET+CLUB+RD+HIGH+POINT,+NC+27265"}, {"name": "Guilford Ag Center", "addr": "3309 Burlington Rd Greensboro, Nc 27405", "lat": 36.084948, "lon": -79.738411, "maps": "https://maps.google.com/?q=3309+BURLINGTON+RD+GREENSBORO,+NC+27405"}, {"name": "Guilford County Board Of Elections Office", "addr": "301 W Market St Greensboro, Nc 27401", "lat": 36.072121, "lon": -79.79275, "maps": "https://maps.google.com/?q=301+W+MARKET+ST+GREENSBORO,+NC+27401"}, {"name": "Jamestown Town Hall", "addr": "301 E Main St Jamestown, Nc 27282", "lat": 35.997311, "lon": -79.935079, "maps": "https://maps.google.com/?q=301+E+MAIN+ST+JAMESTOWN,+NC+27282"}, {"name": "Leonard Recreation Center", "addr": "6324 Ballinger Rd Greensboro, Nc 27410", "lat": 36.10377, "lon": -79.909906, "maps": "https://maps.google.com/?q=6324+BALLINGER+RD+GREENSBORO,+NC+27410"}, {"name": "Lewis Recreation Cntr", "addr": "3110 Forest Lawn Dr Greensboro, Nc 27455", "lat": 36.118, "lon": -79.835139, "maps": "https://maps.google.com/?q=3110+FOREST+LAWN+DR+GREENSBORO,+NC+27455"}, {"name": "Oak Ridge Town Hall", "addr": "8315 Linville Rd Oak Ridge, Nc 27310", "lat": 36.171111, "lon": -79.998285, "maps": "https://maps.google.com/?q=8315+LINVILLE+RD+OAK+RIDGE,+NC+27310"}, {"name": "Pleasant Garden", "addr": "5024 Alliance Church Rd Pleasant Garden, Nc 27313", "lat": 35.968272, "lon": -79.754322, "maps": "https://maps.google.com/?q=5024+ALLIANCE+CHURCH+RD+PLEASANT+GARDEN,+NC+27313"}, {"name": "Roy Culler Center", "addr": "921 Eastchester Dr High Point, Nc 27262", "lat": 35.99141, "lon": -80.00727, "maps": "https://maps.google.com/?q=921+EASTCHESTER+DR+HIGH+POINT,+NC+27262"}, {"name": "Stokesdale", "addr": "8325 Angel-Pardue Rd Stokesdale, Nc 27357", "lat": 36.232493, "lon": -79.976438, "maps": "https://maps.google.com/?q=8325+ANGEL-PARDUE+RD+STOKESDALE,+NC+27357"}, {"name": "Union Square Campus", "addr": "124 E Gate City Blvd Greensboro, Nc 27406", "lat": 36.06421, "lon": -79.789791, "maps": "https://maps.google.com/?q=124+E+GATE+CITY+BLVD+GREENSBORO,+NC+27406"}, {"name": "Washington Terrace Park", "addr": "101 Gordon St High Point, Nc 27260", "lat": 35.968303, "lon": -79.983827, "maps": "https://maps.google.com/?q=101+GORDON+ST+HIGH+POINT,+NC+27260"}];
+    const allCampuses = [{"key": "dukevote", "name": "Duke University", "short_name": "Duke", "city": "Durham", "county": "Durham County", "lat": 35.9985, "lon": -78.933109}, {"key": "uncvote", "name": "UNC-Chapel Hill", "short_name": "UNC-CH", "city": "Chapel Hill", "county": "Orange County", "lat": 35.9146, "lon": -79.050048}, {"key": "nccuvote", "name": "North Carolina Central University", "short_name": "NCCU", "city": "Durham", "county": "Durham County", "lat": 35.97179, "lon": -78.895268}, {"key": "ncsuvote", "name": "North Carolina State University", "short_name": "NC State", "city": "Raleigh", "county": "Wake County", "lat": 35.784342, "lon": -78.685202}, {"key": "appstatevote", "name": "Appalachian State University", "short_name": "App State", "city": "Boone", "county": "Watauga County", "lat": 36.214799, "lon": -81.678922}, {"key": "ecuvote", "name": "East Carolina University", "short_name": "ECU", "city": "Greenville", "county": "Pitt County", "lat": 35.605615, "lon": -77.369303}, {"key": "ecsuvote", "name": "Elizabeth City State University", "short_name": "ECSU", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "fsuvote", "name": "Fayetteville State University", "short_name": "FSU", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "ncatvote", "name": "North Carolina A&T State University", "short_name": "NC A&T", "city": "Greensboro", "county": "Guilford County", "lat": 35.968303, "lon": -79.983827}, {"key": "uncavote", "name": "UNC Asheville", "short_name": "UNC Asheville", "city": "Asheville", "county": "Buncombe County", "lat": 35.577974, "lon": -82.56224}, {"key": "unccvote", "name": "UNC Charlotte", "short_name": "UNC Charlotte", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.30309, "lon": -80.746478}, {"key": "uncgvote", "name": "UNC Greensboro", "short_name": "UNCG", "city": "Greensboro", "county": "Guilford County", "lat": 36.06421, "lon": -79.789791}, {"key": "uncpvote", "name": "UNC Pembroke", "short_name": "UNC Pembroke", "city": "Pembroke", "county": "Robeson County", "lat": 34.676159, "lon": -79.193097}, {"key": "uncsavote", "name": "UNC School of the Arts", "short_name": "UNCSA", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.05471, "lon": -80.252848}, {"key": "uncwvote", "name": "UNC Wilmington", "short_name": "UNCW", "city": "Wilmington", "county": "New Hanover County", "lat": 34.23293, "lon": -77.828256}, {"key": "wcuvote", "name": "Western Carolina University", "short_name": "WCU", "city": "Cullowhee", "county": "Jackson County", "lat": 35.290995, "lon": -83.181647}, {"key": "wssuvote", "name": "Winston-Salem State University", "short_name": "WSSU", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.086876, "lon": -80.223984}, {"key": "wfuvote", "name": "Wake Forest University", "short_name": "Wake Forest", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.130275, "lon": -80.292407}, {"key": "elonvote", "name": "Elon University", "short_name": "Elon", "city": "Elon", "county": "Alamance County", "lat": 36.106958, "lon": -79.442531}, {"key": "davidsonvote", "name": "Davidson College", "short_name": "Davidson", "city": "Davidson", "county": "Mecklenburg County", "lat": 35.481877, "lon": -80.858925}, {"key": "campbellvote", "name": "Campbell University", "short_name": "Campbell", "city": "Buies Creek", "county": "Harnett County", "lat": 35.420412, "lon": -78.811616}, {"key": "highpointvote", "name": "High Point University", "short_name": "High Point", "city": "High Point", "county": "Guilford County", "lat": 35.99141, "lon": -80.00727}, {"key": "meredithvote", "name": "Meredith College", "short_name": "Meredith", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "peacevote", "name": "William Peace University", "short_name": "William Peace", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "shawvote", "name": "Shaw University", "short_name": "Shaw", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "staugustinesvote", "name": "Saint Augustine's University", "short_name": "St. Augustine's", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "queensvote", "name": "Queens University of Charlotte", "short_name": "Queens Charlotte", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.160511, "lon": -80.85762}, {"key": "jcsuvote", "name": "Johnson C. Smith University", "short_name": "JCSU", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.267703, "lon": -80.853434}, {"key": "bartonvote", "name": "Barton College", "short_name": "Barton", "city": "Wilson", "county": "Wilson County", "lat": 35.706725, "lon": -77.927636}, {"key": "belmontabbeyvote", "name": "Belmont Abbey College", "short_name": "Belmont Abbey", "city": "Belmont", "county": "Gaston County", "lat": 35.262841, "lon": -81.187914}, {"key": "bennettvote", "name": "Bennett College", "short_name": "Bennett", "city": "Greensboro", "county": "Guilford County", "lat": 35.968303, "lon": -79.983827}, {"key": "brevardvote", "name": "Brevard College", "short_name": "Brevard", "city": "Brevard", "county": "Transylvania County", "lat": 35.231357, "lon": -82.73485}, {"key": "cabarrusvote", "name": "Cabarrus College of Health Sciences", "short_name": "Cabarrus Health", "city": "Concord", "county": "Cabarrus County", "lat": 35.419006, "lon": -80.679197}, {"key": "catawbavote", "name": "Catawba College", "short_name": "Catawba", "city": "Salisbury", "county": "Rowan County", "lat": 35.692328, "lon": -80.513605}, {"key": "chowanvote", "name": "Chowan University", "short_name": "Chowan", "city": "Murfreesboro", "county": "Hertford County", "lat": 36.278202, "lon": -76.980603}, {"key": "gardnerwebbvote", "name": "Gardner-Webb University", "short_name": "Gardner-Webb", "city": "Boiling Springs", "county": "Cleveland County", "lat": 35.292333, "lon": -81.556195}, {"key": "greensborovote", "name": "Greensboro College", "short_name": "Greensboro College", "city": "Greensboro", "county": "Guilford County", "lat": 36.084948, "lon": -79.738411}, {"key": "guilfordvote", "name": "Guilford College", "short_name": "Guilford College", "city": "Greensboro", "county": "Guilford County", "lat": 36.10377, "lon": -79.909906}, {"key": "leesmcraevote", "name": "Lees-McRae College", "short_name": "Lees-McRae", "city": "Banner Elk", "county": "Avery County", "lat": 36.082276, "lon": -81.924143}, {"key": "lenoirrhynevote", "name": "Lenoir-Rhyne University", "short_name": "Lenoir-Rhyne", "city": "Hickory", "county": "Catawba County", "lat": 35.70178, "lon": -81.218879}, {"key": "livingstonevote", "name": "Livingstone College", "short_name": "Livingstone", "city": "Salisbury", "county": "Rowan County", "lat": 35.692328, "lon": -80.513605}, {"key": "louisburgvote", "name": "Louisburg College", "short_name": "Louisburg", "city": "Louisburg", "county": "Franklin County", "lat": 36.090876, "lon": -78.298034}, {"key": "marshillvote", "name": "Mars Hill University", "short_name": "Mars Hill", "city": "Mars Hill", "county": "Madison County", "lat": 35.804638, "lon": -82.660152}, {"key": "methodistvote", "name": "Methodist University", "short_name": "Methodist", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "macuvote", "name": "Mid-Atlantic Christian University", "short_name": "MACU", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "montreatvote", "name": "Montreat College", "short_name": "Montreat", "city": "Montreat", "county": "Buncombe County", "lat": 35.616143, "lon": -82.322796}, {"key": "ncwesleyanvote", "name": "North Carolina Wesleyan University", "short_name": "NC Wesleyan", "city": "Rocky Mount", "county": "Nash County", "lat": 35.97199, "lon": -77.946848}, {"key": "pfeiffervote", "name": "Pfeiffer University", "short_name": "Pfeiffer", "city": "Misenheimer", "county": "Stanly County", "lat": 35.366337, "lon": -80.196747}, {"key": "salemvote", "name": "Salem College", "short_name": "Salem College", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.05471, "lon": -80.252848}, {"key": "mountolivevote", "name": "University of Mount Olive", "short_name": "Mount Olive", "city": "Mount Olive", "county": "Wayne County", "lat": 35.405461, "lon": -77.944283}, {"key": "warrenwilsonvote", "name": "Warren Wilson College", "short_name": "Warren Wilson", "city": "Swannanoa", "county": "Buncombe County", "lat": 35.588254, "lon": -82.503312}, {"key": "wingatevote", "name": "Wingate University", "short_name": "Wingate", "city": "Wingate", "county": "Union County", "lat": 34.980897, "lon": -80.546006}, {"key": "alamanceccvote", "name": "Alamance Community College", "short_name": "Alamance CC", "city": "Graham", "county": "Alamance County", "lat": 36.106958, "lon": -79.442531}, {"key": "abtechvote", "name": "Asheville-Buncombe Technical Community College", "short_name": "A-B Tech", "city": "Asheville", "county": "Buncombe County", "lat": 35.612178, "lon": -82.420644}, {"key": "beaufortccvote", "name": "Beaufort County Community College", "short_name": "Beaufort CC", "city": "Washington", "county": "Beaufort County", "lat": 35.549611, "lon": -77.036244}, {"key": "bladenccvote", "name": "Bladen Community College", "short_name": "Bladen CC", "city": "Dublin", "county": "Bladen County", "lat": 34.382924, "lon": -78.3277}, {"key": "blueridgeccvote", "name": "Blue Ridge Community College", "short_name": "Blue Ridge CC", "city": "Flat Rock", "county": "Henderson County", "lat": 35.382841, "lon": -82.357051}, {"key": "brunswickccvote", "name": "Brunswick Community College", "short_name": "Brunswick CC", "city": "Bolivia", "county": "Brunswick County", "lat": 34.016602, "lon": -78.268877}, {"key": "caldwellccvote", "name": "Caldwell Community College & Technical Institute", "short_name": "Caldwell CC", "city": "Hudson", "county": "Caldwell County", "lat": 35.922058, "lon": -81.523627}, {"key": "capefearccvote", "name": "Cape Fear Community College", "short_name": "Cape Fear CC", "city": "Wilmington", "county": "New Hanover County", "lat": 34.045063, "lon": -77.899908}, {"key": "carteretccvote", "name": "Carteret Community College", "short_name": "Carteret CC", "city": "Morehead City", "county": "Carteret County", "lat": 34.72871, "lon": -76.639023}, {"key": "cvccvote", "name": "Catawba Valley Community College", "short_name": "Catawba Valley CC", "city": "Hickory", "county": "Catawba County", "lat": 35.70178, "lon": -81.218879}, {"key": "ccccvote", "name": "Central Carolina Community College", "short_name": "Central Carolina CC", "city": "Sanford", "county": "Lee County", "lat": 35.481093, "lon": -79.175067}, {"key": "cpccvote", "name": "Central Piedmont Community College", "short_name": "CPCC", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.392892, "lon": -80.840476}, {"key": "clevelandccvote", "name": "Cleveland Community College", "short_name": "Cleveland CC", "city": "Shelby", "county": "Cleveland County", "lat": 35.292333, "lon": -81.556195}, {"key": "coastalcarolinaccvote", "name": "Coastal Carolina Community College", "short_name": "Coastal Carolina CC", "city": "Jacksonville", "county": "Onslow County", "lat": 34.793989, "lon": -77.397753}, {"key": "albemarleccvote", "name": "College of The Albemarle", "short_name": "College of Albemarle", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "cravenccvote", "name": "Craven Community College", "short_name": "Craven CC", "city": "New Bern", "county": "Craven County", "lat": 35.108227, "lon": -77.037331}, {"key": "davidsondavieccvote", "name": "Davidson-Davie Community College", "short_name": "Davidson-Davie CC", "city": "Thomasville", "county": "Davidson County", "lat": 35.954823, "lon": -80.292712}, {"key": "durhamtechvote", "name": "Durham Technical Community College", "short_name": "Durham Tech", "city": "Durham", "county": "Durham County", "lat": 35.948836, "lon": -78.922106}, {"key": "edgecombeccvote", "name": "Edgecombe Community College", "short_name": "Edgecombe CC", "city": "Tarboro", "county": "Edgecombe County", "lat": 35.896546, "lon": -77.532115}, {"key": "faytechccvote", "name": "Fayetteville Technical Community College", "short_name": "Fayetteville Tech", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "forsythtechvote", "name": "Forsyth Technical Community College", "short_name": "Forsyth Tech", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.155829, "lon": -80.270804}, {"key": "gastonvote", "name": "Gaston College", "short_name": "Gaston College", "city": "Dallas", "county": "Gaston County", "lat": 35.262841, "lon": -81.187914}, {"key": "gtccvote", "name": "Guilford Technical Community College", "short_name": "GTCC", "city": "Jamestown", "county": "Guilford County", "lat": 36.054025, "lon": -79.751959}, {"key": "halifaxccvote", "name": "Halifax Community College", "short_name": "Halifax CC", "city": "Weldon", "county": "Halifax County", "lat": 36.322386, "lon": -77.589158}, {"key": "haywoodccvote", "name": "Haywood Community College", "short_name": "Haywood CC", "city": "Clyde", "county": "Haywood County", "lat": 35.518414, "lon": -82.98872}, {"key": "isothermalccvote", "name": "Isothermal Community College", "short_name": "Isothermal CC", "city": "Spindale", "county": "Rutherford County", "lat": 35.337435, "lon": -81.911191}, {"key": "jamesspruntccvote", "name": "James Sprunt Community College", "short_name": "James Sprunt CC", "city": "Kenansville", "county": "Duplin County", "lat": 34.738645, "lon": -77.988884}, {"key": "johnstonccvote", "name": "Johnston Community College", "short_name": "Johnston CC", "city": "Smithfield", "county": "Johnston County", "lat": 35.693855, "lon": -78.376312}, {"key": "lenoirccvote", "name": "Lenoir Community College", "short_name": "Lenoir CC", "city": "Kinston", "county": "Lenoir County", "lat": 35.241249, "lon": -77.6192}, {"key": "martinccvote", "name": "Martin Community College", "short_name": "Martin CC", "city": "Williamston", "county": "Martin County", "lat": 35.856397, "lon": -77.051819}, {"key": "maylandccvote", "name": "Mayland Community College", "short_name": "Mayland CC", "city": "Spruce Pine", "county": "Mitchell County", "lat": 36.015447, "lon": -82.158381}, {"key": "mcdowelltechvote", "name": "McDowell Technical Community College", "short_name": "McDowell Tech", "city": "Marion", "county": "Mcdowell County", "lat": 35.663264, "lon": -81.977045}, {"key": "mitchellccvote", "name": "Mitchell Community College", "short_name": "Mitchell CC", "city": "Statesville", "county": "Iredell County", "lat": 35.942344, "lon": -80.776667}, {"key": "montgomeryccvote", "name": "Montgomery Community College", "short_name": "Montgomery CC", "city": "Troy", "county": "Montgomery County", "lat": 35.360174, "lon": -79.782085}, {"key": "nashccvote", "name": "Nash Community College", "short_name": "Nash CC", "city": "Rocky Mount", "county": "Nash County", "lat": 35.97199, "lon": -77.946848}, {"key": "pamlicoccvote", "name": "Pamlico Community College", "short_name": "Pamlico CC", "city": "Grantsboro", "county": "Pamlico County", "lat": 35.143237, "lon": -76.771045}, {"key": "piedmontccvote", "name": "Piedmont Community College", "short_name": "Piedmont CC", "city": "Roxboro", "county": "Person County", "lat": 36.395993, "lon": -78.994187}, {"key": "pittccvote", "name": "Pitt Community College", "short_name": "Pitt CC", "city": "Winterville", "county": "Pitt County", "lat": 35.549076, "lon": -77.34883}, {"key": "randolphccvote", "name": "Randolph Community College", "short_name": "Randolph CC", "city": "Asheboro", "county": "Randolph County", "lat": 35.893725, "lon": -79.934697}, {"key": "richmondccvote", "name": "Richmond Community College", "short_name": "Richmond CC", "city": "Hamlet", "county": "Richmond County", "lat": 34.932393, "lon": -79.782669}, {"key": "roanokechowanccvote", "name": "Roanoke-Chowan Community College", "short_name": "Roanoke-Chowan CC", "city": "Ahoskie", "county": "Hertford County", "lat": 36.278202, "lon": -76.980603}, {"key": "robesonccvote", "name": "Robeson Community College", "short_name": "Robeson CC", "city": "Lumberton", "county": "Robeson County", "lat": 34.494386, "lon": -79.113837}, {"key": "rockinghamccvote", "name": "Rockingham Community College", "short_name": "Rockingham CC", "city": "Wentworth", "county": "Rockingham County", "lat": 36.393531, "lon": -79.749993}, {"key": "rcccvote", "name": "Rowan-Cabarrus Community College", "short_name": "Rowan-Cabarrus CC", "city": "Salisbury", "county": "Rowan County", "lat": 35.565516, "lon": -80.418345}, {"key": "sampsonccvote", "name": "Sampson Community College", "short_name": "Sampson CC", "city": "Clinton", "county": "Sampson County", "lat": 34.997388, "lon": -78.31102}, {"key": "sandhillsccvote", "name": "Sandhills Community College", "short_name": "Sandhills CC", "city": "Pinehurst", "county": "Moore County", "lat": 35.135607, "lon": -79.428411}, {"key": "spccvote", "name": "South Piedmont Community College", "short_name": "South Piedmont CC", "city": "Polkton", "county": "Union County", "lat": 34.991177, "lon": -80.3637}, {"key": "southeasternccvote", "name": "Southeastern Community College", "short_name": "Southeastern CC", "city": "Whiteville", "county": "Columbus County", "lat": 34.323492, "lon": -78.824376}, {"key": "southwesternccvote", "name": "Southwestern Community College", "short_name": "Southwestern CC", "city": "Sylva", "county": "Jackson County", "lat": 35.110468, "lon": -83.10432}, {"key": "stanlyccvote", "name": "Stanly Community College", "short_name": "Stanly CC", "city": "Albemarle", "county": "Stanly County", "lat": 35.366337, "lon": -80.196747}, {"key": "surryccvote", "name": "Surry Community College", "short_name": "Surry CC", "city": "Dobson", "county": "Surry County", "lat": 36.392873, "lon": -80.706974}, {"key": "tricountyccvote", "name": "Tri-County Community College", "short_name": "Tri-County CC", "city": "Murphy", "county": "Cherokee County", "lat": 35.087131, "lon": -84.033986}, {"key": "vgccvote", "name": "Vance-Granville Community College", "short_name": "Vance-Granville CC", "city": "Henderson", "county": "Vance County", "lat": 36.338143, "lon": -78.401642}, {"key": "waketechvote", "name": "Wake Technical Community College", "short_name": "Wake Tech", "city": "Raleigh", "county": "Wake County", "lat": 35.771631, "lon": -78.570208}, {"key": "wayneccvote", "name": "Wayne Community College", "short_name": "Wayne CC", "city": "Goldsboro", "county": "Wayne County", "lat": 35.405461, "lon": -77.944283}, {"key": "wpccvote", "name": "Western Piedmont Community College", "short_name": "Western Piedmont CC", "city": "Morganton", "county": "Burke County", "lat": 35.724735, "lon": -81.661102}, {"key": "wilkesccvote", "name": "Wilkes Community College", "short_name": "Wilkes CC", "city": "Wilkesboro", "county": "Wilkes County", "lat": 36.149105, "lon": -81.153576}, {"key": "wilsonccvote", "name": "Wilson Community College", "short_name": "Wilson CC", "city": "Wilson", "county": "Wilson County", "lat": 35.706725, "lon": -77.927636}];
+    const countySites = [{"name": "Barber Park", "addr": "1500 Dans Rd Greensboro, NC 27401", "lat": 36.054025, "lon": -79.751959, "maps": "https://www.google.com/maps/dir/?api=1&destination=1500%20DANS%20RD%20GREENSBORO%2C%20NC%2027401"}, {"name": "Brown Recreation Center", "addr": "302 E Vandalia Rd Greensboro, NC 27406", "lat": 36.014753, "lon": -79.784755, "maps": "https://www.google.com/maps/dir/?api=1&destination=302%20E%20VANDALIA%20RD%20GREENSBORO%2C%20NC%2027406"}, {"name": "Bur-mil Club", "addr": "5834 Bur-Mill Club Rd Greensboro, NC 27410", "lat": 36.161732, "lon": -79.8711, "maps": "https://www.google.com/maps/dir/?api=1&destination=5834%20BUR-MILL%20CLUB%20RD%20GREENSBORO%2C%20NC%2027410"}, {"name": "Charlotte Hawkins Brown Museum", "addr": "6136 Burlington Rd Gibsonville, NC 27249", "lat": 36.067925, "lon": -79.624279, "maps": "https://www.google.com/maps/dir/?api=1&destination=6136%20BURLINGTON%20RD%20GIBSONVILLE%2C%20NC%2027249"}, {"name": "Craft Recreation Center", "addr": "3911 Yanceyville St Greensboro, NC 27405", "lat": 36.136502, "lon": -79.777092, "maps": "https://www.google.com/maps/dir/?api=1&destination=3911%20YANCEYVILLE%20ST%20GREENSBORO%2C%20NC%2027405"}, {"name": "Deep River Recreation Center", "addr": "1529 Skeet Club Rd High Point, NC 27265", "lat": 36.038823, "lon": -79.980115, "maps": "https://www.google.com/maps/dir/?api=1&destination=1529%20SKEET%20CLUB%20RD%20HIGH%20POINT%2C%20NC%2027265"}, {"name": "Guilford Ag Center", "addr": "3309 Burlington Rd Greensboro, NC 27405", "lat": 36.084948, "lon": -79.738411, "maps": "https://www.google.com/maps/dir/?api=1&destination=3309%20BURLINGTON%20RD%20GREENSBORO%2C%20NC%2027405"}, {"name": "Guilford County Board of Elections Office", "addr": "301 W Market St Greensboro, NC 27401", "lat": 36.072121, "lon": -79.79275, "maps": "https://www.google.com/maps/dir/?api=1&destination=301%20W%20MARKET%20ST%20GREENSBORO%2C%20NC%2027401"}, {"name": "Jamestown Town Hall", "addr": "301 E Main St Jamestown, NC 27282", "lat": 35.997311, "lon": -79.935079, "maps": "https://www.google.com/maps/dir/?api=1&destination=301%20E%20MAIN%20ST%20JAMESTOWN%2C%20NC%2027282"}, {"name": "Leonard Recreation Center", "addr": "6324 Ballinger Rd Greensboro, NC 27410", "lat": 36.10377, "lon": -79.909906, "maps": "https://www.google.com/maps/dir/?api=1&destination=6324%20BALLINGER%20RD%20GREENSBORO%2C%20NC%2027410"}, {"name": "Lewis Recreation Cntr", "addr": "3110 Forest Lawn Dr Greensboro, NC 27455", "lat": 36.118, "lon": -79.835139, "maps": "https://www.google.com/maps/dir/?api=1&destination=3110%20FOREST%20LAWN%20DR%20GREENSBORO%2C%20NC%2027455"}, {"name": "Oak Ridge Town Hall", "addr": "8315 Linville Rd Oak Ridge, NC 27310", "lat": 36.171111, "lon": -79.998285, "maps": "https://www.google.com/maps/dir/?api=1&destination=8315%20LINVILLE%20RD%20OAK%20RIDGE%2C%20NC%2027310"}, {"name": "Pleasant Garden", "addr": "5024 Alliance Church Rd Pleasant Garden, NC 27313", "lat": 35.968272, "lon": -79.754322, "maps": "https://www.google.com/maps/dir/?api=1&destination=5024%20ALLIANCE%20CHURCH%20RD%20PLEASANT%20GARDEN%2C%20NC%2027313"}, {"name": "Roy Culler Center", "addr": "921 Eastchester Dr High Point, NC 27262", "lat": 35.99141, "lon": -80.00727, "maps": "https://www.google.com/maps/dir/?api=1&destination=921%20EASTCHESTER%20DR%20HIGH%20POINT%2C%20NC%2027262"}, {"name": "Stokesdale", "addr": "8325 Angel-Pardue Rd Stokesdale, NC 27357", "lat": 36.232493, "lon": -79.976438, "maps": "https://www.google.com/maps/dir/?api=1&destination=8325%20ANGEL-PARDUE%20RD%20STOKESDALE%2C%20NC%2027357"}, {"name": "Union Square Campus", "addr": "124 E Gate City Blvd Greensboro, NC 27406", "lat": 36.06421, "lon": -79.789791, "maps": "https://www.google.com/maps/dir/?api=1&destination=124%20E%20GATE%20CITY%20BLVD%20GREENSBORO%2C%20NC%2027406"}, {"name": "Washington Terrace Park", "addr": "101 Gordon St High Point, NC 27260", "lat": 35.968303, "lon": -79.983827, "maps": "https://www.google.com/maps/dir/?api=1&destination=101%20GORDON%20ST%20HIGH%20POINT%2C%20NC%2027260"}];
+    const countyPrecincts = [{"county": "GUILFORD", "prec_id": "CG1", "name": "BUR-MIL CLUB", "desc": "CG1", "lat": 36.15543, "lon": -79.86202}, {"county": "GUILFORD", "prec_id": "CG2", "name": "JESSE WHARTON ELEMENTARY SCH", "desc": "CG2", "lat": 36.15832, "lon": -79.83785}, {"county": "GUILFORD", "prec_id": "CG3A", "name": "BASS CHAPEL U METHODIST CH", "desc": "CG3A", "lat": 36.14598, "lon": -79.8079}, {"county": "GUILFORD", "prec_id": "CG3B", "name": "CALVARY CHRISTIAN CENTER", "desc": "CG3B", "lat": 36.16, "lon": -79.80285}, {"county": "GUILFORD", "prec_id": "FEN1", "name": "BROWN RECREATION CENTER", "desc": "FEN1", "lat": 36.00926, "lon": -79.75611}, {"county": "GUILFORD", "prec_id": "FEN2", "name": "SOUTHEAST BAPTIST CHURCH", "desc": "FEN2", "lat": 35.99465, "lon": -79.72315}, {"county": "GUILFORD", "prec_id": "FR1", "name": "UNITARIAN UNIVERSALIST CHURCH", "desc": "FR1", "lat": 36.04104, "lon": -79.9048}, {"county": "GUILFORD", "prec_id": "FR2", "name": "JAMESTOWN PRESBYTERIAN CHURCH", "desc": "FR2", "lat": 36.04276, "lon": -79.92771}, {"county": "GUILFORD", "prec_id": "FR3", "name": "COLLINS GROVE UMC", "desc": "FR3", "lat": 36.1304, "lon": -79.89927}, {"county": "GUILFORD", "prec_id": "FR4", "name": "GTCC CEASAR CONE II AVIATION BLDG", "desc": "FR4", "lat": 36.11057, "lon": -79.92379}, {"county": "GUILFORD", "prec_id": "FR5A", "name": "PEARCE ELEMENTARY SCHOOL", "desc": "FR5A", "lat": 36.12159, "lon": -79.94459}, {"county": "GUILFORD", "prec_id": "FR5B", "name": "MERCY HILL CHURCH", "desc": "FR5B", "lat": 36.13508, "lon": -79.95609}, {"county": "GUILFORD", "prec_id": "G01", "name": "GREENSBORO FARMERS CURB MARKET", "desc": "G01", "lat": 36.08084, "lon": -79.77956}, {"county": "GUILFORD", "prec_id": "G02", "name": "PROXIMITY UNITED METHODIST CH", "desc": "G02", "lat": 36.09512, "lon": -79.77342}, {"county": "GUILFORD", "prec_id": "G03", "name": "EAST WHITE OAK BAPTIST CHURCH", "desc": "G03", "lat": 36.09791, "lon": -79.75772}, {"county": "GUILFORD", "prec_id": "G04", "name": "GENESIS BAPTIST CHURCH", "desc": "G04", "lat": 36.08554, "lon": -79.74929}, {"county": "GUILFORD", "prec_id": "G05", "name": "PEELER RECREATION CENTER", "desc": "G05", "lat": 36.10128, "lon": -79.74508}, {"county": "GUILFORD", "prec_id": "G06", "name": "BESSEMER ELEMENTARY SCHOOL", "desc": "G06", "lat": 36.10357, "lon": -79.7285}, {"county": "GUILFORD", "prec_id": "G07", "name": "SMITH SENIOR CENTER", "desc": "G07", "lat": 36.10751, "lon": -79.76909}, {"county": "GUILFORD", "prec_id": "G08", "name": "RANKIN ELEMENTARY SCHOOL", "desc": "G08", "lat": 36.11529, "lon": -79.77243}, {"county": "GUILFORD", "prec_id": "G09", "name": "CRAFT RECREATION CENTER", "desc": "G09", "lat": 36.13593, "lon": -79.77337}, {"county": "GUILFORD", "prec_id": "G10", "name": "WHITE OAK GROVE BAPTIST CHURCH", "desc": "G10", "lat": 36.13327, "lon": -79.75486}, {"county": "GUILFORD", "prec_id": "G11", "name": "ST BENEDICT'S PARISH CENTER", "desc": "G11", "lat": 36.0808, "lon": -79.79305}, {"county": "GUILFORD", "prec_id": "G12", "name": "FIRST BAPTIST CH-GREENSBORO", "desc": "G12", "lat": 36.08142, "lon": -79.80123}, {"county": "GUILFORD", "prec_id": "G13", "name": "FIRST FRIENDS MEETING", "desc": "G13", "lat": 36.08155, "lon": -79.81559}, {"county": "GUILFORD", "prec_id": "G14", "name": "ST ANDREWS EPISCOPAL CHURCH", "desc": "G14", "lat": 36.07347, "lon": -79.81995}, {"county": "GUILFORD", "prec_id": "G15", "name": "PEACE UNITED CHURCH OF CHRIST", "desc": "G15", "lat": 36.07565, "lon": -79.82807}, {"county": "GUILFORD", "prec_id": "G16", "name": "CHRIST UNITED METHODIST CHURCH", "desc": "G16", "lat": 36.07974, "lon": -79.83858}, {"county": "GUILFORD", "prec_id": "G17", "name": "STERNBERGER ELEMENTARY SCHOOL", "desc": "G17", "lat": 36.09056, "lon": -79.82696}, {"county": "GUILFORD", "prec_id": "G18", "name": "IRVING PARK ELEMENTARY SCHOOL", "desc": "G18", "lat": 36.09555, "lon": -79.80903}, {"county": "GUILFORD", "prec_id": "G19", "name": "NEWLYN ST UNITED METHODIST CHURCH", "desc": "G19", "lat": 36.09537, "lon": -79.79134}, {"county": "GUILFORD", "prec_id": "G20", "name": "PAGE HIGH SCHOOL", "desc": "G20", "lat": 36.10449, "lon": -79.80215}, {"county": "GUILFORD", "prec_id": "G21", "name": "MENDENHALL MIDDLE SCHOOL", "desc": "G21", "lat": 36.11983, "lon": -79.79337}, {"county": "GUILFORD", "prec_id": "G22", "name": "IRVING PARK U METHODIST CHURCH", "desc": "G22", "lat": 36.11561, "lon": -79.80972}, {"county": "GUILFORD", "prec_id": "G23", "name": "LAWNDALE BAPTIST CHURCH", "desc": "G23", "lat": 36.11425, "lon": -79.82587}, {"county": "GUILFORD", "prec_id": "G24", "name": "CHRIST LUTHERAN CHURCH", "desc": "G24", "lat": 36.12248, "lon": -79.82335}, {"county": "GUILFORD", "prec_id": "G25", "name": "CATHEDRAL OF HIS GLORY", "desc": "G25", "lat": 36.13252, "lon": -79.82396}, {"county": "GUILFORD", "prec_id": "G26", "name": "PIEDMONT CLASSICAL HIGH SCHOOL", "desc": "G26", "lat": 36.13872, "lon": -79.79359}, {"county": "GUILFORD", "prec_id": "G27", "name": "GLENN MCNAIRY BRANCH LIBRARY", "desc": "G27", "lat": 36.1458, "lon": -79.82369}, {"county": "GUILFORD", "prec_id": "G28", "name": "COVENANT GRACE CHURCH", "desc": "G28", "lat": 36.14471, "lon": -79.83872}, {"county": "GUILFORD", "prec_id": "G29", "name": "LEWIS RECREATION CENTER", "desc": "G29", "lat": 36.12751, "lon": -79.8416}, {"county": "GUILFORD", "prec_id": "G30", "name": "MT PISGAH CHURCH", "desc": "G30", "lat": 36.11953, "lon": -79.84968}, {"county": "GUILFORD", "prec_id": "G31", "name": "GENERAL GREENE ELEMENTARY SCH", "desc": "G31", "lat": 36.10531, "lon": -79.83165}, {"county": "GUILFORD", "prec_id": "G32", "name": "CLAXTON ELEMENTARY SCHOOL", "desc": "G32", "lat": 36.10955, "lon": -79.85561}, {"county": "GUILFORD", "prec_id": "G33", "name": "FIRST LUTHERAN CHURCH", "desc": "G33", "lat": 36.09646, "lon": -79.84568}, {"county": "GUILFORD", "prec_id": "G34", "name": "WESTMINSTER PRESBYTERIAN CH", "desc": "G34", "lat": 36.09836, "lon": -79.86022}, {"county": "GUILFORD", "prec_id": "G35", "name": "DORMITION OF THE THEOTOKOS", "desc": "G35", "lat": 36.08389, "lon": -79.85459}, {"county": "GUILFORD", "prec_id": "G36", "name": "MOREHEAD ELEMENTARY SCHOOL", "desc": "G36", "lat": 36.08066, "lon": -79.86424}, {"county": "GUILFORD", "prec_id": "G37", "name": "MUIRS CHAPEL U METHODIST CH", "desc": "G37", "lat": 36.07497, "lon": -79.87762}, {"county": "GUILFORD", "prec_id": "G38", "name": "FRIENDLY AVE CHURCH OF CHRIST", "desc": "G38", "lat": 36.08457, "lon": -79.88043}, {"county": "GUILFORD", "prec_id": "G39", "name": "FRIENDLY AVENUE BAPTIST CHURCH", "desc": "G39", "lat": 36.09755, "lon": -79.88005}, {"county": "GUILFORD", "prec_id": "G40A1", "name": "ST PAUL THE APOSTLE CATHOLIC CHURCH", "desc": "G40A1", "lat": 36.11595, "lon": -79.87561}, {"county": "GUILFORD", "prec_id": "G40A2", "name": "KERNODLE MIDDLE SCHOOL", "desc": "G40A2", "lat": 36.13115, "lon": -79.87889}, {"county": "GUILFORD", "prec_id": "G40B", "name": "ST BARNABAS EPISCOPAL CHURCH", "desc": "G40B", "lat": 36.1266, "lon": -79.86576}, {"county": "GUILFORD", "prec_id": "G41A", "name": "GUILFORD COLLEGE U METH CH", "desc": "G41A", "lat": 36.1078, "lon": -79.90646}, {"county": "GUILFORD", "prec_id": "G41B", "name": "JEFFERSON ELEMENTARY SCHOOL", "desc": "G41B", "lat": 36.11255, "lon": -79.89014}, {"county": "GUILFORD", "prec_id": "G42A", "name": "FAITH PRESBYTERIAN CHURCH", "desc": "G42A", "lat": 36.09433, "lon": -79.91567}, {"county": "GUILFORD", "prec_id": "G42B", "name": "FRIENDS HOMES AT GUILFORD", "desc": "G42B", "lat": 36.09365, "lon": -79.89569}, {"county": "GUILFORD", "prec_id": "G43", "name": "WESTERN GUILFORD HIGH SCHOOL", "desc": "G43", "lat": 36.08265, "lon": -79.91139}, {"county": "GUILFORD", "prec_id": "G44", "name": "GREENSBORO COLLEGE-REYNOLDS CNTR", "desc": "G44", "lat": 36.06934, "lon": -79.79661}, {"county": "GUILFORD", "prec_id": "G45", "name": "UNCG- ELLIOTT UNIVERSITY CENTER", "desc": "G45", "lat": 36.06889, "lon": -79.81101}, {"county": "GUILFORD", "prec_id": "G46", "name": "WARNERSVILLE RECREATION CENTER", "desc": "G46", "lat": 36.05653, "lon": -79.7976}, {"county": "GUILFORD", "prec_id": "G47", "name": "GLENWOOD PRESBYTERIAN CHURCH", "desc": "G47", "lat": 36.05297, "lon": -79.81347}, {"county": "GUILFORD", "prec_id": "G48", "name": "LINDLEY RECREATION CENTER", "desc": "G48", "lat": 36.06428, "lon": -79.8345}, {"county": "GUILFORD", "prec_id": "G49", "name": "CEDAR GROVE TABERNACLE OF PRAISE", "desc": "G49", "lat": 36.06809, "lon": -79.86742}, {"county": "GUILFORD", "prec_id": "G50", "name": "ST JOHN'S CHURCH", "desc": "G50", "lat": 36.05328, "lon": -79.85755}, {"county": "GUILFORD", "prec_id": "G51", "name": "GLENWOOD RECREATION CENTER", "desc": "G51", "lat": 36.04897, "lon": -79.82737}, {"county": "GUILFORD", "prec_id": "G52", "name": "FOUST ELEMENTARY SCHOOL", "desc": "G52", "lat": 36.03996, "lon": -79.80068}, {"county": "GUILFORD", "prec_id": "G53", "name": "EAST MARKET SEVENTH DAY ADVENTIST CHURCH", "desc": "G53", "lat": 36.01816, "lon": -79.79692}, {"county": "GUILFORD", "prec_id": "G54", "name": "SOUTHSIDE BAPTIST CHURCH", "desc": "G54", "lat": 36.02645, "lon": -79.81353}, {"county": "GUILFORD", "prec_id": "G55", "name": "FRAZIER ELEMENTARY SCHOOL", "desc": "G55", "lat": 36.01102, "lon": -79.81559}, {"county": "GUILFORD", "prec_id": "G56", "name": "MT TABOR UNITED METHODIST CHURCH", "desc": "G56", "lat": 36.03561, "lon": -79.83053}, {"county": "GUILFORD", "prec_id": "G57", "name": "ALLEN MIDDLE SCHOOL", "desc": "G57", "lat": 36.0177, "lon": -79.83307}, {"county": "GUILFORD", "prec_id": "G58", "name": "SMITH HIGH SCHOOL", "desc": "G58", "lat": 36.0355, "lon": -79.84918}, {"county": "GUILFORD", "prec_id": "G59", "name": "HEMPHILL BRANCH LIBRARY", "desc": "G59", "lat": 36.0193, "lon": -79.84886}, {"county": "GUILFORD", "prec_id": "G60", "name": "LUTHERAN CHURCH OF OUR FATHER", "desc": "G60", "lat": 36.03154, "lon": -79.85868}, {"county": "GUILFORD", "prec_id": "G61", "name": "ALDERMAN ELEMENTARY SCHOOL", "desc": "G61", "lat": 36.03959, "lon": -79.87024}, {"county": "GUILFORD", "prec_id": "G62", "name": "GRACE LIFE CHURCH", "desc": "G62", "lat": 36.04526, "lon": -79.88345}, {"county": "GUILFORD", "prec_id": "G63", "name": "EMERGENCY SERVICES TRAINING RM", "desc": "G63", "lat": 36.06664, "lon": -79.89274}, {"county": "GUILFORD", "prec_id": "G64", "name": "RALEIGH CROSSROADS UMC", "desc": "G64", "lat": 36.08114, "lon": -79.94569}, {"county": "GUILFORD", "prec_id": "G65", "name": "PILOT ELEMENTARY SCHOOL", "desc": "G65", "lat": 36.0256, "lon": -79.89633}, {"county": "GUILFORD", "prec_id": "G66", "name": "GATE CITY BAPTIST CHURCH", "desc": "G66", "lat": 36.02875, "lon": -79.90691}, {"county": "GUILFORD", "prec_id": "G67", "name": "BETHEL AME CHURCH", "desc": "G67", "lat": 36.07409, "lon": -79.77925}, {"county": "GUILFORD", "prec_id": "G68", "name": "NC A&T FRYE HALL", "desc": "G68", "lat": 36.07872, "lon": -79.76556}, {"county": "GUILFORD", "prec_id": "G69", "name": "REID MEMORIAL CME CHURCH", "desc": "G69", "lat": 36.06254, "lon": -79.78487}, {"county": "GUILFORD", "prec_id": "G70", "name": "DORIS HENDERSON NEWCOMERS SCHOOL", "desc": "G70", "lat": 36.06492, "lon": -79.77228}, {"county": "GUILFORD", "prec_id": "G71", "name": "MT OLIVET AME ZION CHURCH", "desc": "G71", "lat": 36.06708, "lon": -79.75897}, {"county": "GUILFORD", "prec_id": "G72", "name": "HAIRSTON MIDDLE SCHOOL", "desc": "G72", "lat": 36.07412, "lon": -79.74096}, {"county": "GUILFORD", "prec_id": "G73", "name": "TRINITY AME ZION CHURCH", "desc": "G73", "lat": 36.04855, "lon": -79.7782}, {"county": "GUILFORD", "prec_id": "G74", "name": "BLUFORD ELEMENTARY SCHOOL", "desc": "G74", "lat": 36.05487, "lon": -79.75768}, {"county": "GUILFORD", "prec_id": "G75", "name": "MT ZION BAPTIST CHURCH", "desc": "G75", "lat": 36.03485, "lon": -79.77419}, {"county": "GUILFORD", "prec_id": "GIB", "name": "GIBSONVILLE COMMUNITY CENTER", "desc": "GIB", "lat": 36.10358, "lon": -79.55425}, {"county": "GUILFORD", "prec_id": "GR", "name": "NATHANAEL GREENE ELEM SCHOOL", "desc": "GR", "lat": 35.95765, "lon": -79.58376}, {"county": "GUILFORD", "prec_id": "H01", "name": "HILLIARD MEMORIAL BAPTIST CH", "desc": "H01", "lat": 35.93417, "lon": -80.03061}, {"county": "GUILFORD", "prec_id": "H02", "name": "WESLEY MEMORIAL METHODIST CHURCH", "desc": "H02", "lat": 35.95123, "lon": -80.03045}, {"county": "GUILFORD", "prec_id": "H03", "name": "THE BELOVED COMMUNITY UMC", "desc": "H03", "lat": 35.94039, "lon": -79.99875}, {"county": "GUILFORD", "prec_id": "H04", "name": "ALLEN JAY RECREATION CENTER", "desc": "H04", "lat": 35.93487, "lon": -79.97647}, {"county": "GUILFORD", "prec_id": "H05", "name": "WILLIAMS MEMORIAL CME", "desc": "H05", "lat": 35.96237, "lon": -79.96138}, {"county": "GUILFORD", "prec_id": "H06", "name": "BALES MEMORIAL WESLEYAN CHURCH", "desc": "H06", "lat": 35.97163, "lon": -79.93692}, {"county": "GUILFORD", "prec_id": "H07", "name": "MT CALVARY HOLY CH", "desc": "H07", "lat": 35.95392, "lon": -79.9838}, {"county": "GUILFORD", "prec_id": "H08", "name": "GETHSEMANE BAPTIST CHURCH", "desc": "H08", "lat": 35.9513, "lon": -79.99836}, {"county": "GUILFORD", "prec_id": "H09", "name": "MOREHEAD RECREATION CENTER", "desc": "H09", "lat": 35.96482, "lon": -79.99423}, {"county": "GUILFORD", "prec_id": "H10", "name": "TEMPLE MEMORIAL BAPTIST CHURCH", "desc": "H10", "lat": 35.97716, "lon": -79.96729}, {"county": "GUILFORD", "prec_id": "H11", "name": "MONTLIEU ACADEMY OF TECHNOLOGY", "desc": "H11", "lat": 35.97428, "lon": -79.99046}, {"county": "GUILFORD", "prec_id": "H12", "name": "KIRKMAN PARK SCHOOL", "desc": "H12", "lat": 35.96745, "lon": -80.008}, {"county": "GUILFORD", "prec_id": "H13", "name": "HIGH POINT FRIENDS MEETING", "desc": "H13", "lat": 35.96192, "lon": -80.02137}, {"county": "GUILFORD", "prec_id": "H14", "name": "EMERYWOOD BAPTIST CHURCH", "desc": "H14", "lat": 35.96532, "lon": -80.03935}, {"county": "GUILFORD", "prec_id": "H15", "name": "FOREST HILLS PRESBYTERIAN CH", "desc": "H15", "lat": 35.98674, "lon": -80.03661}, {"county": "GUILFORD", "prec_id": "H16", "name": "ST MARYS COMMUNITY LIFE CENTER", "desc": "H16", "lat": 35.97975, "lon": -80.0241}, {"county": "GUILFORD", "prec_id": "H17", "name": "CONRAD MEMORIAL BAPTIST CHURCH", "desc": "H17", "lat": 35.98177, "lon": -80.00857}, {"county": "GUILFORD", "prec_id": "H18", "name": "T WINGATE ANDREWS HIGH SCHOOL", "desc": "H18", "lat": 35.98981, "lon": -79.99168}, {"county": "GUILFORD", "prec_id": "H19A", "name": "GREATER FIRST UNITED BAPTIST CH", "desc": "H19A", "lat": 35.98773, "lon": -79.98208}, {"county": "GUILFORD", "prec_id": "H19B", "name": "PENNYBYRN AT MARYFIELD", "desc": "H19B", "lat": 35.99142, "lon": -79.96749}, {"county": "GUILFORD", "prec_id": "H20A", "name": "OAKVIEW BAPTIST CHURCH", "desc": "H20A", "lat": 36.0002, "lon": -80.00554}, {"county": "GUILFORD", "prec_id": "H20B", "name": "NORTHWOOD COMMUNITY CENTER", "desc": "H20B", "lat": 36.003, "lon": -79.98797}, {"county": "GUILFORD", "prec_id": "H21", "name": "OAKVIEW RECREATION CENTER", "desc": "H21", "lat": 36.00094, "lon": -80.01825}, {"county": "GUILFORD", "prec_id": "H22", "name": "HIGH POINT PARKS & REC ADMIN OFFICE", "desc": "H22", "lat": 35.99639, "lon": -80.02177}, {"county": "GUILFORD", "prec_id": "H23", "name": "MANNA CHURCH HIGH POINT", "desc": "H23", "lat": 36.00927, "lon": -80.02978}, {"county": "GUILFORD", "prec_id": "H24", "name": "COMMUNITY BIBLE CHURCH", "desc": "H24", "lat": 36.03025, "lon": -80.02932}, {"county": "GUILFORD", "prec_id": "H25", "name": "TABERNACLE BAPTIST CHURCH", "desc": "H25", "lat": 36.03327, "lon": -80.00833}, {"county": "GUILFORD", "prec_id": "H26", "name": "DEEP RIVER CHURCH OF CHRIST", "desc": "H26", "lat": 36.01633, "lon": -79.98362}, {"county": "GUILFORD", "prec_id": "H27-A", "name": "DEEP RIVER RECREATION CENTER", "desc": "H27-A", "lat": 36.04002, "lon": -79.99322}, {"county": "GUILFORD", "prec_id": "H27-B", "name": "DEEP RIVER FRIENDS MEETING", "desc": "H27-B", "lat": 36.04122, "lon": -79.98171}, {"county": "GUILFORD", "prec_id": "H28", "name": "FIRST CHRISTIAN CHURCH OF HIGH POINT", "desc": "H28", "lat": 36.01018, "lon": -79.96588}, {"county": "GUILFORD", "prec_id": "H29A", "name": "TURNER'S CHAPEL AME CHURCH", "desc": "H29A", "lat": 36.02378, "lon": -79.95521}, {"county": "GUILFORD", "prec_id": "H29B", "name": "HICKORY GROVE UNITED METHODIST CHURCH", "desc": "H29B", "lat": 36.04896, "lon": -79.94772}, {"county": "GUILFORD", "prec_id": "JAM1", "name": "JAMESTOWN TOWN HALL", "desc": "JAM1", "lat": 35.99888, "lon": -79.93398}, {"county": "GUILFORD", "prec_id": "JAM2", "name": "FRIENDLY HILLS CHURCH  PCA", "desc": "JAM2", "lat": 36.01564, "lon": -79.91862}, {"county": "GUILFORD", "prec_id": "JAM3", "name": "SEDGEFIELD PRESBYTERIAN CHURCH", "desc": "JAM3", "lat": 36.01731, "lon": -79.88251}, {"county": "GUILFORD", "prec_id": "JAM4", "name": "HAYNES-INMAN EDUCATION CENTER", "desc": "JAM4", "lat": 35.97705, "lon": -79.90051}, {"county": "GUILFORD", "prec_id": "JAM5", "name": "FAIRFIELD COMMUNITY CHURCH", "desc": "JAM5", "lat": 35.94261, "lon": -79.91808}, {"county": "GUILFORD", "prec_id": "JEF1", "name": "MCLEANSVILLE BAPTIST CHURCH", "desc": "JEF1", "lat": 36.11423, "lon": -79.66736}, {"county": "GUILFORD", "prec_id": "JEF2", "name": "CALVARY BAPTIST CHURCH", "desc": "JEF2", "lat": 36.06801, "lon": -79.68282}, {"county": "GUILFORD", "prec_id": "JEF3", "name": "PIEDMONT BAPTIST ASSOCIATION", "desc": "JEF3", "lat": 36.04051, "lon": -79.72438}, {"county": "GUILFORD", "prec_id": "JEF4", "name": "ALAMANCE PRESBYTERIAN CHURCH", "desc": "JEF4", "lat": 36.0379, "lon": -79.65654}, {"county": "GUILFORD", "prec_id": "MON1", "name": "FORGE CHURCH", "desc": "MON1", "lat": 36.13169, "lon": -79.72145}, {"county": "GUILFORD", "prec_id": "MON2A", "name": "BRIGHTWOOD ELEMENTARY SCHOOL", "desc": "MON2A", "lat": 36.16173, "lon": -79.75285}, {"county": "GUILFORD", "prec_id": "MON2B", "name": "LEBANON BAPTIST CHURCH", "desc": "MON2B", "lat": 36.16637, "lon": -79.70894}, {"county": "GUILFORD", "prec_id": "MON3", "name": "LOCUST GROVE BAPTIST CHURCH", "desc": "MON3", "lat": 36.20609, "lon": -79.74202}, {"county": "GUILFORD", "prec_id": "NCGR1", "name": "CENTER UNITED METHODIST CHURCH", "desc": "NCGR1", "lat": 36.19539, "lon": -79.82648}, {"county": "GUILFORD", "prec_id": "NCGR2", "name": "GETHSEMANE UMC", "desc": "NCGR2", "lat": 36.22557, "lon": -79.82579}, {"county": "GUILFORD", "prec_id": "NCLAY1", "name": "COMMUNITY IN CHRIST PRESBY CH", "desc": "NCLAY1", "lat": 35.98696, "lon": -79.69626}, {"county": "GUILFORD", "prec_id": "NCLAY2", "name": "SOUTHEAST MIDDLE SCHOOL", "desc": "NCLAY2", "lat": 35.98862, "lon": -79.65275}, {"county": "GUILFORD", "prec_id": "NDRI", "name": "SHADY GROVE WESLEYAN CHURCH", "desc": "NDRI", "lat": 36.11566, "lon": -80.00131}, {"county": "GUILFORD", "prec_id": "NMAD", "name": "MONTICELLO-BROWN SUMMIT EL SCH", "desc": "NMAD", "lat": 36.20853, "lon": -79.65893}, {"county": "GUILFORD", "prec_id": "NWASH", "name": "HOPE RIVER CHURCH", "desc": "NWASH", "lat": 36.20789, "lon": -79.5759}, {"county": "GUILFORD", "prec_id": "OR1", "name": "OAK RIDGE TOWN HALL", "desc": "OR1", "lat": 36.18627, "lon": -80.01182}, {"county": "GUILFORD", "prec_id": "OR2", "name": "OAK RIDGE UNITED METHODIST CH", "desc": "OR2", "lat": 36.17323, "lon": -79.97108}, {"county": "GUILFORD", "prec_id": "PG1", "name": "KIRKMAN MUNICIPAL BUILDING", "desc": "PG1", "lat": 35.97812, "lon": -79.76332}, {"county": "GUILFORD", "prec_id": "PG2", "name": "PLEASANT GARDEN BAPTIST CHURCH", "desc": "PG2", "lat": 35.93821, "lon": -79.75148}, {"county": "GUILFORD", "prec_id": "RC1", "name": "EASTERN GUILFORD MIDDLE SCHOOL", "desc": "RC1", "lat": 36.0952, "lon": -79.6018}, {"county": "GUILFORD", "prec_id": "RC2", "name": "FIRST BAPTIST CHURCH OF WHITSETT", "desc": "RC2", "lat": 36.05687, "lon": -79.5804}, {"county": "GUILFORD", "prec_id": "SCLAY", "name": "MONNETT ROAD BAPTIST CHURCH", "desc": "SCLAY", "lat": 35.93529, "lon": -79.66965}, {"county": "GUILFORD", "prec_id": "SDRI", "name": "SMITH GROVE BAPTIST CHURCH", "desc": "SDRI", "lat": 36.06688, "lon": -80.00404}, {"county": "GUILFORD", "prec_id": "SF1", "name": "SUMMERFIELD COMMUNITY CENTER", "desc": "SF1", "lat": 36.2004, "lon": -79.92592}, {"county": "GUILFORD", "prec_id": "SF2", "name": "FIRST BAPTIST CH-SUMMERFIELD", "desc": "SF2", "lat": 36.22492, "lon": -79.89001}, {"county": "GUILFORD", "prec_id": "SF3", "name": "MOREHEAD UNITED METHODIST CH", "desc": "SF3", "lat": 36.15817, "lon": -79.89057}, {"county": "GUILFORD", "prec_id": "SF4", "name": "PLEASANT RIDGE CHRISTIAN CHURCH", "desc": "SF4", "lat": 36.16005, "lon": -79.93631}, {"county": "GUILFORD", "prec_id": "SMAD", "name": "NEW BESSEMER BAPTIST CHURCH", "desc": "SMAD", "lat": 36.1551, "lon": -79.66021}, {"county": "GUILFORD", "prec_id": "STOK", "name": "STOKESDALE TOWN HALL", "desc": "STOK", "lat": 36.22739, "lon": -79.9765}, {"county": "GUILFORD", "prec_id": "SUM1", "name": "REHOBETH CHURCH", "desc": "SUM1", "lat": 35.99307, "lon": -79.85883}, {"county": "GUILFORD", "prec_id": "SUM2", "name": "SOUTH ELM STREET BAPTIST CH", "desc": "SUM2", "lat": 35.9809, "lon": -79.80306}, {"county": "GUILFORD", "prec_id": "SUM3", "name": "LIVING WATERS BAPTIST CHURCH", "desc": "SUM3", "lat": 35.97226, "lon": -79.84316}, {"county": "GUILFORD", "prec_id": "SUM4", "name": "COMMUNITY BAPTIST CHURCH", "desc": "SUM4", "lat": 35.93677, "lon": -79.83501}, {"county": "GUILFORD", "prec_id": "SWASH", "name": "FIRE STATION #28", "desc": "SWASH", "lat": 36.15628, "lon": -79.57777}];
+    const campusPrimaryPrecinct = {"primary_precinct": "H11", "primary_name": "MONTLIEU ACADEMY OF TECHNOLOGY", "primary_lat": 35.97428, "primary_lon": -79.99046, "dist_to_campus": 0.56, "nearby_precincts": [{"prec_id": "H11", "name": "MONTLIEU ACADEMY OF TECHNOLOGY", "desc": "H11", "lat": 35.97428, "lon": -79.99046, "dist_to_campus": 0.56}, {"prec_id": "H09", "name": "MOREHEAD RECREATION CENTER", "desc": "H09", "lat": 35.96482, "lon": -79.99423, "dist_to_campus": 0.63}, {"prec_id": "H07", "name": "MT CALVARY HOLY CH", "desc": "H07", "lat": 35.95392, "lon": -79.9838, "dist_to_campus": 0.99}, {"prec_id": "H10", "name": "TEMPLE MEMORIAL BAPTIST CHURCH", "desc": "H10", "lat": 35.97716, "lon": -79.96729, "dist_to_campus": 1.11}, {"prec_id": "H05", "name": "WILLIAMS MEMORIAL CME", "desc": "H05", "lat": 35.96237, "lon": -79.96138, "dist_to_campus": 1.32}]};
     let redirectTimer = null;
 
     function haversine(lat1, lon1, lat2, lon2) {
@@ -1002,8 +1016,8 @@
       }
 
       const statusEl = document.getElementById('geo-status-banner');
-      statusEl.className = 'mt-3 text-xs text-blue-400 font-medium flex items-center gap-2';
-      statusEl.innerHTML = '<span class="animate-spin">⏳</span> Detecting your location...';
+      statusEl.className = 'mt-3 text-xs text-blue-400 font-medium';
+      statusEl.innerText = 'Detecting your location...';
       statusEl.classList.remove('hidden');
 
       navigator.geolocation.getCurrentPosition(
@@ -1025,53 +1039,85 @@
 
     function applyLocation(uLat, uLon) {
       const statusEl = document.getElementById('geo-status-banner');
+      const EARLY_VOTING_DEADLINE = new Date('2026-10-31T15:00:00-04:00');
+      const urlParams = new URLSearchParams(window.location.search);
+      const isElectionDay = (new Date() >= EARLY_VOTING_DEADLINE) || (urlParams.get('mode') === 'election_day');
 
-      // 1. Calculate distances to all county early voting sites
-      if (countySites && countySites.length > 0) {
-        countySites.forEach((s, idx) => {
-          s.distance = haversine(uLat, uLon, s.lat, s.lon);
-          s.elemIndex = idx;
-        });
+      if (isElectionDay) {
+        // Election Day: Find closest precinct
+        if (countyPrecincts && countyPrecincts.length > 0) {
+          countyPrecincts.forEach((p, idx) => {
+            p.distance = haversine(uLat, uLon, p.lat, p.lon);
+            p.elemIndex = idx;
+          });
+          const sortedPrecincts = [...countyPrecincts].sort((a, b) => a.distance - b.distance);
+          const nearestPrecinct = sortedPrecincts[0];
 
-        // Sort sites by proximity
-        const sortedSites = [...countySites].sort((a, b) => a.distance - b.distance);
-        const nearestSite = sortedSites[0];
+          const mainTitle = document.getElementById('main-site-title');
+          const mainAddr = document.getElementById('main-site-addr');
+          const mainMaps = document.getElementById('main-site-maps');
+          const statSite = document.getElementById('stat-primary-site');
+          const statDist = document.getElementById('stat-primary-dist');
 
-        // Update hero primary site dynamically
-        const mainTitle = document.getElementById('main-site-title');
-        const mainAddr = document.getElementById('main-site-addr');
-        const mainMaps = document.getElementById('main-site-maps');
-        const statSite = document.getElementById('stat-primary-site');
-        const statDist = document.getElementById('stat-primary-dist');
-
-        if (mainTitle && nearestSite) {
-          mainTitle.innerText = `${nearestSite.name} (${nearestSite.distance} mi away)`;
-          mainAddr.innerText = nearestSite.addr;
-          mainMaps.href = nearestSite.maps;
-          if (statSite) statSite.innerText = nearestSite.name;
-          if (statDist) statDist.innerText = `📍 ${nearestSite.distance} miles away`;
-        }
-
-        // Update all cards in the county sites grid
-        sortedSites.forEach((s, rank) => {
-          const card = document.getElementById(`site-card-${s.elemIndex}`);
-          if (card) {
-            const tag = card.querySelector('.distance-tag');
-            if (tag) {
-              tag.innerHTML = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${rank === 0 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-300'}">📍 ${s.distance} mi away</span>`;
+          if (mainTitle && nearestPrecinct) {
+            mainTitle.innerText = `${nearestPrecinct.name} (${nearestPrecinct.distance} mi away)`;
+            if (mainAddr) mainAddr.innerText = `Precinct ${nearestPrecinct.prec_id} • Assigned Election Day Polling Place`;
+            if (mainMaps) {
+              mainMaps.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(nearestPrecinct.name + ', Guilford County, NC')}`;
+              mainMaps.innerHTML = '<span>Directions to Nearest Precinct</span><span>↗</span>';
             }
-            if (rank === 0) {
-              card.classList.remove('border-slate-800');
-              card.classList.add('border-2', 'border-emerald-500', 'ring-2', 'ring-emerald-500/20');
-            }
+            if (statSite) statSite.innerText = nearestPrecinct.name;
+            if (statDist) statDist.innerText = `Precinct ${nearestPrecinct.prec_id} (${nearestPrecinct.distance} mi)`;
           }
-        });
 
-        statusEl.className = 'mt-3 text-xs text-emerald-400 font-medium flex items-center gap-2';
-        statusEl.innerHTML = `✓ Located! Your closest early voting site is <b>${nearestSite.name}</b> (<b>${nearestSite.distance} miles away</b>).`;
+          statusEl.className = 'mt-3 text-xs text-emerald-400 font-medium';
+          statusEl.innerHTML = `Located! Your closest Election Day precinct polling place is <b>${nearestPrecinct.name}</b> (<b>${nearestPrecinct.distance} miles away</b>). <a href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(nearestPrecinct.name + ', Guilford County, NC')}" target="_blank" rel="noopener" class="underline font-bold text-white ml-2">Directions ↗</a>`;
+        }
+      } else {
+        // Early Voting
+        if (countySites && countySites.length > 0) {
+          countySites.forEach((s, idx) => {
+            s.distance = haversine(uLat, uLon, s.lat, s.lon);
+            s.elemIndex = idx;
+          });
+
+          const sortedSites = [...countySites].sort((a, b) => a.distance - b.distance);
+          const nearestSite = sortedSites[0];
+
+          const mainTitle = document.getElementById('main-site-title');
+          const mainAddr = document.getElementById('main-site-addr');
+          const mainMaps = document.getElementById('main-site-maps');
+          const statSite = document.getElementById('stat-primary-site');
+          const statDist = document.getElementById('stat-primary-dist');
+
+          if (mainTitle && nearestSite) {
+            mainTitle.innerText = `${nearestSite.name} (${nearestSite.distance} mi away)`;
+            mainAddr.innerText = nearestSite.addr;
+            mainMaps.href = nearestSite.maps;
+            if (statSite) statSite.innerText = nearestSite.name;
+            if (statDist) statDist.innerText = `${nearestSite.distance} miles away`;
+          }
+
+          sortedSites.forEach((s, rank) => {
+            const card = document.getElementById(`site-card-${s.elemIndex}`);
+            if (card) {
+              const tag = card.querySelector('.distance-tag');
+              if (tag) {
+                tag.innerHTML = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${rank === 0 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-300'}">${s.distance} mi away</span>`;
+              }
+              if (rank === 0) {
+                card.classList.remove('border-slate-800');
+                card.classList.add('border-2', 'border-emerald-500', 'ring-2', 'ring-emerald-500/20');
+              }
+            }
+          });
+
+          statusEl.className = 'mt-3 text-xs text-emerald-400 font-medium';
+          statusEl.innerHTML = `Located! Your closest early voting site is <b>${nearestSite.name}</b> (<b>${nearestSite.distance} miles away</b>).`;
+        }
       }
 
-      // 2. Check if user is physically closer to a DIFFERENT campus in NC
+      // Check cross campus
       const sortedCampuses = [...allCampuses].map(c => ({
         ...c,
         dist: haversine(uLat, uLon, c.lat, c.lon)
@@ -1079,18 +1125,16 @@
 
       const closestCampus = sortedCampuses[0];
       if (closestCampus && closestCampus.key !== currentCampusKey && closestCampus.dist < 50) {
-        // User is closer to a different campus!
         const banner = document.getElementById('cross-campus-banner');
         const bannerText = document.getElementById('cross-campus-text');
         const bannerLink = document.getElementById('cross-campus-link');
 
         let secondsLeft = 4;
-        bannerText.innerHTML = `📍 We noticed you are closest to <b>${closestCampus.name}</b> in ${closestCampus.city} (<b>${closestCampus.dist} mi away</b>). Redirecting in <span id="redir-sec">${secondsLeft}</span>s...`;
+        bannerText.innerHTML = `You appear closest to <b>${closestCampus.name}</b> in ${closestCampus.city} (<b>${closestCampus.dist} mi away</b>). Redirecting in <span id="redir-sec">${secondsLeft}</span>s...`;
         bannerLink.href = `/${closestCampus.key}?autoloc=1`;
         bannerLink.innerText = `Go to ${closestCampus.short_name} Guide →`;
         banner.classList.remove('hidden');
 
-        // Check if user arrived via auto-redirect query param
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('autoloc') !== '1') {
           redirectTimer = setInterval(() => {
@@ -1110,35 +1154,32 @@
       const EARLY_VOTING_DEADLINE = new Date('2026-10-31T15:00:00-04:00');
       const urlParams = new URLSearchParams(window.location.search);
       if (new Date() >= EARLY_VOTING_DEADLINE || urlParams.get('mode') === 'election_day') {
-        const topBar = document.querySelector('body > div:first-child');
+        const topBar = document.getElementById('top-announcement-bar');
         if (topBar) {
           topBar.className = 'bg-gradient-to-r from-red-950 via-rose-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-bold text-slate-100 border-b border-rose-900/50 shadow-md';
-          topBar.innerHTML = '<span class="inline-flex items-center gap-2"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span></span><span>🔴 Early Voting Has Ended • <b>ELECTION DAY IS TUESDAY, NOVEMBER 3, 2026</b> • Polls Open <b>6:30 AM – 7:30 PM</b></span></span>';
+          topBar.innerHTML = '<span>Early Voting Has Ended • <b>ELECTION DAY IS TUESDAY, NOVEMBER 3, 2026</b> • Polls Open <b>6:30 AM – 7:30 PM</b></span>';
         }
         const sitesSection = document.getElementById('voting-sites');
         if (sitesSection && !document.getElementById('election-day-alert')) {
           const alertDiv = document.createElement('div');
           alertDiv.id = 'election-day-alert';
-          alertDiv.className = 'bg-rose-950/60 border-2 border-rose-500 rounded-2xl p-5 sm:p-6 mb-8 text-white shadow-xl';
+          alertDiv.className = 'bg-rose-950/60 border-2 border-rose-500 rounded-2xl p-5 sm:p-6 mb-8 text-white shadow-xl col-span-full';
           alertDiv.innerHTML = `
-            <div class="flex items-start gap-4">
-              <span class="text-3xl">⚠️</span>
-              <div class="space-y-3">
-                <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30">Early Voting Concluded</span>
-                <h2 class="text-lg sm:text-xl font-bold text-white">Election Day Voting Rules (Tuesday, Nov 3):</h2>
-                <div class="p-3 rounded-xl bg-slate-950/80 border border-rose-900/60 text-xs sm:text-sm space-y-2 text-slate-200">
-                  <p><b>1. Assigned Precinct Only:</b> Early voting sites are closed. On Election Day, you must vote at your specifically assigned precinct polling place based on your address between <b>6:30 AM and 7:30 PM</b>.</p>
-                  <p><b>2. No Same-Day Registration:</b> Under NC Gen. Stat. § 163-82.6, same-day registration is illegal on Election Day. You must already be registered.</p>
-                  <p><b>3. In line by 7:30 PM? Stay in line!</b> You are legally entitled to vote.</p>
-                </div>
-                <div class="flex flex-wrap gap-2 pt-1">
-                  <a href="https://vt.ncsbe.gov/pplkup/" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-md">
-                    Find Your Assigned Precinct (NCSBE Lookup) ↗
-                  </a>
-                  <a href="https://vt.ncsbe.gov/RegLkup/" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md">
-                    Check Registration & Sample Ballot ↗
-                  </a>
-                </div>
+            <div class="space-y-3">
+              <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30">Early Voting Concluded</span>
+              <h2 class="text-lg sm:text-xl font-bold text-white">Election Day Voting Rules (Tuesday, Nov 3):</h2>
+              <div class="p-3.5 rounded-xl bg-slate-950/80 border border-rose-900/60 text-xs sm:text-sm space-y-2 text-slate-200">
+                <p><b>1. Assigned Precinct Only:</b> Early voting sites are closed. On Election Day, you must vote at your specifically assigned precinct polling place based on your address between <b>6:30 AM and 7:30 PM</b>.</p>
+                <p><b>2. No Same-Day Registration:</b> Under NC Gen. Stat. § 163-82.6, same-day registration is not permitted on Election Day. You must already be registered.</p>
+                <p><b>3. In line by 7:30 PM? Stay in line!</b> You are legally entitled to cast your ballot.</p>
+              </div>
+              <div class="flex flex-wrap gap-2 pt-1">
+                <a href="https://vt.ncsbe.gov/pplkup/" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-md">
+                  Find Your Assigned Precinct (NCSBE Lookup) ↗
+                </a>
+                <a href="https://vt.ncsbe.gov/RegLkup/" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md">
+                  Check Registration &amp; Sample Ballot ↗
+                </a>
               </div>
             </div>
           `;
@@ -1147,7 +1188,6 @@
       }
     }
 
-    // Check if location was already detected or requested via URL
     window.addEventListener('DOMContentLoaded', () => {
       checkElectionDayMode();
       const urlParams = new URLSearchParams(window.location.search);
@@ -1166,16 +1206,16 @@
   <div id="support-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-200">
     <div class="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl text-center">
       <button onclick="closeSupportModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-sm transition" aria-label="Close">
-        ✕
+        Close [X]
       </button>
       
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 mb-3">
-        <span>☕ Independent & Community Supported</span>
+      <div class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 mb-3">
+        <span>Independent &amp; Community Supported</span>
       </div>
       
       <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">Help Rann Bar-On maintain this site</h3>
       <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto mb-6">
-        This statewide student voting platform is independently built and self-funded as a free public service for students and voters across all 111 North Carolina colleges and universities. If you find this guide helpful, your contribution helps cover server hosting, domain fees, and continuous data updates!
+        This statewide student voting platform is independently built and self-funded as a free public service for students and voters across all 110 North Carolina colleges and universities. If you find this guide helpful, your contribution helps cover server hosting, domain fees, and continuous data updates!
       </p>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
@@ -1234,5 +1274,6 @@
     });
   </script>
 
+  <script src="/tracker.js"></script>
 </body>
 </html>

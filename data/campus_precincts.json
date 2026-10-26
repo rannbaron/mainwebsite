@@ -1,0 +1,5392 @@
+{
+  "dukevote": {
+    "primary_precinct": "05",
+    "primary_name": "W I PATTERSON RECREATION CENTER",
+    "primary_lat": 36.00502,
+    "primary_lon": -78.93893,
+    "dist_to_campus": 0.56,
+    "nearby_precincts": [
+      {
+        "prec_id": "05",
+        "name": "W I PATTERSON RECREATION CENTER",
+        "desc": "05",
+        "lat": 36.00502,
+        "lon": -78.93893,
+        "dist_to_campus": 0.56
+      },
+      {
+        "prec_id": "06",
+        "name": "LAKEWOOD ELEMENTARY SCHOOL",
+        "desc": "06",
+        "lat": 35.98693,
+        "lon": -78.94254,
+        "dist_to_campus": 0.96
+      },
+      {
+        "prec_id": "03",
+        "name": "E K POWE ELEMENTARY SCHOOL",
+        "desc": "03",
+        "lat": 36.01164,
+        "lon": -78.92627,
+        "dist_to_campus": 0.99
+      },
+      {
+        "prec_id": "08",
+        "name": "MOREHEAD MONTESSORI MAGNET SCHOOL",
+        "desc": "08",
+        "lat": 35.9905,
+        "lon": -78.9151,
+        "dist_to_campus": 1.15
+      },
+      {
+        "prec_id": "40",
+        "name": "ROGERS-HERR MIDDLE SCHOOL",
+        "desc": "40",
+        "lat": 35.97782,
+        "lon": -78.92818,
+        "dist_to_campus": 1.46
+      }
+    ]
+  },
+  "uncvote": {
+    "primary_precinct": "EA1",
+    "primary_name": "HOLY TRINITY LUTHERAN CHURCH",
+    "primary_lat": 35.92039,
+    "primary_lon": -79.04701,
+    "dist_to_campus": 0.43,
+    "nearby_precincts": [
+      {
+        "prec_id": "EA1",
+        "name": "HOLY TRINITY LUTHERAN CHURCH",
+        "desc": "EAST FRANKLIN",
+        "lat": 35.92039,
+        "lon": -79.04701,
+        "dist_to_campus": 0.43
+      },
+      {
+        "prec_id": "UNC",
+        "name": "SONJA HAYNES STONE CENTER",
+        "desc": "UNC",
+        "lat": 35.91039,
+        "lon": -79.04032,
+        "dist_to_campus": 0.62
+      },
+      {
+        "prec_id": "NS",
+        "name": "FIRST BAPTIST CHURCH",
+        "desc": "NORTHSIDE",
+        "lat": 35.91761,
+        "lon": -79.06167,
+        "dist_to_campus": 0.68
+      },
+      {
+        "prec_id": "WW1",
+        "name": "FRANK PORTER GRAHAM SCHOOL",
+        "desc": "WESTWOOD",
+        "lat": 35.90153,
+        "lon": -79.0637,
+        "dist_to_campus": 1.18
+      },
+      {
+        "prec_id": "TH1",
+        "name": "CARRBORO TOWN HALL COMPLEX",
+        "desc": "TOWN HALL",
+        "lat": 35.91336,
+        "lon": -79.07314,
+        "dist_to_campus": 1.3
+      }
+    ]
+  },
+  "nccuvote": {
+    "primary_precinct": "55-49",
+    "primary_name": "NCCU - TURNER LAW BLDG",
+    "primary_lat": 35.97332,
+    "primary_lon": -78.89754,
+    "dist_to_campus": 0.17,
+    "nearby_precincts": [
+      {
+        "prec_id": "55-49",
+        "name": "NCCU - TURNER LAW BLDG",
+        "desc": "55-49",
+        "lat": 35.97332,
+        "lon": -78.89754,
+        "dist_to_campus": 0.17
+      },
+      {
+        "prec_id": "13",
+        "name": "BURTON ELEMENTARY SCHOOL",
+        "desc": "13",
+        "lat": 35.97752,
+        "lon": -78.88356,
+        "dist_to_campus": 0.77
+      },
+      {
+        "prec_id": "12",
+        "name": "MONUMENT OF FAITH CHURCH",
+        "desc": "12",
+        "lat": 35.98344,
+        "lon": -78.89435,
+        "dist_to_campus": 0.81
+      },
+      {
+        "prec_id": "55-11",
+        "name": "WEAVER STREET CENTER",
+        "desc": "55-11",
+        "lat": 35.96845,
+        "lon": -78.90945,
+        "dist_to_campus": 0.83
+      },
+      {
+        "prec_id": "42",
+        "name": "JAMES E SHEPARD MAGNET SCHOOL",
+        "desc": "42",
+        "lat": 35.95941,
+        "lon": -78.90182,
+        "dist_to_campus": 0.93
+      }
+    ]
+  },
+  "ncsuvote": {
+    "primary_precinct": "01-31",
+    "primary_name": "METHOD COMMUNITY CENTER",
+    "primary_lat": 35.78289,
+    "primary_lon": -78.69196,
+    "dist_to_campus": 0.39,
+    "nearby_precincts": [
+      {
+        "prec_id": "01-31",
+        "name": "METHOD COMMUNITY CENTER",
+        "desc": "PRECINCT 01-31",
+        "lat": 35.78289,
+        "lon": -78.69196,
+        "dist_to_campus": 0.39
+      },
+      {
+        "prec_id": "01-02",
+        "name": "UNITARIAN UNIVERSALIST FELLOWSHIP OF RALEIGH",
+        "desc": "PRECINCT 01-02",
+        "lat": 35.79695,
+        "lon": -78.68349,
+        "dist_to_campus": 0.88
+      },
+      {
+        "prec_id": "01-23",
+        "name": "PULLEN COMMUNITY CENTER",
+        "desc": "PRECINCT 01-23",
+        "lat": 35.77644,
+        "lon": -78.66766,
+        "dist_to_campus": 1.12
+      },
+      {
+        "prec_id": "01-01",
+        "name": "BROOKS AVENUE CHURCH OF CHRIST",
+        "desc": "PRECINCT 01-01",
+        "lat": 35.79308,
+        "lon": -78.66777,
+        "dist_to_campus": 1.15
+      },
+      {
+        "prec_id": "01-41",
+        "name": "COMBS LEADERSHIP MAGNET ELEMENTARY SCHOOL",
+        "desc": "PRECINCT 01-41",
+        "lat": 35.77051,
+        "lon": -78.6986,
+        "dist_to_campus": 1.22
+      }
+    ]
+  },
+  "appstatevote": {
+    "primary_precinct": "06",
+    "primary_name": "PLEMMONS STUDENT UNION",
+    "primary_lat": 36.2125,
+    "primary_lon": -81.67441,
+    "dist_to_campus": 0.3,
+    "nearby_precincts": [
+      {
+        "prec_id": "06",
+        "name": "PLEMMONS STUDENT UNION",
+        "desc": "BOONE 2",
+        "lat": 36.2125,
+        "lon": -81.67441,
+        "dist_to_campus": 0.3
+      },
+      {
+        "prec_id": "12",
+        "name": "AGRICULTURAL CONFERENCE CENTER",
+        "desc": "BOONE 3",
+        "lat": 36.21204,
+        "lon": -81.68353,
+        "dist_to_campus": 0.32
+      },
+      {
+        "prec_id": "05",
+        "name": "WATAUGA COUNTY ADMINISTRATION BLDG",
+        "desc": "BOONE 1",
+        "lat": 36.22094,
+        "lon": -81.68154,
+        "dist_to_campus": 0.45
+      },
+      {
+        "prec_id": "14",
+        "name": "THREE FORKS BAPTIST ASSOCIATION",
+        "desc": "NEW RIVER II",
+        "lat": 36.23748,
+        "lon": -81.6576,
+        "dist_to_campus": 1.97
+      },
+      {
+        "prec_id": "13",
+        "name": "BOONE TOWN CHAMBERS (POLICE DEPARTMENT)",
+        "desc": "NEW RIVER I",
+        "lat": 36.18865,
+        "lon": -81.69612,
+        "dist_to_campus": 2.05
+      }
+    ]
+  },
+  "ecuvote": {
+    "primary_precinct": "1508A",
+    "primary_name": "WILLIS BLDG",
+    "primary_lat": 35.61205,
+    "primary_lon": -77.36645,
+    "dist_to_campus": 0.47,
+    "nearby_precincts": [
+      {
+        "prec_id": "1508A",
+        "name": "WILLIS BLDG",
+        "desc": "GREENVILLE #8A",
+        "lat": 35.61205,
+        "lon": -77.36645,
+        "dist_to_campus": 0.47
+      },
+      {
+        "prec_id": "1507B",
+        "name": "FIRST PRESBYTERIAN CHURCH",
+        "desc": "GREENVILLE #7B",
+        "lat": 35.60053,
+        "lon": -77.36071,
+        "dist_to_campus": 0.6
+      },
+      {
+        "prec_id": "1506",
+        "name": "FIRST PENTECOSTAL HOLINESS CHURCH",
+        "desc": "GREENVILLE #6",
+        "lat": 35.59353,
+        "lon": -77.37566,
+        "dist_to_campus": 0.91
+      },
+      {
+        "prec_id": "1508B",
+        "name": "CYPRESS GLEN RETIREMENT",
+        "desc": "GREENVILLE #8B",
+        "lat": 35.61035,
+        "lon": -77.34509,
+        "dist_to_campus": 1.4
+      },
+      {
+        "prec_id": "1507",
+        "name": "OPENDOOR CHURCH AT IMMANUEL",
+        "desc": "GREENVILLE #7",
+        "lat": 35.60056,
+        "lon": -77.34411,
+        "dist_to_campus": 1.46
+      }
+    ]
+  },
+  "ecsuvote": {
+    "primary_precinct": "SOUTH",
+    "primary_name": "KERMIT E WHITE CENTER",
+    "primary_lat": 36.27677,
+    "primary_lon": -76.21365,
+    "dist_to_campus": 0.62,
+    "nearby_precincts": [
+      {
+        "prec_id": "SOUTH",
+        "name": "KERMIT E WHITE CENTER",
+        "desc": "SOUTH ELIZABETH CITY",
+        "lat": 36.27677,
+        "lon": -76.21365,
+        "dist_to_campus": 0.62
+      },
+      {
+        "prec_id": "EAST",
+        "name": "RIVER ROAD MIDDLE SCHOOL",
+        "desc": "EAST ELIZABETH CITY",
+        "lat": 36.283,
+        "lon": -76.19381,
+        "dist_to_campus": 0.76
+      },
+      {
+        "prec_id": "WEST",
+        "name": "PASQUOTANK ELEMENTARY SCHOOL",
+        "desc": "WEST ELIZABETH CITY",
+        "lat": 36.28725,
+        "lon": -76.24857,
+        "dist_to_campus": 2.31
+      },
+      {
+        "prec_id": "NORTH",
+        "name": "KNOBBS CREEK RECREATION CENTER",
+        "desc": "NORTH ELIZABETH CITY",
+        "lat": 36.31907,
+        "lon": -76.22016,
+        "dist_to_campus": 2.52
+      },
+      {
+        "prec_id": "NIX",
+        "name": "WEEKSVILLE LIONS CLUB",
+        "desc": "NIXONTON",
+        "lat": 36.22962,
+        "lon": -76.17873,
+        "dist_to_campus": 4.09
+      }
+    ]
+  },
+  "fsuvote": {
+    "primary_precinct": "G5B-1",
+    "primary_name": "JOHN D FULLER SR RECREATIONAL ATHLETIC COMPLEX",
+    "primary_lat": 35.04813,
+    "primary_lon": -78.99462,
+    "dist_to_campus": 0.75,
+    "nearby_precincts": [
+      {
+        "prec_id": "G5B-1",
+        "name": "JOHN D FULLER SR RECREATIONAL ATHLETIC COMPLEX",
+        "desc": "CROSS CREEK 28-1-G5",
+        "lat": 35.04813,
+        "lon": -78.99462,
+        "dist_to_campus": 0.75
+      },
+      {
+        "prec_id": "CC25",
+        "name": "CHURCH OF JESUS CHRIST - LATTER DAY SAINTS",
+        "desc": "CROSS CREEK 25",
+        "lat": 35.07313,
+        "lon": -79.00087,
+        "dist_to_campus": 1.06
+      },
+      {
+        "prec_id": "CC27",
+        "name": "CLIFFDALE RECREATION CENTER",
+        "desc": "CROSS CREEK 27",
+        "lat": 35.06868,
+        "lon": -79.00972,
+        "dist_to_campus": 1.13
+      },
+      {
+        "prec_id": "CC26",
+        "name": "MORGANTON ROAD ELEMENTARY SCHOOL",
+        "desc": "CROSS CREEK 26",
+        "lat": 35.0747,
+        "lon": -78.98502,
+        "dist_to_campus": 1.19
+      },
+      {
+        "prec_id": "G5B-2",
+        "name": "INSOUL FELLOWSHIP CHURCH",
+        "desc": "CROSS CREEK 28-2-G5",
+        "lat": 35.04745,
+        "lon": -79.01672,
+        "dist_to_campus": 1.54
+      }
+    ]
+  },
+  "ncatvote": {
+    "primary_precinct": "H11",
+    "primary_name": "MONTLIEU ACADEMY OF TECHNOLOGY",
+    "primary_lat": 35.97428,
+    "primary_lon": -79.99046,
+    "dist_to_campus": 0.56,
+    "nearby_precincts": [
+      {
+        "prec_id": "H11",
+        "name": "MONTLIEU ACADEMY OF TECHNOLOGY",
+        "desc": "H11",
+        "lat": 35.97428,
+        "lon": -79.99046,
+        "dist_to_campus": 0.56
+      },
+      {
+        "prec_id": "H09",
+        "name": "MOREHEAD RECREATION CENTER",
+        "desc": "H09",
+        "lat": 35.96482,
+        "lon": -79.99423,
+        "dist_to_campus": 0.63
+      },
+      {
+        "prec_id": "H07",
+        "name": "MT CALVARY HOLY CH",
+        "desc": "H07",
+        "lat": 35.95392,
+        "lon": -79.9838,
+        "dist_to_campus": 0.99
+      },
+      {
+        "prec_id": "H10",
+        "name": "TEMPLE MEMORIAL BAPTIST CHURCH",
+        "desc": "H10",
+        "lat": 35.97716,
+        "lon": -79.96729,
+        "dist_to_campus": 1.11
+      },
+      {
+        "prec_id": "H05",
+        "name": "WILLIAMS MEMORIAL CME",
+        "desc": "H05",
+        "lat": 35.96237,
+        "lon": -79.96138,
+        "dist_to_campus": 1.32
+      }
+    ]
+  },
+  "uncavote": {
+    "primary_precinct": "10.1",
+    "primary_name": "DR WESLEY GRANT SR - SOUTHSIDE CENTER",
+    "primary_lat": 35.57575,
+    "primary_lon": -82.55772,
+    "dist_to_campus": 0.3,
+    "nearby_precincts": [
+      {
+        "prec_id": "10.1",
+        "name": "DR WESLEY GRANT SR - SOUTHSIDE CENTER",
+        "desc": "10.1",
+        "lat": 35.57575,
+        "lon": -82.55772,
+        "dist_to_campus": 0.3
+      },
+      {
+        "prec_id": "12.1",
+        "name": "HALL FLETCHER SCHOOL-GYMNASIUM",
+        "desc": "12.1",
+        "lat": 35.57769,
+        "lon": -82.5741,
+        "dist_to_campus": 0.67
+      },
+      {
+        "prec_id": "11.1",
+        "name": "GROVE STREET COMMUNITY CENTER",
+        "desc": "11.1",
+        "lat": 35.58891,
+        "lon": -82.56123,
+        "dist_to_campus": 0.76
+      },
+      {
+        "prec_id": "01.1",
+        "name": "STEPHENS LEE COMMUNITY CENTER",
+        "desc": "01.1",
+        "lat": 35.58942,
+        "lon": -82.54561,
+        "dist_to_campus": 1.22
+      },
+      {
+        "prec_id": "13.1",
+        "name": "CALVARY BAPTIST CHURCH",
+        "desc": "13.1",
+        "lat": 35.56631,
+        "lon": -82.58345,
+        "dist_to_campus": 1.44
+      }
+    ]
+  },
+  "unccvote": {
+    "primary_precinct": "105",
+    "primary_name": "NEWELL ELEMENTARY SCHOOL",
+    "primary_lat": 35.29413,
+    "primary_lon": -80.74128,
+    "dist_to_campus": 0.68,
+    "nearby_precincts": [
+      {
+        "prec_id": "105",
+        "name": "NEWELL ELEMENTARY SCHOOL",
+        "desc": "PCT 105",
+        "lat": 35.29413,
+        "lon": -80.74128,
+        "dist_to_campus": 0.68
+      },
+      {
+        "prec_id": "141",
+        "name": "FORMERLY UNIVERSITY CITY REGIONAL LIBRARY",
+        "desc": "PCT 141",
+        "lat": 35.31568,
+        "lon": -80.72666,
+        "dist_to_campus": 1.42
+      },
+      {
+        "prec_id": "126",
+        "name": "GOVERNOR'S VILLAGE STEM ACADEMY-LOWER",
+        "desc": "PCT 126",
+        "lat": 35.29619,
+        "lon": -80.77228,
+        "dist_to_campus": 1.53
+      },
+      {
+        "prec_id": "132",
+        "name": "NEWELL PRESBYTERIAN CHURCH",
+        "desc": "PCT 132",
+        "lat": 35.27578,
+        "lon": -80.75242,
+        "dist_to_campus": 1.92
+      },
+      {
+        "prec_id": "146",
+        "name": "TURNING POINT ACADEMY - FORMER PERFORMANCE LEARNING CTR",
+        "desc": "PCT 146",
+        "lat": 35.31116,
+        "lon": -80.77968,
+        "dist_to_campus": 1.95
+      }
+    ]
+  },
+  "uncgvote": {
+    "primary_precinct": "G69",
+    "primary_name": "REID MEMORIAL CME CHURCH",
+    "primary_lat": 36.06254,
+    "primary_lon": -79.78487,
+    "dist_to_campus": 0.3,
+    "nearby_precincts": [
+      {
+        "prec_id": "G69",
+        "name": "REID MEMORIAL CME CHURCH",
+        "desc": "G69",
+        "lat": 36.06254,
+        "lon": -79.78487,
+        "dist_to_campus": 0.3
+      },
+      {
+        "prec_id": "G44",
+        "name": "GREENSBORO COLLEGE-REYNOLDS CNTR",
+        "desc": "G44",
+        "lat": 36.06934,
+        "lon": -79.79661,
+        "dist_to_campus": 0.52
+      },
+      {
+        "prec_id": "G46",
+        "name": "WARNERSVILLE RECREATION CENTER",
+        "desc": "G46",
+        "lat": 36.05653,
+        "lon": -79.7976,
+        "dist_to_campus": 0.69
+      },
+      {
+        "prec_id": "G67",
+        "name": "BETHEL AME CHURCH",
+        "desc": "G67",
+        "lat": 36.07409,
+        "lon": -79.77925,
+        "dist_to_campus": 0.9
+      },
+      {
+        "prec_id": "G70",
+        "name": "DORIS HENDERSON NEWCOMERS SCHOOL",
+        "desc": "G70",
+        "lat": 36.06492,
+        "lon": -79.77228,
+        "dist_to_campus": 0.98
+      }
+    ]
+  },
+  "uncpvote": {
+    "primary_precinct": "23",
+    "primary_name": "23 SOUTH PEMBROKE-PEMBROKE PUBLIC LIBRARY",
+    "primary_lat": 34.66183,
+    "primary_lon": -79.20414,
+    "dist_to_campus": 1.17,
+    "nearby_precincts": [
+      {
+        "prec_id": "23",
+        "name": "23 SOUTH PEMBROKE-PEMBROKE PUBLIC LIBRARY",
+        "desc": "SOUTH PEMBROKE",
+        "lat": 34.66183,
+        "lon": -79.20414,
+        "dist_to_campus": 1.17
+      },
+      {
+        "prec_id": "22",
+        "name": "22   NORTH PEMBROKE - PEMBROKE RURAL FIRE DEPARTMENT",
+        "desc": "NORTH PEMBROKE",
+        "lat": 34.69996,
+        "lon": -79.18831,
+        "dist_to_campus": 1.67
+      },
+      {
+        "prec_id": "25",
+        "name": "25   RAFT SWAMP - OP OWENS BUILDING",
+        "desc": "RAFT SWAMP",
+        "lat": 34.66235,
+        "lon": -79.10976,
+        "dist_to_campus": 4.83
+      },
+      {
+        "prec_id": "04",
+        "name": "04   BURNT SWAMP - UNION CHAPEL COMMUNITY BUILDING",
+        "desc": "BURNT SWAMP",
+        "lat": 34.71581,
+        "lon": -79.11681,
+        "dist_to_campus": 5.13
+      },
+      {
+        "prec_id": "39",
+        "name": "39   UNION - UNION ELEMENTARY SCHOOL LIBRARY",
+        "desc": "UNION",
+        "lat": 34.61084,
+        "lon": -79.24935,
+        "dist_to_campus": 5.53
+      }
+    ]
+  },
+  "uncsavote": {
+    "primary_precinct": "606",
+    "primary_name": "KONNOAK HILLS UNITED METHODIST CHURCH",
+    "primary_lat": 36.05443,
+    "primary_lon": -80.24719,
+    "dist_to_campus": 0.32,
+    "nearby_precincts": [
+      {
+        "prec_id": "606",
+        "name": "KONNOAK HILLS UNITED METHODIST CHURCH",
+        "desc": "606",
+        "lat": 36.05443,
+        "lon": -80.24719,
+        "dist_to_campus": 0.32
+      },
+      {
+        "prec_id": "605",
+        "name": "PARKLAND HIGH SCHOOL",
+        "desc": "605",
+        "lat": 36.04085,
+        "lon": -80.25813,
+        "dist_to_campus": 1.0
+      },
+      {
+        "prec_id": "604",
+        "name": "NORTH CAROLINA NATIONAL GUARD",
+        "desc": "604",
+        "lat": 36.07,
+        "lon": -80.26112,
+        "dist_to_campus": 1.15
+      },
+      {
+        "prec_id": "603",
+        "name": "DIGGS-LATHAM ELEMENTARY SCHOOL",
+        "desc": "603",
+        "lat": 36.07552,
+        "lon": -80.24935,
+        "dist_to_campus": 1.45
+      },
+      {
+        "prec_id": "503",
+        "name": "TRINITY MORAVIAN CHURCH",
+        "desc": "503",
+        "lat": 36.06647,
+        "lon": -80.23048,
+        "dist_to_campus": 1.49
+      }
+    ]
+  },
+  "uncwvote": {
+    "primary_precinct": "H04",
+    "primary_name": "COLLEGE PARK ELEMENTARY SCHOOL",
+    "primary_lat": 34.2289,
+    "primary_lon": -77.8427,
+    "dist_to_campus": 0.87,
+    "nearby_precincts": [
+      {
+        "prec_id": "H04",
+        "name": "COLLEGE PARK ELEMENTARY SCHOOL",
+        "desc": "H04",
+        "lat": 34.2289,
+        "lon": -77.8427,
+        "dist_to_campus": 0.87
+      },
+      {
+        "prec_id": "H02",
+        "name": "NORTHEAST REGIONAL LIBRARY",
+        "desc": "H02",
+        "lat": 34.23716,
+        "lon": -77.81074,
+        "dist_to_campus": 1.04
+      },
+      {
+        "prec_id": "H05",
+        "name": "BLAIR ELEMENTARY SCHOOL",
+        "desc": "H05",
+        "lat": 34.24751,
+        "lon": -77.84926,
+        "dist_to_campus": 1.57
+      },
+      {
+        "prec_id": "W33",
+        "name": "BRADLEY CREEK ELEMENTARY SCHOOL",
+        "desc": "W33",
+        "lat": 34.20225,
+        "lon": -77.8405,
+        "dist_to_campus": 2.23
+      },
+      {
+        "prec_id": "W34",
+        "name": "UNCW WARWICK CENTER",
+        "desc": "W34",
+        "lat": 34.22918,
+        "lon": -77.87015,
+        "dist_to_campus": 2.41
+      }
+    ]
+  },
+  "wcuvote": {
+    "primary_precinct": "CUL",
+    "primary_name": "HEALTH AND HUMAN SCIENCES (HHS)",
+    "primary_lat": 35.30066,
+    "primary_lon": -83.18867,
+    "dist_to_campus": 0.78,
+    "nearby_precincts": [
+      {
+        "prec_id": "CUL",
+        "name": "HEALTH AND HUMAN SCIENCES (HHS)",
+        "desc": "CULLOWHEE",
+        "lat": 35.30066,
+        "lon": -83.18867,
+        "dist_to_campus": 0.78
+      },
+      {
+        "prec_id": "WEB",
+        "name": "FAMILY RESOURCE CENTER",
+        "desc": "WEBSTER",
+        "lat": 35.32928,
+        "lon": -83.21853,
+        "dist_to_campus": 3.36
+      },
+      {
+        "prec_id": "RIV",
+        "name": "VWF BUILDING",
+        "desc": "RIVER",
+        "lat": 35.27211,
+        "lon": -83.11132,
+        "dist_to_campus": 4.18
+      },
+      {
+        "prec_id": "SAV",
+        "name": "SAVANNAH FIRE STATION",
+        "desc": "SAVANNAH",
+        "lat": 35.27219,
+        "lon": -83.27082,
+        "dist_to_campus": 5.19
+      },
+      {
+        "prec_id": "GCK",
+        "name": "SAVANNAH COMMUNITY BLDG",
+        "desc": "GREENS CREEK",
+        "lat": 35.32841,
+        "lon": -83.29096,
+        "dist_to_campus": 6.68
+      }
+    ]
+  },
+  "wssuvote": {
+    "primary_precinct": "405",
+    "primary_name": "SIMS RECREATION CENTER",
+    "primary_lat": 36.08296,
+    "primary_lon": -80.23034,
+    "dist_to_campus": 0.45,
+    "nearby_precincts": [
+      {
+        "prec_id": "405",
+        "name": "SIMS RECREATION CENTER",
+        "desc": "405",
+        "lat": 36.08296,
+        "lon": -80.23034,
+        "dist_to_campus": 0.45
+      },
+      {
+        "prec_id": "502",
+        "name": "FOREST PARK ELEMENTARY SCHOOL",
+        "desc": "502",
+        "lat": 36.07897,
+        "lon": -80.21474,
+        "dist_to_campus": 0.75
+      },
+      {
+        "prec_id": "404",
+        "name": "MALLOY-JORDAN EAST WINSTON HERITAGE CENTER",
+        "desc": "404",
+        "lat": 36.09909,
+        "lon": -80.23127,
+        "dist_to_campus": 0.94
+      },
+      {
+        "prec_id": "501",
+        "name": "ST ANDREWS UNITED METHODIST CHURCH",
+        "desc": "501",
+        "lat": 36.08269,
+        "lon": -80.20027,
+        "dist_to_campus": 1.36
+      },
+      {
+        "prec_id": "503",
+        "name": "TRINITY MORAVIAN CHURCH",
+        "desc": "503",
+        "lat": 36.06647,
+        "lon": -80.23048,
+        "dist_to_campus": 1.46
+      }
+    ]
+  },
+  "wfuvote": {
+    "primary_precinct": "801",
+    "primary_name": "POLO PARK RECREATION CENTER",
+    "primary_lat": 36.12477,
+    "primary_lon": -80.29935,
+    "dist_to_campus": 0.54,
+    "nearby_precincts": [
+      {
+        "prec_id": "801",
+        "name": "POLO PARK RECREATION CENTER",
+        "desc": "801",
+        "lat": 36.12477,
+        "lon": -80.29935,
+        "dist_to_campus": 0.54
+      },
+      {
+        "prec_id": "802",
+        "name": "REYNOLDA CHURCH",
+        "desc": "802",
+        "lat": 36.11865,
+        "lon": -80.28802,
+        "dist_to_campus": 0.84
+      },
+      {
+        "prec_id": "905",
+        "name": "BETHABARA MORAVIAN CHURCH",
+        "desc": "905",
+        "lat": 36.14453,
+        "lon": -80.28934,
+        "dist_to_campus": 1.0
+      },
+      {
+        "prec_id": "903",
+        "name": "SALEM CHAPEL",
+        "desc": "903",
+        "lat": 36.12337,
+        "lon": -80.27079,
+        "dist_to_campus": 1.3
+      },
+      {
+        "prec_id": "907",
+        "name": "ST ANNE'S EPISCOPAL CHURCH",
+        "desc": "907",
+        "lat": 36.14372,
+        "lon": -80.31059,
+        "dist_to_campus": 1.38
+      }
+    ]
+  },
+  "elonvote": {
+    "primary_precinct": "127",
+    "primary_name": "ELMIRA COMMUNITY CENTER",
+    "primary_lat": 36.11939,
+    "primary_lon": -79.44828,
+    "dist_to_campus": 0.92,
+    "nearby_precincts": [
+      {
+        "prec_id": "127",
+        "name": "ELMIRA COMMUNITY CENTER",
+        "desc": "BURLINGTON 7",
+        "lat": 36.11939,
+        "lon": -79.44828,
+        "dist_to_campus": 0.92
+      },
+      {
+        "prec_id": "12W",
+        "name": "FIRST PRESBYTERIAN CHURCH",
+        "desc": "WEST BURLINGTON",
+        "lat": 36.09401,
+        "lon": -79.44616,
+        "dist_to_campus": 0.92
+      },
+      {
+        "prec_id": "124",
+        "name": "HILLCREST ELEMENTARY SCHOOL",
+        "desc": "BURLINGTON 4",
+        "lat": 36.10402,
+        "lon": -79.46431,
+        "dist_to_campus": 1.23
+      },
+      {
+        "prec_id": "12N",
+        "name": "MAYCO BIGELO CENTER",
+        "desc": "NORTH BURLINGTON",
+        "lat": 36.10956,
+        "lon": -79.41785,
+        "dist_to_campus": 1.39
+      },
+      {
+        "prec_id": "128",
+        "name": "KERNODLE SENIOR ACTIVITIES CENTER",
+        "desc": "BURLINGTON 8",
+        "lat": 36.08234,
+        "lon": -79.44736,
+        "dist_to_campus": 1.72
+      }
+    ]
+  },
+  "davidsonvote": {
+    "primary_precinct": "206",
+    "primary_name": "DAVIDSON TOWN HALL",
+    "primary_lat": 35.49149,
+    "primary_lon": -80.8442,
+    "dist_to_campus": 1.06,
+    "nearby_precincts": [
+      {
+        "prec_id": "206",
+        "name": "DAVIDSON TOWN HALL",
+        "desc": "PCT 206",
+        "lat": 35.49149,
+        "lon": -80.8442,
+        "dist_to_campus": 1.06
+      },
+      {
+        "prec_id": "202",
+        "name": "CORNELIUS TOWN HALL",
+        "desc": "PCT 202",
+        "lat": 35.45881,
+        "lon": -80.84767,
+        "dist_to_campus": 1.72
+      },
+      {
+        "prec_id": "240",
+        "name": "COMMUNITY IN CHRIST LUTHERAN CHURCH",
+        "desc": "PCT 240",
+        "lat": 35.457,
+        "lon": -80.89231,
+        "dist_to_campus": 2.55
+      },
+      {
+        "prec_id": "208",
+        "name": "BETHEL PRESBYTERIAN CHURCH",
+        "desc": "PCT 208",
+        "lat": 35.49472,
+        "lon": -80.90799,
+        "dist_to_campus": 2.9
+      },
+      {
+        "prec_id": "133",
+        "name": "HUNTERSVILLE UNITED METHODIST CHURCH",
+        "desc": "PCT 133",
+        "lat": 35.43843,
+        "lon": -80.84622,
+        "dist_to_campus": 3.09
+      }
+    ]
+  },
+  "campbellvote": {
+    "primary_precinct": "PR32",
+    "primary_name": "BUIES CREEK FIRE DEPARTMENT",
+    "primary_lat": 35.41243,
+    "primary_lon": -78.76498,
+    "dist_to_campus": 2.68,
+    "nearby_precincts": [
+      {
+        "prec_id": "PR32",
+        "name": "BUIES CREEK FIRE DEPARTMENT",
+        "desc": "CENTRAL HARNETT NEILLS CREEK",
+        "lat": 35.41243,
+        "lon": -78.76498,
+        "dist_to_campus": 2.68
+      },
+      {
+        "prec_id": "PR39",
+        "name": "LILLINGTON COMMUNITY BUILDING",
+        "desc": "CENTRAL HARNETT LILLINGTON",
+        "lat": 35.37116,
+        "lon": -78.80492,
+        "dist_to_campus": 3.42
+      },
+      {
+        "prec_id": "PR08",
+        "name": "ANGIER ELEMENTARY SCHOOL",
+        "desc": "BLACK RIVER",
+        "lat": 35.49792,
+        "lon": -78.74238,
+        "dist_to_campus": 6.62
+      },
+      {
+        "prec_id": "PR28",
+        "name": "NORTHWEST HARNETT FIRE DEPARTMENT",
+        "desc": "NORTHWEST HARNETT",
+        "lat": 35.50144,
+        "lon": -78.87818,
+        "dist_to_campus": 6.74
+      },
+      {
+        "prec_id": "PR23",
+        "name": "BOONE TRAIL ELEMENTARY SCHOOL",
+        "desc": "BOONE TRAIL",
+        "lat": 35.42297,
+        "lon": -78.9482,
+        "dist_to_campus": 7.69
+      }
+    ]
+  },
+  "highpointvote": {
+    "primary_precinct": "H20A",
+    "primary_name": "OAKVIEW BAPTIST CHURCH",
+    "primary_lat": 36.0002,
+    "primary_lon": -80.00554,
+    "dist_to_campus": 0.61,
+    "nearby_precincts": [
+      {
+        "prec_id": "H20A",
+        "name": "OAKVIEW BAPTIST CHURCH",
+        "desc": "H20A",
+        "lat": 36.0002,
+        "lon": -80.00554,
+        "dist_to_campus": 0.61
+      },
+      {
+        "prec_id": "H17",
+        "name": "CONRAD MEMORIAL BAPTIST CHURCH",
+        "desc": "H17",
+        "lat": 35.98177,
+        "lon": -80.00857,
+        "dist_to_campus": 0.67
+      },
+      {
+        "prec_id": "H18",
+        "name": "T WINGATE ANDREWS HIGH SCHOOL",
+        "desc": "H18",
+        "lat": 35.98981,
+        "lon": -79.99168,
+        "dist_to_campus": 0.88
+      },
+      {
+        "prec_id": "H22",
+        "name": "HIGH POINT PARKS & REC ADMIN OFFICE",
+        "desc": "H22",
+        "lat": 35.99639,
+        "lon": -80.02177,
+        "dist_to_campus": 0.88
+      },
+      {
+        "prec_id": "H21",
+        "name": "OAKVIEW RECREATION CENTER",
+        "desc": "H21",
+        "lat": 36.00094,
+        "lon": -80.01825,
+        "dist_to_campus": 0.9
+      }
+    ]
+  },
+  "meredithvote": {
+    "primary_precinct": "01-25",
+    "primary_name": "WALNUT TERRACE",
+    "primary_lat": 35.76606,
+    "primary_lon": -78.64124,
+    "dist_to_campus": 0.64,
+    "nearby_precincts": [
+      {
+        "prec_id": "01-25",
+        "name": "WALNUT TERRACE",
+        "desc": "PRECINCT 01-25",
+        "lat": 35.76606,
+        "lon": -78.64124,
+        "dist_to_campus": 0.64
+      },
+      {
+        "prec_id": "01-26",
+        "name": "JOHN CHAVIS MEMORIAL PARK COMMUNITY CENTER",
+        "desc": "PRECINCT 01-26",
+        "lat": 35.76477,
+        "lon": -78.61976,
+        "dist_to_campus": 0.7
+      },
+      {
+        "prec_id": "01-20",
+        "name": "ROBERTS PARK COMMUNITY CENTER",
+        "desc": "PRECINCT 01-20",
+        "lat": 35.76891,
+        "lon": -78.61455,
+        "dist_to_campus": 0.9
+      },
+      {
+        "prec_id": "01-35",
+        "name": "CARNAGE MIDDLE SCHOOL",
+        "desc": "PRECINCT 01-35",
+        "lat": 35.75468,
+        "lon": -78.63158,
+        "dist_to_campus": 1.04
+      },
+      {
+        "prec_id": "01-27",
+        "name": "PROJECT ENLIGHTENMENT",
+        "desc": "PRECINCT 01-27",
+        "lat": 35.76688,
+        "lon": -78.65313,
+        "dist_to_campus": 1.27
+      }
+    ]
+  },
+  "peacevote": {
+    "primary_precinct": "01-25",
+    "primary_name": "WALNUT TERRACE",
+    "primary_lat": 35.76606,
+    "primary_lon": -78.64124,
+    "dist_to_campus": 0.64,
+    "nearby_precincts": [
+      {
+        "prec_id": "01-25",
+        "name": "WALNUT TERRACE",
+        "desc": "PRECINCT 01-25",
+        "lat": 35.76606,
+        "lon": -78.64124,
+        "dist_to_campus": 0.64
+      },
+      {
+        "prec_id": "01-26",
+        "name": "JOHN CHAVIS MEMORIAL PARK COMMUNITY CENTER",
+        "desc": "PRECINCT 01-26",
+        "lat": 35.76477,
+        "lon": -78.61976,
+        "dist_to_campus": 0.7
+      },
+      {
+        "prec_id": "01-20",
+        "name": "ROBERTS PARK COMMUNITY CENTER",
+        "desc": "PRECINCT 01-20",
+        "lat": 35.76891,
+        "lon": -78.61455,
+        "dist_to_campus": 0.9
+      },
+      {
+        "prec_id": "01-35",
+        "name": "CARNAGE MIDDLE SCHOOL",
+        "desc": "PRECINCT 01-35",
+        "lat": 35.75468,
+        "lon": -78.63158,
+        "dist_to_campus": 1.04
+      },
+      {
+        "prec_id": "01-27",
+        "name": "PROJECT ENLIGHTENMENT",
+        "desc": "PRECINCT 01-27",
+        "lat": 35.76688,
+        "lon": -78.65313,
+        "dist_to_campus": 1.27
+      }
+    ]
+  },
+  "shawvote": {
+    "primary_precinct": "01-25",
+    "primary_name": "WALNUT TERRACE",
+    "primary_lat": 35.76606,
+    "primary_lon": -78.64124,
+    "dist_to_campus": 0.64,
+    "nearby_precincts": [
+      {
+        "prec_id": "01-25",
+        "name": "WALNUT TERRACE",
+        "desc": "PRECINCT 01-25",
+        "lat": 35.76606,
+        "lon": -78.64124,
+        "dist_to_campus": 0.64
+      },
+      {
+        "prec_id": "01-26",
+        "name": "JOHN CHAVIS MEMORIAL PARK COMMUNITY CENTER",
+        "desc": "PRECINCT 01-26",
+        "lat": 35.76477,
+        "lon": -78.61976,
+        "dist_to_campus": 0.7
+      },
+      {
+        "prec_id": "01-20",
+        "name": "ROBERTS PARK COMMUNITY CENTER",
+        "desc": "PRECINCT 01-20",
+        "lat": 35.76891,
+        "lon": -78.61455,
+        "dist_to_campus": 0.9
+      },
+      {
+        "prec_id": "01-35",
+        "name": "CARNAGE MIDDLE SCHOOL",
+        "desc": "PRECINCT 01-35",
+        "lat": 35.75468,
+        "lon": -78.63158,
+        "dist_to_campus": 1.04
+      },
+      {
+        "prec_id": "01-27",
+        "name": "PROJECT ENLIGHTENMENT",
+        "desc": "PRECINCT 01-27",
+        "lat": 35.76688,
+        "lon": -78.65313,
+        "dist_to_campus": 1.27
+      }
+    ]
+  },
+  "staugustinesvote": {
+    "primary_precinct": "01-25",
+    "primary_name": "WALNUT TERRACE",
+    "primary_lat": 35.76606,
+    "primary_lon": -78.64124,
+    "dist_to_campus": 0.64,
+    "nearby_precincts": [
+      {
+        "prec_id": "01-25",
+        "name": "WALNUT TERRACE",
+        "desc": "PRECINCT 01-25",
+        "lat": 35.76606,
+        "lon": -78.64124,
+        "dist_to_campus": 0.64
+      },
+      {
+        "prec_id": "01-26",
+        "name": "JOHN CHAVIS MEMORIAL PARK COMMUNITY CENTER",
+        "desc": "PRECINCT 01-26",
+        "lat": 35.76477,
+        "lon": -78.61976,
+        "dist_to_campus": 0.7
+      },
+      {
+        "prec_id": "01-20",
+        "name": "ROBERTS PARK COMMUNITY CENTER",
+        "desc": "PRECINCT 01-20",
+        "lat": 35.76891,
+        "lon": -78.61455,
+        "dist_to_campus": 0.9
+      },
+      {
+        "prec_id": "01-35",
+        "name": "CARNAGE MIDDLE SCHOOL",
+        "desc": "PRECINCT 01-35",
+        "lat": 35.75468,
+        "lon": -78.63158,
+        "dist_to_campus": 1.04
+      },
+      {
+        "prec_id": "01-27",
+        "name": "PROJECT ENLIGHTENMENT",
+        "desc": "PRECINCT 01-27",
+        "lat": 35.76688,
+        "lon": -78.65313,
+        "dist_to_campus": 1.27
+      }
+    ]
+  },
+  "queensvote": {
+    "primary_precinct": "050",
+    "primary_name": "TYVOLA SENIOR CENTER",
+    "primary_lat": 35.15939,
+    "primary_lon": -80.86347,
+    "dist_to_campus": 0.34,
+    "nearby_precincts": [
+      {
+        "prec_id": "050",
+        "name": "TYVOLA SENIOR CENTER",
+        "desc": "PCT 050",
+        "lat": 35.15939,
+        "lon": -80.86347,
+        "dist_to_campus": 0.34
+      },
+      {
+        "prec_id": "037",
+        "name": "PINEWOOD ELEMENTARY SCHOOL",
+        "desc": "PCT 037",
+        "lat": 35.17037,
+        "lon": -80.86345,
+        "dist_to_campus": 0.76
+      },
+      {
+        "prec_id": "059",
+        "name": "MONTCLAIRE ELEMENTARY SCHOOL",
+        "desc": "PCT 059",
+        "lat": 35.15,
+        "lon": -80.867,
+        "dist_to_campus": 0.9
+      },
+      {
+        "prec_id": "049",
+        "name": "ST LUKE'S LUTHERAN CHURCH",
+        "desc": "PCT 049",
+        "lat": 35.17037,
+        "lon": -80.84613,
+        "dist_to_campus": 0.94
+      },
+      {
+        "prec_id": "057",
+        "name": "SHARON PRESBYTERIAN CHURCH",
+        "desc": "PCT 057",
+        "lat": 35.14725,
+        "lon": -80.84293,
+        "dist_to_campus": 1.24
+      }
+    ]
+  },
+  "jcsuvote": {
+    "primary_precinct": "055",
+    "primary_name": "LINCOLN HEIGHTS MONTESSORI SCHOOL",
+    "primary_lat": 35.26479,
+    "primary_lon": -80.84854,
+    "dist_to_campus": 0.34,
+    "nearby_precincts": [
+      {
+        "prec_id": "055",
+        "name": "LINCOLN HEIGHTS MONTESSORI SCHOOL",
+        "desc": "PCT 055",
+        "lat": 35.26479,
+        "lon": -80.84854,
+        "dist_to_campus": 0.34
+      },
+      {
+        "prec_id": "025",
+        "name": "WEST CHARLOTTE RECREATION CENTER",
+        "desc": "PCT 025",
+        "lat": 35.26035,
+        "lon": -80.86169,
+        "dist_to_campus": 0.69
+      },
+      {
+        "prec_id": "016",
+        "name": "EAST STONEWALL AME ZION CHURCH",
+        "desc": "PCT 016",
+        "lat": 35.28131,
+        "lon": -80.86252,
+        "dist_to_campus": 1.07
+      },
+      {
+        "prec_id": "056",
+        "name": "DRUID HILLS ACADEMY",
+        "desc": "PCT 056",
+        "lat": 35.26223,
+        "lon": -80.82963,
+        "dist_to_campus": 1.4
+      },
+      {
+        "prec_id": "054",
+        "name": "OAKLAWN LANGUAGE ACADEMY",
+        "desc": "PCT 054",
+        "lat": 35.24817,
+        "lon": -80.84219,
+        "dist_to_campus": 1.49
+      }
+    ]
+  },
+  "bartonvote": {
+    "primary_precinct": "PRWB",
+    "primary_name": "LADDIE T BELL COMMUNITY CENTER",
+    "primary_lat": 35.71642,
+    "primary_lon": -77.91793,
+    "dist_to_campus": 0.86,
+    "nearby_precincts": [
+      {
+        "prec_id": "PRWB",
+        "name": "LADDIE T BELL COMMUNITY CENTER",
+        "desc": "WILSON B",
+        "lat": 35.71642,
+        "lon": -77.91793,
+        "dist_to_campus": 0.86
+      },
+      {
+        "prec_id": "PRWI",
+        "name": "WILSON COUNTY AGRICULTURE CENTER",
+        "desc": "WILSON I",
+        "lat": 35.7012,
+        "lon": -77.94222,
+        "dist_to_campus": 0.9
+      },
+      {
+        "prec_id": "PRWC",
+        "name": "VANDAHLIA H REID COMMUNITY CENTER",
+        "desc": "WILSON C",
+        "lat": 35.72773,
+        "lon": -77.9277,
+        "dist_to_campus": 1.45
+      },
+      {
+        "prec_id": "PRWQ",
+        "name": "AMERICAN LEGION BLDG",
+        "desc": "WILSON Q",
+        "lat": 35.71408,
+        "lon": -77.89941,
+        "dist_to_campus": 1.66
+      },
+      {
+        "prec_id": "PRWA",
+        "name": "WILSON COUNTY PUBLIC LIBRARY",
+        "desc": "WILSON A",
+        "lat": 35.73101,
+        "lon": -77.91601,
+        "dist_to_campus": 1.8
+      }
+    ]
+  },
+  "belmontabbeyvote": {
+    "primary_precinct": "1A",
+    "primary_name": "SENIOR ACTIVITY CENTER",
+    "primary_lat": 35.25193,
+    "primary_lon": -81.18228,
+    "dist_to_campus": 0.82,
+    "nearby_precincts": [
+      {
+        "prec_id": "1A",
+        "name": "SENIOR ACTIVITY CENTER",
+        "desc": "YORK CHESTER",
+        "lat": 35.25193,
+        "lon": -81.18228,
+        "dist_to_campus": 0.82
+      },
+      {
+        "prec_id": "16A",
+        "name": "BRADLEY COMMUNITY CENTER",
+        "desc": "HIGHLAND HILL",
+        "lat": 35.28077,
+        "lon": -81.17798,
+        "dist_to_campus": 1.36
+      },
+      {
+        "prec_id": "2A",
+        "name": "PHILLIPS COMMUNITY CENTER",
+        "desc": "VICTORY RIDGE",
+        "lat": 35.24511,
+        "lon": -81.19818,
+        "dist_to_campus": 1.36
+      },
+      {
+        "prec_id": "28A",
+        "name": "PARTNERS HEALTHCARE MANAGEMENT",
+        "desc": "GARRISON",
+        "lat": 35.25447,
+        "lon": -81.15887,
+        "dist_to_campus": 1.74
+      },
+      {
+        "prec_id": "15A",
+        "name": "T JEFFERS CENTER",
+        "desc": "MYRTLE",
+        "lat": 35.28115,
+        "lon": -81.22272,
+        "dist_to_campus": 2.34
+      }
+    ]
+  },
+  "bennettvote": {
+    "primary_precinct": "H11",
+    "primary_name": "MONTLIEU ACADEMY OF TECHNOLOGY",
+    "primary_lat": 35.97428,
+    "primary_lon": -79.99046,
+    "dist_to_campus": 0.56,
+    "nearby_precincts": [
+      {
+        "prec_id": "H11",
+        "name": "MONTLIEU ACADEMY OF TECHNOLOGY",
+        "desc": "H11",
+        "lat": 35.97428,
+        "lon": -79.99046,
+        "dist_to_campus": 0.56
+      },
+      {
+        "prec_id": "H09",
+        "name": "MOREHEAD RECREATION CENTER",
+        "desc": "H09",
+        "lat": 35.96482,
+        "lon": -79.99423,
+        "dist_to_campus": 0.63
+      },
+      {
+        "prec_id": "H07",
+        "name": "MT CALVARY HOLY CH",
+        "desc": "H07",
+        "lat": 35.95392,
+        "lon": -79.9838,
+        "dist_to_campus": 0.99
+      },
+      {
+        "prec_id": "H10",
+        "name": "TEMPLE MEMORIAL BAPTIST CHURCH",
+        "desc": "H10",
+        "lat": 35.97716,
+        "lon": -79.96729,
+        "dist_to_campus": 1.11
+      },
+      {
+        "prec_id": "H05",
+        "name": "WILLIAMS MEMORIAL CME",
+        "desc": "H05",
+        "lat": 35.96237,
+        "lon": -79.96138,
+        "dist_to_campus": 1.32
+      }
+    ]
+  },
+  "brevardvote": {
+    "primary_precinct": "B4",
+    "primary_name": "PORTER CENTER",
+    "primary_lat": 35.23182,
+    "primary_lon": -82.71883,
+    "dist_to_campus": 0.9,
+    "nearby_precincts": [
+      {
+        "prec_id": "B4",
+        "name": "PORTER CENTER",
+        "desc": "BREVARD #4",
+        "lat": 35.23182,
+        "lon": -82.71883,
+        "dist_to_campus": 0.9
+      },
+      {
+        "prec_id": "B1",
+        "name": "ELECTION CENTER",
+        "desc": "BREVARD #1",
+        "lat": 35.21764,
+        "lon": -82.73794,
+        "dist_to_campus": 0.96
+      },
+      {
+        "prec_id": "B2",
+        "name": "MARY C JENKINS COMMUNITY CENTER",
+        "desc": "BREVARD #2",
+        "lat": 35.23296,
+        "lon": -82.75574,
+        "dist_to_campus": 1.18
+      },
+      {
+        "prec_id": "B3",
+        "name": "TRANSYLVANIA COUNTY RESCUE SQUAD-BREVARD UNIT",
+        "desc": "BREVARD #3",
+        "lat": 35.25441,
+        "lon": -82.75062,
+        "dist_to_campus": 1.82
+      },
+      {
+        "prec_id": "WC",
+        "name": "WILLIAMSON CREEK COMMUNITY CENTER",
+        "desc": "WILLIAMSON CREEK",
+        "lat": 35.22245,
+        "lon": -82.68854,
+        "dist_to_campus": 2.69
+      }
+    ]
+  },
+  "cabarrusvote": {
+    "primary_precinct": "04-08",
+    "primary_name": "04-08  NORTHWEST CABARRUS HIGH SCHOOL",
+    "primary_lat": 35.43834,
+    "primary_lon": -80.66914,
+    "dist_to_campus": 1.45,
+    "nearby_precincts": [
+      {
+        "prec_id": "04-08",
+        "name": "04-08  NORTHWEST CABARRUS HIGH SCHOOL",
+        "desc": "04-08",
+        "lat": 35.43834,
+        "lon": -80.66914,
+        "dist_to_campus": 1.45
+      },
+      {
+        "prec_id": "02-10",
+        "name": "02-10  WEDDINGTON HILLS ELEMENTARY SCH",
+        "desc": "WEDDINGTON HILLS",
+        "lat": 35.39826,
+        "lon": -80.65884,
+        "dist_to_campus": 1.84
+      },
+      {
+        "prec_id": "02-08",
+        "name": "02-08  ODELL PRIMARY SCHOOL",
+        "desc": "02-08",
+        "lat": 35.42217,
+        "lon": -80.7162,
+        "dist_to_campus": 2.09
+      },
+      {
+        "prec_id": "02-06",
+        "name": "02-06  WINECOFF ELEMENTARY SCHOOL",
+        "desc": "02-06",
+        "lat": 35.43248,
+        "lon": -80.63892,
+        "dist_to_campus": 2.45
+      },
+      {
+        "prec_id": "02-02",
+        "name": "02-02  FURR ELEMENTARY SCHOOL",
+        "desc": "02-02",
+        "lat": 35.38091,
+        "lon": -80.68174,
+        "dist_to_campus": 2.64
+      }
+    ]
+  },
+  "catawbavote": {
+    "primary_precinct": "41",
+    "primary_name": "ISENBERG ELEMENTARY SCHOOL",
+    "primary_lat": 35.69485,
+    "primary_lon": -80.50573,
+    "dist_to_campus": 0.48,
+    "nearby_precincts": [
+      {
+        "prec_id": "41",
+        "name": "ISENBERG ELEMENTARY SCHOOL",
+        "desc": "MILFORD HILLS CITY",
+        "lat": 35.69485,
+        "lon": -80.50573,
+        "dist_to_campus": 0.48
+      },
+      {
+        "prec_id": "42",
+        "name": "HALL GYM",
+        "desc": "WEST WARD #3",
+        "lat": 35.67668,
+        "lon": -80.49244,
+        "dist_to_campus": 1.61
+      },
+      {
+        "prec_id": "39",
+        "name": "OVERTON ELEMENTARY SCHOOL",
+        "desc": "WEST INNES",
+        "lat": 35.69282,
+        "lon": -80.4813,
+        "dist_to_campus": 1.81
+      },
+      {
+        "prec_id": "35",
+        "name": "ROWAN PUBLIC LIBRARY - MAIN BRANCH - STANBACK ROOM",
+        "desc": "WEST WARD #1",
+        "lat": 35.66621,
+        "lon": -80.48937,
+        "dist_to_campus": 2.26
+      },
+      {
+        "prec_id": "21",
+        "name": "SALEM LUTHERAN CHURCH - FELLOWSHIP BUILDING",
+        "desc": "NORTH LOCKE",
+        "lat": 35.68307,
+        "lon": -80.55658,
+        "dist_to_campus": 2.5
+      }
+    ]
+  },
+  "chowanvote": {
+    "primary_precinct": "A2",
+    "primary_name": "AHOSKIE FIRE DEPARTMENT",
+    "primary_lat": 36.2671,
+    "primary_lon": -76.97678,
+    "dist_to_campus": 0.8,
+    "nearby_precincts": [
+      {
+        "prec_id": "A2",
+        "name": "AHOSKIE FIRE DEPARTMENT",
+        "desc": "AHOSKIE 2",
+        "lat": 36.2671,
+        "lon": -76.97678,
+        "dist_to_campus": 0.8
+      },
+      {
+        "prec_id": "A1",
+        "name": "HERTFORD COUNTY HIGH SCHOOL GYM",
+        "desc": "AHOSKIE 1",
+        "lat": 36.305,
+        "lon": -76.9942,
+        "dist_to_campus": 2.0
+      },
+      {
+        "prec_id": "A3",
+        "name": "R L VANN SCHOOL",
+        "desc": "AHOSKIE 3",
+        "lat": 36.30309,
+        "lon": -76.9331,
+        "dist_to_campus": 3.16
+      },
+      {
+        "prec_id": "UN",
+        "name": "ROANOKE CHOWAN COMMUNITY COLLEGE",
+        "desc": "UNION",
+        "lat": 36.34193,
+        "lon": -77.02323,
+        "dist_to_campus": 5.0
+      },
+      {
+        "prec_id": "WN",
+        "name": "COOPERATIVE EXTENSION BUILDING",
+        "desc": "WINTON",
+        "lat": 36.38399,
+        "lon": -76.95637,
+        "dist_to_campus": 7.43
+      }
+    ]
+  },
+  "gardnerwebbvote": {
+    "primary_precinct": "S C",
+    "primary_name": "SHELBY CITY PARK",
+    "primary_lat": 35.29268,
+    "primary_lon": -81.52817,
+    "dist_to_campus": 1.58,
+    "nearby_precincts": [
+      {
+        "prec_id": "S C",
+        "name": "SHELBY CITY PARK",
+        "desc": "SHELBY CENTRAL",
+        "lat": 35.29268,
+        "lon": -81.52817,
+        "dist_to_campus": 1.58
+      },
+      {
+        "prec_id": "S S",
+        "name": "HOLLY OAK PARK",
+        "desc": "SHELBY SOUTH",
+        "lat": 35.26494,
+        "lon": -81.5251,
+        "dist_to_campus": 2.58
+      },
+      {
+        "prec_id": "S N",
+        "name": "NEAL SENIOR CENTER",
+        "desc": "SHELBY NORTH",
+        "lat": 35.33499,
+        "lon": -81.54338,
+        "dist_to_campus": 3.03
+      },
+      {
+        "prec_id": "S E",
+        "name": "WALLS MEMORIAL BAPTIST CHURCH",
+        "desc": "SHELBY EAST",
+        "lat": 35.31447,
+        "lon": -81.4813,
+        "dist_to_campus": 4.49
+      },
+      {
+        "prec_id": "SHANGI",
+        "name": "CHRIST COVENANT CHURCH",
+        "desc": "SHANGHAI",
+        "lat": 35.23382,
+        "lon": -81.59897,
+        "dist_to_campus": 4.71
+      }
+    ]
+  },
+  "greensborovote": {
+    "primary_precinct": "G04",
+    "primary_name": "GENESIS BAPTIST CHURCH",
+    "primary_lat": 36.08554,
+    "primary_lon": -79.74929,
+    "dist_to_campus": 0.61,
+    "nearby_precincts": [
+      {
+        "prec_id": "G04",
+        "name": "GENESIS BAPTIST CHURCH",
+        "desc": "G04",
+        "lat": 36.08554,
+        "lon": -79.74929,
+        "dist_to_campus": 0.61
+      },
+      {
+        "prec_id": "G72",
+        "name": "HAIRSTON MIDDLE SCHOOL",
+        "desc": "G72",
+        "lat": 36.07412,
+        "lon": -79.74096,
+        "dist_to_campus": 0.76
+      },
+      {
+        "prec_id": "G05",
+        "name": "PEELER RECREATION CENTER",
+        "desc": "G05",
+        "lat": 36.10128,
+        "lon": -79.74508,
+        "dist_to_campus": 1.19
+      },
+      {
+        "prec_id": "G03",
+        "name": "EAST WHITE OAK BAPTIST CHURCH",
+        "desc": "G03",
+        "lat": 36.09791,
+        "lon": -79.75772,
+        "dist_to_campus": 1.4
+      },
+      {
+        "prec_id": "G06",
+        "name": "BESSEMER ELEMENTARY SCHOOL",
+        "desc": "G06",
+        "lat": 36.10357,
+        "lon": -79.7285,
+        "dist_to_campus": 1.4
+      }
+    ]
+  },
+  "guilfordvote": {
+    "primary_precinct": "G41A",
+    "primary_name": "GUILFORD COLLEGE U METH CH",
+    "primary_lat": 36.1078,
+    "primary_lon": -79.90646,
+    "dist_to_campus": 0.34,
+    "nearby_precincts": [
+      {
+        "prec_id": "G41A",
+        "name": "GUILFORD COLLEGE U METH CH",
+        "desc": "G41A",
+        "lat": 36.1078,
+        "lon": -79.90646,
+        "dist_to_campus": 0.34
+      },
+      {
+        "prec_id": "G42A",
+        "name": "FAITH PRESBYTERIAN CHURCH",
+        "desc": "G42A",
+        "lat": 36.09433,
+        "lon": -79.91567,
+        "dist_to_campus": 0.73
+      },
+      {
+        "prec_id": "FR4",
+        "name": "GTCC CEASAR CONE II AVIATION BLDG",
+        "desc": "FR4",
+        "lat": 36.11057,
+        "lon": -79.92379,
+        "dist_to_campus": 0.91
+      },
+      {
+        "prec_id": "G42B",
+        "name": "FRIENDS HOMES AT GUILFORD",
+        "desc": "G42B",
+        "lat": 36.09365,
+        "lon": -79.89569,
+        "dist_to_campus": 1.06
+      },
+      {
+        "prec_id": "G41B",
+        "name": "JEFFERSON ELEMENTARY SCHOOL",
+        "desc": "G41B",
+        "lat": 36.11255,
+        "lon": -79.89014,
+        "dist_to_campus": 1.26
+      }
+    ]
+  },
+  "leesmcraevote": {
+    "primary_precinct": "15",
+    "primary_name": "AVERY COUNTY POOL COMPLEX",
+    "primary_lat": 36.0756,
+    "primary_lon": -81.94963,
+    "dist_to_campus": 1.5,
+    "nearby_precincts": [
+      {
+        "prec_id": "15",
+        "name": "AVERY COUNTY POOL COMPLEX",
+        "desc": "NEWLAND # 2",
+        "lat": 36.0756,
+        "lon": -81.94963,
+        "dist_to_campus": 1.5
+      },
+      {
+        "prec_id": "13",
+        "name": "AARON BAPTIST CHURCH",
+        "desc": "MONTEZUMA",
+        "lat": 36.09163,
+        "lon": -81.89931,
+        "dist_to_campus": 1.53
+      },
+      {
+        "prec_id": "14",
+        "name": "AVERY MORRISON LIBRARY",
+        "desc": "NEWLAND # 1",
+        "lat": 36.10722,
+        "lon": -81.94203,
+        "dist_to_campus": 1.99
+      },
+      {
+        "prec_id": "09",
+        "name": "CHESTNUT DALE BAPTIST CHURCH",
+        "desc": "HUGHES",
+        "lat": 36.05984,
+        "lon": -81.96705,
+        "dist_to_campus": 2.85
+      },
+      {
+        "prec_id": "11",
+        "name": "LINVILLE FIRE DEPT",
+        "desc": "LINVILLE",
+        "lat": 36.08577,
+        "lon": -81.85773,
+        "dist_to_campus": 3.72
+      }
+    ]
+  },
+  "lenoirrhynevote": {
+    "primary_precinct": "08",
+    "primary_name": "08   CONOVER EAST  -  CONOVER STATION",
+    "primary_lat": 35.70901,
+    "primary_lon": -81.20226,
+    "dist_to_campus": 1.06,
+    "nearby_precincts": [
+      {
+        "prec_id": "08",
+        "name": "08   CONOVER EAST  -  CONOVER STATION",
+        "desc": "CONOVER EAST",
+        "lat": 35.70901,
+        "lon": -81.20226,
+        "dist_to_campus": 1.06
+      },
+      {
+        "prec_id": "25",
+        "name": "25 NORTH NEWTON-ABERNETHY MEMORIAL METHODIST CHURCH",
+        "desc": "NORTH NEWTON",
+        "lat": 35.68422,
+        "lon": -81.22652,
+        "dist_to_campus": 1.29
+      },
+      {
+        "prec_id": "07",
+        "name": "07   CONOVER WEST  -  FAITH EVANGELICAL LUTHERAN CHURCH",
+        "desc": "CONOVER WEST",
+        "lat": 35.72367,
+        "lon": -81.22802,
+        "dist_to_campus": 1.6
+      },
+      {
+        "prec_id": "40",
+        "name": "40   WEST NEWTON  -  CATAWBA COUNTY LIBRARY",
+        "desc": "WEST NEWTON",
+        "lat": 35.66883,
+        "lon": -81.23878,
+        "dist_to_campus": 2.54
+      },
+      {
+        "prec_id": "10",
+        "name": "10   EAST NEWTON  -  NEWTON RECREATION CENTER",
+        "desc": "EAST NEWTON",
+        "lat": 35.66435,
+        "lon": -81.21749,
+        "dist_to_campus": 2.59
+      }
+    ]
+  },
+  "livingstonevote": {
+    "primary_precinct": "41",
+    "primary_name": "ISENBERG ELEMENTARY SCHOOL",
+    "primary_lat": 35.69485,
+    "primary_lon": -80.50573,
+    "dist_to_campus": 0.48,
+    "nearby_precincts": [
+      {
+        "prec_id": "41",
+        "name": "ISENBERG ELEMENTARY SCHOOL",
+        "desc": "MILFORD HILLS CITY",
+        "lat": 35.69485,
+        "lon": -80.50573,
+        "dist_to_campus": 0.48
+      },
+      {
+        "prec_id": "42",
+        "name": "HALL GYM",
+        "desc": "WEST WARD #3",
+        "lat": 35.67668,
+        "lon": -80.49244,
+        "dist_to_campus": 1.61
+      },
+      {
+        "prec_id": "39",
+        "name": "OVERTON ELEMENTARY SCHOOL",
+        "desc": "WEST INNES",
+        "lat": 35.69282,
+        "lon": -80.4813,
+        "dist_to_campus": 1.81
+      },
+      {
+        "prec_id": "35",
+        "name": "ROWAN PUBLIC LIBRARY - MAIN BRANCH - STANBACK ROOM",
+        "desc": "WEST WARD #1",
+        "lat": 35.66621,
+        "lon": -80.48937,
+        "dist_to_campus": 2.26
+      },
+      {
+        "prec_id": "21",
+        "name": "SALEM LUTHERAN CHURCH - FELLOWSHIP BUILDING",
+        "desc": "NORTH LOCKE",
+        "lat": 35.68307,
+        "lon": -80.55658,
+        "dist_to_campus": 2.5
+      }
+    ]
+  },
+  "louisburgvote": {
+    "primary_precinct": "01",
+    "primary_name": "LOUISBURG POLICE TRAINING CENTER",
+    "primary_lat": 36.09856,
+    "primary_lon": -78.29944,
+    "dist_to_campus": 0.54,
+    "nearby_precincts": [
+      {
+        "prec_id": "01",
+        "name": "LOUISBURG POLICE TRAINING CENTER",
+        "desc": "LOUISBURG CITY",
+        "lat": 36.09856,
+        "lon": -78.29944,
+        "dist_to_campus": 0.54
+      },
+      {
+        "prec_id": "02",
+        "name": "LOUISBURG ELEMENTARY SCHOOL GYM",
+        "desc": "WEST LOUISBURG COUNTRY",
+        "lat": 36.11563,
+        "lon": -78.31837,
+        "dist_to_campus": 2.05
+      },
+      {
+        "prec_id": "16",
+        "name": "TERRELL LANE MIDDLE SCHOOL GYM",
+        "desc": "EAST  LOUISBURG COUNTRY",
+        "lat": 36.11592,
+        "lon": -78.24042,
+        "dist_to_campus": 3.65
+      },
+      {
+        "prec_id": "15",
+        "name": "FRANKLINTON ELEMENTARY SCHOOL GYM",
+        "desc": "EAST FRANKLINTON",
+        "lat": 36.11539,
+        "lon": -78.39402,
+        "dist_to_campus": 5.62
+      },
+      {
+        "prec_id": "05",
+        "name": "BUNN MIDDLE SCHOOL GYM",
+        "desc": "EAST HARRIS",
+        "lat": 35.9946,
+        "lon": -78.29112,
+        "dist_to_campus": 6.66
+      }
+    ]
+  },
+  "marshillvote": {
+    "primary_precinct": "NORTH",
+    "primary_name": "MADISON EARLY COLLEGE HIGH SCHOOL",
+    "primary_lat": 35.81615,
+    "primary_lon": -82.66153,
+    "dist_to_campus": 0.8,
+    "nearby_precincts": [
+      {
+        "prec_id": "NORTH",
+        "name": "MADISON EARLY COLLEGE HIGH SCHOOL",
+        "desc": "NORTH MARSHALL",
+        "lat": 35.81615,
+        "lon": -82.66153,
+        "dist_to_campus": 0.8
+      },
+      {
+        "prec_id": "SOUTH",
+        "name": "MADISON A-B TECH TEMPORARY",
+        "desc": "SOUTH MARSHALL",
+        "lat": 35.78301,
+        "lon": -82.72025,
+        "dist_to_campus": 3.68
+      },
+      {
+        "prec_id": "MARS H",
+        "name": "MARS HILL ELEMENTARY SCHOOL",
+        "desc": "MARS HILL",
+        "lat": 35.81618,
+        "lon": -82.57753,
+        "dist_to_campus": 4.7
+      },
+      {
+        "prec_id": "GRAPEV",
+        "name": "CENTER COMMUNITY CENTER",
+        "desc": "GRAPEVINE",
+        "lat": 35.85692,
+        "lon": -82.6062,
+        "dist_to_campus": 4.71
+      },
+      {
+        "prec_id": "REVERE",
+        "name": "REVERE-RICE COVE COMMUNITY CENTER",
+        "desc": "REVERE-RICE COVE",
+        "lat": 35.90272,
+        "lon": -82.7079,
+        "dist_to_campus": 7.29
+      }
+    ]
+  },
+  "methodistvote": {
+    "primary_precinct": "G5B-1",
+    "primary_name": "JOHN D FULLER SR RECREATIONAL ATHLETIC COMPLEX",
+    "primary_lat": 35.04813,
+    "primary_lon": -78.99462,
+    "dist_to_campus": 0.75,
+    "nearby_precincts": [
+      {
+        "prec_id": "G5B-1",
+        "name": "JOHN D FULLER SR RECREATIONAL ATHLETIC COMPLEX",
+        "desc": "CROSS CREEK 28-1-G5",
+        "lat": 35.04813,
+        "lon": -78.99462,
+        "dist_to_campus": 0.75
+      },
+      {
+        "prec_id": "CC25",
+        "name": "CHURCH OF JESUS CHRIST - LATTER DAY SAINTS",
+        "desc": "CROSS CREEK 25",
+        "lat": 35.07313,
+        "lon": -79.00087,
+        "dist_to_campus": 1.06
+      },
+      {
+        "prec_id": "CC27",
+        "name": "CLIFFDALE RECREATION CENTER",
+        "desc": "CROSS CREEK 27",
+        "lat": 35.06868,
+        "lon": -79.00972,
+        "dist_to_campus": 1.13
+      },
+      {
+        "prec_id": "CC26",
+        "name": "MORGANTON ROAD ELEMENTARY SCHOOL",
+        "desc": "CROSS CREEK 26",
+        "lat": 35.0747,
+        "lon": -78.98502,
+        "dist_to_campus": 1.19
+      },
+      {
+        "prec_id": "G5B-2",
+        "name": "INSOUL FELLOWSHIP CHURCH",
+        "desc": "CROSS CREEK 28-2-G5",
+        "lat": 35.04745,
+        "lon": -79.01672,
+        "dist_to_campus": 1.54
+      }
+    ]
+  },
+  "macuvote": {
+    "primary_precinct": "SOUTH",
+    "primary_name": "KERMIT E WHITE CENTER",
+    "primary_lat": 36.27677,
+    "primary_lon": -76.21365,
+    "dist_to_campus": 0.62,
+    "nearby_precincts": [
+      {
+        "prec_id": "SOUTH",
+        "name": "KERMIT E WHITE CENTER",
+        "desc": "SOUTH ELIZABETH CITY",
+        "lat": 36.27677,
+        "lon": -76.21365,
+        "dist_to_campus": 0.62
+      },
+      {
+        "prec_id": "EAST",
+        "name": "RIVER ROAD MIDDLE SCHOOL",
+        "desc": "EAST ELIZABETH CITY",
+        "lat": 36.283,
+        "lon": -76.19381,
+        "dist_to_campus": 0.76
+      },
+      {
+        "prec_id": "WEST",
+        "name": "PASQUOTANK ELEMENTARY SCHOOL",
+        "desc": "WEST ELIZABETH CITY",
+        "lat": 36.28725,
+        "lon": -76.24857,
+        "dist_to_campus": 2.31
+      },
+      {
+        "prec_id": "NORTH",
+        "name": "KNOBBS CREEK RECREATION CENTER",
+        "desc": "NORTH ELIZABETH CITY",
+        "lat": 36.31907,
+        "lon": -76.22016,
+        "dist_to_campus": 2.52
+      },
+      {
+        "prec_id": "NIX",
+        "name": "WEEKSVILLE LIONS CLUB",
+        "desc": "NIXONTON",
+        "lat": 36.22962,
+        "lon": -76.17873,
+        "dist_to_campus": 4.09
+      }
+    ]
+  },
+  "montreatvote": {
+    "primary_precinct": "34.1",
+    "primary_name": "BLACK MOUNTAIN LIBRARY",
+    "primary_lat": 35.62049,
+    "primary_lon": -82.32691,
+    "dist_to_campus": 0.38,
+    "nearby_precincts": [
+      {
+        "prec_id": "34.1",
+        "name": "BLACK MOUNTAIN LIBRARY",
+        "desc": "34.1",
+        "lat": 35.62049,
+        "lon": -82.32691,
+        "dist_to_campus": 0.38
+      },
+      {
+        "prec_id": "33.2",
+        "name": "BLACK MOUNTAIN PRIMARY SCHOOL",
+        "desc": "33.2",
+        "lat": 35.60878,
+        "lon": -82.32273,
+        "dist_to_campus": 0.51
+      },
+      {
+        "prec_id": "35.1",
+        "name": "ST JAMES EPISCOPAL CHURCH",
+        "desc": "35.1",
+        "lat": 35.61895,
+        "lon": -82.33539,
+        "dist_to_campus": 0.73
+      },
+      {
+        "prec_id": "33.3",
+        "name": "BLACK MOUNTAIN ELEMENTARY SCHOOL",
+        "desc": "33.3",
+        "lat": 35.6285,
+        "lon": -82.31492,
+        "dist_to_campus": 0.96
+      },
+      {
+        "prec_id": "32.1",
+        "name": "OWEN MIDDLE SCHOOL",
+        "desc": "32.1",
+        "lat": 35.65614,
+        "lon": -82.36138,
+        "dist_to_campus": 3.51
+      }
+    ]
+  },
+  "ncwesleyanvote": {
+    "primary_precinct": "P08A",
+    "primary_name": "NASH COUNTY AGRICULTURE CENTER",
+    "primary_lat": 35.97257,
+    "primary_lon": -77.97466,
+    "dist_to_campus": 1.56,
+    "nearby_precincts": [
+      {
+        "prec_id": "P08A",
+        "name": "NASH COUNTY AGRICULTURE CENTER",
+        "desc": "NASHVILLE",
+        "lat": 35.97257,
+        "lon": -77.97466,
+        "dist_to_campus": 1.56
+      },
+      {
+        "prec_id": "P15A",
+        "name": "NASH CENTRAL HIGH SCHOOL (AUX GYM)",
+        "desc": "OAK LEVEL",
+        "lat": 35.93686,
+        "lon": -77.9009,
+        "dist_to_campus": 3.53
+      },
+      {
+        "prec_id": "P19A",
+        "name": "ENGLEWOOD BAPTIST CHURCH",
+        "desc": "ROCKY MOUNT WINSTEAD",
+        "lat": 35.96002,
+        "lon": -77.85679,
+        "dist_to_campus": 5.1
+      },
+      {
+        "prec_id": "P11A",
+        "name": "RED OAK VOLUNTEER FIRE DEPARTMENT",
+        "desc": "RED OAK",
+        "lat": 36.04029,
+        "lon": -77.90908,
+        "dist_to_campus": 5.17
+      },
+      {
+        "prec_id": "P05A",
+        "name": "COOPERS VOLUNTEER FIRE DEPARTMENT",
+        "desc": "COOPERS",
+        "lat": 35.89288,
+        "lon": -77.97837,
+        "dist_to_campus": 5.74
+      }
+    ]
+  },
+  "pfeiffervote": {
+    "primary_precinct": "0003",
+    "primary_name": "STANLY COUNTY SENIOR CENTER",
+    "primary_lat": 35.36564,
+    "primary_lon": -80.18893,
+    "dist_to_campus": 0.44,
+    "nearby_precincts": [
+      {
+        "prec_id": "0003",
+        "name": "STANLY COUNTY SENIOR CENTER",
+        "desc": "ALBEMARLE NUMBER 3",
+        "lat": 35.36564,
+        "lon": -80.18893,
+        "dist_to_campus": 0.44
+      },
+      {
+        "prec_id": "0011",
+        "name": "CENTERVIEW BAPTIST CHURCH FELLOWSHIP HALL",
+        "desc": "ALBEMARLE NUMBER 11",
+        "lat": 35.38837,
+        "lon": -80.19663,
+        "dist_to_campus": 1.52
+      },
+      {
+        "prec_id": "0108",
+        "name": "E E WADDELL CENTER",
+        "desc": "ALBEMARLE 8.1",
+        "lat": 35.34245,
+        "lon": -80.18422,
+        "dist_to_campus": 1.8
+      },
+      {
+        "prec_id": "0107",
+        "name": "ALBEMARLE MIDDLE SCHOOL",
+        "desc": "ALBEMARLE 7.1",
+        "lat": 35.35495,
+        "lon": -80.16438,
+        "dist_to_campus": 1.99
+      },
+      {
+        "prec_id": "0110",
+        "name": "STANLY COMMUNITY COLLEGE AUTOMOTIVE PROGRAMS BUILDING",
+        "desc": "ALBEMARLE 10.1",
+        "lat": 35.3385,
+        "lon": -80.22352,
+        "dist_to_campus": 2.44
+      }
+    ]
+  },
+  "salemvote": {
+    "primary_precinct": "606",
+    "primary_name": "KONNOAK HILLS UNITED METHODIST CHURCH",
+    "primary_lat": 36.05443,
+    "primary_lon": -80.24719,
+    "dist_to_campus": 0.32,
+    "nearby_precincts": [
+      {
+        "prec_id": "606",
+        "name": "KONNOAK HILLS UNITED METHODIST CHURCH",
+        "desc": "606",
+        "lat": 36.05443,
+        "lon": -80.24719,
+        "dist_to_campus": 0.32
+      },
+      {
+        "prec_id": "605",
+        "name": "PARKLAND HIGH SCHOOL",
+        "desc": "605",
+        "lat": 36.04085,
+        "lon": -80.25813,
+        "dist_to_campus": 1.0
+      },
+      {
+        "prec_id": "604",
+        "name": "NORTH CAROLINA NATIONAL GUARD",
+        "desc": "604",
+        "lat": 36.07,
+        "lon": -80.26112,
+        "dist_to_campus": 1.15
+      },
+      {
+        "prec_id": "603",
+        "name": "DIGGS-LATHAM ELEMENTARY SCHOOL",
+        "desc": "603",
+        "lat": 36.07552,
+        "lon": -80.24935,
+        "dist_to_campus": 1.45
+      },
+      {
+        "prec_id": "503",
+        "name": "TRINITY MORAVIAN CHURCH",
+        "desc": "503",
+        "lat": 36.06647,
+        "lon": -80.23048,
+        "dist_to_campus": 1.49
+      }
+    ]
+  },
+  "mountolivevote": {
+    "primary_precinct": "12",
+    "primary_name": "12 - ADAMSVILLE BAPTIST CHURCH",
+    "primary_lat": 35.39366,
+    "primary_lon": -77.9411,
+    "dist_to_campus": 0.83,
+    "nearby_precincts": [
+      {
+        "prec_id": "12",
+        "name": "12 - ADAMSVILLE BAPTIST CHURCH",
+        "desc": "12",
+        "lat": 35.39366,
+        "lon": -77.9411,
+        "dist_to_campus": 0.83
+      },
+      {
+        "prec_id": "11",
+        "name": "11- GREENLEAF CHRISTIAN CHURCH",
+        "desc": "11",
+        "lat": 35.40697,
+        "lon": -77.96434,
+        "dist_to_campus": 1.13
+      },
+      {
+        "prec_id": "06",
+        "name": "06 - CROSSWAY CHURCH",
+        "desc": "06",
+        "lat": 35.42525,
+        "lon": -77.92629,
+        "dist_to_campus": 1.7
+      },
+      {
+        "prec_id": "22",
+        "name": "22 - FAITH ALLIANCE CHURCH",
+        "desc": "22",
+        "lat": 35.37428,
+        "lon": -77.94568,
+        "dist_to_campus": 2.16
+      },
+      {
+        "prec_id": "29",
+        "name": "29 - WAYNE COUNTY PUBLIC LIBRARY",
+        "desc": "29",
+        "lat": 35.38632,
+        "lon": -77.97863,
+        "dist_to_campus": 2.34
+      }
+    ]
+  },
+  "warrenwilsonvote": {
+    "primary_precinct": "06.1",
+    "primary_name": "TRINITY PRESBYTERIAN CHURCH",
+    "primary_lat": 35.5825,
+    "primary_lon": -82.50768,
+    "dist_to_campus": 0.47,
+    "nearby_precincts": [
+      {
+        "prec_id": "06.1",
+        "name": "TRINITY PRESBYTERIAN CHURCH",
+        "desc": "06.1",
+        "lat": 35.5825,
+        "lon": -82.50768,
+        "dist_to_campus": 0.47
+      },
+      {
+        "prec_id": "25.1",
+        "name": "CHARLES C BELL SCHOOL",
+        "desc": "25.1",
+        "lat": 35.5901,
+        "lon": -82.49405,
+        "dist_to_campus": 0.54
+      },
+      {
+        "prec_id": "21.1",
+        "name": "HAW CREEK ELEMENTARY SCHOOL",
+        "desc": "21.1",
+        "lat": 35.60162,
+        "lon": -82.50829,
+        "dist_to_campus": 0.96
+      },
+      {
+        "prec_id": "07.1",
+        "name": "KENILWORTH PRESBYTERIAN CHURCH",
+        "desc": "07.1",
+        "lat": 35.57917,
+        "lon": -82.52862,
+        "dist_to_campus": 1.55
+      },
+      {
+        "prec_id": "09.1",
+        "name": "MURPHY-OAKLEY COMMUNITY CENTER",
+        "desc": "09.1",
+        "lat": 35.56922,
+        "lon": -82.51795,
+        "dist_to_campus": 1.55
+      }
+    ]
+  },
+  "wingatevote": {
+    "primary_precinct": "043",
+    "primary_name": "WINCHESTER COMMUNITY CENTER",
+    "primary_lat": 34.98601,
+    "primary_lon": -80.53927,
+    "dist_to_campus": 0.52,
+    "nearby_precincts": [
+      {
+        "prec_id": "043",
+        "name": "WINCHESTER COMMUNITY CENTER",
+        "desc": "043",
+        "lat": 34.98601,
+        "lon": -80.53927,
+        "dist_to_campus": 0.52
+      },
+      {
+        "prec_id": "010",
+        "name": "THE OLD ARMORY",
+        "desc": "010",
+        "lat": 34.98267,
+        "lon": -80.55816,
+        "dist_to_campus": 0.7
+      },
+      {
+        "prec_id": "002",
+        "name": "J RAY SHUTE CENTER",
+        "desc": "002",
+        "lat": 34.96757,
+        "lon": -80.55018,
+        "dist_to_campus": 0.95
+      },
+      {
+        "prec_id": "001",
+        "name": "IGLESIA DE DIOS (CHURCH OF GOD)",
+        "desc": "001",
+        "lat": 34.99924,
+        "lon": -80.55679,
+        "dist_to_campus": 1.41
+      },
+      {
+        "prec_id": "003",
+        "name": "ST LUKES LUTHERAN CHURCH",
+        "desc": "003",
+        "lat": 34.9667,
+        "lon": -80.52543,
+        "dist_to_campus": 1.52
+      }
+    ]
+  },
+  "alamanceccvote": {
+    "primary_precinct": "127",
+    "primary_name": "ELMIRA COMMUNITY CENTER",
+    "primary_lat": 36.11939,
+    "primary_lon": -79.44828,
+    "dist_to_campus": 0.92,
+    "nearby_precincts": [
+      {
+        "prec_id": "127",
+        "name": "ELMIRA COMMUNITY CENTER",
+        "desc": "BURLINGTON 7",
+        "lat": 36.11939,
+        "lon": -79.44828,
+        "dist_to_campus": 0.92
+      },
+      {
+        "prec_id": "12W",
+        "name": "FIRST PRESBYTERIAN CHURCH",
+        "desc": "WEST BURLINGTON",
+        "lat": 36.09401,
+        "lon": -79.44616,
+        "dist_to_campus": 0.92
+      },
+      {
+        "prec_id": "124",
+        "name": "HILLCREST ELEMENTARY SCHOOL",
+        "desc": "BURLINGTON 4",
+        "lat": 36.10402,
+        "lon": -79.46431,
+        "dist_to_campus": 1.23
+      },
+      {
+        "prec_id": "12N",
+        "name": "MAYCO BIGELO CENTER",
+        "desc": "NORTH BURLINGTON",
+        "lat": 36.10956,
+        "lon": -79.41785,
+        "dist_to_campus": 1.39
+      },
+      {
+        "prec_id": "128",
+        "name": "KERNODLE SENIOR ACTIVITIES CENTER",
+        "desc": "BURLINGTON 8",
+        "lat": 36.08234,
+        "lon": -79.44736,
+        "dist_to_campus": 1.72
+      }
+    ]
+  },
+  "abtechvote": {
+    "primary_precinct": "66.1",
+    "primary_name": "BEE TREE FIRE DEPARTMENT",
+    "primary_lat": 35.60161,
+    "primary_lon": -82.4275,
+    "dist_to_campus": 0.83,
+    "nearby_precincts": [
+      {
+        "prec_id": "66.1",
+        "name": "BEE TREE FIRE DEPARTMENT",
+        "desc": "66.1",
+        "lat": 35.60161,
+        "lon": -82.4275,
+        "dist_to_campus": 0.83
+      },
+      {
+        "prec_id": "64.1",
+        "name": "FIRST BAPTIST OF SWANNANOA",
+        "desc": "64.1",
+        "lat": 35.58009,
+        "lon": -82.42081,
+        "dist_to_campus": 2.22
+      },
+      {
+        "prec_id": "62.1",
+        "name": "GRASSY BRANCH BAPTIST",
+        "desc": "62.1",
+        "lat": 35.60804,
+        "lon": -82.46858,
+        "dist_to_campus": 2.71
+      },
+      {
+        "prec_id": "65.1",
+        "name": "W D WILLIAMS ELEMENTARY",
+        "desc": "65.1",
+        "lat": 35.65008,
+        "lon": -82.40319,
+        "dist_to_campus": 2.8
+      },
+      {
+        "prec_id": "61.1",
+        "name": "RICEVILLE COMMUNITY CENTER",
+        "desc": "61.1",
+        "lat": 35.63734,
+        "lon": -82.46585,
+        "dist_to_campus": 3.08
+      }
+    ]
+  },
+  "beaufortccvote": {
+    "primary_precinct": "WASH1",
+    "primary_name": "EAST HAVEN APARTMENTS COMM RM",
+    "primary_lat": 35.53932,
+    "primary_lon": -77.0453,
+    "dist_to_campus": 0.87,
+    "nearby_precincts": [
+      {
+        "prec_id": "WASH1",
+        "name": "EAST HAVEN APARTMENTS COMM RM",
+        "desc": "WASHINGTON WARD 1",
+        "lat": 35.53932,
+        "lon": -77.0453,
+        "dist_to_campus": 0.87
+      },
+      {
+        "prec_id": "WASH4",
+        "name": "7TH STREET RECREATION CENTER",
+        "desc": "WASHINGTON WARD 4",
+        "lat": 35.5615,
+        "lon": -77.02148,
+        "dist_to_campus": 1.17
+      },
+      {
+        "prec_id": "PSJW3",
+        "name": "BEAUFORT CO BOYS AND GIRLS CLUB",
+        "desc": "P S JONES-WASH W3",
+        "lat": 35.56763,
+        "lon": -77.0521,
+        "dist_to_campus": 1.53
+      },
+      {
+        "prec_id": "WASHP",
+        "name": "WASHINGTON PARK MUNICIPAL BUILDING",
+        "desc": "WASHINGTON PARK",
+        "lat": 35.5281,
+        "lon": -77.01516,
+        "dist_to_campus": 1.9
+      },
+      {
+        "prec_id": "WASH2",
+        "name": "WASHINGTON FIRE DEPARTMENT",
+        "desc": "WASHINGTON WARD 2",
+        "lat": 35.56309,
+        "lon": -77.07432,
+        "dist_to_campus": 2.33
+      }
+    ]
+  },
+  "bladenccvote": {
+    "primary_precinct": "P55",
+    "primary_name": "FRENCHES CREEK-KELLY FIRE DEPARTMENT",
+    "primary_lat": 34.4791,
+    "primary_lon": -78.30542,
+    "dist_to_campus": 6.77,
+    "nearby_precincts": [
+      {
+        "prec_id": "P55",
+        "name": "FRENCHES CREEK-KELLY FIRE DEPARTMENT",
+        "desc": "FRENCHES CREEK",
+        "lat": 34.4791,
+        "lon": -78.30542,
+        "dist_to_campus": 6.77
+      },
+      {
+        "prec_id": "P30",
+        "name": "CARVERS CREEK-EAST ARCADIA TOWN HALL",
+        "desc": "CARVERS CREEK",
+        "lat": 34.44217,
+        "lon": -78.4241,
+        "dist_to_campus": 6.85
+      },
+      {
+        "prec_id": "P75",
+        "name": "WHITES CREEK-LISBON FIRE DEPARTMENT",
+        "desc": "WHITES CREEK",
+        "lat": 34.48657,
+        "lon": -78.53305,
+        "dist_to_campus": 13.72
+      },
+      {
+        "prec_id": "P65",
+        "name": "LAKE CREEK-BAY TREE FIRE DEPARTMENT",
+        "desc": "LAKE CREEK",
+        "lat": 34.61074,
+        "lon": -78.37599,
+        "dist_to_campus": 15.98
+      },
+      {
+        "prec_id": "P25",
+        "name": "BROWN MARSH-TOWN HALL",
+        "desc": "BROWN MARSH",
+        "lat": 34.5074,
+        "lon": -78.6218,
+        "dist_to_campus": 18.84
+      }
+    ]
+  },
+  "blueridgeccvote": {
+    "primary_precinct": "ED",
+    "primary_name": "NORTH CAROLINA JUSTICE ACADEMY",
+    "primary_lat": 35.39903,
+    "primary_lon": -82.3371,
+    "dist_to_campus": 1.59,
+    "nearby_precincts": [
+      {
+        "prec_id": "ED",
+        "name": "NORTH CAROLINA JUSTICE ACADEMY",
+        "desc": "EDNEYVILLE",
+        "lat": 35.39903,
+        "lon": -82.3371,
+        "dist_to_campus": 1.59
+      },
+      {
+        "prec_id": "NB",
+        "name": "FAMILY LIFE CENTER OF REFUGE BAPT CH",
+        "desc": "NORTH BLUE RIDGE",
+        "lat": 35.35176,
+        "lon": -82.37358,
+        "dist_to_campus": 2.34
+      },
+      {
+        "prec_id": "CC",
+        "name": "FRUITLAND BAPTIST CHURCH",
+        "desc": "CLEAR CREEK",
+        "lat": 35.39043,
+        "lon": -82.40661,
+        "dist_to_campus": 2.84
+      },
+      {
+        "prec_id": "CV",
+        "name": "CAROLINA VILLAGE",
+        "desc": "CAROLINA VILLAGE",
+        "lat": 35.3402,
+        "lon": -82.4351,
+        "dist_to_campus": 5.29
+      },
+      {
+        "prec_id": "BC",
+        "name": "BAT CAVE VOLUNTEER FIRE DEPT",
+        "desc": "BAT CAVE",
+        "lat": 35.44554,
+        "lon": -82.29979,
+        "dist_to_campus": 5.4
+      }
+    ]
+  },
+  "brunswickccvote": {
+    "primary_precinct": "CB05",
+    "primary_name": "LOCKWOOD FOLLY COMMUNITY BLDG",
+    "primary_lat": 33.94611,
+    "primary_lon": -78.26535,
+    "dist_to_campus": 4.87,
+    "nearby_precincts": [
+      {
+        "prec_id": "CB05",
+        "name": "LOCKWOOD FOLLY COMMUNITY BLDG",
+        "desc": "SECESSION 1",
+        "lat": 33.94611,
+        "lon": -78.26535,
+        "dist_to_campus": 4.87
+      },
+      {
+        "prec_id": "CB06",
+        "name": "VIRGINIA WILLIAMSON ELEMENTARY SCHOOL",
+        "desc": "MOSQUITO 1",
+        "lat": 33.97706,
+        "lon": -78.19107,
+        "dist_to_campus": 5.23
+      },
+      {
+        "prec_id": "CB01",
+        "name": "THE BRUNSWICK CENTER AT SUPPLY",
+        "desc": "SUPPLY",
+        "lat": 34.09215,
+        "lon": -78.30556,
+        "dist_to_campus": 5.63
+      },
+      {
+        "prec_id": "CB02",
+        "name": "WEST BRUNSWICK HIGH SCHOOL",
+        "desc": "SHALLOTTE",
+        "lat": 34.00914,
+        "lon": -78.37699,
+        "dist_to_campus": 6.21
+      },
+      {
+        "prec_id": "SB01",
+        "name": "BRUNS COUNTY COOPERATIVE EXTENSION",
+        "desc": "BOLIVIA",
+        "lat": 34.06925,
+        "lon": -78.14883,
+        "dist_to_campus": 7.78
+      }
+    ]
+  },
+  "caldwellccvote": {
+    "primary_precinct": "8",
+    "primary_name": "HIBRITEN HIGH SCHOOL",
+    "primary_lat": 35.93133,
+    "primary_lon": -81.48736,
+    "dist_to_campus": 2.13,
+    "nearby_precincts": [
+      {
+        "prec_id": "8",
+        "name": "HIBRITEN HIGH SCHOOL",
+        "desc": "HIBRITEN",
+        "lat": 35.93133,
+        "lon": -81.48736,
+        "dist_to_campus": 2.13
+      },
+      {
+        "prec_id": "7",
+        "name": "MULBERRY RECREATION CENTER",
+        "desc": "LENOIR",
+        "lat": 35.88933,
+        "lon": -81.53974,
+        "dist_to_campus": 2.43
+      },
+      {
+        "prec_id": "6",
+        "name": "MARTIN LUTHER KING RECREATION CENTER",
+        "desc": "FREEDMAN",
+        "lat": 35.93759,
+        "lon": -81.56567,
+        "dist_to_campus": 2.59
+      },
+      {
+        "prec_id": "10",
+        "name": "CAJAHS MOUNTAIN TOWN HALL",
+        "desc": "CAJAHS MOUNTAIN",
+        "lat": 35.84618,
+        "lon": -81.54958,
+        "dist_to_campus": 5.44
+      },
+      {
+        "prec_id": "13",
+        "name": "MCCREARY FAMILY RECREATION CENTER",
+        "desc": "HUDSON",
+        "lat": 35.84776,
+        "lon": -81.48557,
+        "dist_to_campus": 5.56
+      }
+    ]
+  },
+  "capefearccvote": {
+    "primary_precinct": "FP08",
+    "primary_name": "CAROLINA BEACH MUNI COMPLEX REC CENTER",
+    "primary_lat": 34.04751,
+    "primary_lon": -77.87633,
+    "dist_to_campus": 1.36,
+    "nearby_precincts": [
+      {
+        "prec_id": "FP08",
+        "name": "CAROLINA BEACH MUNI COMPLEX REC CENTER",
+        "desc": "FP08",
+        "lat": 34.04751,
+        "lon": -77.87633,
+        "dist_to_campus": 1.36
+      },
+      {
+        "prec_id": "FP07",
+        "name": "ANDERSON ELEMENTARY SCHOOL",
+        "desc": "FP07",
+        "lat": 34.07706,
+        "lon": -77.91401,
+        "dist_to_campus": 2.35
+      },
+      {
+        "prec_id": "FP04",
+        "name": "MYRTLE GROVE MIDDLE SCHOOL",
+        "desc": "FP04",
+        "lat": 34.09749,
+        "lon": -77.87459,
+        "dist_to_campus": 3.9
+      },
+      {
+        "prec_id": "FP06",
+        "name": "BELLAMY ELEMENTARY SCHOOL",
+        "desc": "FP06",
+        "lat": 34.112,
+        "lon": -77.91833,
+        "dist_to_campus": 4.74
+      },
+      {
+        "prec_id": "M06",
+        "name": "MYRTLE GROVE BAPTIST CHURCH",
+        "desc": "M06",
+        "lat": 34.14487,
+        "lon": -77.88298,
+        "dist_to_campus": 6.96
+      }
+    ]
+  },
+  "carteretccvote": {
+    "primary_precinct": "BFT2",
+    "primary_name": "COUNTY BD OF EDUCATION ADMINISTRATION BLDG",
+    "primary_lat": 34.73731,
+    "primary_lon": -76.63712,
+    "dist_to_campus": 0.6,
+    "nearby_precincts": [
+      {
+        "prec_id": "BFT2",
+        "name": "COUNTY BD OF EDUCATION ADMINISTRATION BLDG",
+        "desc": "BEAUFORT 2",
+        "lat": 34.73731,
+        "lon": -76.63712,
+        "dist_to_campus": 0.6
+      },
+      {
+        "prec_id": "BFT1",
+        "name": "BOYS AND GIRLS CLUB",
+        "desc": "BEAUFORT 1",
+        "lat": 34.71254,
+        "lon": -76.66553,
+        "dist_to_campus": 1.87
+      },
+      {
+        "prec_id": "MHD1",
+        "name": "MOREHEAD PARKS REC BUILDING",
+        "desc": "MOREHEAD 1",
+        "lat": 34.74121,
+        "lon": -76.70277,
+        "dist_to_campus": 3.72
+      },
+      {
+        "prec_id": "OTBEG",
+        "name": "WOODVILLE BAPTIST CHURCH",
+        "desc": "OTWAY/STRAITS/BETTIE/GLOUCESTER",
+        "lat": 34.78559,
+        "lon": -76.57131,
+        "dist_to_campus": 5.5
+      },
+      {
+        "prec_id": "MHD2",
+        "name": "CARTERET COUNTY HEALTH DEPARTMENT",
+        "desc": "MOREHEAD 2",
+        "lat": 34.72687,
+        "lon": -76.74554,
+        "dist_to_campus": 6.05
+      }
+    ]
+  },
+  "cvccvote": {
+    "primary_precinct": "08",
+    "primary_name": "08   CONOVER EAST  -  CONOVER STATION",
+    "primary_lat": 35.70901,
+    "primary_lon": -81.20226,
+    "dist_to_campus": 1.06,
+    "nearby_precincts": [
+      {
+        "prec_id": "08",
+        "name": "08   CONOVER EAST  -  CONOVER STATION",
+        "desc": "CONOVER EAST",
+        "lat": 35.70901,
+        "lon": -81.20226,
+        "dist_to_campus": 1.06
+      },
+      {
+        "prec_id": "25",
+        "name": "25 NORTH NEWTON-ABERNETHY MEMORIAL METHODIST CHURCH",
+        "desc": "NORTH NEWTON",
+        "lat": 35.68422,
+        "lon": -81.22652,
+        "dist_to_campus": 1.29
+      },
+      {
+        "prec_id": "07",
+        "name": "07   CONOVER WEST  -  FAITH EVANGELICAL LUTHERAN CHURCH",
+        "desc": "CONOVER WEST",
+        "lat": 35.72367,
+        "lon": -81.22802,
+        "dist_to_campus": 1.6
+      },
+      {
+        "prec_id": "40",
+        "name": "40   WEST NEWTON  -  CATAWBA COUNTY LIBRARY",
+        "desc": "WEST NEWTON",
+        "lat": 35.66883,
+        "lon": -81.23878,
+        "dist_to_campus": 2.54
+      },
+      {
+        "prec_id": "10",
+        "name": "10   EAST NEWTON  -  NEWTON RECREATION CENTER",
+        "desc": "EAST NEWTON",
+        "lat": 35.66435,
+        "lon": -81.21749,
+        "dist_to_campus": 2.59
+      }
+    ]
+  },
+  "ccccvote": {
+    "primary_precinct": "A2",
+    "primary_name": "J GLENN EDWARDS ELEMENTARY SCHOOL",
+    "primary_lat": 35.48739,
+    "primary_lon": -79.14211,
+    "dist_to_campus": 1.9,
+    "nearby_precincts": [
+      {
+        "prec_id": "A2",
+        "name": "J GLENN EDWARDS ELEMENTARY SCHOOL",
+        "desc": "PRECINCT A2",
+        "lat": 35.48739,
+        "lon": -79.14211,
+        "dist_to_campus": 1.9
+      },
+      {
+        "prec_id": "B2",
+        "name": "B T BULLOCK ELEMENTARY SCHOOL",
+        "desc": "PRECINCT B2",
+        "lat": 35.51158,
+        "lon": -79.17937,
+        "dist_to_campus": 2.12
+      },
+      {
+        "prec_id": "A1",
+        "name": "SOUTHERN LEE HIGH SCHOOL",
+        "desc": "PRECINCT A1",
+        "lat": 35.44771,
+        "lon": -79.1966,
+        "dist_to_campus": 2.61
+      },
+      {
+        "prec_id": "D2",
+        "name": "AMERICAN LEGION",
+        "desc": "PRECINCT D2",
+        "lat": 35.52109,
+        "lon": -79.21672,
+        "dist_to_campus": 3.62
+      },
+      {
+        "prec_id": "E2",
+        "name": "EAST LEE MIDDLE SCHOOL",
+        "desc": "PRECINCT E2",
+        "lat": 35.43471,
+        "lon": -79.10805,
+        "dist_to_campus": 4.95
+      }
+    ]
+  },
+  "cpccvote": {
+    "primary_precinct": "241",
+    "primary_name": "J M ALEXANDER MIDDLE SCHOOL",
+    "primary_lat": 35.39478,
+    "primary_lon": -80.81303,
+    "dist_to_campus": 1.55,
+    "nearby_precincts": [
+      {
+        "prec_id": "241",
+        "name": "J M ALEXANDER MIDDLE SCHOOL",
+        "desc": "PCT 241",
+        "lat": 35.39478,
+        "lon": -80.81303,
+        "dist_to_campus": 1.55
+      },
+      {
+        "prec_id": "207",
+        "name": "HUNTERSVILLE ELEMENTARY SCHOOL",
+        "desc": "PCT 207",
+        "lat": 35.42433,
+        "lon": -80.82343,
+        "dist_to_campus": 2.37
+      },
+      {
+        "prec_id": "134",
+        "name": "BRADLEY MIDDLE SCHOOL",
+        "desc": "PCT 134",
+        "lat": 35.39502,
+        "lon": -80.88897,
+        "dist_to_campus": 2.74
+      },
+      {
+        "prec_id": "151",
+        "name": "CROFT COMMUNITY SCHOOL",
+        "desc": "PCT 151",
+        "lat": 35.36542,
+        "lon": -80.80243,
+        "dist_to_campus": 2.86
+      },
+      {
+        "prec_id": "143",
+        "name": "LAKE FOREST COMMUNITY CHURCH",
+        "desc": "PCT 143",
+        "lat": 35.42352,
+        "lon": -80.87637,
+        "dist_to_campus": 2.93
+      }
+    ]
+  },
+  "clevelandccvote": {
+    "primary_precinct": "S C",
+    "primary_name": "SHELBY CITY PARK",
+    "primary_lat": 35.29268,
+    "primary_lon": -81.52817,
+    "dist_to_campus": 1.58,
+    "nearby_precincts": [
+      {
+        "prec_id": "S C",
+        "name": "SHELBY CITY PARK",
+        "desc": "SHELBY CENTRAL",
+        "lat": 35.29268,
+        "lon": -81.52817,
+        "dist_to_campus": 1.58
+      },
+      {
+        "prec_id": "S S",
+        "name": "HOLLY OAK PARK",
+        "desc": "SHELBY SOUTH",
+        "lat": 35.26494,
+        "lon": -81.5251,
+        "dist_to_campus": 2.58
+      },
+      {
+        "prec_id": "S N",
+        "name": "NEAL SENIOR CENTER",
+        "desc": "SHELBY NORTH",
+        "lat": 35.33499,
+        "lon": -81.54338,
+        "dist_to_campus": 3.03
+      },
+      {
+        "prec_id": "S E",
+        "name": "WALLS MEMORIAL BAPTIST CHURCH",
+        "desc": "SHELBY EAST",
+        "lat": 35.31447,
+        "lon": -81.4813,
+        "dist_to_campus": 4.49
+      },
+      {
+        "prec_id": "SHANGI",
+        "name": "CHRIST COVENANT CHURCH",
+        "desc": "SHANGHAI",
+        "lat": 35.23382,
+        "lon": -81.59897,
+        "dist_to_campus": 4.71
+      }
+    ]
+  },
+  "coastalcarolinaccvote": {
+    "primary_precinct": "EN03",
+    "primary_name": "COMMONS RECREATION CENTER",
+    "primary_lat": 34.81515,
+    "primary_lon": -77.38475,
+    "dist_to_campus": 1.64,
+    "nearby_precincts": [
+      {
+        "prec_id": "EN03",
+        "name": "COMMONS RECREATION CENTER",
+        "desc": "EN03",
+        "lat": 34.81515,
+        "lon": -77.38475,
+        "dist_to_campus": 1.64
+      },
+      {
+        "prec_id": "BM08",
+        "name": "PINE VALLEY UMC",
+        "desc": "BM08",
+        "lat": 34.77092,
+        "lon": -77.37457,
+        "dist_to_campus": 2.07
+      },
+      {
+        "prec_id": "NR02",
+        "name": "LIVING HOPE COMMUNITY CHURCH",
+        "desc": "NR02",
+        "lat": 34.76011,
+        "lon": -77.39931,
+        "dist_to_campus": 2.34
+      },
+      {
+        "prec_id": "WN04",
+        "name": "CATALYST CHURCH",
+        "desc": "WN04",
+        "lat": 34.78183,
+        "lon": -77.44706,
+        "dist_to_campus": 2.92
+      },
+      {
+        "prec_id": "HM05",
+        "name": "THE POTTERS HOUSE CHURCH",
+        "desc": "HM05",
+        "lat": 34.83933,
+        "lon": -77.42997,
+        "dist_to_campus": 3.63
+      }
+    ]
+  },
+  "albemarleccvote": {
+    "primary_precinct": "SOUTH",
+    "primary_name": "KERMIT E WHITE CENTER",
+    "primary_lat": 36.27677,
+    "primary_lon": -76.21365,
+    "dist_to_campus": 0.62,
+    "nearby_precincts": [
+      {
+        "prec_id": "SOUTH",
+        "name": "KERMIT E WHITE CENTER",
+        "desc": "SOUTH ELIZABETH CITY",
+        "lat": 36.27677,
+        "lon": -76.21365,
+        "dist_to_campus": 0.62
+      },
+      {
+        "prec_id": "EAST",
+        "name": "RIVER ROAD MIDDLE SCHOOL",
+        "desc": "EAST ELIZABETH CITY",
+        "lat": 36.283,
+        "lon": -76.19381,
+        "dist_to_campus": 0.76
+      },
+      {
+        "prec_id": "WEST",
+        "name": "PASQUOTANK ELEMENTARY SCHOOL",
+        "desc": "WEST ELIZABETH CITY",
+        "lat": 36.28725,
+        "lon": -76.24857,
+        "dist_to_campus": 2.31
+      },
+      {
+        "prec_id": "NORTH",
+        "name": "KNOBBS CREEK RECREATION CENTER",
+        "desc": "NORTH ELIZABETH CITY",
+        "lat": 36.31907,
+        "lon": -76.22016,
+        "dist_to_campus": 2.52
+      },
+      {
+        "prec_id": "NIX",
+        "name": "WEEKSVILLE LIONS CLUB",
+        "desc": "NIXONTON",
+        "lat": 36.22962,
+        "lon": -76.17873,
+        "dist_to_campus": 4.09
+      }
+    ]
+  },
+  "cravenccvote": {
+    "primary_precinct": "N1",
+    "primary_name": "GEORGE STREET - CRAVEN CO SR SRVS GEORGE ST CENTER",
+    "primary_lat": 35.09956,
+    "primary_lon": -77.05087,
+    "dist_to_campus": 0.97,
+    "nearby_precincts": [
+      {
+        "prec_id": "N1",
+        "name": "GEORGE STREET - CRAVEN CO SR SRVS GEORGE ST CENTER",
+        "desc": "GEORGE STREET",
+        "lat": 35.09956,
+        "lon": -77.05087,
+        "dist_to_campus": 0.97
+      },
+      {
+        "prec_id": "N2",
+        "name": "FORT TOTTEN - YMCA",
+        "desc": "FORT TOTTEN",
+        "lat": 35.10212,
+        "lon": -77.06661,
+        "dist_to_campus": 1.71
+      },
+      {
+        "prec_id": "N3N5",
+        "name": "GROVER C FIELDS MIDDLE SCHOOL (GLENBURNIE-GROVER C)",
+        "desc": "GLENBURNIE-GROVER C",
+        "lat": 35.12661,
+        "lon": -77.0606,
+        "dist_to_campus": 1.83
+      },
+      {
+        "prec_id": "N6",
+        "name": "WEST NEW BERN - WEST NEW BERN RECREATION DEPT",
+        "desc": "WEST NEW BERN",
+        "lat": 35.10582,
+        "lon": -77.10178,
+        "dist_to_campus": 3.65
+      },
+      {
+        "prec_id": "N4",
+        "name": "H J MACDONALD - H J MACDONALD MIDDLE SCHOOL",
+        "desc": "H.J. MACDONALD",
+        "lat": 35.13159,
+        "lon": -77.09711,
+        "dist_to_campus": 3.74
+      }
+    ]
+  },
+  "davidsondavieccvote": {
+    "primary_precinct": "04",
+    "primary_name": "ARCADIA COMMUNITY CENTER",
+    "primary_lat": 35.96621,
+    "primary_lon": -80.26479,
+    "dist_to_campus": 1.75,
+    "nearby_precincts": [
+      {
+        "prec_id": "04",
+        "name": "ARCADIA COMMUNITY CENTER",
+        "desc": "ARCADIA #04",
+        "lat": 35.96621,
+        "lon": -80.26479,
+        "dist_to_campus": 1.75
+      },
+      {
+        "prec_id": "84",
+        "name": "FRIEDBERG ELEMENTARY SCHOOL",
+        "desc": "WEST ARCADIA #84",
+        "lat": 35.96357,
+        "lon": -80.34058,
+        "dist_to_campus": 2.74
+      },
+      {
+        "prec_id": "46",
+        "name": "OUR SAVIOUR'S LUTHERAN CHURCH",
+        "desc": "NORTH DAVIDSON # 46",
+        "lat": 35.9236,
+        "lon": -80.25294,
+        "dist_to_campus": 3.1
+      },
+      {
+        "prec_id": "50",
+        "name": "A-RC-H FIRE DEPARTMENT",
+        "desc": "REEDY CREEK #50",
+        "lat": 35.90462,
+        "lon": -80.33218,
+        "dist_to_campus": 4.11
+      },
+      {
+        "prec_id": "82",
+        "name": "WELCOME FIRE DEPARTMENT",
+        "desc": "WELCOME #82",
+        "lat": 35.88969,
+        "lon": -80.23271,
+        "dist_to_campus": 5.61
+      }
+    ]
+  },
+  "durhamtechvote": {
+    "primary_precinct": "41",
+    "primary_name": "WHITE ROCK BAPTIST CHURCH",
+    "primary_lat": 35.95559,
+    "primary_lon": -78.91536,
+    "dist_to_campus": 0.6,
+    "nearby_precincts": [
+      {
+        "prec_id": "41",
+        "name": "WHITE ROCK BAPTIST CHURCH",
+        "desc": "41",
+        "lat": 35.95559,
+        "lon": -78.91536,
+        "dist_to_campus": 0.6
+      },
+      {
+        "prec_id": "34-2",
+        "name": "IVY COMMUNITY CENTER",
+        "desc": "34-2",
+        "lat": 35.94232,
+        "lon": -78.90594,
+        "dist_to_campus": 1.01
+      },
+      {
+        "prec_id": "51",
+        "name": "SOUTHWEST ELEMENTARY SCHOOL",
+        "desc": "51",
+        "lat": 35.93474,
+        "lon": -78.93264,
+        "dist_to_campus": 1.14
+      },
+      {
+        "prec_id": "42",
+        "name": "JAMES E SHEPARD MAGNET SCHOOL",
+        "desc": "42",
+        "lat": 35.95941,
+        "lon": -78.90182,
+        "dist_to_campus": 1.35
+      },
+      {
+        "prec_id": "55-11",
+        "name": "WEAVER STREET CENTER",
+        "desc": "55-11",
+        "lat": 35.96845,
+        "lon": -78.90945,
+        "dist_to_campus": 1.53
+      }
+    ]
+  },
+  "edgecombeccvote": {
+    "primary_precinct": "0101",
+    "primary_name": "COUNTY ADMIN BLDG AUDITORIUM",
+    "primary_lat": 35.90524,
+    "primary_lon": -77.51094,
+    "dist_to_campus": 1.33,
+    "nearby_precincts": [
+      {
+        "prec_id": "0101",
+        "name": "COUNTY ADMIN BLDG AUDITORIUM",
+        "desc": "TARBORO 1",
+        "lat": 35.90524,
+        "lon": -77.51094,
+        "dist_to_campus": 1.33
+      },
+      {
+        "prec_id": "0102",
+        "name": "SALVATION & DELIVERANCE CHURCH",
+        "desc": "TARBORO 2",
+        "lat": 35.87565,
+        "lon": -77.55478,
+        "dist_to_campus": 1.92
+      },
+      {
+        "prec_id": "0103",
+        "name": "BRASWELL RECREATION CENTER",
+        "desc": "TARBORO 3",
+        "lat": 35.91033,
+        "lon": -77.58029,
+        "dist_to_campus": 2.86
+      },
+      {
+        "prec_id": "0104",
+        "name": "MARTIN MILLENNIUM ACADEMY",
+        "desc": "TARBORO 4",
+        "lat": 35.92756,
+        "lon": -77.5864,
+        "dist_to_campus": 3.72
+      },
+      {
+        "prec_id": "0401",
+        "name": "FREE UNION MISSIONARY BAPTIST CHURCH",
+        "desc": "LAWRENCE",
+        "lat": 35.97231,
+        "lon": -77.49598,
+        "dist_to_campus": 5.61
+      }
+    ]
+  },
+  "faytechccvote": {
+    "primary_precinct": "G5B-1",
+    "primary_name": "JOHN D FULLER SR RECREATIONAL ATHLETIC COMPLEX",
+    "primary_lat": 35.04813,
+    "primary_lon": -78.99462,
+    "dist_to_campus": 0.75,
+    "nearby_precincts": [
+      {
+        "prec_id": "G5B-1",
+        "name": "JOHN D FULLER SR RECREATIONAL ATHLETIC COMPLEX",
+        "desc": "CROSS CREEK 28-1-G5",
+        "lat": 35.04813,
+        "lon": -78.99462,
+        "dist_to_campus": 0.75
+      },
+      {
+        "prec_id": "CC25",
+        "name": "CHURCH OF JESUS CHRIST - LATTER DAY SAINTS",
+        "desc": "CROSS CREEK 25",
+        "lat": 35.07313,
+        "lon": -79.00087,
+        "dist_to_campus": 1.06
+      },
+      {
+        "prec_id": "CC27",
+        "name": "CLIFFDALE RECREATION CENTER",
+        "desc": "CROSS CREEK 27",
+        "lat": 35.06868,
+        "lon": -79.00972,
+        "dist_to_campus": 1.13
+      },
+      {
+        "prec_id": "CC26",
+        "name": "MORGANTON ROAD ELEMENTARY SCHOOL",
+        "desc": "CROSS CREEK 26",
+        "lat": 35.0747,
+        "lon": -78.98502,
+        "dist_to_campus": 1.19
+      },
+      {
+        "prec_id": "G5B-2",
+        "name": "INSOUL FELLOWSHIP CHURCH",
+        "desc": "CROSS CREEK 28-2-G5",
+        "lat": 35.04745,
+        "lon": -79.01672,
+        "dist_to_campus": 1.54
+      }
+    ]
+  },
+  "forsythtechvote": {
+    "primary_precinct": "208",
+    "primary_name": "BROWN & DOUGLAS NEIGHBORHOOD CENTER",
+    "primary_lat": 36.15306,
+    "primary_lon": -80.2716,
+    "dist_to_campus": 0.2,
+    "nearby_precincts": [
+      {
+        "prec_id": "208",
+        "name": "BROWN & DOUGLAS NEIGHBORHOOD CENTER",
+        "desc": "208",
+        "lat": 36.15306,
+        "lon": -80.2716,
+        "dist_to_campus": 0.2
+      },
+      {
+        "prec_id": "206",
+        "name": "NORTH HILLS ELEMENTARY SCHOOL",
+        "desc": "206",
+        "lat": 36.15431,
+        "lon": -80.25585,
+        "dist_to_campus": 0.84
+      },
+      {
+        "prec_id": "202",
+        "name": "NORTH POINT BAPTIST CHURCH",
+        "desc": "202",
+        "lat": 36.15877,
+        "lon": -80.28785,
+        "dist_to_campus": 0.97
+      },
+      {
+        "prec_id": "905",
+        "name": "BETHABARA MORAVIAN CHURCH",
+        "desc": "905",
+        "lat": 36.14453,
+        "lon": -80.28934,
+        "dist_to_campus": 1.3
+      },
+      {
+        "prec_id": "207",
+        "name": "NEW HOPE UNITED METHODIST CHURCH",
+        "desc": "207",
+        "lat": 36.17558,
+        "lon": -80.27921,
+        "dist_to_campus": 1.44
+      }
+    ]
+  },
+  "gastonvote": {
+    "primary_precinct": "1A",
+    "primary_name": "SENIOR ACTIVITY CENTER",
+    "primary_lat": 35.25193,
+    "primary_lon": -81.18228,
+    "dist_to_campus": 0.82,
+    "nearby_precincts": [
+      {
+        "prec_id": "1A",
+        "name": "SENIOR ACTIVITY CENTER",
+        "desc": "YORK CHESTER",
+        "lat": 35.25193,
+        "lon": -81.18228,
+        "dist_to_campus": 0.82
+      },
+      {
+        "prec_id": "16A",
+        "name": "BRADLEY COMMUNITY CENTER",
+        "desc": "HIGHLAND HILL",
+        "lat": 35.28077,
+        "lon": -81.17798,
+        "dist_to_campus": 1.36
+      },
+      {
+        "prec_id": "2A",
+        "name": "PHILLIPS COMMUNITY CENTER",
+        "desc": "VICTORY RIDGE",
+        "lat": 35.24511,
+        "lon": -81.19818,
+        "dist_to_campus": 1.36
+      },
+      {
+        "prec_id": "28A",
+        "name": "PARTNERS HEALTHCARE MANAGEMENT",
+        "desc": "GARRISON",
+        "lat": 35.25447,
+        "lon": -81.15887,
+        "dist_to_campus": 1.74
+      },
+      {
+        "prec_id": "15A",
+        "name": "T JEFFERS CENTER",
+        "desc": "MYRTLE",
+        "lat": 35.28115,
+        "lon": -81.22272,
+        "dist_to_campus": 2.34
+      }
+    ]
+  },
+  "gtccvote": {
+    "primary_precinct": "G74",
+    "primary_name": "BLUFORD ELEMENTARY SCHOOL",
+    "primary_lat": 36.05487,
+    "primary_lon": -79.75768,
+    "dist_to_campus": 0.32,
+    "nearby_precincts": [
+      {
+        "prec_id": "G74",
+        "name": "BLUFORD ELEMENTARY SCHOOL",
+        "desc": "G74",
+        "lat": 36.05487,
+        "lon": -79.75768,
+        "dist_to_campus": 0.32
+      },
+      {
+        "prec_id": "G71",
+        "name": "MT OLIVET AME ZION CHURCH",
+        "desc": "G71",
+        "lat": 36.06708,
+        "lon": -79.75897,
+        "dist_to_campus": 0.98
+      },
+      {
+        "prec_id": "G70",
+        "name": "DORIS HENDERSON NEWCOMERS SCHOOL",
+        "desc": "G70",
+        "lat": 36.06492,
+        "lon": -79.77228,
+        "dist_to_campus": 1.36
+      },
+      {
+        "prec_id": "G73",
+        "name": "TRINITY AME ZION CHURCH",
+        "desc": "G73",
+        "lat": 36.04855,
+        "lon": -79.7782,
+        "dist_to_campus": 1.51
+      },
+      {
+        "prec_id": "G72",
+        "name": "HAIRSTON MIDDLE SCHOOL",
+        "desc": "G72",
+        "lat": 36.07412,
+        "lon": -79.74096,
+        "dist_to_campus": 1.52
+      }
+    ]
+  },
+  "halifaxccvote": {
+    "primary_precinct": "HAL",
+    "primary_name": "HALIFAX COUNTY AGRICULTURAL CENTER",
+    "primary_lat": 36.28493,
+    "primary_lon": -77.52522,
+    "dist_to_campus": 4.4,
+    "nearby_precincts": [
+      {
+        "prec_id": "HAL",
+        "name": "HALIFAX COUNTY AGRICULTURAL CENTER",
+        "desc": "HALIFAX",
+        "lat": 36.28493,
+        "lon": -77.52522,
+        "dist_to_campus": 4.4
+      },
+      {
+        "prec_id": "WEL1-2",
+        "name": "HALIFAX COMMUNITY COLLEGE",
+        "desc": "WELDON 1-2",
+        "lat": 36.41239,
+        "lon": -77.5782,
+        "dist_to_campus": 6.25
+      },
+      {
+        "prec_id": "WEL 3",
+        "name": "AMERICAN LEGION BUILDING",
+        "desc": "WELDON 3",
+        "lat": 36.39635,
+        "lon": -77.66082,
+        "dist_to_campus": 6.48
+      },
+      {
+        "prec_id": "RR 10",
+        "name": "ROANOKE RAPIDS FIRST PENTECOSTAL HOLINESS CHURCH",
+        "desc": "ROANOKE RAPIDS 10",
+        "lat": 36.4412,
+        "lon": -77.63513,
+        "dist_to_campus": 8.6
+      },
+      {
+        "prec_id": "FAUCT",
+        "name": "DARLINGTON COMMUNITY CENTER",
+        "desc": "FAUCETT",
+        "lat": 36.34024,
+        "lon": -77.74334,
+        "dist_to_campus": 8.67
+      }
+    ]
+  },
+  "haywoodccvote": {
+    "primary_precinct": "WW",
+    "primary_name": "WAYNESVILLE  RECREATION CENTER",
+    "primary_lat": 35.5091,
+    "primary_lon": -82.99915,
+    "dist_to_campus": 0.87,
+    "nearby_precincts": [
+      {
+        "prec_id": "WW",
+        "name": "WAYNESVILLE  RECREATION CENTER",
+        "desc": "WAYNESVILLE WEST",
+        "lat": 35.5091,
+        "lon": -82.99915,
+        "dist_to_campus": 0.87
+      },
+      {
+        "prec_id": "LJ",
+        "name": "JUNALUSKA FIRE DEPT",
+        "desc": "LAKE JUNALUSKA",
+        "lat": 35.53185,
+        "lon": -82.96807,
+        "dist_to_campus": 1.49
+      },
+      {
+        "prec_id": "WC",
+        "name": "SENIOR CITIZENS BLDG",
+        "desc": "WAYNESVILLE CENTER",
+        "lat": 35.49307,
+        "lon": -82.9836,
+        "dist_to_campus": 1.77
+      },
+      {
+        "prec_id": "WE",
+        "name": "US DEPT OF AGRICULTURE SERVICE CENTER",
+        "desc": "WAYNESVILLE EAST",
+        "lat": 35.48771,
+        "lon": -82.94984,
+        "dist_to_campus": 3.05
+      },
+      {
+        "prec_id": "WS-1",
+        "name": "WAYNESVILLE PUBLIC LIBRARY",
+        "desc": "WAYNESVILLE SOUTH 1",
+        "lat": 35.48841,
+        "lon": -83.03235,
+        "dist_to_campus": 3.21
+      }
+    ]
+  },
+  "isothermalccvote": {
+    "primary_precinct": "13",
+    "primary_name": "FIRST BAPTIST CHURCH",
+    "primary_lat": 35.33906,
+    "primary_lon": -81.89704,
+    "dist_to_campus": 0.81,
+    "nearby_precincts": [
+      {
+        "prec_id": "13",
+        "name": "FIRST BAPTIST CHURCH",
+        "desc": "FOREST CITY #1",
+        "lat": 35.33906,
+        "lon": -81.89704,
+        "dist_to_campus": 0.81
+      },
+      {
+        "prec_id": "30",
+        "name": "SPINDALE HOUSE",
+        "desc": "SPINDALE",
+        "lat": 35.34447,
+        "lon": -81.92768,
+        "dist_to_campus": 1.05
+      },
+      {
+        "prec_id": "14",
+        "name": "FIRST UNITED METHODIST CHURCH",
+        "desc": "FOREST CITY #2",
+        "lat": 35.34065,
+        "lon": -81.85958,
+        "dist_to_campus": 2.92
+      },
+      {
+        "prec_id": "28",
+        "name": "SECOND BAPTIST CHURCH",
+        "desc": "RUTHERFORDTON #2",
+        "lat": 35.37369,
+        "lon": -81.94864,
+        "dist_to_campus": 3.28
+      },
+      {
+        "prec_id": "27",
+        "name": "COUNTY OFFICE BUILDING",
+        "desc": "RUTHERFORDTON #1",
+        "lat": 35.36786,
+        "lon": -81.98092,
+        "dist_to_campus": 4.46
+      }
+    ]
+  },
+  "jamesspruntccvote": {
+    "primary_precinct": "WLLC",
+    "primary_name": "AMERICAN LEGION POST #156",
+    "primary_lat": 34.77058,
+    "primary_lon": -78.06278,
+    "dist_to_campus": 4.74,
+    "nearby_precincts": [
+      {
+        "prec_id": "WLLC",
+        "name": "AMERICAN LEGION POST #156",
+        "desc": "WALLACE",
+        "lat": 34.77058,
+        "lon": -78.06278,
+        "dist_to_campus": 4.74
+      },
+      {
+        "prec_id": "ROSE",
+        "name": "ROSE HILL COMMUNITY LIBRARY",
+        "desc": "ROSE HILL",
+        "lat": 34.82101,
+        "lon": -78.03046,
+        "dist_to_campus": 6.16
+      },
+      {
+        "prec_id": "CHAR",
+        "name": "GREENEVERS EDUCATIONAL RECREATIONAL COMMUNITY CENTER",
+        "desc": "CHARITY",
+        "lat": 34.82118,
+        "lon": -77.9102,
+        "dist_to_campus": 7.24
+      },
+      {
+        "prec_id": "MAGN",
+        "name": "MAGNOLIA FIRE DEPARTMENT",
+        "desc": "MAGNOLIA",
+        "lat": 34.88166,
+        "lon": -78.08198,
+        "dist_to_campus": 11.2
+      },
+      {
+        "prec_id": "CYCK",
+        "name": "MILL SWAMP COMMUNITY BUILDING",
+        "desc": "CYPRESS CREEK",
+        "lat": 34.77496,
+        "lon": -77.7569,
+        "dist_to_campus": 13.41
+      }
+    ]
+  },
+  "johnstonccvote": {
+    "primary_precinct": "PR29A",
+    "primary_name": "ARCHER LODGE COMMUNITY BUILDING",
+    "primary_lat": 35.70179,
+    "primary_lon": -78.40264,
+    "dist_to_campus": 1.58,
+    "nearby_precincts": [
+      {
+        "prec_id": "PR29A",
+        "name": "ARCHER LODGE COMMUNITY BUILDING",
+        "desc": "ARCHERS LODGE",
+        "lat": 35.70179,
+        "lon": -78.40264,
+        "dist_to_campus": 1.58
+      },
+      {
+        "prec_id": "PR29B",
+        "name": "RIVER DELL ELEMENTARY SCHOOL",
+        "desc": "FLOWERS PLANTATION",
+        "lat": 35.65175,
+        "lon": -78.36599,
+        "dist_to_campus": 2.97
+      },
+      {
+        "prec_id": "PR32",
+        "name": "BAPTIST TABERNACLE CHURCH",
+        "desc": "NORTH WILDERS",
+        "lat": 35.70482,
+        "lon": -78.32474,
+        "dist_to_campus": 2.99
+      },
+      {
+        "prec_id": "PR10A",
+        "name": "HOCUTT BAPTIST CHURCH ANNEX",
+        "desc": "NORTH CLAYTON 1",
+        "lat": 35.65244,
+        "lon": -78.43833,
+        "dist_to_campus": 4.51
+      },
+      {
+        "prec_id": "PR10B",
+        "name": "CLAYTON CIVITAN CLUB",
+        "desc": "NORTH CLAYTON 2",
+        "lat": 35.68272,
+        "lon": -78.4672,
+        "dist_to_campus": 5.16
+      }
+    ]
+  },
+  "lenoirccvote": {
+    "primary_precinct": "K3",
+    "primary_name": "FAIRFIELD REC CENTER",
+    "primary_lat": 35.26672,
+    "primary_lon": -77.59718,
+    "dist_to_campus": 2.15,
+    "nearby_precincts": [
+      {
+        "prec_id": "K3",
+        "name": "FAIRFIELD REC CENTER",
+        "desc": "KINSTON-3",
+        "lat": 35.26672,
+        "lon": -77.59718,
+        "dist_to_campus": 2.15
+      },
+      {
+        "prec_id": "K1",
+        "name": "GEORGIA K BATTLE REC CENTER",
+        "desc": "KINSTON -1",
+        "lat": 35.25036,
+        "lon": -77.57502,
+        "dist_to_campus": 2.57
+      },
+      {
+        "prec_id": "K4",
+        "name": "KINSTON CHURCH OF CHRIST",
+        "desc": "KINSTON-4",
+        "lat": 35.28343,
+        "lon": -77.60796,
+        "dist_to_campus": 2.98
+      },
+      {
+        "prec_id": "K2",
+        "name": "GORDON STREET CHRISTIAN CHURCH",
+        "desc": "KINSTON-2",
+        "lat": 35.26571,
+        "lon": -77.57443,
+        "dist_to_campus": 3.04
+      },
+      {
+        "prec_id": "N",
+        "name": "COOPERATIVE EXTENSION OFFICE",
+        "desc": "NEUSE",
+        "lat": 35.2124,
+        "lon": -77.66135,
+        "dist_to_campus": 3.1
+      }
+    ]
+  },
+  "martinccvote": {
+    "primary_precinct": "WM2",
+    "primary_name": "WILLIAMSTON SCOUT HUT",
+    "primary_lat": 35.87527,
+    "primary_lon": -77.08786,
+    "dist_to_campus": 2.4,
+    "nearby_precincts": [
+      {
+        "prec_id": "WM2",
+        "name": "WILLIAMSTON SCOUT HUT",
+        "desc": "WILLIAMSTON 2",
+        "lat": 35.87527,
+        "lon": -77.08786,
+        "dist_to_campus": 2.4
+      },
+      {
+        "prec_id": "WM1",
+        "name": "NC TELECENTER",
+        "desc": "WILLIAMSTON 1",
+        "lat": 35.82359,
+        "lon": -77.07065,
+        "dist_to_campus": 2.5
+      },
+      {
+        "prec_id": "HMT",
+        "name": "MORRIS LYNCH RECREATIONAL BLDG",
+        "desc": "HAMILTON",
+        "lat": 35.9187,
+        "lon": -77.12815,
+        "dist_to_campus": 6.07
+      },
+      {
+        "prec_id": "CR",
+        "name": "EVERETTS RURITAN CLUB BUILDING",
+        "desc": "CROSS ROADS",
+        "lat": 35.79308,
+        "lon": -77.17277,
+        "dist_to_campus": 8.07
+      },
+      {
+        "prec_id": "BG",
+        "name": "BEAR GRASS FIRE DEPARTMENT",
+        "desc": "BEAR GRASS",
+        "lat": 35.7488,
+        "lon": -77.11271,
+        "dist_to_campus": 8.18
+      }
+    ]
+  },
+  "maylandccvote": {
+    "primary_precinct": "01-A",
+    "primary_name": "BAKERSVILLE FIRE DEPARTMENT",
+    "primary_lat": 36.01921,
+    "primary_lon": -82.19548,
+    "dist_to_campus": 2.09,
+    "nearby_precincts": [
+      {
+        "prec_id": "01-A",
+        "name": "BAKERSVILLE FIRE DEPARTMENT",
+        "desc": "BAKERSVILLE",
+        "lat": 36.01921,
+        "lon": -82.19548,
+        "dist_to_campus": 2.09
+      },
+      {
+        "prec_id": "03",
+        "name": "CANE CREEK COMMUNITY BUILDING",
+        "desc": "CANE CREEK",
+        "lat": 36.02403,
+        "lon": -82.09055,
+        "dist_to_campus": 3.84
+      },
+      {
+        "prec_id": "09",
+        "name": "MITCHELL COUNTY SENIOR CITIZENS CENTER",
+        "desc": "SNOW CREEK",
+        "lat": 35.96331,
+        "lon": -82.13388,
+        "dist_to_campus": 3.85
+      },
+      {
+        "prec_id": "06",
+        "name": "FORK MOUNTAIN FIRE DEPARTMENT",
+        "desc": "LITTLE ROCK CREEK",
+        "lat": 36.07062,
+        "lon": -82.12815,
+        "dist_to_campus": 4.17
+      },
+      {
+        "prec_id": "05",
+        "name": "BULADEAN ELEMENTARY SCHOOL",
+        "desc": "HARRELL",
+        "lat": 36.09996,
+        "lon": -82.19235,
+        "dist_to_campus": 6.14
+      }
+    ]
+  },
+  "mcdowelltechvote": {
+    "primary_precinct": "MAR 4",
+    "primary_name": "CLINCHFIELD BAPTIST CHURCH FELLOWSHIP BUILDING",
+    "primary_lat": 35.67509,
+    "primary_lon": -81.97672,
+    "dist_to_campus": 0.82,
+    "nearby_precincts": [
+      {
+        "prec_id": "MAR 4",
+        "name": "CLINCHFIELD BAPTIST CHURCH FELLOWSHIP BUILDING",
+        "desc": "MARION #4",
+        "lat": 35.67509,
+        "lon": -81.97672,
+        "dist_to_campus": 0.82
+      },
+      {
+        "prec_id": "MAR 2",
+        "name": "EAST MCDOWELL MIDDLE SCHOOL GYMNASIUM",
+        "desc": "MARION #2",
+        "lat": 35.67792,
+        "lon": -82.00399,
+        "dist_to_campus": 1.82
+      },
+      {
+        "prec_id": "HIGGIN",
+        "name": "UNIVERSAL ADVANCED MANUFACTURING CENTER CONFERENCE ROOM",
+        "desc": "HIGGINS",
+        "lat": 35.6527,
+        "lon": -81.93708,
+        "dist_to_campus": 2.36
+      },
+      {
+        "prec_id": "MAR 3",
+        "name": "CLINCHFIELD UNITED METHODIST CHURCH FELLOWSHIP BUILDING",
+        "desc": "MARION #3",
+        "lat": 35.70881,
+        "lon": -81.97422,
+        "dist_to_campus": 3.15
+      },
+      {
+        "prec_id": "MAR 5",
+        "name": "MCDOWELL COUNTY RECREATION CENTER GYMNASIUM",
+        "desc": "MARION #5",
+        "lat": 35.68684,
+        "lon": -82.02843,
+        "dist_to_campus": 3.31
+      }
+    ]
+  },
+  "mitchellccvote": {
+    "primary_precinct": "TB",
+    "primary_name": "HARMONY AMERICAN LEGION BLDG",
+    "primary_lat": 35.91294,
+    "primary_lon": -80.75541,
+    "dist_to_campus": 2.35,
+    "nearby_precincts": [
+      {
+        "prec_id": "TB",
+        "name": "HARMONY AMERICAN LEGION BLDG",
+        "desc": "TURNERSBURG",
+        "lat": 35.91294,
+        "lon": -80.75541,
+        "dist_to_campus": 2.35
+      },
+      {
+        "prec_id": "EM",
+        "name": "NORTH IREDELL RESCUE SQUAD",
+        "desc": "EAGLE MILLS",
+        "lat": 35.99971,
+        "lon": -80.75301,
+        "dist_to_campus": 4.18
+      },
+      {
+        "prec_id": "OL",
+        "name": "HARMONY FIRE DEPT IN OLIN",
+        "desc": "OLIN",
+        "lat": 35.92705,
+        "lon": -80.86241,
+        "dist_to_campus": 4.91
+      },
+      {
+        "prec_id": "CS",
+        "name": "COOL SPRING COMMUNITY CHURCH",
+        "desc": "COOL SPRINGS",
+        "lat": 35.8508,
+        "lon": -80.76755,
+        "dist_to_campus": 6.35
+      },
+      {
+        "prec_id": "UG",
+        "name": "UNION GROVE FIRE DEPARTMENT",
+        "desc": "UNION GROVE",
+        "lat": 36.01249,
+        "lon": -80.85526,
+        "dist_to_campus": 6.54
+      }
+    ]
+  },
+  "montgomeryccvote": {
+    "primary_precinct": "BIS",
+    "primary_name": "BISCOE TOWN HALL",
+    "primary_lat": 35.35147,
+    "primary_lon": -79.79006,
+    "dist_to_campus": 0.75,
+    "nearby_precincts": [
+      {
+        "prec_id": "BIS",
+        "name": "BISCOE TOWN HALL",
+        "desc": "BISCOE",
+        "lat": 35.35147,
+        "lon": -79.79006,
+        "dist_to_campus": 0.75
+      },
+      {
+        "prec_id": "CAN",
+        "name": "CANDOR FIRE DEPARTMENT",
+        "desc": "CANDOR",
+        "lat": 35.29359,
+        "lon": -79.79647,
+        "dist_to_campus": 4.67
+      },
+      {
+        "prec_id": "T2",
+        "name": "TROY TOWN HALL",
+        "desc": "TROY 2",
+        "lat": 35.36601,
+        "lon": -79.86871,
+        "dist_to_campus": 4.9
+      },
+      {
+        "prec_id": "STA",
+        "name": "STAR TOWN HALL",
+        "desc": "STAR",
+        "lat": 35.44126,
+        "lon": -79.77928,
+        "dist_to_campus": 5.6
+      },
+      {
+        "prec_id": "LIT",
+        "name": "LITTLE RIVER COMMUNITY BLDG",
+        "desc": "LITTLE RIVER",
+        "lat": 35.44939,
+        "lon": -79.85549,
+        "dist_to_campus": 7.42
+      }
+    ]
+  },
+  "nashccvote": {
+    "primary_precinct": "P08A",
+    "primary_name": "NASH COUNTY AGRICULTURE CENTER",
+    "primary_lat": 35.97257,
+    "primary_lon": -77.97466,
+    "dist_to_campus": 1.56,
+    "nearby_precincts": [
+      {
+        "prec_id": "P08A",
+        "name": "NASH COUNTY AGRICULTURE CENTER",
+        "desc": "NASHVILLE",
+        "lat": 35.97257,
+        "lon": -77.97466,
+        "dist_to_campus": 1.56
+      },
+      {
+        "prec_id": "P15A",
+        "name": "NASH CENTRAL HIGH SCHOOL (AUX GYM)",
+        "desc": "OAK LEVEL",
+        "lat": 35.93686,
+        "lon": -77.9009,
+        "dist_to_campus": 3.53
+      },
+      {
+        "prec_id": "P19A",
+        "name": "ENGLEWOOD BAPTIST CHURCH",
+        "desc": "ROCKY MOUNT WINSTEAD",
+        "lat": 35.96002,
+        "lon": -77.85679,
+        "dist_to_campus": 5.1
+      },
+      {
+        "prec_id": "P11A",
+        "name": "RED OAK VOLUNTEER FIRE DEPARTMENT",
+        "desc": "RED OAK",
+        "lat": 36.04029,
+        "lon": -77.90908,
+        "dist_to_campus": 5.17
+      },
+      {
+        "prec_id": "P05A",
+        "name": "COOPERS VOLUNTEER FIRE DEPARTMENT",
+        "desc": "COOPERS",
+        "lat": 35.89288,
+        "lon": -77.97837,
+        "dist_to_campus": 5.74
+      }
+    ]
+  },
+  "pamlicoccvote": {
+    "primary_precinct": "1CR",
+    "primary_name": "GRANTSBORO TOWN HALL",
+    "primary_lat": 35.14917,
+    "primary_lon": -76.82716,
+    "dist_to_campus": 3.2,
+    "nearby_precincts": [
+      {
+        "prec_id": "1CR",
+        "name": "GRANTSBORO TOWN HALL",
+        "desc": "CROSSROADS",
+        "lat": 35.14917,
+        "lon": -76.82716,
+        "dist_to_campus": 3.2
+      },
+      {
+        "prec_id": "3CH",
+        "name": "PAMLICO COUNTY COURTHOUSE",
+        "desc": "COURTHOUSE",
+        "lat": 35.13963,
+        "lon": -76.69326,
+        "dist_to_campus": 4.4
+      },
+      {
+        "prec_id": "1RB",
+        "name": "REELSBORO FIRE DEPARTMENT",
+        "desc": "REELSBORO",
+        "lat": 35.14159,
+        "lon": -76.92445,
+        "dist_to_campus": 8.67
+      },
+      {
+        "prec_id": "5AP",
+        "name": "ARAPAHOE FIRE DEPARTMENT",
+        "desc": "ARAPAHOE",
+        "lat": 35.01294,
+        "lon": -76.81669,
+        "dist_to_campus": 9.37
+      },
+      {
+        "prec_id": "2OT",
+        "name": "ORIENTAL FIRE DEPARTMENT",
+        "desc": "ORIENTAL",
+        "lat": 35.09436,
+        "lon": -76.57822,
+        "dist_to_campus": 11.41
+      }
+    ]
+  },
+  "piedmontccvote": {
+    "primary_precinct": "RCOB",
+    "primary_name": "PERSON COUNTY OFFICE BUILDING AUDITORIUM",
+    "primary_lat": 36.38975,
+    "primary_lon": -79.01253,
+    "dist_to_campus": 1.11,
+    "nearby_precincts": [
+      {
+        "prec_id": "RCOB",
+        "name": "PERSON COUNTY OFFICE BUILDING AUDITORIUM",
+        "desc": "ROXBORO CENTRAL",
+        "lat": 36.38975,
+        "lon": -79.01253,
+        "dist_to_campus": 1.11
+      },
+      {
+        "prec_id": "PNTH",
+        "name": "PIEDMONT COMMUNITY COLLEGE-S100 BLDG",
+        "desc": "PIEDMONT NORTH",
+        "lat": 36.41647,
+        "lon": -78.96064,
+        "dist_to_campus": 2.34
+      },
+      {
+        "prec_id": "ROXL",
+        "name": "PERSON COUNTY LIBRARY",
+        "desc": "ROXBORO 4",
+        "lat": 36.36337,
+        "lon": -78.95012,
+        "dist_to_campus": 3.33
+      },
+      {
+        "prec_id": "OLHI",
+        "name": "OLD OLIVE HILL SCHOOL GYM",
+        "desc": "OLIVE HILL",
+        "lat": 36.39578,
+        "lon": -79.09119,
+        "dist_to_campus": 5.39
+      },
+      {
+        "prec_id": "FLHE",
+        "name": "OLD HELENA SCHOOL LUNCHROOM",
+        "desc": "FLAT RIVER",
+        "lat": 36.29071,
+        "lon": -78.97654,
+        "dist_to_campus": 7.34
+      }
+    ]
+  },
+  "pittccvote": {
+    "primary_precinct": "1513B",
+    "primary_name": "UNITY FREE WILL BAPTIST CHURCH",
+    "primary_lat": 35.53402,
+    "primary_lon": -77.34419,
+    "dist_to_campus": 1.07,
+    "nearby_precincts": [
+      {
+        "prec_id": "1513B",
+        "name": "UNITY FREE WILL BAPTIST CHURCH",
+        "desc": "GREENVILLE #13B",
+        "lat": 35.53402,
+        "lon": -77.34419,
+        "dist_to_campus": 1.07
+      },
+      {
+        "prec_id": "1513A",
+        "name": "H BOYD LEE PARK",
+        "desc": "GREENVILLE #13A",
+        "lat": 35.52786,
+        "lon": -77.3591,
+        "dist_to_campus": 1.58
+      },
+      {
+        "prec_id": "1511B",
+        "name": "FIRST FREE WILL BAPTIST CHURCH",
+        "desc": "GREENVILLE #11B",
+        "lat": 35.5735,
+        "lon": -77.36358,
+        "dist_to_campus": 1.88
+      },
+      {
+        "prec_id": "1511A",
+        "name": "CHURCH OF JESUS CHRIST OF LATTER-DAY SAINTS",
+        "desc": "GREENVILLE #11A",
+        "lat": 35.56517,
+        "lon": -77.37751,
+        "dist_to_campus": 1.96
+      },
+      {
+        "prec_id": "1510A",
+        "name": "OAKMONT BAPTIST CHURCH",
+        "desc": "GREENVILLE #10A",
+        "lat": 35.57887,
+        "lon": -77.34967,
+        "dist_to_campus": 2.06
+      }
+    ]
+  },
+  "randolphccvote": {
+    "primary_precinct": "AR",
+    "primary_name": "RANDOLPH COMMUNITY COLLEGE - ARCHDALE CENTER",
+    "primary_lat": 35.89598,
+    "primary_lon": -79.95092,
+    "dist_to_campus": 0.92,
+    "nearby_precincts": [
+      {
+        "prec_id": "AR",
+        "name": "RANDOLPH COMMUNITY COLLEGE - ARCHDALE CENTER",
+        "desc": "ARCHDALE",
+        "lat": 35.89598,
+        "lon": -79.95092,
+        "dist_to_campus": 0.92
+      },
+      {
+        "prec_id": "TR",
+        "name": "HOPEWELL ELEMENTARY SCHOOL",
+        "desc": "TRINITY",
+        "lat": 35.86872,
+        "lon": -79.98612,
+        "dist_to_campus": 3.36
+      },
+      {
+        "prec_id": "NM",
+        "name": "CEDAR SQUARE FRIENDS MEETING",
+        "desc": "NEW MARKET",
+        "lat": 35.86362,
+        "lon": -79.87549,
+        "dist_to_campus": 3.91
+      },
+      {
+        "prec_id": "TT",
+        "name": "POPLAR RIDGE FRIENDS MEETING",
+        "desc": "TRINITY TABERNACLE",
+        "lat": 35.81009,
+        "lon": -79.98924,
+        "dist_to_campus": 6.54
+      },
+      {
+        "prec_id": "LC",
+        "name": "LEVEL CROSS ELEMENTARY SCHOOL",
+        "desc": "LEVEL CROSS",
+        "lat": 35.8789,
+        "lon": -79.80078,
+        "dist_to_campus": 7.57
+      }
+    ]
+  },
+  "richmondccvote": {
+    "primary_precinct": "01",
+    "primary_name": "BROWDER PARK",
+    "primary_lat": 34.93072,
+    "primary_lon": -79.78016,
+    "dist_to_campus": 0.18,
+    "nearby_precincts": [
+      {
+        "prec_id": "01",
+        "name": "BROWDER PARK",
+        "desc": "ROCKINGHAM #1",
+        "lat": 34.93072,
+        "lon": -79.78016,
+        "dist_to_campus": 0.18
+      },
+      {
+        "prec_id": "23",
+        "name": "CORDOVA FIRE & RESCUE SQUAD",
+        "desc": "WOLF PIT #2",
+        "lat": 34.90246,
+        "lon": -79.81522,
+        "dist_to_campus": 2.77
+      },
+      {
+        "prec_id": "02",
+        "name": "ROCKINGHAM MIDDLE SCHOOL AUDITORIUM",
+        "desc": "ROCKINGHAM #2",
+        "lat": 34.98072,
+        "lon": -79.80204,
+        "dist_to_campus": 3.51
+      },
+      {
+        "prec_id": "22",
+        "name": "EAST ROCKINGHAM SENIOR CENTER",
+        "desc": "WOLF PIT #1",
+        "lat": 34.86402,
+        "lon": -79.82475,
+        "dist_to_campus": 5.29
+      },
+      {
+        "prec_id": "21",
+        "name": "NORTHSIDE FIRE DEPARTMENT",
+        "desc": "ROCKINGHAM #3",
+        "lat": 35.00615,
+        "lon": -79.70781,
+        "dist_to_campus": 6.63
+      }
+    ]
+  },
+  "roanokechowanccvote": {
+    "primary_precinct": "A2",
+    "primary_name": "AHOSKIE FIRE DEPARTMENT",
+    "primary_lat": 36.2671,
+    "primary_lon": -76.97678,
+    "dist_to_campus": 0.8,
+    "nearby_precincts": [
+      {
+        "prec_id": "A2",
+        "name": "AHOSKIE FIRE DEPARTMENT",
+        "desc": "AHOSKIE 2",
+        "lat": 36.2671,
+        "lon": -76.97678,
+        "dist_to_campus": 0.8
+      },
+      {
+        "prec_id": "A1",
+        "name": "HERTFORD COUNTY HIGH SCHOOL GYM",
+        "desc": "AHOSKIE 1",
+        "lat": 36.305,
+        "lon": -76.9942,
+        "dist_to_campus": 2.0
+      },
+      {
+        "prec_id": "A3",
+        "name": "R L VANN SCHOOL",
+        "desc": "AHOSKIE 3",
+        "lat": 36.30309,
+        "lon": -76.9331,
+        "dist_to_campus": 3.16
+      },
+      {
+        "prec_id": "UN",
+        "name": "ROANOKE CHOWAN COMMUNITY COLLEGE",
+        "desc": "UNION",
+        "lat": 36.34193,
+        "lon": -77.02323,
+        "dist_to_campus": 5.0
+      },
+      {
+        "prec_id": "WN",
+        "name": "COOPERATIVE EXTENSION BUILDING",
+        "desc": "WINTON",
+        "lat": 36.38399,
+        "lon": -76.95637,
+        "dist_to_campus": 7.43
+      }
+    ]
+  },
+  "robesonccvote": {
+    "primary_precinct": "05A",
+    "primary_name": "05A-  FAIRMONT FIRE HALL (SENIOR CENTER)",
+    "primary_lat": 34.47817,
+    "primary_lon": -79.13723,
+    "dist_to_campus": 1.74,
+    "nearby_precincts": [
+      {
+        "prec_id": "05A",
+        "name": "05A-  FAIRMONT FIRE HALL (SENIOR CENTER)",
+        "desc": "FAIRMONT",
+        "lat": 34.47817,
+        "lon": -79.13723,
+        "dist_to_campus": 1.74
+      },
+      {
+        "prec_id": "38",
+        "name": "38   THOMPSON - MCDONALD MUNICIPAL BUILDING",
+        "desc": "THOMPSON",
+        "lat": 34.52635,
+        "lon": -79.18746,
+        "dist_to_campus": 4.74
+      },
+      {
+        "prec_id": "36",
+        "name": "36   SMYRNA - SMYRNA FIRE DEPTMENT",
+        "desc": "SMYRNA",
+        "lat": 34.54703,
+        "lon": -79.03969,
+        "dist_to_campus": 5.57
+      },
+      {
+        "prec_id": "02",
+        "name": "02   BACK SWAMP - SOUTHERN SPIRIT TRIBAL BUILDING",
+        "desc": "BACK SWAMP",
+        "lat": 34.57763,
+        "lon": -79.10134,
+        "dist_to_campus": 5.8
+      },
+      {
+        "prec_id": "07",
+        "name": "07   GADDYS - GADDYS TWSP VOLUNTEER FIRE DEPT",
+        "desc": "GADDYS",
+        "lat": 34.44889,
+        "lon": -79.20771,
+        "dist_to_campus": 6.2
+      }
+    ]
+  },
+  "rockinghamccvote": {
+    "primary_precinct": "RC",
+    "primary_name": "ROCKINGHAM COUNTY AGRICULTURAL BUILDING",
+    "primary_lat": 36.42049,
+    "primary_lon": -79.75632,
+    "dist_to_campus": 1.9,
+    "nearby_precincts": [
+      {
+        "prec_id": "RC",
+        "name": "ROCKINGHAM COUNTY AGRICULTURAL BUILDING",
+        "desc": "ROCK CENTRAL",
+        "lat": 36.42049,
+        "lon": -79.75632,
+        "dist_to_campus": 1.9
+      },
+      {
+        "prec_id": "RE-1",
+        "name": "MOSS STREET ELEMENTARY",
+        "desc": "REIDSVILLE-1",
+        "lat": 36.36628,
+        "lon": -79.68877,
+        "dist_to_campus": 3.89
+      },
+      {
+        "prec_id": "MO",
+        "name": "MONROETON ELEMENTARY",
+        "desc": "MONROETON",
+        "lat": 36.29972,
+        "lon": -79.76541,
+        "dist_to_campus": 6.54
+      },
+      {
+        "prec_id": "RE-2",
+        "name": "REIDSVILLE MIDDLE SCHOOL",
+        "desc": "REIDSVILLE-2",
+        "lat": 36.31535,
+        "lon": -79.66949,
+        "dist_to_campus": 7.02
+      },
+      {
+        "prec_id": "NB",
+        "name": "BETHANY ELEMENTARY SCHOOL",
+        "desc": "NEW BETHEL",
+        "lat": 36.3218,
+        "lon": -79.85622,
+        "dist_to_campus": 7.71
+      }
+    ]
+  },
+  "rcccvote": {
+    "primary_precinct": "26",
+    "primary_name": "EAST ROWAN HIGH SCHOOL - LIBRARY",
+    "primary_lat": 35.58244,
+    "primary_lon": -80.38638,
+    "dist_to_campus": 2.14,
+    "nearby_precincts": [
+      {
+        "prec_id": "26",
+        "name": "EAST ROWAN HIGH SCHOOL - LIBRARY",
+        "desc": "GOLD KNOB",
+        "lat": 35.58244,
+        "lon": -80.38638,
+        "dist_to_campus": 2.14
+      },
+      {
+        "prec_id": "25",
+        "name": "ROCKWELL AMERICAN LEGION BUILDING",
+        "desc": "ROCKWELL",
+        "lat": 35.54286,
+        "lon": -80.39136,
+        "dist_to_campus": 2.18
+      },
+      {
+        "prec_id": "01",
+        "name": "WEST PARK BAPTIST CHURCH",
+        "desc": "BARNHARDT MILL",
+        "lat": 35.53729,
+        "lon": -80.43644,
+        "dist_to_campus": 2.2
+      },
+      {
+        "prec_id": "14A",
+        "name": "GRANITE QUARRY MUNICIPAL BUILDING",
+        "desc": "GRANITE QUARRY",
+        "lat": 35.60404,
+        "lon": -80.42842,
+        "dist_to_campus": 2.72
+      },
+      {
+        "prec_id": "13",
+        "name": "ROCK GROVE METHODIST CHURCH - FELLOWSHIP BLDG",
+        "desc": "ROCK GROVE",
+        "lat": 35.53966,
+        "lon": -80.48063,
+        "dist_to_campus": 3.93
+      }
+    ]
+  },
+  "sampsonccvote": {
+    "primary_precinct": "CLCE",
+    "primary_name": "SAMPSON COUNTY AGRI-EXPO CENTER (CIVIC CENTER)",
+    "primary_lat": 34.99443,
+    "primary_lon": -78.32139,
+    "dist_to_campus": 0.62,
+    "nearby_precincts": [
+      {
+        "prec_id": "CLCE",
+        "name": "SAMPSON COUNTY AGRI-EXPO CENTER (CIVIC CENTER)",
+        "desc": "CLINTON, CENTRAL",
+        "lat": 34.99443,
+        "lon": -78.32139,
+        "dist_to_campus": 0.62
+      },
+      {
+        "prec_id": "CLEA",
+        "name": "SAMPSON COUNTY AGRI-EXPO CENTER (CIVIC CENTER)",
+        "desc": "CLINTON, EAST",
+        "lat": 35.00147,
+        "lon": -78.27467,
+        "dist_to_campus": 2.08
+      },
+      {
+        "prec_id": "CLNE",
+        "name": "SAMPSON COUNTY AGRI-EXPO CENTER (CIVIC CENTER)",
+        "desc": "CLINTON, NORTHEAST",
+        "lat": 35.02795,
+        "lon": -78.32761,
+        "dist_to_campus": 2.31
+      },
+      {
+        "prec_id": "CLSW",
+        "name": "SAMPSON COMMUNITY COLLEGE- ACTIVITY BUILDING",
+        "desc": "CLINTON, SOUTHWEST",
+        "lat": 34.94794,
+        "lon": -78.33981,
+        "dist_to_campus": 3.79
+      },
+      {
+        "prec_id": "CLWE",
+        "name": "SAMPSON COMMUNITY COLLEGE-ACTIVITY BUILDING",
+        "desc": "CLINTON, WEST",
+        "lat": 34.97732,
+        "lon": -78.38564,
+        "dist_to_campus": 4.45
+      }
+    ]
+  },
+  "sandhillsccvote": {
+    "primary_precinct": "EAB",
+    "primary_name": "NEW LIFE TABERNACLE CHURCH FELLOWSHIP HALL",
+    "primary_lat": 35.1188,
+    "primary_lon": -79.41207,
+    "dist_to_campus": 1.48,
+    "nearby_precincts": [
+      {
+        "prec_id": "EAB",
+        "name": "NEW LIFE TABERNACLE CHURCH FELLOWSHIP HALL",
+        "desc": "EAST ABERDEEN",
+        "lat": 35.1188,
+        "lon": -79.41207,
+        "dist_to_campus": 1.48
+      },
+      {
+        "prec_id": "WAB",
+        "name": "ABERDEEN RECREATION STATION",
+        "desc": "WEST ABERDEEN",
+        "lat": 35.14215,
+        "lon": -79.48022,
+        "dist_to_campus": 2.96
+      },
+      {
+        "prec_id": "SSP",
+        "name": "DOUGLASS COMMUNITY CENTER",
+        "desc": "SOUTH SOUTHERN PINES",
+        "lat": 35.17842,
+        "lon": -79.41899,
+        "dist_to_campus": 3.01
+      },
+      {
+        "prec_id": "PDN",
+        "name": "SOUTHERN PINES RECREATION CTR",
+        "desc": "PINEDENE",
+        "lat": 35.14621,
+        "lon": -79.37277,
+        "dist_to_campus": 3.23
+      },
+      {
+        "prec_id": "PHB2",
+        "name": "PINECREST HIGH SCHOOL - AUDITORIUM",
+        "desc": "PINEHURST B2",
+        "lat": 35.17709,
+        "lon": -79.45476,
+        "dist_to_campus": 3.23
+      }
+    ]
+  },
+  "spccvote": {
+    "primary_precinct": "009",
+    "primary_name": "EDWARDS MEMORIAL LIBRARY",
+    "primary_lat": 34.98645,
+    "primary_lon": -80.37402,
+    "dist_to_campus": 0.67,
+    "nearby_precincts": [
+      {
+        "prec_id": "009",
+        "name": "EDWARDS MEMORIAL LIBRARY",
+        "desc": "009",
+        "lat": 34.98645,
+        "lon": -80.37402,
+        "dist_to_campus": 0.67
+      },
+      {
+        "prec_id": "036",
+        "name": "CROSSROADS AME ZION CHURCH",
+        "desc": "036",
+        "lat": 35.03991,
+        "lon": -80.35498,
+        "dist_to_campus": 3.4
+      },
+      {
+        "prec_id": "027",
+        "name": "ALLENS CROSSROADS VFD",
+        "desc": "027",
+        "lat": 34.9374,
+        "lon": -80.37357,
+        "dist_to_campus": 3.76
+      },
+      {
+        "prec_id": "008",
+        "name": "WINGATE COMMUNITY CENTER",
+        "desc": "008",
+        "lat": 34.98105,
+        "lon": -80.45677,
+        "dist_to_campus": 5.31
+      },
+      {
+        "prec_id": "034",
+        "name": "MIDWAY BAPTIST CHURCH",
+        "desc": "034",
+        "lat": 35.03991,
+        "lon": -80.45999,
+        "dist_to_campus": 6.41
+      }
+    ]
+  },
+  "southeasternccvote": {
+    "primary_precinct": "P07",
+    "primary_name": "CHADBOURN-CHADBOURN MUNICIPAL ANNEX",
+    "primary_lat": 34.32123,
+    "primary_lon": -78.84399,
+    "dist_to_campus": 1.13,
+    "nearby_precincts": [
+      {
+        "prec_id": "P07",
+        "name": "CHADBOURN-CHADBOURN MUNICIPAL ANNEX",
+        "desc": "CHADBOURN",
+        "lat": 34.32123,
+        "lon": -78.84399,
+        "dist_to_campus": 1.13
+      },
+      {
+        "prec_id": "P223",
+        "name": "WHITEVILLE MID - VINELAND STATION DEPOT",
+        "desc": "WHITEVILLE MID",
+        "lat": 34.34177,
+        "lon": -78.76167,
+        "dist_to_campus": 3.79
+      },
+      {
+        "prec_id": "P22A",
+        "name": "SOUTH WHITEVILLE - COLUMBUS COUNTY FAIRGROUND",
+        "desc": "SOUTH WHITEVILLE",
+        "lat": 34.27739,
+        "lon": -78.75701,
+        "dist_to_campus": 4.99
+      },
+      {
+        "prec_id": "P06",
+        "name": "CERRO GORDO- CERRO GORDO TOWN HALL",
+        "desc": "CERRO GORDO",
+        "lat": 34.31756,
+        "lon": -78.93077,
+        "dist_to_campus": 6.09
+      },
+      {
+        "prec_id": "P15",
+        "name": "TATUM - WOW LODGE 1088",
+        "desc": "TATUM",
+        "lat": 34.40384,
+        "lon": -78.87956,
+        "dist_to_campus": 6.38
+      }
+    ]
+  },
+  "southwesternccvote": {
+    "primary_precinct": "CAS",
+    "primary_name": "CASHIERS RECREATION CENTER",
+    "primary_lat": 35.07976,
+    "primary_lon": -83.09051,
+    "dist_to_campus": 2.26,
+    "nearby_precincts": [
+      {
+        "prec_id": "CAS",
+        "name": "CASHIERS RECREATION CENTER",
+        "desc": "CASHIERS",
+        "lat": 35.07976,
+        "lon": -83.09051,
+        "dist_to_campus": 2.26
+      },
+      {
+        "prec_id": "GLV",
+        "name": "GLENVILLE CASHIERS EMS RESCUE",
+        "desc": "GLENVILLE",
+        "lat": 35.17152,
+        "lon": -83.13703,
+        "dist_to_campus": 4.61
+      },
+      {
+        "prec_id": "CAN",
+        "name": "CANADA FIRE STATION",
+        "desc": "CANADA",
+        "lat": 35.22336,
+        "lon": -83.00285,
+        "dist_to_campus": 9.68
+      },
+      {
+        "prec_id": "RIV",
+        "name": "VWF BUILDING",
+        "desc": "RIVER",
+        "lat": 35.27211,
+        "lon": -83.11132,
+        "dist_to_campus": 11.18
+      },
+      {
+        "prec_id": "CUL",
+        "name": "HEALTH AND HUMAN SCIENCES (HHS)",
+        "desc": "CULLOWHEE",
+        "lat": 35.30066,
+        "lon": -83.18867,
+        "dist_to_campus": 13.98
+      }
+    ]
+  },
+  "stanlyccvote": {
+    "primary_precinct": "0003",
+    "primary_name": "STANLY COUNTY SENIOR CENTER",
+    "primary_lat": 35.36564,
+    "primary_lon": -80.18893,
+    "dist_to_campus": 0.44,
+    "nearby_precincts": [
+      {
+        "prec_id": "0003",
+        "name": "STANLY COUNTY SENIOR CENTER",
+        "desc": "ALBEMARLE NUMBER 3",
+        "lat": 35.36564,
+        "lon": -80.18893,
+        "dist_to_campus": 0.44
+      },
+      {
+        "prec_id": "0011",
+        "name": "CENTERVIEW BAPTIST CHURCH FELLOWSHIP HALL",
+        "desc": "ALBEMARLE NUMBER 11",
+        "lat": 35.38837,
+        "lon": -80.19663,
+        "dist_to_campus": 1.52
+      },
+      {
+        "prec_id": "0108",
+        "name": "E E WADDELL CENTER",
+        "desc": "ALBEMARLE 8.1",
+        "lat": 35.34245,
+        "lon": -80.18422,
+        "dist_to_campus": 1.8
+      },
+      {
+        "prec_id": "0107",
+        "name": "ALBEMARLE MIDDLE SCHOOL",
+        "desc": "ALBEMARLE 7.1",
+        "lat": 35.35495,
+        "lon": -80.16438,
+        "dist_to_campus": 1.99
+      },
+      {
+        "prec_id": "0110",
+        "name": "STANLY COMMUNITY COLLEGE AUTOMOTIVE PROGRAMS BUILDING",
+        "desc": "ALBEMARLE 10.1",
+        "lat": 35.3385,
+        "lon": -80.22352,
+        "dist_to_campus": 2.44
+      }
+    ]
+  },
+  "surryccvote": {
+    "primary_precinct": "29",
+    "primary_name": "SURRY CO SERVICE CENTER - TRAINING CTR",
+    "primary_lat": 36.41991,
+    "primary_lon": -80.72889,
+    "dist_to_campus": 2.23,
+    "nearby_precincts": [
+      {
+        "prec_id": "29",
+        "name": "SURRY CO SERVICE CENTER - TRAINING CTR",
+        "desc": "DOBSON COMBINED",
+        "lat": 36.41991,
+        "lon": -80.72889,
+        "dist_to_campus": 2.23
+      },
+      {
+        "prec_id": "04",
+        "name": "DOBSON RESCUE SQUAD",
+        "desc": "DOBSON #3",
+        "lat": 36.35977,
+        "lon": -80.70688,
+        "dist_to_campus": 2.29
+      },
+      {
+        "prec_id": "05",
+        "name": "FELLOWSHIP BAPTIST CHURCH - FELLOWSHIP HALL",
+        "desc": "ELDORA",
+        "lat": 36.39451,
+        "lon": -80.60311,
+        "dist_to_campus": 5.78
+      },
+      {
+        "prec_id": "11",
+        "name": "JOT-UM-DOWN VFD",
+        "desc": "MARSH",
+        "lat": 36.31279,
+        "lon": -80.75356,
+        "dist_to_campus": 6.11
+      },
+      {
+        "prec_id": "18",
+        "name": "FAITH BAPTIST CHURCH - FELLOWSHIP HALL",
+        "desc": "MT AIRY #8",
+        "lat": 36.47243,
+        "lon": -80.65382,
+        "dist_to_campus": 6.24
+      }
+    ]
+  },
+  "tricountyccvote": {
+    "primary_precinct": "MURS",
+    "primary_name": "MURPHY SOUTH",
+    "primary_lat": 35.09401,
+    "primary_lon": -84.01132,
+    "dist_to_campus": 1.37,
+    "nearby_precincts": [
+      {
+        "prec_id": "MURS",
+        "name": "MURPHY SOUTH",
+        "desc": "MURPHY SOUTH",
+        "lat": 35.09401,
+        "lon": -84.01132,
+        "dist_to_campus": 1.37
+      },
+      {
+        "prec_id": "MURN",
+        "name": "MURPHY NORTH",
+        "desc": "MURPHY NORTH",
+        "lat": 35.11919,
+        "lon": -84.03455,
+        "dist_to_campus": 2.22
+      },
+      {
+        "prec_id": "BRAS",
+        "name": "BRASSTOWN",
+        "desc": "BRASSTOWN",
+        "lat": 35.02388,
+        "lon": -84.00511,
+        "dist_to_campus": 4.67
+      },
+      {
+        "prec_id": "PCHT",
+        "name": "PEACHTREE",
+        "desc": "PEACHTREE",
+        "lat": 35.09397,
+        "lon": -83.94481,
+        "dist_to_campus": 5.06
+      },
+      {
+        "prec_id": "RGER",
+        "name": "RANGER",
+        "desc": "RANGER",
+        "lat": 35.05087,
+        "lon": -84.1146,
+        "dist_to_campus": 5.2
+      }
+    ]
+  },
+  "vgccvote": {
+    "primary_precinct": "CH",
+    "primary_name": "EATON JOHNSON MIDDLE GYMNASIUM",
+    "primary_lat": 36.3307,
+    "primary_lon": -78.40036,
+    "dist_to_campus": 0.52,
+    "nearby_precincts": [
+      {
+        "prec_id": "CH",
+        "name": "EATON JOHNSON MIDDLE GYMNASIUM",
+        "desc": "CENTRAL HENDERSON",
+        "lat": 36.3307,
+        "lon": -78.40036,
+        "dist_to_campus": 0.52
+      },
+      {
+        "prec_id": "NV",
+        "name": "NORTHERN VANCE MIDDLE SCHOOL",
+        "desc": "NV",
+        "lat": 36.35059,
+        "lon": -78.40409,
+        "dist_to_campus": 0.87
+      },
+      {
+        "prec_id": "WH",
+        "name": "CENTRAL FIRE STATION",
+        "desc": "WH",
+        "lat": 36.33946,
+        "lon": -78.43172,
+        "dist_to_campus": 1.68
+      },
+      {
+        "prec_id": "SH",
+        "name": "H LESLIE PERRY MEMORIAL LIBRARY",
+        "desc": "SOUTH HENDERSON",
+        "lat": 36.30063,
+        "lon": -78.41788,
+        "dist_to_campus": 2.75
+      },
+      {
+        "prec_id": "SCRK",
+        "name": "AYCOCK RECREATION COMPLEX",
+        "desc": "SCRK",
+        "lat": 36.29763,
+        "lon": -78.33158,
+        "dist_to_campus": 4.8
+      }
+    ]
+  },
+  "waketechvote": {
+    "primary_precinct": "01-40",
+    "primary_name": "WORTHDALE COMMUNITY CENTER",
+    "primary_lat": 35.77395,
+    "primary_lon": -78.58295,
+    "dist_to_campus": 0.73,
+    "nearby_precincts": [
+      {
+        "prec_id": "01-40",
+        "name": "WORTHDALE COMMUNITY CENTER",
+        "desc": "PRECINCT 01-40",
+        "lat": 35.77395,
+        "lon": -78.58295,
+        "dist_to_campus": 0.73
+      },
+      {
+        "prec_id": "17-07",
+        "name": "ROGERS LANE ELEMENTARY SCHOOL",
+        "desc": "PRECINCT 17-07",
+        "lat": 35.77653,
+        "lon": -78.55609,
+        "dist_to_campus": 0.86
+      },
+      {
+        "prec_id": "17-09",
+        "name": "ABUNDANT LIFE CHRISTIAN CENTER",
+        "desc": "PRECINCT 17-09",
+        "lat": 35.7576,
+        "lon": -78.56134,
+        "dist_to_campus": 1.09
+      },
+      {
+        "prec_id": "01-19",
+        "name": "POE MAGNET ELEMENTARY SCHOOL",
+        "desc": "PRECINCT 01-19",
+        "lat": 35.77161,
+        "lon": -78.60561,
+        "dist_to_campus": 1.98
+      },
+      {
+        "prec_id": "01-20",
+        "name": "ROBERTS PARK COMMUNITY CENTER",
+        "desc": "PRECINCT 01-20",
+        "lat": 35.76891,
+        "lon": -78.61455,
+        "dist_to_campus": 2.49
+      }
+    ]
+  },
+  "wayneccvote": {
+    "primary_precinct": "12",
+    "primary_name": "12 - ADAMSVILLE BAPTIST CHURCH",
+    "primary_lat": 35.39366,
+    "primary_lon": -77.9411,
+    "dist_to_campus": 0.83,
+    "nearby_precincts": [
+      {
+        "prec_id": "12",
+        "name": "12 - ADAMSVILLE BAPTIST CHURCH",
+        "desc": "12",
+        "lat": 35.39366,
+        "lon": -77.9411,
+        "dist_to_campus": 0.83
+      },
+      {
+        "prec_id": "11",
+        "name": "11- GREENLEAF CHRISTIAN CHURCH",
+        "desc": "11",
+        "lat": 35.40697,
+        "lon": -77.96434,
+        "dist_to_campus": 1.13
+      },
+      {
+        "prec_id": "06",
+        "name": "06 - CROSSWAY CHURCH",
+        "desc": "06",
+        "lat": 35.42525,
+        "lon": -77.92629,
+        "dist_to_campus": 1.7
+      },
+      {
+        "prec_id": "22",
+        "name": "22 - FAITH ALLIANCE CHURCH",
+        "desc": "22",
+        "lat": 35.37428,
+        "lon": -77.94568,
+        "dist_to_campus": 2.16
+      },
+      {
+        "prec_id": "29",
+        "name": "29 - WAYNE COUNTY PUBLIC LIBRARY",
+        "desc": "29",
+        "lat": 35.38632,
+        "lon": -77.97863,
+        "dist_to_campus": 2.34
+      }
+    ]
+  },
+  "wpccvote": {
+    "primary_precinct": "0039",
+    "primary_name": "MORGANTON 9    AGRICULTURAL CTR",
+    "primary_lat": 35.72822,
+    "primary_lon": -81.65905,
+    "dist_to_campus": 0.27,
+    "nearby_precincts": [
+      {
+        "prec_id": "0039",
+        "name": "MORGANTON 9    AGRICULTURAL CTR",
+        "desc": "MORGANTON 09",
+        "lat": 35.72822,
+        "lon": -81.65905,
+        "dist_to_campus": 0.27
+      },
+      {
+        "prec_id": "0031",
+        "name": "MORGANTON 1  COMMA",
+        "desc": "MORGANTON 01",
+        "lat": 35.7454,
+        "lon": -81.68115,
+        "dist_to_campus": 1.82
+      },
+      {
+        "prec_id": "0036",
+        "name": "MORGANTON 6      MULL ELEMENTARY",
+        "desc": "MORGANTON 06",
+        "lat": 35.69945,
+        "lon": -81.63974,
+        "dist_to_campus": 2.12
+      },
+      {
+        "prec_id": "0038",
+        "name": "MORGANTON 8      PLEASANT VIEW BAPTIST",
+        "desc": "MORGANTON 08",
+        "lat": 35.75751,
+        "lon": -81.64889,
+        "dist_to_campus": 2.37
+      },
+      {
+        "prec_id": "0034",
+        "name": "MORGANTON 4     BURKE SENIOR CENTER",
+        "desc": "MORGANTON 04",
+        "lat": 35.73344,
+        "lon": -81.70333,
+        "dist_to_campus": 2.44
+      }
+    ]
+  },
+  "wilkesccvote": {
+    "primary_precinct": "127",
+    "primary_name": "WILKESBORO CIVIC CENTER",
+    "primary_lat": 36.1393,
+    "primary_lon": -81.17055,
+    "dist_to_campus": 1.16,
+    "nearby_precincts": [
+      {
+        "prec_id": "127",
+        "name": "WILKESBORO CIVIC CENTER",
+        "desc": "WILKESBORO #1",
+        "lat": 36.1393,
+        "lon": -81.17055,
+        "dist_to_campus": 1.16
+      },
+      {
+        "prec_id": "118",
+        "name": "VETERANS OF FOREIGN WARS (VFW) HALL",
+        "desc": "NORTH WILKESBORO",
+        "lat": 36.17164,
+        "lon": -81.13779,
+        "dist_to_campus": 1.79
+      },
+      {
+        "prec_id": "129",
+        "name": "WILKESBORO FIRE DEPT CHERRY ST",
+        "desc": "WILKESBORO #3",
+        "lat": 36.12434,
+        "lon": -81.12704,
+        "dist_to_campus": 2.26
+      },
+      {
+        "prec_id": "104",
+        "name": "CRICKET FIRE DEPARTMENT",
+        "desc": "CRICKET",
+        "lat": 36.16742,
+        "lon": -81.19103,
+        "dist_to_campus": 2.44
+      },
+      {
+        "prec_id": "108",
+        "name": "WILKES SENIOR CENTER",
+        "desc": "FAIRPLAINS",
+        "lat": 36.19094,
+        "lon": -81.10475,
+        "dist_to_campus": 3.97
+      }
+    ]
+  },
+  "wilsonccvote": {
+    "primary_precinct": "PRWB",
+    "primary_name": "LADDIE T BELL COMMUNITY CENTER",
+    "primary_lat": 35.71642,
+    "primary_lon": -77.91793,
+    "dist_to_campus": 0.86,
+    "nearby_precincts": [
+      {
+        "prec_id": "PRWB",
+        "name": "LADDIE T BELL COMMUNITY CENTER",
+        "desc": "WILSON B",
+        "lat": 35.71642,
+        "lon": -77.91793,
+        "dist_to_campus": 0.86
+      },
+      {
+        "prec_id": "PRWI",
+        "name": "WILSON COUNTY AGRICULTURE CENTER",
+        "desc": "WILSON I",
+        "lat": 35.7012,
+        "lon": -77.94222,
+        "dist_to_campus": 0.9
+      },
+      {
+        "prec_id": "PRWC",
+        "name": "VANDAHLIA H REID COMMUNITY CENTER",
+        "desc": "WILSON C",
+        "lat": 35.72773,
+        "lon": -77.9277,
+        "dist_to_campus": 1.45
+      },
+      {
+        "prec_id": "PRWQ",
+        "name": "AMERICAN LEGION BLDG",
+        "desc": "WILSON Q",
+        "lat": 35.71408,
+        "lon": -77.89941,
+        "dist_to_campus": 1.66
+      },
+      {
+        "prec_id": "PRWA",
+        "name": "WILSON COUNTY PUBLIC LIBRARY",
+        "desc": "WILSON A",
+        "lat": 35.73101,
+        "lon": -77.91601,
+        "dist_to_campus": 1.8
+      }
+    ]
+  }
+}

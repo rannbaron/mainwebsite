@@ -4,7 +4,7 @@ North Carolina State Board of Elections (NCSBE) Bi-Weekly Automation Engine
 Checks NCSBE official endpoints every two weeks for upcoming elections (General, Primaries,
 Runoffs, Municipal, and Special elections), downloads the latest early voting sites and county
 BOE data across all 100 NC counties, includes local races (county commissioners, school boards,
-judges, municipal councils) and all three voting guides (Democratic, Republican, Independent),
+judges, municipal councils) and candidate voting guides (Democratic and Independent),
 and rebuilds the entire NC student voting platform.
 
 Designed to run completely hands-free on GitLab CI/CD or GitHub Actions without requiring
@@ -217,29 +217,34 @@ def fetch_and_update_early_voting_sites(election_info):
 
     log(f"Successfully cached early voting sites for {len(county_sites)} counties (total {sites_found_count} sites updated).")
 
-def run_platform_build():
+def run_platform_build(force_eday=False):
     """
-    Executes the full NC Student Voting platform build scripts.
+    Executes the appropriate NC Student Voting platform build scripts.
+    During Early Voting: runs build_entire_nc_voting_system.py.
+    After Early Voting ends: replaces all guides with Election Day voting info via generate_election_day_pages.py.
     """
-    log("Step 4: Rebuilding student voting guides, master directory, and dynamic QR portal...")
+    now = datetime.datetime.now()
+    # Early voting for 2026 General concludes Saturday, October 31, 2026 at 3:00 PM EDT
+    early_voting_ended = force_eday or (now >= datetime.datetime(2026, 10, 31, 15, 0, 0))
 
-    # Run main build
-    cmd_build = [sys.executable, os.path.join(MAIN_DIR, 'build_entire_nc_voting_system.py')]
-    log(f"Running: {' '.join(cmd_build)}")
-    res = subprocess.run(cmd_build, cwd=MAIN_DIR, capture_output=True, text=True)
-    if res.returncode != 0:
-        log(f"Build failed: {res.stderr}")
+    if early_voting_ended:
+        log("Early voting has ended. Running Election Day generator to replace all guides with Election Day precinct info...")
+        cmd_ed = [sys.executable, os.path.join(MAIN_DIR, 'generate_election_day_pages.py')]
+        log(f"Running: {' '.join(cmd_ed)}")
+        res_ed = subprocess.run(cmd_ed, cwd=MAIN_DIR, capture_output=True, text=True)
+        if res_ed.returncode != 0:
+            log(f"Election Day generator failed: {res_ed.stderr}")
+        else:
+            log("Election Day pages successfully generated and replaced.")
     else:
-        log("Main platform build completed successfully.")
-
-    # Run static Election Day pre-generator
-    cmd_ed = [sys.executable, os.path.join(MAIN_DIR, 'generate_election_day_pages.py')]
-    log(f"Running: {' '.join(cmd_ed)}")
-    res_ed = subprocess.run(cmd_ed, cwd=MAIN_DIR, capture_output=True, text=True)
-    if res_ed.returncode != 0:
-        log(f"Election Day pre-generator failed: {res_ed.stderr}")
-    else:
-        log("Election Day static pre-generator completed successfully.")
+        log("Early voting is currently active. Building statewide early voting guides with Sunday hours and precinct geolocation...")
+        cmd_build = [sys.executable, os.path.join(MAIN_DIR, 'build_entire_nc_voting_system.py')]
+        log(f"Running: {' '.join(cmd_build)}")
+        res = subprocess.run(cmd_build, cwd=MAIN_DIR, capture_output=True, text=True)
+        if res.returncode != 0:
+            log(f"Build failed: {res.stderr}")
+        else:
+            log("Main statewide platform build completed successfully.")
 
 def git_commit_and_push_if_changed(election_info):
     """
@@ -271,7 +276,7 @@ def git_commit_and_push_if_changed(election_info):
     subprocess.run(['git', 'add', '-A'], cwd=MAIN_DIR)
     commit_msg = (
         f"Bi-weekly NCSBE update: Refreshed for {election_info['election_title']} "
-        f"({election_info['election_date']}) with local races, voting sites, and 3-guide balance [skip ci]"
+        f"({election_info['election_date']}) with local races, voting sites, and voting guides [skip ci]"
     )
     subprocess.run(['git', 'commit', '-m', commit_msg], cwd=MAIN_DIR)
 
