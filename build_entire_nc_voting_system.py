@@ -6,8 +6,8 @@ import re
 import qrcode
 import qrcode.image.svg
 
-MAIN_DIR = '/home/rann/Documents/mainwebsite'
-LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26'
+MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
+LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
 
 print("1. Loading cached NC election data...")
@@ -88,7 +88,7 @@ for inst in institutions:
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="white")
         img.save(png_path)
-        img.save(f"{LOCAL_DIR}/{key}_qr.png")
+        if LOCAL_DIR: img.save(f"{LOCAL_DIR}/{key}_qr.png")
     with open(png_path, 'rb') as f:
         qr_b64_map[key] = base64.b64encode(f.read()).decode('utf-8')
 
@@ -970,8 +970,50 @@ for inst in institutions:
       }}
     }}
 
+    function checkElectionDayMode() {{
+      const EARLY_VOTING_DEADLINE = new Date('2026-10-31T15:00:00-04:00');
+      const urlParams = new URLSearchParams(window.location.search);
+      if (new Date() >= EARLY_VOTING_DEADLINE || urlParams.get('mode') === 'election_day') {{
+        const topBar = document.querySelector('body > div:first-child');
+        if (topBar) {{
+          topBar.className = 'bg-gradient-to-r from-red-950 via-rose-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-bold text-slate-100 border-b border-rose-900/50 shadow-md';
+          topBar.innerHTML = '<span class="inline-flex items-center gap-2"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span></span><span>🔴 Early Voting Has Ended • <b>ELECTION DAY IS TUESDAY, NOVEMBER 3, 2026</b> • Polls Open <b>6:30 AM – 7:30 PM</b></span></span>';
+        }}
+        const sitesSection = document.getElementById('voting-sites');
+        if (sitesSection && !document.getElementById('election-day-alert')) {{
+          const alertDiv = document.createElement('div');
+          alertDiv.id = 'election-day-alert';
+          alertDiv.className = 'bg-rose-950/60 border-2 border-rose-500 rounded-2xl p-5 sm:p-6 mb-8 text-white shadow-xl';
+          alertDiv.innerHTML = `
+            <div class="flex items-start gap-4">
+              <span class="text-3xl">⚠️</span>
+              <div class="space-y-3">
+                <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30">Early Voting Concluded</span>
+                <h2 class="text-lg sm:text-xl font-bold text-white">Election Day Voting Rules (Tuesday, Nov 3):</h2>
+                <div class="p-3 rounded-xl bg-slate-950/80 border border-rose-900/60 text-xs sm:text-sm space-y-2 text-slate-200">
+                  <p><b>1. Assigned Precinct Only:</b> Early voting sites are closed. On Election Day, you must vote at your specifically assigned precinct polling place based on your address between <b>6:30 AM and 7:30 PM</b>.</p>
+                  <p><b>2. No Same-Day Registration:</b> Under NC Gen. Stat. § 163-82.6, same-day registration is illegal on Election Day. You must already be registered.</p>
+                  <p><b>3. In line by 7:30 PM? Stay in line!</b> You are legally entitled to vote.</p>
+                </div>
+                <div class="flex flex-wrap gap-2 pt-1">
+                  <a href="https://vt.ncsbe.gov/pplkup/" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-md">
+                    Find Your Assigned Precinct (NCSBE Lookup) ↗
+                  </a>
+                  <a href="https://vt.ncsbe.gov/RegLkup/" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-md">
+                    Check Registration & Sample Ballot ↗
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+          sitesSection.insertBefore(alertDiv, sitesSection.firstChild);
+        }}
+      }}
+    }}
+
     // Check if location was already detected or requested via URL
     window.addEventListener('DOMContentLoaded', () => {{
+      checkElectionDayMode();
       const urlParams = new URLSearchParams(window.location.search);
       const savedLat = sessionStorage.getItem('nc_user_lat');
       const savedLon = sessionStorage.getItem('nc_user_lon');
@@ -996,8 +1038,9 @@ for inst in institutions:
         f.write(html_content)
 
     # Mirror to local Fall26 workspace
-    with open(f"{LOCAL_DIR}/{key}.html", 'w', encoding='utf-8') as f:
-        f.write(html_content)
+    if LOCAL_DIR:
+        with open(f"{LOCAL_DIR}/{key}.html", 'w', encoding='utf-8') as f:
+            f.write(html_content)
 
 print(f"Generated {len(institutions)} individual campus pages with geolocation.")
 
@@ -1410,7 +1453,20 @@ campuses_html = f'''<!DOCTYPE html>
     }}
 
     // Check if location is already saved in session
+    function checkElectionDayMode() {{
+      const EARLY_VOTING_DEADLINE = new Date('2026-10-31T15:00:00-04:00');
+      const urlParams = new URLSearchParams(window.location.search);
+      if (new Date() >= EARLY_VOTING_DEADLINE || urlParams.get('mode') === 'election_day') {{
+        const topBar = document.querySelector('body > div:first-child');
+        if (topBar) {{
+          topBar.className = 'bg-gradient-to-r from-red-950 via-rose-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-bold text-slate-100 border-b border-rose-900/50 shadow-md';
+          topBar.innerHTML = '<span class="inline-flex items-center gap-2"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span></span><span>🔴 Early Voting Has Ended • <b>ELECTION DAY IS TUESDAY, NOVEMBER 3, 2026</b> • Polls Open <b>6:30 AM – 7:30 PM</b></span></span>';
+        }}
+      }}
+    }}
+
     window.addEventListener('DOMContentLoaded', () => {{
+      checkElectionDayMode();
       const savedLat = sessionStorage.getItem('nc_user_lat');
       const savedLon = sessionStorage.getItem('nc_user_lon');
       if (savedLat && savedLon) {{
@@ -1436,8 +1492,9 @@ os.makedirs(f"{MAIN_DIR}/campuses", exist_ok=True)
 with open(f"{MAIN_DIR}/campuses/index.html", 'w', encoding='utf-8') as f:
     f.write(campuses_html)
 
-with open(f"{LOCAL_DIR}/campuses.html", 'w', encoding='utf-8') as f:
-    f.write(campuses_html)
+if LOCAL_DIR:
+    with open(f"{LOCAL_DIR}/campuses.html", 'w', encoding='utf-8') as f:
+        f.write(campuses_html)
 
 print("Master campuses.html updated with geolocation!")
 
@@ -1820,8 +1877,26 @@ vote_html = f'''<!DOCTYPE html>
       alert(`Copied link to ${{currentCampus.short_name || currentCampus.name}} Early Voting Guide!`);
     }}
 
+    function checkElectionDayMode() {{
+      const EARLY_VOTING_DEADLINE = new Date('2026-10-31T15:00:00-04:00');
+      const urlParams = new URLSearchParams(window.location.search);
+      if (new Date() >= EARLY_VOTING_DEADLINE || urlParams.get('mode') === 'election_day') {{
+        const topBar = document.querySelector('body > div:first-child');
+        if (topBar) {{
+          topBar.className = 'bg-gradient-to-r from-red-950 via-rose-950 to-slate-950 px-4 py-2 text-center text-xs sm:text-sm font-bold text-slate-100 border-b border-rose-900/50 shadow-md';
+          topBar.innerHTML = '<span class="inline-flex items-center gap-2"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span></span><span>🔴 Early Voting Has Ended • <b>ELECTION DAY IS TUESDAY, NOVEMBER 3, 2026</b> • Polls Open <b>6:30 AM – 7:30 PM</b></span></span>';
+        }}
+        const badge = document.getElementById('qr-status-badge');
+        if (badge) {{
+          badge.innerHTML = '<span>🔴 Election Day Mode</span>';
+          badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-rose-950/80 text-rose-300 border border-rose-700/60 mb-2';
+        }}
+      }}
+    }}
+
     // Auto-detect if location permission is already granted
     window.addEventListener('DOMContentLoaded', () => {{
+      checkElectionDayMode();
       const savedLat = sessionStorage.getItem('nc_user_lat');
       const savedLon = sessionStorage.getItem('nc_user_lon');
       if (savedLat && savedLon) {{
@@ -1853,8 +1928,9 @@ os.makedirs(f"{MAIN_DIR}/vote", exist_ok=True)
 with open(f"{MAIN_DIR}/vote/index.html", 'w', encoding='utf-8') as f:
     f.write(vote_html)
 
-with open(f"{LOCAL_DIR}/vote.html", 'w', encoding='utf-8') as f:
-    f.write(vote_html)
+if LOCAL_DIR:
+    with open(f"{LOCAL_DIR}/vote.html", 'w', encoding='utf-8') as f:
+        f.write(vote_html)
 
 print("Updated /vote with dynamic Main QR code and Zip Code lookup!")
 print("ALL DONE!")

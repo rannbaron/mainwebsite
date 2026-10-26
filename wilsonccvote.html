@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wilson CC Student Guide to Early Voting in Wilson County | Rann Bar-On</title>
-  <meta name="description" content="Complete early voting guide for Wilson Community College students in Wilson County, NC: voting sites, dynamic geolocation, voter ID rules, candidate guides (Dem, Rep, Ind), and hours.">
+  <title>Wilson CC Student Election Day Voting Guide (Tuesday, Nov 3) | Rann Bar-On</title>
+  <meta name="description" content="Election Day voting guide for Wilson Community College students in Wilson County, NC: assigned precinct polling place lookup, hours (6:30 AM - 7:30 PM), voter ID rules, and candidate guides.">
   
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rannbar-on.com/wilsonccvote">
-  <meta property="og:title" content="Wilson CC Student Guide to Early Voting in Wilson County">
-  <meta property="og:description" content="Everything Wilson Community College students need to cast their ballot early in Wilson County: dynamic nearest site detection, voter ID rules, and same-day registration.">
+  <meta property="og:title" content="Wilson CC Student Election Day Voting Guide">
+  <meta property="og:description" content="Everything Wilson Community College students need for Election Day (Tuesday, Nov 3): find your assigned precinct polling place, hours, and voter ID rules.">
   <meta property="og:image" content="https://rannbar-on.com/wilsonccvote_qr.png">
 
   <!-- Tailwind CSS -->
@@ -21,7 +21,6 @@
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
-    
     :root {
       --bg: #070b14;
       --card-bg: #0f172a;
@@ -29,59 +28,25 @@
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
     }
-
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg);
       color: var(--text-main);
       overflow-x: hidden;
     }
-
-    .font-mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0b1120;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #334155;
-      border-radius: 3px;
-    }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
 
-  <!-- Auto-Location Redirect Banner (Hidden by default, shown if user is closer to another campus) -->
-  <div id="cross-campus-banner" class="hidden bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 text-white px-4 py-3 text-center text-xs sm:text-sm font-semibold shadow-xl border-b border-indigo-500/40 relative z-50">
-    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-      <div class="flex items-center gap-2">
-        <span class="text-lg">📍</span>
-        <span id="cross-campus-text">Location detected: You are closer to another campus.</span>
-      </div>
-      <div class="flex items-center gap-2">
-        <a id="cross-campus-link" href="#" class="px-3.5 py-1.5 rounded-lg bg-white text-slate-950 font-bold text-xs hover:bg-slate-100 transition shadow-sm">
-          Switch Guide Now →
-        </a>
-        <button onclick="cancelRedirect()" class="px-2.5 py-1.5 rounded-lg bg-black/20 hover:bg-black/40 text-white text-xs transition">
-          Stay on this page
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Top Announcement Bar -->
-  <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
-    <span class="inline-flex items-center gap-1.5">
-      <span class="relative flex h-2 w-2">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+  <!-- Top Announcement Bar (Election Day Mode) -->
+  <div class="bg-gradient-to-r from-red-950 via-rose-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-bold text-slate-100 border-b border-rose-900/50 shadow-md">
+    <span class="inline-flex items-center gap-2">
+      <span class="relative flex h-2.5 w-2.5">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span>
       </span>
-      <span>Early Voting in Wilson County is <b>OPEN NOW</b> through <b>Saturday, October 31, 2026</b></span>
+      <span>🔴 Early Voting Has Ended • <b>ELECTION DAY IS TUESDAY, NOVEMBER 3, 2026</b> • Polls Open <b>6:30 AM – 7:30 PM</b></span>
     </span>
   </div>
 
@@ -98,10 +63,9 @@
         </div>
       </a>
       <div class="flex items-center gap-2 sm:gap-2.5">
-        <button onclick="detectNearestSite()" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 hover:bg-blue-500/30 transition">
-          <span>📍</span>
-          <span class="hidden sm:inline">Detect Nearest Site</span>
-        </button>
+        <a href="#precinct-lookup" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-rose-600 hover:bg-rose-500 text-white transition shadow-sm">
+          📍 Assigned Precinct
+        </a>
         <a href="#voter-guides" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
           🗳️ Guides
         </a>
@@ -125,7 +89,6 @@
         </a>
       </div>
       
-      <!-- Quick Jump Campus Selector -->
       <div class="flex items-center gap-2">
         <label for="campus-quick-jump" class="text-xs text-slate-400 font-medium hidden sm:inline">Switch Campus:</label>
         <select id="campus-quick-jump" onchange="if(this.value) window.location.href=this.value;" class="bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-blue-500 font-medium">
@@ -246,38 +209,38 @@
     </div>
   </nav>
 
-  <!-- Hero Section -->
+  <!-- Hero Section (Election Day Focus) -->
   <section class="relative py-12 sm:py-16 px-4 sm:px-6 border-b border-slate-800/80 overflow-hidden">
     <div class="max-w-4xl mx-auto text-center relative z-10">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30 mb-4">
         <span>🎓 Wilson Community College</span>
         <span class="text-slate-600">•</span>
-        <span>Wilson County, NC</span>
+        <span>Election Day Guide (Nov 3)</span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
         Wilson CC Student Guide <br class="hidden sm:inline"/>
-        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">to Early Voting in Wilson County</span>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-rose-400 via-amber-300 to-orange-300">to Voting on Election Day</span>
       </h1>
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Everything Wilson Community College undergraduate and graduate students need to cast their ballot early. Detect your nearest polling location, compare candidate guides from all perspectives, and make sure your voice is heard!
+        Early voting has concluded. On <b>Election Day (Tuesday, November 3)</b>, North Carolina law requires you to vote at your <b>specifically assigned precinct polling place</b>. Find your precinct, bring your photo ID, and cast your ballot before 7:30 PM!
       </p>
 
       <!-- Key Stat Pills -->
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
-          <div class="text-xs text-slate-400 font-medium">Early Voting Window</div>
-          <div class="text-base font-bold text-white mt-0.5">Oct 15 – Oct 31</div>
-          <div class="text-[11px] text-emerald-400 mt-1 font-mono">Open 7 days/wk</div>
+          <div class="text-xs text-slate-400 font-medium">Election Day</div>
+          <div class="text-base font-bold text-white mt-0.5">Tuesday, Nov 3</div>
+          <div class="text-[11px] text-emerald-400 mt-1 font-mono">6:30 AM – 7:30 PM</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
-          <div class="text-xs text-slate-400 font-medium">Primary Voting Site</div>
-          <div id="stat-primary-site" class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Wilson County Agriculture Center</div>
-          <div id="stat-primary-dist" class="text-[11px] text-blue-400 mt-1 font-mono">Wilson, NC</div>
+          <div class="text-xs text-slate-400 font-medium">Where to Vote</div>
+          <div class="text-sm sm:text-base font-bold text-rose-300 mt-0.5 truncate">Assigned Precinct Only</div>
+          <div class="text-[11px] text-slate-400 mt-1 font-mono">Based on address</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
-          <div class="text-xs text-slate-400 font-medium">Missed Registration?</div>
-          <div class="text-base font-bold text-white mt-0.5">Same-Day Reg</div>
-          <div class="text-[11px] text-purple-400 mt-1 font-mono">Register & vote at once</div>
+          <div class="text-xs text-slate-400 font-medium">Same-Day Reg</div>
+          <div class="text-base font-bold text-rose-400 mt-0.5">NOT Available</div>
+          <div class="text-[11px] text-rose-300 mt-1 font-mono">Must be registered</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div class="text-xs text-slate-400 font-medium">Voter ID Rule</div>
@@ -288,9 +251,89 @@
     </div>
   </section>
 
-  <!-- CRITICAL VOTER ID RULE SECTION -->
-  <section id="voter-id" class="py-8 px-4 sm:px-6 border-emerald-500/40 bg-emerald-950/20 border-b">
-    <div class="max-w-4xl mx-auto">
+  <!-- CRITICAL ELECTION DAY RULES NOTICE -->
+  <section id="election-day-rules" class="py-8 px-4 sm:px-6 bg-rose-950/20 border-b border-rose-900/40">
+    <div class="max-w-4xl mx-auto space-y-4">
+      <div class="bg-rose-950/40 border-2 border-rose-500/60 rounded-2xl p-5 sm:p-6 shadow-xl">
+        <div class="flex items-start gap-4">
+          <div class="p-3 rounded-xl bg-rose-500/20 text-rose-300 text-2xl shrink-0">
+            ⚠️
+          </div>
+          <div>
+            <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-300 border border-rose-500/30 mb-2">Mandatory North Carolina Election Law</span>
+            <h2 class="text-xl font-bold text-white mb-2">Two Critical Rules for Voting on Election Day:</h2>
+            <div class="space-y-3 text-xs sm:text-sm text-slate-200 mt-3 leading-relaxed">
+              <div class="p-3.5 rounded-xl bg-slate-950/80 border border-rose-900/60">
+                <p class="font-bold text-white mb-1">1. You CANNOT vote at any polling site — You MUST go to your specifically assigned precinct.</p>
+                <p class="text-slate-300">During early voting, voters could visit any site in the county. On Election Day, your ballot is printed specifically for your home precinct. If you go to the wrong precinct, you will have to vote a provisional ballot, and races outside that precinct may not be counted.</p>
+              </div>
+
+              <div class="p-3.5 rounded-xl bg-slate-950/80 border border-rose-900/60">
+                <p class="font-bold text-white mb-1">2. Same-Day Voter Registration is NOT available on Election Day.</p>
+                <p class="text-slate-300">Under NC General Statutes (§ 163-82.6), same-day registration is permitted <i>only</i> during Early Voting. On Election Day, you must already be registered to vote in North Carolina.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+
+    <!-- Section 1: Assigned Precinct Polling Place Lookup -->
+    <section id="precinct-lookup" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
+      <div class="max-w-3xl">
+        <span class="text-xs font-mono font-semibold text-rose-400 uppercase tracking-wider">Find Where You Vote Today</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-3">Look Up Your Assigned Precinct Polling Place</h2>
+        <p class="text-sm text-slate-300 leading-relaxed mb-6">
+          Every voter in Wilson County is assigned a specific Election Day polling place based on their voter registration residential address (your dormitory or off-campus apartment).
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Lookup Tool 1 -->
+          <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+            <div>
+              <div class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-1">Official NCSBE Tool</div>
+              <h3 class="text-base font-bold text-white mb-2">Polling Place Search (by Address)</h3>
+              <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                Enter your campus dormitory address or off-campus apartment address to find your assigned Election Day precinct, polling place address, and sample ballot.
+              </p>
+            </div>
+            <a href="https://vt.ncsbe.gov/pplkup/" target="_blank" rel="noopener" class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs text-center transition shadow-md flex items-center justify-center gap-1.5">
+              <span>Open NCSBE Polling Place Lookup</span>
+              <span>↗</span>
+            </a>
+          </div>
+
+          <!-- Lookup Tool 2 -->
+          <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between">
+            <div>
+              <div class="text-xs font-bold text-emerald-400 uppercase tracking-wider mb-1">Voter Search</div>
+              <h3 class="text-base font-bold text-white mb-2">Voter Search & Registration Check</h3>
+              <p class="text-xs text-slate-300 leading-relaxed mb-4">
+                Enter your first and last name to look up your active registration record, confirm your assigned polling location, and view your exact district ballot.
+              </p>
+            </div>
+            <a href="https://vt.ncsbe.gov/RegLkup/" target="_blank" rel="noopener" class="w-full py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs text-center transition shadow-md flex items-center justify-center gap-1.5">
+              <span>Look Up Your Voter Record</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl bg-slate-950 border border-slate-800/80 flex items-start gap-3">
+          <span class="text-xl">💡</span>
+          <div class="text-xs text-slate-300 leading-relaxed">
+            <b>In Line by 7:30 PM? STAY IN LINE!</b> Under North Carolina law, if you are physically in line at your assigned polling place by 7:30 PM on Election Day, election officials are legally required to keep the polls open until you have cast your ballot. Do not leave the line!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Voter ID Requirement -->
+    <section id="voter-id" class="scroll-mt-20">
       
         <div class="bg-emerald-950/40 border-2 border-emerald-500/60 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-start gap-4">
           <div class="p-3 rounded-xl bg-emerald-500/20 text-emerald-300 text-2xl shrink-0">
@@ -298,142 +341,27 @@
           </div>
           <div>
             <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-2">Approved by NC State Board of Elections</span>
-            <h2 class="text-xl font-bold text-white mb-2">Wilson Community College Student ID is Valid for Voting!</h2>
+            <h2 class="text-xl font-bold text-white mb-2">Wilson Community College Student ID is Valid on Election Day!</h2>
             <p class="text-sm text-emerald-100/90 leading-relaxed mb-3">
-              The North Carolina State Board of Elections officially approved the <b>Physical WCC Student ID</b> for voter photo identification. You can use your physical student ID to cast your ballot.
+              The North Carolina State Board of Elections officially approved the <b>Physical WCC Student ID</b> for voter photo identification. You can use your physical plastic student ID to vote.
             </p>
             <div class="p-3.5 rounded-xl bg-emerald-900/30 border border-emerald-700/50 text-xs text-emerald-200/90 space-y-1.5 font-medium">
-              <p>⚠️ <b>CRITICAL: PHYSICAL CARD REQUIRED.</b> Digital IDs stored on mobile phones (Apple Wallet, Google Wallet, photos) are <b>NOT ACCEPTED</b> at polling sites under NC law.</p>
+              <p>⚠️ <b>CRITICAL: PHYSICAL CARD REQUIRED.</b> Digital IDs stored on mobile phones (Apple Wallet, Google Wallet, photos) are <b>NOT ACCEPTED</b> under NC law.</p>
               <p>✅ <b>Other Accepted Photo IDs:</b> NC Driver’s License, US Passport, Military/Veteran ID, or free county BOE ID card.</p>
-              <p>💡 <b>Need an ID on voting day?</b> You can still vote! Fill out a Photo ID Exception Form at the polling place or get a free voter photo ID at the Wilson County Board of Elections office.</p>
+              <p>💡 <b>Lacking an ID at the polls?</b> Fill out a Photo ID Exception Form at your precinct and cast a ballot that counts.</p>
             </div>
           </div>
         </div>
         
-    </div>
-  </section>
-
-  <!-- Main Content Container -->
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
-
-    <!-- Section 1: Campus Polling Site with Geolocation Finder -->
-    <section id="polling-site" class="scroll-mt-20">
-      
-      <!-- Interactive Geolocation Discovery Card -->
-      <div class="bg-gradient-to-r from-blue-950/40 via-indigo-950/30 to-slate-900 border border-blue-500/30 rounded-2xl p-4 sm:p-5 mb-6 shadow-md">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-lg">📍</span>
-              <h3 class="text-sm font-bold text-white">Find Your Nearest Polling Location Dynamically</h3>
-            </div>
-            <p class="text-xs text-slate-300 mt-1">
-              Allow location access to update this page with exact distances to all Wilson County early voting sites and locate your closest voting site.
-            </p>
-          </div>
-          <div class="flex items-center gap-2 shrink-0">
-            <button onclick="detectNearestSite()" id="btn-detect-loc" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm flex items-center gap-1.5">
-              <span>📍</span>
-              <span>Detect My Location</span>
-            </button>
-          </div>
-        </div>
-        <div id="geo-status-banner" class="mt-3 text-xs hidden"></div>
-      </div>
-
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Campus / Nearest Early Voting Site</span>
-          <h2 id="main-site-title" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Wilson County Agriculture Center</h2>
-        </div>
-        <span id="site-open-tag" class="hidden sm:inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-          Open to all Wilson County Voters
-        </span>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Left: Address & Directions -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:col-span-1 flex flex-col justify-between">
-          <div>
-            <div class="flex items-center gap-2 text-sm font-semibold text-slate-300 mb-2">
-              <span>📍 Address & Getting There</span>
-            </div>
-            <p id="main-site-addr" class="text-base font-bold text-white leading-snug">
-              1806 Goldsboro St S Wilson, Nc 27893
-            </p>
-            <p id="main-site-desc" class="text-xs text-slate-400 mt-2 leading-relaxed">
-              Official Early Voting location serving Wilson Community College students, faculty, staff, and all residents of Wilson County.
-            </p>
-
-            <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-2 text-xs text-slate-300 leading-relaxed">
-              <p><b>Free Voter Parking:</b> Available at or near the facility during voting hours.</p>
-              <p><b>Flexibility:</b> You can cast your early ballot at <b>any</b> early voting site in Wilson County.</p>
-            </div>
-          </div>
-
-          <div class="mt-6 pt-4">
-            <a id="main-site-maps" href="https://maps.google.com/?q=1806+GOLDSBORO+ST+S+WILSON,+NC+27893" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
-              <span>Open in Google Maps</span>
-              <span>↗</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- Right: Early Voting Hours Schedule -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:col-span-2">
-          <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider mb-3">Wilson County Early Voting Hours Schedule</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-              <thead>
-                <tr class="border-b border-slate-800 text-xs text-slate-400 font-mono">
-                  <th class="py-2.5 font-semibold">Days</th>
-                  <th class="py-2.5 font-semibold">Dates</th>
-                  <th class="py-2.5 font-semibold">Hours</th>
-                  <th class="py-2.5 font-semibold text-right">Status</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-800/60">
-                <tr>
-                  <td class="py-3 font-medium text-white">Mondays – Fridays</td>
-                  <td class="py-3 text-slate-400 text-xs">Oct 15 – Oct 30</td>
-                  <td class="py-3 font-mono text-emerald-400 font-semibold">8:00 AM – 7:30 PM</td>
-                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Extended</span></td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-medium text-white">Saturdays</td>
-                  <td class="py-3 text-slate-400 text-xs">Oct 17 & Oct 24</td>
-                  <td class="py-3 font-mono text-blue-300 font-semibold">8:00 AM – 3:00 PM</td>
-                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Weekend</span></td>
-                </tr>
-                <tr>
-                  <td class="py-3 font-medium text-white">Sundays</td>
-                  <td class="py-3 text-slate-400 text-xs">Oct 18 & Oct 25</td>
-                  <td class="py-3 font-mono text-blue-300 font-semibold">1:00 PM – 5:00 PM</td>
-                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Afternoon</span></td>
-                </tr>
-                <tr class="bg-amber-500/5 font-semibold">
-                  <td class="py-3 text-amber-300">Final Saturday (Last Day!)</td>
-                  <td class="py-3 text-amber-200 text-xs">Saturday, Oct 31</td>
-                  <td class="py-3 font-mono text-amber-300 font-bold">8:00 AM – 3:00 PM</td>
-                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Closes 3 PM</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <p class="text-xs text-slate-400 mt-4 leading-relaxed">
-            💡 <i>During early voting, you can vote at <b>any</b> early voting location in Wilson County, regardless of your precinct!</i>
-          </p>
-        </div>
-      </div>
     </section>
 
-    <!-- Section 2: Local Candidate Voter Guides (Democratic, Republican & Independent) -->
+    <!-- Section 3: Candidate Voter Guides (Democratic, Republican & Independent) -->
     <section id="voter-guides" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
       <div class="max-w-3xl mb-8">
         <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Candidate Research & Endorsements</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">Local Candidate Guides for Wilson CC Students</h2>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">Election Day Candidate Guides for Wilson CC Students</h2>
         <p class="text-sm text-slate-300 leading-relaxed">
-          Before casting your ballot in Wilson County, review candidate questionnaires, voting records, and endorsements from multiple political perspectives. Compare trusted Democratic, Republican, and non-partisan sources below:
+          Before entering the voting booth in Wilson County, review candidate questionnaires, voting records, and endorsements from multiple political perspectives:
         </p>
       </div>
 
@@ -446,18 +374,8 @@
             </div>
             <h3 class="text-lg font-bold text-white mb-2">Blue Voter Guide & NC Dems</h3>
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
-              Enter your local Wilson County address to see customized candidate recommendations and slates endorsed by Democratic, labor, reproductive rights, and environmental organizations across North Carolina.
+              Enter your local address to see customized candidate recommendations and slates endorsed by Democratic, labor, reproductive rights, and environmental organizations across North Carolina.
             </p>
-            <ul class="text-xs text-slate-400 space-y-1.5 mb-4">
-              <li class="flex items-center gap-2">
-                <span class="text-blue-400 font-bold">✓</span>
-                <span>Endorsements from 40+ progressive orgs</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <span class="text-blue-400 font-bold">✓</span>
-                <span>Local legislative, judicial & county races</span>
-              </li>
-            </ul>
           </div>
           <div class="space-y-2 pt-2 border-t border-slate-800/80">
             <a href="https://bluevoterguide.org/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
@@ -481,16 +399,6 @@
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
               Comprehensive candidate ratings, policy scorecards, and evaluations based on conservative constitutional principles, fiscal policies, and traditional values across Wilson County.
             </p>
-            <ul class="text-xs text-slate-400 space-y-1.5 mb-4">
-              <li class="flex items-center gap-2">
-                <span class="text-red-400 font-bold">✓</span>
-                <span>Detailed candidate ratings & questionnaires</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <span class="text-red-400 font-bold">✓</span>
-                <span>Covers statewide, judicial & local offices</span>
-              </li>
-            </ul>
           </div>
           <div class="space-y-2 pt-2 border-t border-slate-800/80">
             <a href="https://ivoterguide.com/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-xs transition shadow-sm">
@@ -514,16 +422,6 @@
             <p class="text-xs text-slate-300 leading-relaxed mb-4">
               Strictly non-partisan, unbiased candidate comparisons produced by the League of Women Voters of NC. Candidates answer identical policy questions directly in their own unedited words.
             </p>
-            <ul class="text-xs text-slate-400 space-y-1.5 mb-4">
-              <li class="flex items-center gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span>Side-by-side unedited candidate responses</span>
-              </li>
-              <li class="flex items-center gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span>Zero party bias or endorsements</span>
-              </li>
-            </ul>
           </div>
           <div class="space-y-2 pt-2 border-t border-slate-800/80">
             <a href="https://www.vote411.org/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs transition shadow-sm">
@@ -539,125 +437,29 @@
       </div>
     </section>
 
-    <!-- Section 3: Same-Day Registration -->
-    <section id="registration" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 scroll-mt-20">
-      <div class="max-w-3xl">
-        <span class="text-xs font-mono font-semibold text-purple-400 uppercase tracking-wider">Missed the Voter Registration Deadline?</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-3">Same-Day Voter Registration is Available!</h2>
-        <p class="text-sm text-slate-300 leading-relaxed mb-6">
-          In North Carolina, if you are not yet registered to vote in Wilson County, or if you moved to a new address, you can <b>register and vote on the same visit</b> exclusively during Early Voting. (Same-day registration is <i>not</i> allowed on Election Day).
-        </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <!-- On Campus Students -->
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5">
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 font-bold text-xs mb-3">
-              <span>🏠 On-Campus Residents</span>
-            </div>
-            <h4 class="text-sm font-bold text-white mb-1.5">What to Bring:</h4>
-            <ul class="text-xs text-slate-300 space-y-2">
-              <li class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Photo ID:</b> An approved photo ID (or Physical WCC Student ID if approved, NC Driver's License, or US Passport).</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Proof of Residence:</b> Campus housing verification (residential roster provided to election officials, or housing contract on student portal).</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Off Campus Students -->
-          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5">
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 font-bold text-xs mb-3">
-              <span>🏢 Off-Campus Residents</span>
-            </div>
-            <h4 class="text-sm font-bold text-white mb-1.5">What to Bring:</h4>
-            <ul class="text-xs text-slate-300 space-y-2">
-              <li class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Photo ID:</b> Approved photo identification.</span>
-              </li>
-              <li class="flex items-start gap-2">
-                <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Proof of Residence:</b> Document showing your name and current local Wilson County address (utility bill, bank statement, paycheck, lease, or university official letter; can be digital on your phone).</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="mt-6 p-4 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-400 leading-relaxed">
-          ⚖️ <b>Student Voting Rights:</b> College students have the established legal right to choose whether to register and vote at their college address or their permanent home address. You must choose one and vote only once per election.
-        </div>
-      </div>
-    </section>
-
-    <!-- Section 4: All Early Voting Sites in County -->
-    <section id="sites" class="scroll-mt-20">
-      <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div>
-          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Countywide Flexibility</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All 2 Wilson County Early Voting Sites</h2>
-          <p class="text-sm text-slate-400 mt-1">Any registered Wilson County voter can cast a ballot at any of these sites during early voting hours.</p>
-        </div>
-        <div id="sites-sort-status" class="text-xs text-emerald-400 font-medium"></div>
-      </div>
-
-      <div id="all-sites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        
-        <div id="site-card-0" class="site-card rounded-xl p-4 border-2 border-blue-500/70 bg-slate-900 shadow-md relative overflow-hidden flex flex-col justify-between" data-lat="35.706725" data-lon="-77.927636" data-index="0">
-          <div>
-            <span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-600 text-white default-campus-badge">Campus / Nearest Site</span>
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Wilson County Agriculture Center</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">1806 Goldsboro St S Wilson, Nc 27893</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=1806+GOLDSBORO+ST+S+WILSON,+NC+27893" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-
-        <div id="site-card-1" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.724514" data-lon="-77.908293" data-index="1">
-          <div>
-            
-            <div class="distance-tag mb-1"></div>
-            <h4 class="site-title font-bold text-white text-sm pr-16">Wilson County Board Of Elections Office</h4>
-            <p class="site-addr text-xs text-slate-300 mt-1">112 Douglas St E Wilson, Nc 27893</p>
-          </div>
-          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
-            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
-            <a href="https://maps.google.com/?q=112+DOUGLAS+ST+E+WILSON,+NC+27893" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
-          </div>
-        </div>
-        
-      </div>
-    </section>
-
-    <!-- Section 5: Official Resources & County BOE -->
+    <!-- Section 4: Election Day Checklist & County BOE -->
     <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
           <span>📋</span>
-          <span>Pre-Voting Checklist</span>
+          <span>Election Day Checklist</span>
         </h3>
         <ul class="space-y-3 text-xs sm:text-sm text-slate-300">
           <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
-            <span class="text-blue-400 font-bold shrink-0">1.</span>
-            <span><b>Physical Photo ID:</b> Bring a physical acceptable photo ID. Remember: digital phone images are not permitted.</span>
+            <span class="text-rose-400 font-bold shrink-0">1.</span>
+            <span><b>Verify Assigned Precinct:</b> Double-check your polling place at <a href="https://vt.ncsbe.gov/pplkup/" target="_blank" class="text-rose-400 underline">vt.ncsbe.gov/pplkup</a> before you leave.</span>
           </li>
           <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
             <span class="text-blue-400 font-bold shrink-0">2.</span>
-            <span><b>Proof of Residence (If Registering):</b> Proof of your current address in Wilson County.</span>
+            <span><b>Physical Photo ID:</b> Bring your physical plastic ID card (phone images are not permitted).</span>
           </li>
           <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
             <span class="text-blue-400 font-bold shrink-0">3.</span>
-            <span><b>Check Sample Ballot:</b> Look up your sample ballot on the <a href="https://www.wilsoncountync.gov/departments/board-of-elections" target="_blank" class="text-blue-400 underline">Wilson County Board Of Elections</a> portal.</span>
+            <span><b>Voting Hours:</b> 6:30 AM to 7:30 PM. (If in line by 7:30 PM, stay in line!).</span>
           </li>
           <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
             <span class="text-blue-400 font-bold shrink-0">4.</span>
-            <span><b>Notes Allowed:</b> You can bring a printed voter guide or written notes into the voting booth.</span>
+            <span><b>Notes Allowed:</b> You can bring a paper voter guide or handwritten notes into the booth.</span>
           </li>
         </ul>
       </div>
@@ -677,7 +479,7 @@
             <a href="https://www.wilsoncountync.gov/departments/board-of-elections" target="_blank" rel="noopener" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-200 transition">
               <div>
                 <div class="font-semibold text-white">Official County Election Website</div>
-                <div class="text-xs text-slate-400 mt-0.5">Sample ballots, wait times & office info</div>
+                <div class="text-xs text-slate-400 mt-0.5">Election Day precinct lists & results</div>
               </div>
               <span class="text-slate-400">↗</span>
             </a>
@@ -685,20 +487,20 @@
         </div>
 
         <div class="mt-4 pt-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-          <span>Need help? Call Election Office:</span>
+          <span>Election Day Helpline:</span>
           <a href="tel:2523992836" class="font-mono font-bold text-blue-400 hover:underline">252-399-2836</a>
         </div>
       </div>
     </section>
 
-    <!-- Section 6: QR Code Card -->
+    <!-- Section 5: QR Code Card -->
     <section id="qr-code" class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
       <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-between">
         <div class="max-w-xl text-center sm:text-left">
-          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Share with Classmates & Dorms</span>
-          <h2 class="text-2xl font-bold text-white mt-1 mb-2">Scan or Share this Wilson CC Voting Guide</h2>
+          <span class="text-xs font-mono font-semibold text-rose-400 uppercase tracking-wider">Share with Classmates & Dorms</span>
+          <h2 class="text-2xl font-bold text-white mt-1 mb-2">Share this Wilson CC Election Day Guide</h2>
           <p class="text-sm text-slate-300 leading-relaxed mb-4">
-            Scan with your phone or copy the direct link for dorm group chats, social media, dining hall flyers, and student organizations across Wilson Community College!
+            Help your fellow students vote today! Share this link in dorm group chats, student organization channels, and on social media so everyone finds their assigned precinct before polls close at 7:30 PM.
           </p>
           <div class="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
             <div class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm text-blue-300 select-all">
@@ -707,10 +509,10 @@
             <button onclick="navigator.clipboard.writeText('https://rannbar-on.com/wilsonccvote'); alert('Link copied to clipboard!');" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
               Copy Link
             </button>
-            <a href="/wilsonccvote_qr.png" download="Wilson CC_Vote_Early_QR.png" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+            <a href="/wilsonccvote_qr.png" download="Wilson CC_Vote_QR.png" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
               Download PNG
             </a>
-            <a href="/wilsonccvote_qr.svg" download="Wilson CC_Vote_Early_QR.svg" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+            <a href="/wilsonccvote_qr.svg" download="Wilson CC_Vote_QR.svg" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
               Download SVG
             </a>
             <a href="/campuses" class="px-4 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 font-semibold text-xs transition">
@@ -720,8 +522,8 @@
         </div>
 
         <!-- QR Code Visual -->
-        <div class="bg-white p-4 rounded-2xl shadow-2xl border-4 border-blue-500/30 shrink-0 text-center">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACRUlEQVR4nO2bQY7bMAxFH0cGulSAOcAcRblBzzRH6g3so8wN7GUAGb8Lyk5mWhRJATcCSi0SCX6LDxAUP2nYxJ1rermXhEADDfQFFmvrvAy07QlujzZ0ojVQkiTJr0SNuQKspve3CkWSNB8rINCH0JY9rGZngDInwTLgmXc+XECgj6NZ8kBNZvYMAYE+gG7J1K5DvxP/pYBA/7wGAJqNzxWmE1iZEeVjqJAFLMcJCPRBdHXf57m1lyw7A0ybRexE6/+NDi17fFU0nZLvBZXb3vnpWgNFmpM0+iHp9oGqPwWSND5da6C0ZipLGrPkxtANRpY0ktR2T9caaOuOR2+r1la8ACjzah63Mh8rINB7l6QKHjLAE6yo+u56HUZudYC28tQuvPrpYtwvwYhWJ+hv65abjrLNDgmX0QmKD3SLrnOL3VbkNtWlRG71gbaipBm2jGp28GoMI1q9oGwvS/a2yr1Fq1sac6Udn6410JfrGFdjvrTJ+3RaDfLFKB/fFJOnXlB3Ga14zenGVvh/mQkH3x26mOn9tNq1gl3fJ9s518MFBHrPcgdfthZ5a4z3zguIyVMv6D6DT4LlFU3bS2MrP1KF5bQN4p+uNdDbFCpz+2l2kKRWt8IT9oEOQPLO2CBVprc6AKsJQCypMn2fDxMQ6IPR2gK1x4j9CGBiGWoHWgMdPp1SpcwrBqtRdjtf5tfDBAT6t2i+GJMN+DR+XMyP0R33gm5zwn20+8XLS5WYE/aC/uIJfeV9Tkh4wn5Qiy+CAg30EPQnU4meIhF35vQAAAAASUVORK5CYII=" alt="QR code for Wilson Community College student early voting guide" class="w-48 h-48 sm:w-52 sm:h-52 object-contain mx-auto" />
+        <div class="bg-white p-4 rounded-2xl shadow-2xl border-4 border-rose-500/30 shrink-0 text-center">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACRUlEQVR4nO2bQY7bMAxFH0cGulSAOcAcRblBzzRH6g3so8wN7GUAGb8Lyk5mWhRJATcCSi0SCX6LDxAUP2nYxJ1rermXhEADDfQFFmvrvAy07QlujzZ0ojVQkiTJr0SNuQKspve3CkWSNB8rINCH0JY9rGZngDInwTLgmXc+XECgj6NZ8kBNZvYMAYE+gG7J1K5DvxP/pYBA/7wGAJqNzxWmE1iZEeVjqJAFLMcJCPRBdHXf57m1lyw7A0ybRexE6/+NDi17fFU0nZLvBZXb3vnpWgNFmpM0+iHp9oGqPwWSND5da6C0ZipLGrPkxtANRpY0ktR2T9caaOuOR2+r1la8ACjzah63Mh8rINB7l6QKHjLAE6yo+u56HUZudYC28tQuvPrpYtwvwYhWJ+hv65abjrLNDgmX0QmKD3SLrnOL3VbkNtWlRG71gbaipBm2jGp28GoMI1q9oGwvS/a2yr1Fq1sac6Udn6410JfrGFdjvrTJ+3RaDfLFKB/fFJOnXlB3Ga14zenGVvh/mQkH3x26mOn9tNq1gl3fJ9s518MFBHrPcgdfthZ5a4z3zguIyVMv6D6DT4LlFU3bS2MrP1KF5bQN4p+uNdDbFCpz+2l2kKRWt8IT9oEOQPLO2CBVprc6AKsJQCypMn2fDxMQ6IPR2gK1x4j9CGBiGWoHWgMdPp1SpcwrBqtRdjtf5tfDBAT6t2i+GJMN+DR+XMyP0R33gm5zwn20+8XLS5WYE/aC/uIJfeV9Tkh4wn5Qiy+CAg30EPQnU4meIhF35vQAAAAASUVORK5CYII=" alt="QR code for Wilson Community College student voting guide" class="w-48 h-48 sm:w-52 sm:h-52 object-contain mx-auto" />
           <div class="text-[11px] font-bold text-slate-900 mt-2 font-mono">rannbar-on.com/wilsonccvote</div>
         </div>
       </div>
@@ -742,158 +544,6 @@
       </div>
     </div>
   </footer>
-
-  <!-- Geolocation & Dynamic Polling Site Script -->
-  <script>
-    const currentCampusKey = "wilsonccvote";
-    const currentCampusName = "Wilson Community College";
-    const allCampuses = [{"key": "dukevote", "name": "Duke University", "short_name": "Duke", "city": "Durham", "county": "Durham County", "lat": 35.9985, "lon": -78.933109}, {"key": "uncvote", "name": "UNC-Chapel Hill", "short_name": "UNC-CH", "city": "Chapel Hill", "county": "Orange County", "lat": 35.9146, "lon": -79.050048}, {"key": "nccuvote", "name": "North Carolina Central University", "short_name": "NCCU", "city": "Durham", "county": "Durham County", "lat": 35.97179, "lon": -78.895268}, {"key": "ncsuvote", "name": "North Carolina State University", "short_name": "NC State", "city": "Raleigh", "county": "Wake County", "lat": 35.784342, "lon": -78.685202}, {"key": "appstatevote", "name": "Appalachian State University", "short_name": "App State", "city": "Boone", "county": "Watauga County", "lat": 36.214799, "lon": -81.678922}, {"key": "ecuvote", "name": "East Carolina University", "short_name": "ECU", "city": "Greenville", "county": "Pitt County", "lat": 35.605615, "lon": -77.369303}, {"key": "ecsuvote", "name": "Elizabeth City State University", "short_name": "ECSU", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "fsuvote", "name": "Fayetteville State University", "short_name": "FSU", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "ncatvote", "name": "North Carolina A&T State University", "short_name": "NC A&T", "city": "Greensboro", "county": "Guilford County", "lat": 35.968303, "lon": -79.983827}, {"key": "uncavote", "name": "UNC Asheville", "short_name": "UNC Asheville", "city": "Asheville", "county": "Buncombe County", "lat": 35.577974, "lon": -82.56224}, {"key": "unccvote", "name": "UNC Charlotte", "short_name": "UNC Charlotte", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.30309, "lon": -80.746478}, {"key": "uncgvote", "name": "UNC Greensboro", "short_name": "UNCG", "city": "Greensboro", "county": "Guilford County", "lat": 36.06421, "lon": -79.789791}, {"key": "uncpvote", "name": "UNC Pembroke", "short_name": "UNC Pembroke", "city": "Pembroke", "county": "Robeson County", "lat": 34.676159, "lon": -79.193097}, {"key": "uncsavote", "name": "UNC School of the Arts", "short_name": "UNCSA", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.05471, "lon": -80.252848}, {"key": "uncwvote", "name": "UNC Wilmington", "short_name": "UNCW", "city": "Wilmington", "county": "New Hanover County", "lat": 34.23293, "lon": -77.828256}, {"key": "wcuvote", "name": "Western Carolina University", "short_name": "WCU", "city": "Cullowhee", "county": "Jackson County", "lat": 35.290995, "lon": -83.181647}, {"key": "wssuvote", "name": "Winston-Salem State University", "short_name": "WSSU", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.086876, "lon": -80.223984}, {"key": "wfuvote", "name": "Wake Forest University", "short_name": "Wake Forest", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.130275, "lon": -80.292407}, {"key": "elonvote", "name": "Elon University", "short_name": "Elon", "city": "Elon", "county": "Alamance County", "lat": 36.106958, "lon": -79.442531}, {"key": "davidsonvote", "name": "Davidson College", "short_name": "Davidson", "city": "Davidson", "county": "Mecklenburg County", "lat": 35.481877, "lon": -80.858925}, {"key": "campbellvote", "name": "Campbell University", "short_name": "Campbell", "city": "Buies Creek", "county": "Harnett County", "lat": 35.420412, "lon": -78.811616}, {"key": "highpointvote", "name": "High Point University", "short_name": "High Point", "city": "High Point", "county": "Guilford County", "lat": 35.99141, "lon": -80.00727}, {"key": "meredithvote", "name": "Meredith College", "short_name": "Meredith", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "peacevote", "name": "William Peace University", "short_name": "William Peace", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "shawvote", "name": "Shaw University", "short_name": "Shaw", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "staugustinesvote", "name": "Saint Augustine's University", "short_name": "St. Augustine's", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "queensvote", "name": "Queens University of Charlotte", "short_name": "Queens Charlotte", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.160511, "lon": -80.85762}, {"key": "jcsuvote", "name": "Johnson C. Smith University", "short_name": "JCSU", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.267703, "lon": -80.853434}, {"key": "bartonvote", "name": "Barton College", "short_name": "Barton", "city": "Wilson", "county": "Wilson County", "lat": 35.706725, "lon": -77.927636}, {"key": "belmontabbeyvote", "name": "Belmont Abbey College", "short_name": "Belmont Abbey", "city": "Belmont", "county": "Gaston County", "lat": 35.262841, "lon": -81.187914}, {"key": "bennettvote", "name": "Bennett College", "short_name": "Bennett", "city": "Greensboro", "county": "Guilford County", "lat": 35.968303, "lon": -79.983827}, {"key": "brevardvote", "name": "Brevard College", "short_name": "Brevard", "city": "Brevard", "county": "Transylvania County", "lat": 35.231357, "lon": -82.73485}, {"key": "cabarrusvote", "name": "Cabarrus College of Health Sciences", "short_name": "Cabarrus Health", "city": "Concord", "county": "Cabarrus County", "lat": 35.419006, "lon": -80.679197}, {"key": "catawbavote", "name": "Catawba College", "short_name": "Catawba", "city": "Salisbury", "county": "Rowan County", "lat": 35.692328, "lon": -80.513605}, {"key": "chowanvote", "name": "Chowan University", "short_name": "Chowan", "city": "Murfreesboro", "county": "Hertford County", "lat": 36.278202, "lon": -76.980603}, {"key": "gardnerwebbvote", "name": "Gardner-Webb University", "short_name": "Gardner-Webb", "city": "Boiling Springs", "county": "Cleveland County", "lat": 35.292333, "lon": -81.556195}, {"key": "greensborovote", "name": "Greensboro College", "short_name": "Greensboro College", "city": "Greensboro", "county": "Guilford County", "lat": 36.084948, "lon": -79.738411}, {"key": "guilfordvote", "name": "Guilford College", "short_name": "Guilford College", "city": "Greensboro", "county": "Guilford County", "lat": 36.10377, "lon": -79.909906}, {"key": "leesmcraevote", "name": "Lees-McRae College", "short_name": "Lees-McRae", "city": "Banner Elk", "county": "Avery County", "lat": 36.082276, "lon": -81.924143}, {"key": "lenoirrhynevote", "name": "Lenoir-Rhyne University", "short_name": "Lenoir-Rhyne", "city": "Hickory", "county": "Catawba County", "lat": 35.70178, "lon": -81.218879}, {"key": "livingstonevote", "name": "Livingstone College", "short_name": "Livingstone", "city": "Salisbury", "county": "Rowan County", "lat": 35.692328, "lon": -80.513605}, {"key": "louisburgvote", "name": "Louisburg College", "short_name": "Louisburg", "city": "Louisburg", "county": "Franklin County", "lat": 36.090876, "lon": -78.298034}, {"key": "marshillvote", "name": "Mars Hill University", "short_name": "Mars Hill", "city": "Mars Hill", "county": "Madison County", "lat": 35.804638, "lon": -82.660152}, {"key": "methodistvote", "name": "Methodist University", "short_name": "Methodist", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "macuvote", "name": "Mid-Atlantic Christian University", "short_name": "MACU", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "montreatvote", "name": "Montreat College", "short_name": "Montreat", "city": "Montreat", "county": "Buncombe County", "lat": 35.616143, "lon": -82.322796}, {"key": "ncwesleyanvote", "name": "North Carolina Wesleyan University", "short_name": "NC Wesleyan", "city": "Rocky Mount", "county": "Nash County", "lat": 35.97199, "lon": -77.946848}, {"key": "pfeiffervote", "name": "Pfeiffer University", "short_name": "Pfeiffer", "city": "Misenheimer", "county": "Stanly County", "lat": 35.366337, "lon": -80.196747}, {"key": "salemvote", "name": "Salem College", "short_name": "Salem College", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.05471, "lon": -80.252848}, {"key": "standrewsvote", "name": "St. Andrews University", "short_name": "St. Andrews", "city": "Laurinburg", "county": "Scotland County", "lat": 34.774638, "lon": -79.459863}, {"key": "mountolivevote", "name": "University of Mount Olive", "short_name": "Mount Olive", "city": "Mount Olive", "county": "Wayne County", "lat": 35.405461, "lon": -77.944283}, {"key": "warrenwilsonvote", "name": "Warren Wilson College", "short_name": "Warren Wilson", "city": "Swannanoa", "county": "Buncombe County", "lat": 35.588254, "lon": -82.503312}, {"key": "wingatevote", "name": "Wingate University", "short_name": "Wingate", "city": "Wingate", "county": "Union County", "lat": 34.980897, "lon": -80.546006}, {"key": "alamanceccvote", "name": "Alamance Community College", "short_name": "Alamance CC", "city": "Graham", "county": "Alamance County", "lat": 36.106958, "lon": -79.442531}, {"key": "abtechvote", "name": "Asheville-Buncombe Technical Community College", "short_name": "A-B Tech", "city": "Asheville", "county": "Buncombe County", "lat": 35.612178, "lon": -82.420644}, {"key": "beaufortccvote", "name": "Beaufort County Community College", "short_name": "Beaufort CC", "city": "Washington", "county": "Beaufort County", "lat": 35.549611, "lon": -77.036244}, {"key": "bladenccvote", "name": "Bladen Community College", "short_name": "Bladen CC", "city": "Dublin", "county": "Bladen County", "lat": 34.382924, "lon": -78.3277}, {"key": "blueridgeccvote", "name": "Blue Ridge Community College", "short_name": "Blue Ridge CC", "city": "Flat Rock", "county": "Henderson County", "lat": 35.382841, "lon": -82.357051}, {"key": "brunswickccvote", "name": "Brunswick Community College", "short_name": "Brunswick CC", "city": "Bolivia", "county": "Brunswick County", "lat": 34.016602, "lon": -78.268877}, {"key": "caldwellccvote", "name": "Caldwell Community College & Technical Institute", "short_name": "Caldwell CC", "city": "Hudson", "county": "Caldwell County", "lat": 35.922058, "lon": -81.523627}, {"key": "capefearccvote", "name": "Cape Fear Community College", "short_name": "Cape Fear CC", "city": "Wilmington", "county": "New Hanover County", "lat": 34.045063, "lon": -77.899908}, {"key": "carteretccvote", "name": "Carteret Community College", "short_name": "Carteret CC", "city": "Morehead City", "county": "Carteret County", "lat": 34.72871, "lon": -76.639023}, {"key": "cvccvote", "name": "Catawba Valley Community College", "short_name": "Catawba Valley CC", "city": "Hickory", "county": "Catawba County", "lat": 35.70178, "lon": -81.218879}, {"key": "ccccvote", "name": "Central Carolina Community College", "short_name": "Central Carolina CC", "city": "Sanford", "county": "Lee County", "lat": 35.481093, "lon": -79.175067}, {"key": "cpccvote", "name": "Central Piedmont Community College", "short_name": "CPCC", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.392892, "lon": -80.840476}, {"key": "clevelandccvote", "name": "Cleveland Community College", "short_name": "Cleveland CC", "city": "Shelby", "county": "Cleveland County", "lat": 35.292333, "lon": -81.556195}, {"key": "coastalcarolinaccvote", "name": "Coastal Carolina Community College", "short_name": "Coastal Carolina CC", "city": "Jacksonville", "county": "Onslow County", "lat": 34.793989, "lon": -77.397753}, {"key": "albemarleccvote", "name": "College of The Albemarle", "short_name": "College of Albemarle", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "cravenccvote", "name": "Craven Community College", "short_name": "Craven CC", "city": "New Bern", "county": "Craven County", "lat": 35.108227, "lon": -77.037331}, {"key": "davidsondavieccvote", "name": "Davidson-Davie Community College", "short_name": "Davidson-Davie CC", "city": "Thomasville", "county": "Davidson County", "lat": 35.954823, "lon": -80.292712}, {"key": "durhamtechvote", "name": "Durham Technical Community College", "short_name": "Durham Tech", "city": "Durham", "county": "Durham County", "lat": 35.948836, "lon": -78.922106}, {"key": "edgecombeccvote", "name": "Edgecombe Community College", "short_name": "Edgecombe CC", "city": "Tarboro", "county": "Edgecombe County", "lat": 35.896546, "lon": -77.532115}, {"key": "faytechccvote", "name": "Fayetteville Technical Community College", "short_name": "Fayetteville Tech", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "forsythtechvote", "name": "Forsyth Technical Community College", "short_name": "Forsyth Tech", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.155829, "lon": -80.270804}, {"key": "gastonvote", "name": "Gaston College", "short_name": "Gaston College", "city": "Dallas", "county": "Gaston County", "lat": 35.262841, "lon": -81.187914}, {"key": "gtccvote", "name": "Guilford Technical Community College", "short_name": "GTCC", "city": "Jamestown", "county": "Guilford County", "lat": 36.054025, "lon": -79.751959}, {"key": "halifaxccvote", "name": "Halifax Community College", "short_name": "Halifax CC", "city": "Weldon", "county": "Halifax County", "lat": 36.322386, "lon": -77.589158}, {"key": "haywoodccvote", "name": "Haywood Community College", "short_name": "Haywood CC", "city": "Clyde", "county": "Haywood County", "lat": 35.518414, "lon": -82.98872}, {"key": "isothermalccvote", "name": "Isothermal Community College", "short_name": "Isothermal CC", "city": "Spindale", "county": "Rutherford County", "lat": 35.337435, "lon": -81.911191}, {"key": "jamesspruntccvote", "name": "James Sprunt Community College", "short_name": "James Sprunt CC", "city": "Kenansville", "county": "Duplin County", "lat": 34.738645, "lon": -77.988884}, {"key": "johnstonccvote", "name": "Johnston Community College", "short_name": "Johnston CC", "city": "Smithfield", "county": "Johnston County", "lat": 35.693855, "lon": -78.376312}, {"key": "lenoirccvote", "name": "Lenoir Community College", "short_name": "Lenoir CC", "city": "Kinston", "county": "Lenoir County", "lat": 35.241249, "lon": -77.6192}, {"key": "martinccvote", "name": "Martin Community College", "short_name": "Martin CC", "city": "Williamston", "county": "Martin County", "lat": 35.856397, "lon": -77.051819}, {"key": "maylandccvote", "name": "Mayland Community College", "short_name": "Mayland CC", "city": "Spruce Pine", "county": "Mitchell County", "lat": 36.015447, "lon": -82.158381}, {"key": "mcdowelltechvote", "name": "McDowell Technical Community College", "short_name": "McDowell Tech", "city": "Marion", "county": "Mcdowell County", "lat": 35.663264, "lon": -81.977045}, {"key": "mitchellccvote", "name": "Mitchell Community College", "short_name": "Mitchell CC", "city": "Statesville", "county": "Iredell County", "lat": 35.942344, "lon": -80.776667}, {"key": "montgomeryccvote", "name": "Montgomery Community College", "short_name": "Montgomery CC", "city": "Troy", "county": "Montgomery County", "lat": 35.360174, "lon": -79.782085}, {"key": "nashccvote", "name": "Nash Community College", "short_name": "Nash CC", "city": "Rocky Mount", "county": "Nash County", "lat": 35.97199, "lon": -77.946848}, {"key": "pamlicoccvote", "name": "Pamlico Community College", "short_name": "Pamlico CC", "city": "Grantsboro", "county": "Pamlico County", "lat": 35.143237, "lon": -76.771045}, {"key": "piedmontccvote", "name": "Piedmont Community College", "short_name": "Piedmont CC", "city": "Roxboro", "county": "Person County", "lat": 36.395993, "lon": -78.994187}, {"key": "pittccvote", "name": "Pitt Community College", "short_name": "Pitt CC", "city": "Winterville", "county": "Pitt County", "lat": 35.549076, "lon": -77.34883}, {"key": "randolphccvote", "name": "Randolph Community College", "short_name": "Randolph CC", "city": "Asheboro", "county": "Randolph County", "lat": 35.893725, "lon": -79.934697}, {"key": "richmondccvote", "name": "Richmond Community College", "short_name": "Richmond CC", "city": "Hamlet", "county": "Richmond County", "lat": 34.932393, "lon": -79.782669}, {"key": "roanokechowanccvote", "name": "Roanoke-Chowan Community College", "short_name": "Roanoke-Chowan CC", "city": "Ahoskie", "county": "Hertford County", "lat": 36.278202, "lon": -76.980603}, {"key": "robesonccvote", "name": "Robeson Community College", "short_name": "Robeson CC", "city": "Lumberton", "county": "Robeson County", "lat": 34.494386, "lon": -79.113837}, {"key": "rockinghamccvote", "name": "Rockingham Community College", "short_name": "Rockingham CC", "city": "Wentworth", "county": "Rockingham County", "lat": 36.393531, "lon": -79.749993}, {"key": "rcccvote", "name": "Rowan-Cabarrus Community College", "short_name": "Rowan-Cabarrus CC", "city": "Salisbury", "county": "Rowan County", "lat": 35.565516, "lon": -80.418345}, {"key": "sampsonccvote", "name": "Sampson Community College", "short_name": "Sampson CC", "city": "Clinton", "county": "Sampson County", "lat": 34.997388, "lon": -78.31102}, {"key": "sandhillsccvote", "name": "Sandhills Community College", "short_name": "Sandhills CC", "city": "Pinehurst", "county": "Moore County", "lat": 35.135607, "lon": -79.428411}, {"key": "spccvote", "name": "South Piedmont Community College", "short_name": "South Piedmont CC", "city": "Polkton", "county": "Union County", "lat": 34.991177, "lon": -80.3637}, {"key": "southeasternccvote", "name": "Southeastern Community College", "short_name": "Southeastern CC", "city": "Whiteville", "county": "Columbus County", "lat": 34.323492, "lon": -78.824376}, {"key": "southwesternccvote", "name": "Southwestern Community College", "short_name": "Southwestern CC", "city": "Sylva", "county": "Jackson County", "lat": 35.110468, "lon": -83.10432}, {"key": "stanlyccvote", "name": "Stanly Community College", "short_name": "Stanly CC", "city": "Albemarle", "county": "Stanly County", "lat": 35.366337, "lon": -80.196747}, {"key": "surryccvote", "name": "Surry Community College", "short_name": "Surry CC", "city": "Dobson", "county": "Surry County", "lat": 36.392873, "lon": -80.706974}, {"key": "tricountyccvote", "name": "Tri-County Community College", "short_name": "Tri-County CC", "city": "Murphy", "county": "Cherokee County", "lat": 35.087131, "lon": -84.033986}, {"key": "vgccvote", "name": "Vance-Granville Community College", "short_name": "Vance-Granville CC", "city": "Henderson", "county": "Vance County", "lat": 36.338143, "lon": -78.401642}, {"key": "waketechvote", "name": "Wake Technical Community College", "short_name": "Wake Tech", "city": "Raleigh", "county": "Wake County", "lat": 35.771631, "lon": -78.570208}, {"key": "wayneccvote", "name": "Wayne Community College", "short_name": "Wayne CC", "city": "Goldsboro", "county": "Wayne County", "lat": 35.405461, "lon": -77.944283}, {"key": "wpccvote", "name": "Western Piedmont Community College", "short_name": "Western Piedmont CC", "city": "Morganton", "county": "Burke County", "lat": 35.724735, "lon": -81.661102}, {"key": "wilkesccvote", "name": "Wilkes Community College", "short_name": "Wilkes CC", "city": "Wilkesboro", "county": "Wilkes County", "lat": 36.149105, "lon": -81.153576}, {"key": "wilsonccvote", "name": "Wilson Community College", "short_name": "Wilson CC", "city": "Wilson", "county": "Wilson County", "lat": 35.706725, "lon": -77.927636}];
-    const countySites = [{"name": "Wilson County Agriculture Center", "addr": "1806 Goldsboro St S Wilson, Nc 27893", "lat": 35.706725, "lon": -77.927636, "maps": "https://maps.google.com/?q=1806+GOLDSBORO+ST+S+WILSON,+NC+27893"}, {"name": "Wilson County Board Of Elections Office", "addr": "112 Douglas St E Wilson, Nc 27893", "lat": 35.724514, "lon": -77.908293, "maps": "https://maps.google.com/?q=112+DOUGLAS+ST+E+WILSON,+NC+27893"}];
-    let redirectTimer = null;
-
-    function haversine(lat1, lon1, lat2, lon2) {
-      const R = 3958.8; // miles
-      const dLat = (lat2 - lat1) * Math.PI / 180;
-      const dLon = (lon2 - lon1) * Math.PI / 180;
-      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                Math.sin(dLon/2) * Math.sin(dLon/2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-      return Math.round(R * c * 10) / 10;
-    }
-
-    function cancelRedirect() {
-      if (redirectTimer) {
-        clearInterval(redirectTimer);
-        redirectTimer = null;
-      }
-      document.getElementById('cross-campus-banner').classList.add('hidden');
-    }
-
-    function detectNearestSite() {
-      if (!navigator.geolocation) {
-        alert("Geolocation is not supported by your browser.");
-        return;
-      }
-
-      const statusEl = document.getElementById('geo-status-banner');
-      statusEl.className = 'mt-3 text-xs text-blue-400 font-medium flex items-center gap-2';
-      statusEl.innerHTML = '<span class="animate-spin">⏳</span> Detecting your location...';
-      statusEl.classList.remove('hidden');
-
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          const uLat = position.coords.latitude;
-          const uLon = position.coords.longitude;
-          sessionStorage.setItem('nc_user_lat', uLat);
-          sessionStorage.setItem('nc_user_lon', uLon);
-
-          applyLocation(uLat, uLon);
-        },
-        error => {
-          statusEl.className = 'mt-3 text-xs text-amber-400 font-medium';
-          statusEl.innerText = "Location permission was denied or unavailable. You can still browse manually!";
-        },
-        { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
-      );
-    }
-
-    function applyLocation(uLat, uLon) {
-      const statusEl = document.getElementById('geo-status-banner');
-
-      // 1. Calculate distances to all county early voting sites
-      if (countySites && countySites.length > 0) {
-        countySites.forEach((s, idx) => {
-          s.distance = haversine(uLat, uLon, s.lat, s.lon);
-          s.elemIndex = idx;
-        });
-
-        // Sort sites by proximity
-        const sortedSites = [...countySites].sort((a, b) => a.distance - b.distance);
-        const nearestSite = sortedSites[0];
-
-        // Update hero primary site dynamically
-        const mainTitle = document.getElementById('main-site-title');
-        const mainAddr = document.getElementById('main-site-addr');
-        const mainMaps = document.getElementById('main-site-maps');
-        const statSite = document.getElementById('stat-primary-site');
-        const statDist = document.getElementById('stat-primary-dist');
-
-        if (mainTitle && nearestSite) {
-          mainTitle.innerText = `${nearestSite.name} (${nearestSite.distance} mi away)`;
-          mainAddr.innerText = nearestSite.addr;
-          mainMaps.href = nearestSite.maps;
-          if (statSite) statSite.innerText = nearestSite.name;
-          if (statDist) statDist.innerText = `📍 ${nearestSite.distance} miles away`;
-        }
-
-        // Update all cards in the county sites grid
-        sortedSites.forEach((s, rank) => {
-          const card = document.getElementById(`site-card-${s.elemIndex}`);
-          if (card) {
-            const tag = card.querySelector('.distance-tag');
-            if (tag) {
-              tag.innerHTML = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${rank === 0 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-300'}">📍 ${s.distance} mi away</span>`;
-            }
-            if (rank === 0) {
-              card.classList.remove('border-slate-800');
-              card.classList.add('border-2', 'border-emerald-500', 'ring-2', 'ring-emerald-500/20');
-            }
-          }
-        });
-
-        statusEl.className = 'mt-3 text-xs text-emerald-400 font-medium flex items-center gap-2';
-        statusEl.innerHTML = `✓ Located! Your closest early voting site is <b>${nearestSite.name}</b> (<b>${nearestSite.distance} miles away</b>).`;
-      }
-
-      // 2. Check if user is physically closer to a DIFFERENT campus in NC
-      const sortedCampuses = [...allCampuses].map(c => ({
-        ...c,
-        dist: haversine(uLat, uLon, c.lat, c.lon)
-      })).sort((a, b) => a.dist - b.dist);
-
-      const closestCampus = sortedCampuses[0];
-      if (closestCampus && closestCampus.key !== currentCampusKey && closestCampus.dist < 50) {
-        // User is closer to a different campus!
-        const banner = document.getElementById('cross-campus-banner');
-        const bannerText = document.getElementById('cross-campus-text');
-        const bannerLink = document.getElementById('cross-campus-link');
-
-        let secondsLeft = 4;
-        bannerText.innerHTML = `📍 We noticed you are closest to <b>${closestCampus.name}</b> in ${closestCampus.city} (<b>${closestCampus.dist} mi away</b>). Redirecting in <span id="redir-sec">${secondsLeft}</span>s...`;
-        bannerLink.href = `/${closestCampus.key}?autoloc=1`;
-        bannerLink.innerText = `Go to ${closestCampus.short_name} Guide →`;
-        banner.classList.remove('hidden');
-
-        // Check if user arrived via auto-redirect query param
-        const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('autoloc') !== '1') {
-          redirectTimer = setInterval(() => {
-            secondsLeft -= 1;
-            const secEl = document.getElementById('redir-sec');
-            if (secEl) secEl.innerText = secondsLeft;
-            if (secondsLeft <= 0) {
-              clearInterval(redirectTimer);
-              window.location.href = `/${closestCampus.key}?autoloc=1`;
-            }
-          }, 1000);
-        }
-      }
-    }
-
-    // Check if location was already detected or requested via URL
-    window.addEventListener('DOMContentLoaded', () => {
-      const urlParams = new URLSearchParams(window.location.search);
-      const savedLat = sessionStorage.getItem('nc_user_lat');
-      const savedLon = sessionStorage.getItem('nc_user_lon');
-
-      if (urlParams.get('autoloc') === '1' && savedLat && savedLon) {
-        applyLocation(parseFloat(savedLat), parseFloat(savedLon));
-      } else if (savedLat && savedLon) {
-        applyLocation(parseFloat(savedLat), parseFloat(savedLon));
-      }
-    });
-  </script>
 
 </body>
 </html>

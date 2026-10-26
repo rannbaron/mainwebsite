@@ -1,0 +1,43 @@
+name: Switch to Election Day Voting Info
+
+on:
+  schedule:
+    # Saturday, October 31, 2026 at 3:00 PM EDT = 19:00 UTC (When Early Voting ends across NC)
+    - cron: '0 19 31 10 *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  switch-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          pip install qrcode pillow
+
+      - name: Run Election Day Static Generator
+        run: |
+          python3 generate_election_day_pages.py
+
+      - name: Commit and Push Changes to main
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Switch voting platform to Election Day voting info (Early voting concluded)" && git push origin main)
