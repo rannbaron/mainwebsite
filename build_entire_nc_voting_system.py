@@ -9,6 +9,8 @@ import qrcode.image.svg
 MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
 LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
+GITLAB_ISSUES_URL = os.environ.get('GITLAB_ISSUES_URL') or (f"{os.environ['CI_PROJECT_URL']}/-/issues" if 'CI_PROJECT_URL' in os.environ else 'https://gitlab.oit.duke.edu/rb6/mainwebsite/-/issues')
+
 
 print("1. Loading cached NC election data...")
 with open(f'{CACHE_DIR}/all_institutions.json', 'r', encoding='utf-8') as f:
@@ -825,9 +827,19 @@ for inst in institutions:
         <p class="font-medium text-slate-300">Non-partisan student voting guide prepared by Rann Bar-On.</p>
         <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the {boe_name} and the North Carolina State Board of Elections.</p>
       </div>
-      <div class="flex items-center gap-4 text-xs">
+      <div class="flex flex-wrap items-center justify-center sm:justify-end gap-4 text-xs">
         <a href="/campuses" class="text-blue-400 hover:underline">All NC Campuses</a>
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+        <a href="{GITLAB_ISSUES_URL}" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>🦊</span>
+          <span>GitLab Bug Tracker</span>
+          <span class="text-[10px]">↗</span>
+        </a>
+        <a href="#support-site" onclick="openSupportModal(); return false;" class="text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-medium">
+          <span>☕</span>
+          <span>Help Rann Bar-On maintain this site</span>
+        </a>
+
       </div>
     </div>
   </footer>
@@ -1023,6 +1035,78 @@ for inst in institutions:
       }} else if (savedLat && savedLon) {{
         applyLocation(parseFloat(savedLat), parseFloat(savedLon));
       }}
+    }});
+  </script>
+
+  <!-- Support Modal -->
+  <div id="support-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-200">
+    <div class="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl text-center">
+      <button onclick="closeSupportModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-sm transition" aria-label="Close">
+        ✕
+      </button>
+      
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 mb-3">
+        <span>☕ Independent & Community Supported</span>
+      </div>
+      
+      <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">Help Rann Bar-On maintain this site</h3>
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto mb-6">
+        This statewide student voting platform is independently built and self-funded as a free public service for students and voters across all 111 North Carolina colleges and universities. If you find this guide helpful, your contribution helps cover server hosting, domain fees, and continuous data updates!
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+        <!-- Venmo Card -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-blue-500/40 flex flex-col items-center text-center">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 rounded-md bg-[#008CFF] text-white font-bold flex items-center justify-center text-xs">V</span>
+            <span class="font-bold text-white text-sm">Venmo</span>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border-2 border-blue-500/30 shadow-md my-1">
+            <img src="/venmo_qr.png" alt="Venmo QR Code @Ran-Baron" class="w-32 h-32 object-contain" />
+          </div>
+          <div class="font-mono text-xs font-bold text-blue-400 mt-2 select-all">@Ran-Baron</div>
+          <a href="https://account.venmo.com/u/Ran-Baron" target="_blank" rel="noopener" class="mt-3 w-full py-2 px-3 rounded-xl bg-[#008CFF] hover:bg-blue-600 text-white font-semibold text-xs text-center transition shadow-sm">
+            Pay via Venmo ↗
+          </a>
+        </div>
+
+        <!-- CashApp Card -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 flex flex-col items-center text-center">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 rounded-md bg-[#00D632] text-black font-extrabold flex items-center justify-center text-xs">$</span>
+            <span class="font-bold text-white text-sm">Cash App</span>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border-2 border-emerald-500/30 shadow-md my-1">
+            <img src="/cashapp_qr.png" alt="Cash App QR Code $RanBaron" class="w-32 h-32 object-contain" />
+          </div>
+          <div class="font-mono text-xs font-bold text-emerald-400 mt-2 select-all">$RanBaron</div>
+          <a href="https://cash.app/$RanBaron" target="_blank" rel="noopener" class="mt-3 w-full py-2 px-3 rounded-xl bg-[#00D632] hover:bg-emerald-500 text-black font-bold text-xs text-center transition shadow-sm">
+            Pay via Cash App ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500 text-center">
+        Thank you for supporting non-partisan student voting access in North Carolina!
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openSupportModal() {{
+      const modal = document.getElementById('support-modal');
+      if (modal) modal.classList.remove('hidden');
+    }}
+    function closeSupportModal() {{
+      const modal = document.getElementById('support-modal');
+      if (modal) modal.classList.add('hidden');
+    }}
+    window.addEventListener('click', (e) => {{
+      const modal = document.getElementById('support-modal');
+      if (e.target === modal) closeSupportModal();
+    }});
+    window.addEventListener('keydown', (e) => {{
+      if (e.key === 'Escape') closeSupportModal();
     }});
   </script>
 
@@ -1280,8 +1364,18 @@ campuses_html = f'''<!DOCTYPE html>
         <p class="font-medium text-slate-300">Non-partisan student voting guide directory prepared by Rann Bar-On.</p>
         <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the North Carolina State Board of Elections and all 100 County Boards of Elections.</p>
       </div>
-      <div class="flex items-center gap-4 text-xs">
+      <div class="flex flex-wrap items-center justify-center sm:justify-end gap-4 text-xs">
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+        <a href="{GITLAB_ISSUES_URL}" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>🦊</span>
+          <span>GitLab Bug Tracker</span>
+          <span class="text-[10px]">↗</span>
+        </a>
+        <a href="#support-site" onclick="openSupportModal(); return false;" class="text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-medium">
+          <span>☕</span>
+          <span>Help Rann Bar-On maintain this site</span>
+        </a>
+
       </div>
     </div>
   </footer>
@@ -1479,6 +1573,78 @@ campuses_html = f'''<!DOCTYPE html>
         if (btn) btn.innerHTML = '✓ Proximity Active';
       }}
       renderCampuses(campusesData);
+    }});
+  </script>
+
+  <!-- Support Modal -->
+  <div id="support-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-200">
+    <div class="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl text-center">
+      <button onclick="closeSupportModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-sm transition" aria-label="Close">
+        ✕
+      </button>
+      
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 mb-3">
+        <span>☕ Independent & Community Supported</span>
+      </div>
+      
+      <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">Help Rann Bar-On maintain this site</h3>
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto mb-6">
+        This statewide student voting platform is independently built and self-funded as a free public service for students and voters across all 111 North Carolina colleges and universities. If you find this guide helpful, your contribution helps cover server hosting, domain fees, and continuous data updates!
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+        <!-- Venmo Card -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-blue-500/40 flex flex-col items-center text-center">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 rounded-md bg-[#008CFF] text-white font-bold flex items-center justify-center text-xs">V</span>
+            <span class="font-bold text-white text-sm">Venmo</span>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border-2 border-blue-500/30 shadow-md my-1">
+            <img src="/venmo_qr.png" alt="Venmo QR Code @Ran-Baron" class="w-32 h-32 object-contain" />
+          </div>
+          <div class="font-mono text-xs font-bold text-blue-400 mt-2 select-all">@Ran-Baron</div>
+          <a href="https://account.venmo.com/u/Ran-Baron" target="_blank" rel="noopener" class="mt-3 w-full py-2 px-3 rounded-xl bg-[#008CFF] hover:bg-blue-600 text-white font-semibold text-xs text-center transition shadow-sm">
+            Pay via Venmo ↗
+          </a>
+        </div>
+
+        <!-- CashApp Card -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 flex flex-col items-center text-center">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 rounded-md bg-[#00D632] text-black font-extrabold flex items-center justify-center text-xs">$</span>
+            <span class="font-bold text-white text-sm">Cash App</span>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border-2 border-emerald-500/30 shadow-md my-1">
+            <img src="/cashapp_qr.png" alt="Cash App QR Code $RanBaron" class="w-32 h-32 object-contain" />
+          </div>
+          <div class="font-mono text-xs font-bold text-emerald-400 mt-2 select-all">$RanBaron</div>
+          <a href="https://cash.app/$RanBaron" target="_blank" rel="noopener" class="mt-3 w-full py-2 px-3 rounded-xl bg-[#00D632] hover:bg-emerald-500 text-black font-bold text-xs text-center transition shadow-sm">
+            Pay via Cash App ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500 text-center">
+        Thank you for supporting non-partisan student voting access in North Carolina!
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openSupportModal() {{
+      const modal = document.getElementById('support-modal');
+      if (modal) modal.classList.remove('hidden');
+    }}
+    function closeSupportModal() {{
+      const modal = document.getElementById('support-modal');
+      if (modal) modal.classList.add('hidden');
+    }}
+    window.addEventListener('click', (e) => {{
+      const modal = document.getElementById('support-modal');
+      if (e.target === modal) closeSupportModal();
+    }});
+    window.addEventListener('keydown', (e) => {{
+      if (e.key === 'Escape') closeSupportModal();
     }});
   </script>
 
@@ -1714,9 +1880,19 @@ vote_html = f'''<!DOCTYPE html>
   <footer class="border-t border-slate-800/80 bg-slate-950 py-6 px-4 text-center text-xs text-slate-500">
     <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
       <span>Non-partisan student voting guide portal prepared by Rann Bar-On.</span>
-      <div class="flex items-center gap-4">
+      <div class="flex flex-wrap items-center justify-center gap-4">
         <a href="/campuses" class="text-blue-400 hover:underline">All 111 NC Campuses</a>
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+        <a href="{GITLAB_ISSUES_URL}" target="_blank" rel="noopener" class="text-slate-400 hover:text-slate-200 hover:underline flex items-center gap-1">
+          <span>🦊</span>
+          <span>GitLab Bug Tracker</span>
+          <span class="text-[10px]">↗</span>
+        </a>
+        <a href="#support-site" onclick="openSupportModal(); return false;" class="text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-medium">
+          <span>☕</span>
+          <span>Help Rann Bar-On maintain this site</span>
+        </a>
+
       </div>
     </div>
   </footer>
@@ -1915,6 +2091,78 @@ vote_html = f'''<!DOCTYPE html>
           }}
         }}).catch(() => {{}});
       }}
+    }});
+  </script>
+
+  <!-- Support Modal -->
+  <div id="support-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm transition-opacity duration-200">
+    <div class="relative w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl text-center">
+      <button onclick="closeSupportModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-xl bg-slate-800/60 hover:bg-slate-800 text-sm transition" aria-label="Close">
+        ✕
+      </button>
+      
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-300 border border-amber-500/30 mb-3">
+        <span>☕ Independent & Community Supported</span>
+      </div>
+      
+      <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">Help Rann Bar-On maintain this site</h3>
+      <p class="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-md mx-auto mb-6">
+        This statewide student voting platform is independently built and self-funded as a free public service for students and voters across all 111 North Carolina colleges and universities. If you find this guide helpful, your contribution helps cover server hosting, domain fees, and continuous data updates!
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+        <!-- Venmo Card -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-blue-500/40 flex flex-col items-center text-center">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 rounded-md bg-[#008CFF] text-white font-bold flex items-center justify-center text-xs">V</span>
+            <span class="font-bold text-white text-sm">Venmo</span>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border-2 border-blue-500/30 shadow-md my-1">
+            <img src="/venmo_qr.png" alt="Venmo QR Code @Ran-Baron" class="w-32 h-32 object-contain" />
+          </div>
+          <div class="font-mono text-xs font-bold text-blue-400 mt-2 select-all">@Ran-Baron</div>
+          <a href="https://account.venmo.com/u/Ran-Baron" target="_blank" rel="noopener" class="mt-3 w-full py-2 px-3 rounded-xl bg-[#008CFF] hover:bg-blue-600 text-white font-semibold text-xs text-center transition shadow-sm">
+            Pay via Venmo ↗
+          </a>
+        </div>
+
+        <!-- CashApp Card -->
+        <div class="p-4 rounded-2xl bg-slate-950 border border-emerald-500/40 flex flex-col items-center text-center">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 rounded-md bg-[#00D632] text-black font-extrabold flex items-center justify-center text-xs">$</span>
+            <span class="font-bold text-white text-sm">Cash App</span>
+          </div>
+          <div class="bg-white p-2.5 rounded-xl border-2 border-emerald-500/30 shadow-md my-1">
+            <img src="/cashapp_qr.png" alt="Cash App QR Code $RanBaron" class="w-32 h-32 object-contain" />
+          </div>
+          <div class="font-mono text-xs font-bold text-emerald-400 mt-2 select-all">$RanBaron</div>
+          <a href="https://cash.app/$RanBaron" target="_blank" rel="noopener" class="mt-3 w-full py-2 px-3 rounded-xl bg-[#00D632] hover:bg-emerald-500 text-black font-bold text-xs text-center transition shadow-sm">
+            Pay via Cash App ↗
+          </a>
+        </div>
+      </div>
+
+      <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500 text-center">
+        Thank you for supporting non-partisan student voting access in North Carolina!
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openSupportModal() {{
+      const modal = document.getElementById('support-modal');
+      if (modal) modal.classList.remove('hidden');
+    }}
+    function closeSupportModal() {{
+      const modal = document.getElementById('support-modal');
+      if (modal) modal.classList.add('hidden');
+    }}
+    window.addEventListener('click', (e) => {{
+      const modal = document.getElementById('support-modal');
+      if (e.target === modal) closeSupportModal();
+    }});
+    window.addEventListener('keydown', (e) => {{
+      if (e.key === 'Escape') closeSupportModal();
     }});
   </script>
 
