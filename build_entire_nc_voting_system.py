@@ -1442,84 +1442,233 @@ with open(f"{LOCAL_DIR}/campuses.html", 'w', encoding='utf-8') as f:
 print("Master campuses.html updated with geolocation!")
 
 # 7. Create smart Geolocation Landing Page for /vote
-print("5. Generating smart Geolocation Landing Page for /vote...")
+print("5. Generating dynamic Main QR Code Portal for /vote with Geolocation and Zip Code lookup...")
+
+# Build zip map from voting sites
+zip_map = {}
+for county, sites in sites_by_county.items():
+    for s in sites:
+        csz = s.get('SiteAddressCSZ', '') + ' ' + s.get('SiteAddressComplete', '')
+        zips = re.findall(r'\b(2[78]\d{3})\b', csz)
+        lat = s.get('SiteCoordLat')
+        lon = s.get('SiteCoordLong')
+        if zips and lat and lon:
+            for z in zips:
+                if z not in zip_map:
+                    zip_map[z] = [round(lat, 4), round(lon, 4)]
+
+local_zip_map_json_str = json.dumps(zip_map)
+qr_b64_map_json_str = json.dumps(qr_b64_map)
+duke_qr_b64 = qr_b64_map.get('dukevote', '')
+
 vote_html = f'''<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>North Carolina Campus Early Voting Portal | Rann Bar-On</title>
-  <meta name="description" content="Find your nearest North Carolina college campus early voting site using automatic location detection, or browse all 111 NC campus guides.">
+  <title>North Carolina Campus Early Voting Portal & QR Code | Rann Bar-On</title>
+  <meta name="description" content="Dynamic NC student early voting portal. Automatically generates the QR code and early voting guide for your college or university using geolocation or zip code.">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rannbar-on.com/vote">
+  <meta property="og:title" content="North Carolina Campus Early Voting Portal">
+  <meta property="og:description" content="Dynamic QR code and early voting guide for every college and university in North Carolina.">
+  <meta property="og:image" content="https://rannbar-on.com/dukevote_qr.png">
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     if (!window.tailwind) {{
-      document.write('<script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\\/script>');
+      document.write('<script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>');
     }}
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    
+    :root {{
+      --bg: #070b14;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }}
+
     body {{
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #070b14;
-      color: #f8fafc;
+      background-color: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }}
+
+    .font-mono {{
+      font-family: 'JetBrains Mono', monospace;
     }}
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 antialiased p-4 sm:p-8">
+<body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 antialiased">
 
-  <div class="max-w-xl mx-auto w-full my-auto text-center space-y-6">
-    <div class="w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400 text-3xl flex items-center justify-center mx-auto shadow-xl">
-      🗳️
-    </div>
-
-    <div>
-      <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-3">
-        North Carolina Student Voting Portal
+  <!-- Top Announcement Bar -->
+  <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
+    <span class="inline-flex items-center gap-1.5">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
       </span>
-      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-        Find Your Nearest Campus Early Voting Site
+      <span>North Carolina Early Voting is <b>OPEN STATEWIDE</b> through <b>Saturday, October 31, 2026</b></span>
+    </span>
+  </div>
+
+  <!-- Header / Navigation -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="https://rannbar-on.com/" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center font-bold text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition">
+          R
+        </div>
+        <div>
+          <span class="font-bold tracking-tight text-white block text-sm sm:text-base leading-none">Rann Bar-On</span>
+          <span class="text-[11px] text-slate-400 font-mono">rannbar-on.com</span>
+        </div>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="/campuses" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
+          Browse All 111 NC Campuses →
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-grow flex flex-col items-center justify-center">
+
+    <div class="text-center max-w-2xl mx-auto mb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-3">
+        <span>📍 Smart QR Code Portal</span>
+        <span class="text-slate-600">•</span>
+        <span>All 111 NC Campuses</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+        Scan Your Campus Early Voting Guide
       </h1>
-      <p class="text-sm text-slate-300 mt-2 leading-relaxed">
-        Allow location access to automatically detect your closest NC college, university, or community college early voting site.
+      <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+        This QR code automatically updates to point to your college or university's early voting guide. Use your device location or enter a zip code below to customize it instantly.
       </p>
     </div>
 
-    <!-- Geolocation Trigger Button -->
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
-      <button onclick="detectAndRedirect()" id="btn-detect" class="w-full py-4 px-6 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-base shadow-lg transition flex items-center justify-center gap-2 group">
-        <span class="text-xl">📍</span>
-        <span>Use My Location & Go to Nearest Campus</span>
-        <span class="group-hover:translate-x-1 transition">→</span>
-      </button>
-
-      <div id="status-msg" class="text-xs text-slate-400 min-h-[20px]">
-        Redirecting to Duke Guide in <span id="timer-sec" class="font-bold text-white">5</span>s...
+    <!-- The Main Dynamic QR Card -->
+    <div class="w-full max-w-md bg-gradient-to-b from-slate-900 to-slate-950 border-2 border-blue-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl text-center relative overflow-hidden mb-8">
+      
+      <!-- Dynamic School Header -->
+      <div class="mb-4">
+        <div id="qr-status-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-slate-800 text-slate-300 border border-slate-700 mb-2">
+          <span>🔵 Default: Duke University</span>
+        </div>
+        <h2 id="qr-school-name" class="text-xl sm:text-2xl font-black text-white tracking-tight">
+          Duke University
+        </h2>
+        <p id="qr-school-loc" class="text-xs text-slate-400 mt-0.5 font-medium">
+          Durham, NC • Durham County
+        </p>
       </div>
 
-      <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs">
-        <a href="/dukevote" class="text-blue-400 hover:underline font-semibold">Go to Duke Guide Now →</a>
-        <span class="text-slate-600 hidden sm:inline">•</span>
-        <a href="/campuses" class="text-slate-300 hover:text-white underline">Browse All 111 NC Campuses</a>
+      <!-- High-Resolution QR Box -->
+      <div class="bg-white p-4 sm:p-5 rounded-2xl shadow-xl border-4 border-blue-500/30 inline-block my-2 transition duration-300">
+        <img id="main-qr-img" src="data:image/png;base64,{duke_qr_b64}" alt="NC Campus Early Voting QR Code" class="w-52 h-52 sm:w-56 sm:h-56 object-contain mx-auto" />
+      </div>
+
+      <!-- URL Pill -->
+      <div id="qr-guide-url" class="mt-3 inline-block font-mono text-xs font-semibold text-blue-400 bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-800 select-all">
+        rannbar-on.com/dukevote
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="mt-5 space-y-2">
+        <a id="qr-guide-btn" href="/dukevote?autoloc=1" class="w-full py-3 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm transition shadow-lg flex items-center justify-center gap-2">
+          <span>Open Duke Guide Now</span>
+          <span>→</span>
+        </a>
+
+        <div class="grid grid-cols-3 gap-2 text-xs">
+          <button onclick="copyCurrentLink()" class="py-2 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold transition flex items-center justify-center gap-1">
+            <span>📋</span><span>Copy</span>
+          </button>
+          <a id="qr-dl-png" href="/dukevote_qr.png" download="Duke_Vote_QR.png" class="py-2 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold transition flex items-center justify-center gap-1">
+            <span>📥</span><span>PNG</span>
+          </a>
+          <a id="qr-dl-svg" href="/dukevote_qr.svg" download="Duke_Vote_QR.svg" class="py-2 px-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold transition flex items-center justify-center gap-1">
+            <span>📥</span><span>SVG</span>
+          </a>
+        </div>
       </div>
     </div>
-  </div>
 
-  <footer class="text-center text-xs text-slate-500 py-4">
-    Non-partisan student voting portal • <a href="https://rannbar-on.com/" class="text-slate-400 hover:underline">rannbar-on.com</a>
+    <!-- Dynamic Location / Zip Controls Container -->
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-5">
+      
+      <!-- Option 1: Geolocation -->
+      <div>
+        <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Option 1: Device Location (Fastest)</label>
+        <button onclick="triggerGeolocation()" id="btn-geo" class="w-full py-2.5 px-4 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/40 text-blue-300 font-bold text-xs transition flex items-center justify-center gap-2">
+          <span>📍</span>
+          <span>Use My Current Location to Update QR</span>
+        </button>
+        <div id="geo-status-text" class="text-[11px] text-slate-400 mt-1.5 min-h-[16px] text-center"></div>
+      </div>
+
+      <div class="relative flex py-1 items-center">
+        <div class="flex-grow border-t border-slate-800"></div>
+        <span class="flex-shrink mx-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">or</span>
+        <div class="flex-grow border-t border-slate-800"></div>
+      </div>
+
+      <!-- Option 2: NC Zip Code Lookup -->
+      <div>
+        <label for="zip-input" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Option 2: Enter NC Zip Code</label>
+        <form onsubmit="handleZipSubmit(event)" class="flex gap-2">
+          <input type="text" id="zip-input" maxlength="5" pattern="[0-9]{{5}}" placeholder="e.g. 27708, 27514, 28608..." 
+                 class="w-full bg-slate-950 border border-slate-700 focus:border-blue-500 rounded-xl px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none" />
+          <button type="submit" id="btn-zip-submit" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition shrink-0">
+            Update QR
+          </button>
+        </form>
+        <div id="zip-status-text" class="text-[11px] text-slate-400 mt-1.5 min-h-[16px] text-center"></div>
+      </div>
+
+      <div class="relative flex py-1 items-center">
+        <div class="flex-grow border-t border-slate-800"></div>
+        <span class="flex-shrink mx-3 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">or</span>
+        <div class="flex-grow border-t border-slate-800"></div>
+      </div>
+
+      <!-- Option 3: Manual Campus Selection -->
+      <div>
+        <label for="campus-select" class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Option 3: Select College / University</label>
+        <select id="campus-select" onchange="handleSelectCampus(this.value)" class="w-full bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-blue-500 font-medium">
+          <option value="">Choose an NC College/University...</option>
+          {campus_options_html}
+        </select>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-6 px-4 text-center text-xs text-slate-500">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <span>Non-partisan student voting guide portal prepared by Rann Bar-On.</span>
+      <div class="flex items-center gap-4">
+        <a href="/campuses" class="text-blue-400 hover:underline">All 111 NC Campuses</a>
+        <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+      </div>
+    </div>
   </footer>
 
   <script>
+    const qrB64Map = {qr_b64_map_json_str};
     const allCampuses = {campus_geo_json_str};
-    let timeLeft = 5;
-    let timer = setInterval(() => {{
-      timeLeft -= 1;
-      const t = document.getElementById('timer-sec');
-      if (t) t.innerText = timeLeft;
-      if (timeLeft <= 0) {{
-        clearInterval(timer);
-        window.location.replace('/dukevote');
-      }}
-    }}, 1000);
+    const localZips = {local_zip_map_json_str};
+    let currentCampus = allCampuses.find(c => c.key === 'dukevote') || allCampuses[0];
 
     function haversine(lat1, lon1, lat2, lon2) {{
       const R = 3958.8; // miles
@@ -1532,19 +1681,51 @@ vote_html = f'''<!DOCTYPE html>
       return Math.round(R * c * 10) / 10;
     }}
 
-    function detectAndRedirect() {{
-      clearInterval(timer);
-      const btn = document.getElementById('btn-detect');
-      const msg = document.getElementById('status-msg');
+    function updateMainQR(campus, sourceTitle, extraDetail) {{
+      currentCampus = campus;
+      
+      // Update QR Code Image
+      const qrImg = document.getElementById('main-qr-img');
+      if (qrB64Map[campus.key]) {{
+        qrImg.src = 'data:image/png;base64,' + qrB64Map[campus.key];
+      }} else {{
+        qrImg.src = `/${{campus.key}}_qr.png`;
+      }}
 
+      // Update Header & Details
+      document.getElementById('qr-school-name').innerText = `${{campus.icon || ''}} ${{campus.name}}`.trim();
+      document.getElementById('qr-school-loc').innerText = `${{campus.city}}, NC • ${{campus.county}}`;
+      document.getElementById('qr-guide-url').innerText = `rannbar-on.com/${{campus.key}}`;
+
+      // Update Status Badge
+      const statusBadge = document.getElementById('qr-status-badge');
+      statusBadge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-2';
+      statusBadge.innerHTML = `<span>✓</span><span>${{sourceTitle}}</span>`;
+
+      // Update Action Links
+      const guideBtn = document.getElementById('qr-guide-btn');
+      guideBtn.href = `/${{campus.key}}?autoloc=1`;
+      guideBtn.innerText = `Open ${{campus.short_name || campus.name}} Guide Now →`;
+
+      document.getElementById('qr-dl-png').href = `/${{campus.key}}_qr.png`;
+      document.getElementById('qr-dl-png').download = `${{campus.short_name || 'Campus'}}_Vote_QR.png`;
+      
+      document.getElementById('qr-dl-svg').href = `/${{campus.key}}_qr.svg`;
+      document.getElementById('qr-dl-svg').download = `${{campus.short_name || 'Campus'}}_Vote_QR.svg`;
+
+      // Save user campus selection
+      sessionStorage.setItem('nc_user_campus', campus.key);
+    }}
+
+    function triggerGeolocation() {{
       if (!navigator.geolocation) {{
-        alert("Geolocation is not supported by your browser. Redirecting to Duke guide...");
-        window.location.replace('/dukevote');
+        alert("Geolocation is not supported by your browser.");
         return;
       }}
 
-      btn.innerHTML = '<span class="animate-spin text-xl">⏳</span><span>Detecting your location...</span>';
-      msg.innerText = "Please allow location access in your browser prompt...";
+      const status = document.getElementById('geo-status-text');
+      status.className = 'text-[11px] text-blue-400 mt-1.5 min-h-[16px] text-center font-medium';
+      status.innerHTML = '<span class="animate-spin">⏳</span> Detecting your location...';
 
       navigator.geolocation.getCurrentPosition(
         pos => {{
@@ -1560,21 +1741,108 @@ vote_html = f'''<!DOCTYPE html>
           }})).sort((a, b) => a.dist - b.dist);
 
           const closest = sorted[0];
-          msg.innerHTML = `Found! You are closest to <b>${{closest.name}}</b> (${{closest.dist}} mi away). Redirecting...`;
-          setTimeout(() => {{
-            window.location.replace(`/${{closest.key}}?autoloc=1`);
-          }}, 500);
+          updateMainQR(closest, `Located via GPS: ${{closest.name}}`, `${{closest.dist}} mi away`);
+          status.className = 'text-[11px] text-emerald-400 mt-1.5 min-h-[16px] text-center font-medium';
+          status.innerHTML = `✓ Found! Closest campus: <b>${{closest.name}}</b> (${{closest.dist}} miles away)`;
         }},
         err => {{
-          msg.innerText = "Location permission denied. Redirecting to default Duke guide...";
-          setTimeout(() => {{
-            window.location.replace('/dukevote');
-          }}, 800);
+          status.className = 'text-[11px] text-amber-400 mt-1.5 min-h-[16px] text-center font-medium';
+          status.innerText = "Location permission was denied. Try entering your zip code below!";
         }},
         {{ enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }}
       );
     }}
+
+    async function handleZipSubmit(e) {{
+      e.preventDefault();
+      const zipInput = document.getElementById('zip-input');
+      const zip = zipInput.value.trim();
+      const status = document.getElementById('zip-status-text');
+
+      if (!/^\d{5}$/.test(zip)) {{
+        status.className = 'text-[11px] text-amber-400 mt-1.5 min-h-[16px] text-center font-medium';
+        status.innerText = "Please enter a valid 5-digit NC zip code.";
+        return;
+      }}
+
+      status.className = 'text-[11px] text-blue-400 mt-1.5 min-h-[16px] text-center font-medium';
+      status.innerHTML = '<span class="animate-spin">⏳</span> Looking up zip code...';
+
+      let coords = null;
+      if (localZips[zip]) {{
+        coords = localZips[zip];
+      }} else {{
+        try {{
+          const res = await fetch(`https://api.zippopotam.us/us/${{zip}}`);
+          if (res.ok) {{
+            const data = await res.json();
+            if (data.places && data.places.length > 0) {{
+              coords = [parseFloat(data.places[0].latitude), parseFloat(data.places[0].longitude)];
+            }}
+          }}
+        }} catch (err) {{
+          console.warn("Zippopotam fetch failed:", err);
+        }}
+      }}
+
+      if (coords) {{
+        const [zLat, zLon] = coords;
+        const sorted = [...allCampuses].map(c => ({{
+          ...c,
+          dist: haversine(zLat, zLon, c.lat, c.lon)
+        }})).sort((a, b) => a.dist - b.dist);
+
+        const closest = sorted[0];
+        updateMainQR(closest, `Zip Code ${{zip}}: ${{closest.name}}`, `${{closest.dist}} mi away`);
+        status.className = 'text-[11px] text-emerald-400 mt-1.5 min-h-[16px] text-center font-medium';
+        status.innerHTML = `✓ Zip ${{zip}} matched! Closest campus: <b>${{closest.name}}</b> (${{closest.dist}} miles away)`;
+      }} else {{
+        status.className = 'text-[11px] text-amber-400 mt-1.5 min-h-[16px] text-center font-medium';
+        status.innerText = "Could not find coordinates for that zip code. Please select your school from Option 3!";
+      }}
+    }}
+
+    function handleSelectCampus(key) {{
+      if (!key) return;
+      const cleanKey = key.replace('/', '');
+      const campus = allCampuses.find(c => c.key === cleanKey);
+      if (campus) {{
+        updateMainQR(campus, `Selected: ${{campus.name}}`, campus.city);
+        const status = document.getElementById('zip-status-text');
+        status.className = 'text-[11px] text-emerald-400 mt-1.5 min-h-[16px] text-center font-medium';
+        status.innerHTML = `✓ Updated QR Code to <b>${{campus.name}}</b>`;
+      }}
+    }}
+
+    function copyCurrentLink() {{
+      const url = `https://rannbar-on.com/${{currentCampus.key}}`;
+      navigator.clipboard.writeText(url);
+      alert(`Copied link to ${{currentCampus.short_name || currentCampus.name}} Early Voting Guide!`);
+    }}
+
+    // Auto-detect if location permission is already granted
+    window.addEventListener('DOMContentLoaded', () => {{
+      const savedLat = sessionStorage.getItem('nc_user_lat');
+      const savedLon = sessionStorage.getItem('nc_user_lon');
+      if (savedLat && savedLon) {{
+        const uLat = parseFloat(savedLat);
+        const uLon = parseFloat(savedLon);
+        const sorted = [...allCampuses].map(c => ({{
+          ...c,
+          dist: haversine(uLat, uLon, c.lat, c.lon)
+        }})).sort((a, b) => a.dist - b.dist);
+        const closest = sorted[0];
+        updateMainQR(closest, `Location Restored: ${{closest.name}}`, `${{closest.dist}} mi away`);
+      }} else if (navigator.permissions && navigator.permissions.query) {{
+        navigator.permissions.query({{ name: 'geolocation' }}).then(res => {{
+          if (res.state === 'granted') {{
+            triggerGeolocation();
+          }}
+        }}).catch(() => {{}});
+      }}
+    }});
   </script>
+
 </body>
 </html>
 '''
@@ -1588,5 +1856,5 @@ with open(f"{MAIN_DIR}/vote/index.html", 'w', encoding='utf-8') as f:
 with open(f"{LOCAL_DIR}/vote.html", 'w', encoding='utf-8') as f:
     f.write(vote_html)
 
-print("Updated /vote with dynamic Geolocation redirection!")
+print("Updated /vote with dynamic Main QR code and Zip Code lookup!")
 print("ALL DONE!")
