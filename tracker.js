@@ -87,7 +87,7 @@
       logEvent('click_directions', { dest: href });
     } else if (text.includes('detect') || text.includes('gps') || text.includes('location')) {
       logEvent('click_geolocation', {});
-    } else if (href.includes('bluevoterguide') || href.includes('ivoterguide') || href.includes('vote411')) {
+    } else if (href.includes('bluevoterguide') || href.includes('vote411')) {
       logEvent('click_voter_guide', { guide: href });
     }
   });

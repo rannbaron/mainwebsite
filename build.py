@@ -209,7 +209,6 @@ for inst in campuses:
       <div class="guide-links">
         <div><strong>Non-partisan:</strong> <a href="https://www.vote411.org/north-carolina" target="_blank" rel="noopener">Vote411 (League of Women Voters)</a></div>
         <div><strong>Democratic:</strong> <a href="https://bluevoterguide.org/" target="_blank" rel="noopener">Blue Voter Guide (NC)</a> | <a href="{dem_url}" target="_blank" rel="noopener">{c_display} Democratic Party</a></div>
-        <div><strong>Republican:</strong> <a href="https://ivoterguide.com/" target="_blank" rel="noopener">iVoterGuide (NC)</a> | <a href="{rep_url}" target="_blank" rel="noopener">{c_display} Republican Party</a></div>
       </div>'''
 
     boe_section_html = f'''      <h2>{c_display} Board of Elections</h2>

@@ -14,6 +14,25 @@ import urllib.parse
 MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
 LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
+DATA_DIR = f'{MAIN_DIR}/data'
+os.makedirs(CACHE_DIR, exist_ok=True)
+
+# Ensure cache is seeded from data/ if needed
+mapping = {
+    'campuses.json': 'all_institutions.json',
+    'county_boe.json': 'county_boe_info.json',
+    'county_sites.json': 'county_early_voting_sites.json',
+    'campus_geo.json': 'campus_geo_data.json',
+    'county_precincts.json': 'county_precincts_map.json',
+    'campus_precincts.json': 'campus_primary_precincts.json'
+}
+for src, dst in mapping.items():
+    d_path = os.path.join(CACHE_DIR, dst)
+    s_path = os.path.join(DATA_DIR, src)
+    if not os.path.exists(d_path) and os.path.exists(s_path):
+        import shutil
+        shutil.copyfile(s_path, d_path)
+
 GITLAB_REPO_URL = os.environ.get('CI_PROJECT_URL') or 'https://github.com/rannbaron/mainwebsite'
 GITLAB_ISSUES_URL = os.environ.get('GITLAB_ISSUES_URL') or 'https://github.com/rannbaron/mainwebsite/issues'
 VERIFIED_UPDATE_TIME = "October 26, 2026 at 1:45 PM EDT"
@@ -233,7 +252,7 @@ for inst in institutions:
 
     county_sites_raw = sites_by_county.get(cname, [])
     primary_site = None
-    kw = inst.get('site_keyword', '').upper()
+    kw = 'WESTERN CAROLINA' if key == 'wcuvote' else inst.get('site_keyword', '').upper()
     for s in county_sites_raw:
         if kw and kw in s['Name'].upper():
             primary_site = s
@@ -640,17 +659,17 @@ for inst in institutions:
       </div>
     </section>
 
-    <!-- Section 2: Local Candidate Voter Guides (Democratic, Republican & Independent) -->
+    <!-- Section 2: Local Candidate Voter Guides (Democratic & Non-Partisan) -->
     <section id="voter-guides" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
       <div class="max-w-3xl mb-8">
         <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Candidate Research &amp; Endorsements</span>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">Local Candidate Guides for {inst['short_name']} Students</h2>
         <p class="text-sm text-slate-300 leading-relaxed">
-          Before heading to the ballot box in {c_display}, review questionnaires, policy scorecards, and endorsements from multiple political perspectives:
+          Before heading to the ballot box in {c_display}, review questionnaires, policy scorecards, and endorsements:
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- 1. Democratic-Leaning Guide -->
         <div class="bg-slate-950/80 border border-blue-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-md">
           <div>
@@ -674,30 +693,7 @@ for inst in institutions:
           </div>
         </div>
 
-        <!-- 2. Republican-Leaning Guide -->
-        <div class="bg-slate-950/80 border border-red-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-md">
-          <div>
-            <div class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-500/20 text-red-400 border border-red-500/30 mb-3">
-              <span>Republican / Conservative</span>
-            </div>
-            <h3 class="text-lg font-bold text-white mb-2">iVoterGuide &amp; NC Values</h3>
-            <p class="text-xs text-slate-300 leading-relaxed mb-4">
-              Research-backed candidate evaluations and ratings based on conservative constitutional principles, fiscal policies, and traditional values across {c_display}.
-            </p>
-          </div>
-          <div class="space-y-2 pt-2 border-t border-slate-800/80">
-            <a href="https://ivoterguide.com/" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-xs transition shadow-sm">
-              <span>Open iVoterGuide (NC)</span>
-              <span>↗</span>
-            </a>
-            <a href="{rep_county_url}" target="_blank" rel="noopener" class="w-full flex items-center justify-between p-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-red-300 border border-slate-800 font-medium text-xs transition">
-              <span>{c_display} Republican Party (GOP)</span>
-              <span>↗</span>
-            </a>
-          </div>
-        </div>
-
-        <!-- 3. Independent / Non-Partisan Guide -->
+        <!-- 2. Independent / Non-Partisan Guide -->
         <div class="bg-slate-950/80 border border-emerald-500/40 rounded-2xl p-5 sm:p-6 flex flex-col justify-between shadow-md">
           <div>
             <div class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 mb-3">

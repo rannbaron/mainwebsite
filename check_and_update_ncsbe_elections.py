@@ -4,7 +4,7 @@ North Carolina State Board of Elections (NCSBE) Bi-Weekly Automation Engine
 Checks NCSBE official endpoints every two weeks for upcoming elections (General, Primaries,
 Runoffs, Municipal, and Special elections), downloads the latest early voting sites and county
 BOE data across all 100 NC counties, includes local races (county commissioners, school boards,
-judges, municipal councils) and all three voting guides (Democratic, Republican, Independent),
+judges, municipal councils) and candidate voting guides (Democratic and Independent),
 and rebuilds the entire NC student voting platform.
 
 Designed to run completely hands-free on GitLab CI/CD or GitHub Actions without requiring
@@ -276,7 +276,7 @@ def git_commit_and_push_if_changed(election_info):
     subprocess.run(['git', 'add', '-A'], cwd=MAIN_DIR)
     commit_msg = (
         f"Bi-weekly NCSBE update: Refreshed for {election_info['election_title']} "
-        f"({election_info['election_date']}) with local races, voting sites, and 3-guide balance [skip ci]"
+        f"({election_info['election_date']}) with local races, voting sites, and voting guides [skip ci]"
     )
     subprocess.run(['git', 'commit', '-m', commit_msg], cwd=MAIN_DIR)
 
