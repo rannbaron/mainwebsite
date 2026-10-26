@@ -53,22 +53,27 @@ def format_title(text):
         return "NCCU - Turner Law Building"
     if "LITTLE RIVER" in s.upper():
         return "Little River Community Complex"
+    if s.upper() == "WESTERN CAROLINA UNIVERSITY" or "WESTERN CAROLINA UNIVERSITY" in s.upper():
+        return "WCU - Health and Human Sciences Building (HHS)"
     
     minor = {'of', 'and', 'at', 'the', 'for', 'in', 'on', 'by', 'to'}
-    acronyms = {'NCCU', 'NC', 'UNC', 'NCSU', 'GOP', 'BOE', 'USA', 'US', 'DPS', 'STEM', 'W.I.', 'E.K.', 'W.J.', 'C.C.', 'KIPP'}
+    acronyms = {'NCCU', 'NC', 'UNC', 'NCSU', 'WCU', 'HHS', 'GOP', 'BOE', 'USA', 'US', 'DPS', 'STEM', 'W.I.', 'E.K.', 'W.J.', 'C.C.', 'KIPP'}
     
     words = s.split()
     out = []
     for i, w in enumerate(words):
-        w_clean = w.rstrip(',.-')
-        suffix = w[len(w_clean):]
-        w_up = w_clean.upper()
-        if w_up in acronyms:
-            out.append(w_up + suffix)
-        elif i > 0 and w.lower() in minor:
-            out.append(w.lower() + suffix)
+        m = re.match(r'^([^\w]*)(.*?)([^\w]*)$', w)
+        if m:
+            prefix, core, suffix = m.groups()
         else:
-            out.append(w.capitalize() + suffix)
+            prefix, core, suffix = '', w, ''
+        core_up = core.upper()
+        if core_up in acronyms:
+            out.append(prefix + core_up + suffix)
+        elif i > 0 and core.lower() in minor:
+            out.append(prefix + core.lower() + suffix)
+        else:
+            out.append(prefix + core.capitalize() + suffix)
     res = " ".join(out)
     res = re.sub(r'\bBoard Of Elections\b', 'Board of Elections', res, flags=re.I)
     res = re.sub(r'\bDurham,\s*Nc\b', 'Durham, NC', res, flags=re.I)

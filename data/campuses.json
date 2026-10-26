@@ -1072,7 +1072,7 @@
     "lat": 35.290995,
     "lon": -83.181647,
     "primary_precinct": "CUL",
-    "primary_precinct_name": "HEALTH AND HUMAN SCIENCES (HHS)",
+    "primary_precinct_name": "Health and Human Sciences Building (HHS)",
     "primary_precinct_lat": 35.30066,
     "primary_precinct_lon": -83.18867,
     "dist_to_precinct": 0.78,
@@ -1119,9 +1119,11 @@
       }
     ],
     "clean_id_card_name": "CatCard",
-    "site_name": "WESTERN CAROLINA UNIVERSITY",
-    "site_address": "4121 LITTLE SAVANNAH RD CULLOWHEE, NC 28723",
-    "has_on_campus_site": true
+    "site_name": "WCU Health and Human Sciences Building (HHS)",
+    "site_address": "4121 Little Savannah Rd, Cullowhee, NC 28723",
+    "has_on_campus_site": true,
+    "site_entrance": "Voting takes place in the ground floor atrium / lobby of the Health and Human Sciences Building.",
+    "transit_shuttle": "Accessible via the free WCU Cat-Tran shuttle (All-Campus / HHS route) running continuously from the University Center and campus residence halls across NC-107."
   },
   {
     "key": "wssuvote",
