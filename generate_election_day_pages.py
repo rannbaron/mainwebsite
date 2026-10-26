@@ -293,7 +293,7 @@ for inst in institutions:
     .font-mono {{ font-family: 'JetBrains Mono', monospace; }}
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased" data-campus="{inst['name']}" data-key="{key}" data-county="{inst['county']}">
 
   <!-- TOP OFFICIAL DATA VERIFICATION BANNER -->
   <aside aria-label="Official verification notice" class="bg-slate-900 border-b border-slate-800 text-xs text-slate-300 py-2 px-4 sm:px-6">
@@ -657,6 +657,7 @@ for inst in institutions:
         <a href="/vote" class="hover:text-white transition">Dynamic QR Portal</a>
         <a href="https://www.ncsbe.gov" target="_blank" rel="noopener" class="hover:text-white transition">NCSBE Official</a>
         <a href="{GITLAB_ISSUES_URL}" target="_blank" rel="noopener" class="hover:text-white transition">GitLab Bug Tracker</a>
+        <a href="/stats" class="hover:text-white transition">Usage Tracker</a>
       </div>
     </div>
   </footer>
@@ -728,6 +729,7 @@ for inst in institutions:
       );
     }}
   </script>
+  <script src="/tracker.js"></script>
 </body>
 </html>
 '''
@@ -821,7 +823,7 @@ campuses_html = f'''<!DOCTYPE html>
     body {{ font-family: 'Inter', sans-serif; background-color: #070b14; color: #f8fafc; }}
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased" data-campus="Master Directory" data-key="campuses">
   <aside class="bg-slate-900 border-b border-slate-800 text-xs text-slate-300 py-2 px-4 sm:px-6">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
       <div class="flex items-center gap-2">
@@ -927,6 +929,7 @@ campuses_html = f'''<!DOCTYPE html>
       applyFilter();
     }}
   </script>
+  <script src="/tracker.js"></script>
 </body>
 </html>
 '''
@@ -957,7 +960,7 @@ vote_html = f'''<!DOCTYPE html>
     .font-mono {{ font-family: 'JetBrains Mono', monospace; }}
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased" data-campus="Dynamic QR Portal" data-key="vote">
   <aside class="bg-slate-900 border-b border-slate-800 text-xs text-slate-300 py-2 px-4 sm:px-6">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
       <div class="flex items-center gap-2">
@@ -1135,6 +1138,7 @@ vote_html = f'''<!DOCTYPE html>
       }}
     }}
   </script>
+  <script src="/tracker.js"></script>
 </body>
 </html>
 '''

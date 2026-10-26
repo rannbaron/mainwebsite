@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Usage Tracker & Campus Visitor Analytics | NC Student Voting Platform</title>
+  <meta name="description" content="Live visitor metrics and campus breakdown for the North Carolina Student Voting Platform across all 110 colleges and universities.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #070b14; color: #f8fafc; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased" data-campus="Usage Analytics Portal" data-key="stats">
+
+  <!-- TOP BANNER -->
+  <aside aria-label="Official verification notice" class="bg-slate-900 border-b border-slate-800 text-xs text-slate-300 py-2 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-wide">Usage Tracker</span>
+        <span>Visitor & Campus Telemetry Dashboard</span>
+      </div>
+      <div class="flex items-center gap-4 text-slate-400 text-[11px]">
+        <span>Powered by Privacy-Friendly Analytics</span>
+        <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300 underline font-medium">GoatCounter Dashboard &rarr;</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Navigation Header -->
+  <header class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="/campuses" class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-md text-xs font-mono">NC</div>
+        <span class="font-bold text-slate-100 text-sm">NC Student Voting</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="/campuses" class="text-xs font-medium px-3.5 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">Directory (110 Campuses)</a>
+        <a href="/vote" class="text-xs font-medium px-3.5 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">Statewide /vote</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-10">
+    <div class="text-center space-y-4">
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/30">
+        [ANALYTICS] &bull; 110 Campuses Tracked Statewide
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+        Visitor Traffic & <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-emerald-300 to-purple-400">Campus Breakdown Analytics</span>
+      </h1>
+      <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+        Every visit across all 110 North Carolina colleges and universities is tracked in real time. You can see the total number of visitors, unique visits, and exact student traffic per campus.
+      </p>
+    </div>
+
+    <!-- Live Dashboard Card -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-mono font-semibold text-emerald-400 uppercase tracking-wider">Live Analytics Engine</span>
+          <h2 class="text-2xl font-bold text-white mt-1">GoatCounter Web Dashboard</h2>
+          <p class="text-xs text-slate-300 mt-1">
+            Privacy-first, cookie-free, GDPR-compliant analytics hosted at <code class="text-blue-300 font-mono">rannbaron.goatcounter.com</code>.
+          </p>
+        </div>
+        <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener" class="py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-md inline-flex items-center gap-1.5 shrink-0">
+          <span>Open GoatCounter Dashboard</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800">
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">Total Coverage</div>
+          <div class="text-2xl font-bold text-white">110 Campuses</div>
+          <div class="text-xs text-slate-400 mt-1">16 UNC, 58 CC, 36 Private</div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800">
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">Campus Identification</div>
+          <div class="text-2xl font-bold text-emerald-400">100% URL Granular</div>
+          <div class="text-xs text-slate-400 mt-1">Each campus has its own slug (/dukevote, etc.)</div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800">
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">Event Tracking</div>
+          <div class="text-2xl font-bold text-purple-400">Interactions Logged</div>
+          <div class="text-xs text-slate-400 mt-1">Directions, Geolocation, Voter Guides</div>
+        </div>
+      </div>
+
+      <!-- Setup & Access Instructions -->
+      <div class="p-5 rounded-2xl bg-slate-950/90 border border-blue-500/30 space-y-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono text-xs">[SETUP]</span>
+          <span>How to Access Your Live Analytics</span>
+        </h3>
+        <ol class="list-decimal pl-5 space-y-1.5 text-xs text-slate-300 leading-relaxed">
+          <li>Visit <a href="https://www.goatcounter.com/signup" target="_blank" rel="noopener" class="text-blue-400 underline font-semibold">goatcounter.com/signup</a>.</li>
+          <li>Enter <code class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-blue-300 font-mono">rannbaron</code> as your site code, enter your email address and password.</li>
+          <li>Once created, sign in at <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener" class="text-blue-400 underline font-semibold">rannbaron.goatcounter.com</a>.</li>
+          <li>You will see a live chart showing total visits, daily visitor count, and a table of paths sorted by traffic (e.g. <code class="text-slate-200 font-mono">/dukevote</code>, <code class="text-slate-200 font-mono">/uncvote</code>, <code class="text-slate-200 font-mono">/ncsuvote</code>, <code class="text-slate-200 font-mono">/vote</code>) showing exactly which campuses are visiting most.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Campus Tracking Keys Reference -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <h2 class="text-xl font-bold text-white">Campus Path Slugs Directory</h2>
+          <p class="text-xs text-slate-400">Search any institution to see its tracked path slug.</p>
+        </div>
+        <input type="text" id="slug-search" placeholder="Search campus or slug..." oninput="filterSlugs()" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+
+      <div class="max-h-96 overflow-y-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-950 text-slate-400 font-mono uppercase sticky top-0 border-b border-slate-800">
+            <tr>
+              <th class="py-2.5 px-4">Campus Name</th>
+              <th class="py-2.5 px-4">Tracking Slug</th>
+              <th class="py-2.5 px-4">Direct Link</th>
+            </tr>
+          </thead>
+          <tbody id="slug-tbody" class="divide-y divide-slate-800/60 font-medium"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="mt-auto border-t border-slate-800/80 bg-slate-950 py-8 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left text-xs text-slate-400">
+      <div>North Carolina Student Voting Platform &bull; Usage Telemetry</div>
+      <div class="flex gap-4">
+        <a href="/campuses" class="hover:text-white transition">All 110 Campuses</a>
+        <a href="/vote" class="hover:text-white transition">Dynamic /vote</a>
+        <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener" class="hover:text-white transition">GoatCounter Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/tracker.js"></script>
+  <script>
+    fetch('/.nc_voting_cache/all_institutions.json')
+      .then(r => r.json())
+      .then(insts => {
+        window.allInstitutions = insts.filter(i => i.key !== 'standrewsvote');
+        renderSlugs(window.allInstitutions);
+      })
+      .catch(() => {
+        // Fallback list
+        const fallback = [
+          { name: "Duke University", key: "dukevote" },
+          { name: "UNC-Chapel Hill", key: "uncvote" },
+          { name: "NC State University", key: "ncsuvote" },
+          { name: "NC Central University", key: "nccuvote" },
+          { name: "Appalachian State University", key: "appstatevote" },
+          { name: "East Carolina University", key: "ecuvote" },
+          { name: "UNC Charlotte", key: "unccvote" }
+        ];
+        renderSlugs(fallback);
+      });
+
+    function renderSlugs(list) {
+      const tbody = document.getElementById('slug-tbody');
+      tbody.innerHTML = list.map(i => `
+        <tr class="hover:bg-slate-950/60 transition">
+          <td class="py-2.5 px-4 text-slate-200 font-semibold">${i.name}</td>
+          <td class="py-2.5 px-4 font-mono text-blue-300">/${i.key}</td>
+          <td class="py-2.5 px-4">
+            <a href="/${i.key}" target="_blank" class="text-rose-400 hover:underline">Open Guide &rarr;</a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterSlugs() {
+      const q = document.getElementById('slug-search').value.toLowerCase().trim();
+      if (!window.allInstitutions) return;
+      const filtered = window.allInstitutions.filter(i => i.name.toLowerCase().includes(q) || i.key.toLowerCase().includes(q));
+      renderSlugs(filtered);
+    }
+  </script>
+</body>
+</html>

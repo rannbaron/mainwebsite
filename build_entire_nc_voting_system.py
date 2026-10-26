@@ -399,7 +399,7 @@ for inst in institutions:
     .font-mono {{ font-family: 'JetBrains Mono', monospace; }}
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased" data-campus="{inst['name']}" data-key="{key}" data-county="{inst['county']}">
 
   <!-- Top Announcement Bar -->
   <div id="top-announcement-bar" class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
@@ -814,6 +814,7 @@ for inst in institutions:
           <span>GitLab Bug Tracker</span>
           <span class="text-[10px]">↗</span>
         </a>
+        <a href="/stats" class="text-slate-400 hover:text-slate-200 hover:underline">Usage Tracker</a>
         <a href="#support-site" onclick="openSupportModal(); return false;" class="text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-medium">
           <span>Help Rann Bar-On maintain this site</span>
         </a>
@@ -1115,6 +1116,7 @@ for inst in institutions:
     }});
   </script>
 
+  <script src="/tracker.js"></script>
 </body>
 </html>
 '''
@@ -1225,7 +1227,7 @@ campuses_template = '''<!DOCTYPE html>
     .font-mono { font-family: 'JetBrains Mono', monospace; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased font-sans" data-campus="Master Directory" data-key="campuses">
 
   <!-- Top Announcement Bar -->
   <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
@@ -1338,6 +1340,7 @@ campuses_template = '''<!DOCTYPE html>
           <span>GitLab Bug Tracker</span>
           <span class="text-[10px]">↗</span>
         </a>
+        <a href="/stats" class="text-slate-400 hover:text-slate-200 hover:underline">Usage Tracker</a>
         <a href="#support-site" onclick="openSupportModal(); return false;" class="text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-medium">
           <span>Help Rann Bar-On maintain this site</span>
         </a>
@@ -1542,6 +1545,7 @@ campuses_template = '''<!DOCTYPE html>
     });
   </script>
 
+  <script src="/tracker.js"></script>
 </body>
 </html>
 '''
@@ -1617,7 +1621,7 @@ vote_html = f'''<!DOCTYPE html>
     .font-mono {{ font-family: 'JetBrains Mono', monospace; }}
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 antialiased">
+<body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 antialiased font-sans" data-campus="Dynamic QR Portal" data-key="vote">
 
   <!-- Top Announcement Bar -->
   <div id="top-announcement-bar" class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
@@ -1800,6 +1804,7 @@ vote_html = f'''<!DOCTYPE html>
           <span>GitLab Bug Tracker</span>
           <span class="text-[10px]">↗</span>
         </a>
+        <a href="/stats" class="text-slate-400 hover:text-slate-200 hover:underline">Usage Tracker</a>
         <a href="#support-site" onclick="openSupportModal(); return false;" class="text-amber-400 hover:text-amber-300 hover:underline flex items-center gap-1 font-medium">
           <span>Help Rann Bar-On maintain this site</span>
         </a>
@@ -2083,6 +2088,7 @@ vote_html = f'''<!DOCTYPE html>
     }});
   </script>
 
+  <script src="/tracker.js"></script>
 </body>
 </html>
 '''
