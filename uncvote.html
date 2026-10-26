@@ -4,13 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>UNC-CH Student Guide to Early Voting in Orange County | Rann Bar-On</title>
-  <meta name="description" content="Complete early voting guide for UNC-Chapel Hill students in Orange County, NC: on-campus site, voter ID rules, same-day registration, hours, and polling locations.">
+  <meta name="description" content="Complete early voting guide for UNC-Chapel Hill students in Orange County, NC: voting sites, voter ID rules, same-day registration, and hours.">
   
-  <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rannbar-on.com/uncvote">
   <meta property="og:title" content="UNC-CH Student Guide to Early Voting in Orange County">
-  <meta property="og:description" content="Everything UNC-Chapel Hill students need to vote early: on-campus voting site, physical student ID requirements, same-day registration, and hours.">
+  <meta property="og:description" content="Everything UNC-Chapel Hill students need to cast their ballot early in Orange County: polling locations, voter ID rules, and same-day registration.">
   <meta property="og:image" content="https://rannbar-on.com/uncvote_qr.png">
 
   <!-- Tailwind CSS -->
@@ -58,7 +57,7 @@
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
 
   <!-- Top Announcement Bar -->
-  <div class="bg-gradient-to-r from-sky-950 via-slate-900 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
+  <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
     <span class="inline-flex items-center gap-1.5">
       <span class="relative flex h-2 w-2">
         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -80,33 +79,148 @@
           <span class="text-[11px] text-slate-400 font-mono">rannbar-on.com</span>
         </div>
       </a>
-      <div class="flex items-center gap-3">
-        <a href="#polling-site" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full text-sky-400 bg-sky-500/10 border-sky-500/20 hover:opacity-80 transition">
-          📍 Campus Site
+      <div class="flex items-center gap-2.5">
+        <a href="/campuses" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
+          <span>🏛️</span>
+          <span class="hidden sm:inline">All NC Campuses</span>
         </a>
         <a href="#voter-id" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 hover:bg-amber-500/20 transition">
-          ⚠️ Voter ID Rules
+          ⚠️ Voter ID
         </a>
-        <a href="#qr-code" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
-          📱 QR Codes
+        <a href="#qr-code" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm">
+          📱 QR Code
         </a>
       </div>
     </div>
   </header>
 
-  <!-- University Switcher Nav -->
-  <nav class="bg-slate-900/90 border-b border-slate-800/80 py-2.5 px-4 overflow-x-auto shadow-inner">
-    <div class="max-w-6xl mx-auto flex items-center justify-between gap-3">
-      <span class="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5">
-        <span>🏛️</span>
-        <span class="hidden sm:inline">Triangle Campus Guides:</span>
-        <span class="sm:hidden">Campuses:</span>
-      </span>
-      <div class="flex items-center gap-2 overflow-x-auto text-xs font-semibold py-0.5">
-        <a href="/dukevote" class="px-3 py-1.5 rounded-lg border font-semibold text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700 hover:text-white"><span>🔵</span><span>Duke</span></a>
-<a href="/uncvote" class="px-3 py-1.5 rounded-lg border font-semibold text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 bg-white text-slate-950 border-white font-bold"><span>🩵</span><span>UNC-CH</span></a>
-<a href="/nccuvote" class="px-3 py-1.5 rounded-lg border font-semibold text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700 hover:text-white"><span>🦅</span><span>NCCU</span></a>
-<a href="/ncsuvote" class="px-3 py-1.5 rounded-lg border font-semibold text-xs transition shadow-sm flex items-center gap-1.5 shrink-0 bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-700 hover:text-white"><span>🐺</span><span>NC State</span></a>
+  <!-- Campus Quick Jump Selector Bar -->
+  <nav class="bg-slate-900/95 border-b border-slate-800/80 py-2.5 px-4 backdrop-blur shadow-inner">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <a href="/campuses" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 font-bold text-xs transition">
+          <span>🏛️</span>
+          <span>Browse All 111 NC Campuses</span>
+        </a>
+      </div>
+      
+      <!-- Quick Jump Campus Selector -->
+      <div class="flex items-center gap-2">
+        <label for="campus-quick-jump" class="text-xs text-slate-400 font-medium hidden sm:inline">Switch Campus:</label>
+        <select id="campus-quick-jump" onchange="if(this.value) window.location.href=this.value;" class="bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-blue-500 font-medium">
+          <option value="">Jump to another NC College/University...</option>
+          <option value="/alamanceccvote">Alamance Community College (Graham) - CC</option>
+<option value="/appstatevote">Appalachian State University (Boone) - UNC</option>
+<option value="/abtechvote">Asheville-Buncombe Technical Community College (Asheville) - CC</option>
+<option value="/bartonvote">Barton College (Wilson) - Private</option>
+<option value="/beaufortccvote">Beaufort County Community College (Washington) - CC</option>
+<option value="/belmontabbeyvote">Belmont Abbey College (Belmont) - Private</option>
+<option value="/bennettvote">Bennett College (Greensboro) - Private</option>
+<option value="/bladenccvote">Bladen Community College (Dublin) - CC</option>
+<option value="/blueridgeccvote">Blue Ridge Community College (Flat Rock) - CC</option>
+<option value="/brevardvote">Brevard College (Brevard) - Private</option>
+<option value="/brunswickccvote">Brunswick Community College (Bolivia) - CC</option>
+<option value="/cabarrusvote">Cabarrus College of Health Sciences (Concord) - Private</option>
+<option value="/caldwellccvote">Caldwell Community College & Technical Institute (Hudson) - CC</option>
+<option value="/campbellvote">Campbell University (Buies Creek) - Private</option>
+<option value="/capefearccvote">Cape Fear Community College (Wilmington) - CC</option>
+<option value="/carteretccvote">Carteret Community College (Morehead City) - CC</option>
+<option value="/catawbavote">Catawba College (Salisbury) - Private</option>
+<option value="/cvccvote">Catawba Valley Community College (Hickory) - CC</option>
+<option value="/ccccvote">Central Carolina Community College (Sanford) - CC</option>
+<option value="/cpccvote">Central Piedmont Community College (Charlotte) - CC</option>
+<option value="/chowanvote">Chowan University (Murfreesboro) - Private</option>
+<option value="/clevelandccvote">Cleveland Community College (Shelby) - CC</option>
+<option value="/coastalcarolinaccvote">Coastal Carolina Community College (Jacksonville) - CC</option>
+<option value="/albemarleccvote">College of The Albemarle (Elizabeth City) - CC</option>
+<option value="/cravenccvote">Craven Community College (New Bern) - CC</option>
+<option value="/davidsonvote">Davidson College (Davidson) - Private</option>
+<option value="/davidsondavieccvote">Davidson-Davie Community College (Thomasville) - CC</option>
+<option value="/dukevote">Duke University (Durham) - Private</option>
+<option value="/durhamtechvote">Durham Technical Community College (Durham) - CC</option>
+<option value="/ecuvote">East Carolina University (Greenville) - UNC</option>
+<option value="/edgecombeccvote">Edgecombe Community College (Tarboro) - CC</option>
+<option value="/ecsuvote">Elizabeth City State University (Elizabeth City) - UNC</option>
+<option value="/elonvote">Elon University (Elon) - Private</option>
+<option value="/fsuvote">Fayetteville State University (Fayetteville) - UNC</option>
+<option value="/faytechccvote">Fayetteville Technical Community College (Fayetteville) - CC</option>
+<option value="/forsythtechvote">Forsyth Technical Community College (Winston-Salem) - CC</option>
+<option value="/gardnerwebbvote">Gardner-Webb University (Boiling Springs) - Private</option>
+<option value="/gastonvote">Gaston College (Dallas) - CC</option>
+<option value="/greensborovote">Greensboro College (Greensboro) - Private</option>
+<option value="/guilfordvote">Guilford College (Greensboro) - Private</option>
+<option value="/gtccvote">Guilford Technical Community College (Jamestown) - CC</option>
+<option value="/halifaxccvote">Halifax Community College (Weldon) - CC</option>
+<option value="/haywoodccvote">Haywood Community College (Clyde) - CC</option>
+<option value="/highpointvote">High Point University (High Point) - Private</option>
+<option value="/isothermalccvote">Isothermal Community College (Spindale) - CC</option>
+<option value="/jamesspruntccvote">James Sprunt Community College (Kenansville) - CC</option>
+<option value="/jcsuvote">Johnson C. Smith University (Charlotte) - Private</option>
+<option value="/johnstonccvote">Johnston Community College (Smithfield) - CC</option>
+<option value="/leesmcraevote">Lees-McRae College (Banner Elk) - Private</option>
+<option value="/lenoirccvote">Lenoir Community College (Kinston) - CC</option>
+<option value="/lenoirrhynevote">Lenoir-Rhyne University (Hickory) - Private</option>
+<option value="/livingstonevote">Livingstone College (Salisbury) - Private</option>
+<option value="/louisburgvote">Louisburg College (Louisburg) - Private</option>
+<option value="/marshillvote">Mars Hill University (Mars Hill) - Private</option>
+<option value="/martinccvote">Martin Community College (Williamston) - CC</option>
+<option value="/maylandccvote">Mayland Community College (Spruce Pine) - CC</option>
+<option value="/mcdowelltechvote">McDowell Technical Community College (Marion) - CC</option>
+<option value="/meredithvote">Meredith College (Raleigh) - Private</option>
+<option value="/methodistvote">Methodist University (Fayetteville) - Private</option>
+<option value="/macuvote">Mid-Atlantic Christian University (Elizabeth City) - Private</option>
+<option value="/mitchellccvote">Mitchell Community College (Statesville) - CC</option>
+<option value="/montgomeryccvote">Montgomery Community College (Troy) - CC</option>
+<option value="/montreatvote">Montreat College (Montreat) - Private</option>
+<option value="/nashccvote">Nash Community College (Rocky Mount) - CC</option>
+<option value="/ncatvote">North Carolina A&T State University (Greensboro) - UNC</option>
+<option value="/nccuvote">North Carolina Central University (Durham) - UNC</option>
+<option value="/ncsuvote">North Carolina State University (Raleigh) - UNC</option>
+<option value="/ncwesleyanvote">North Carolina Wesleyan University (Rocky Mount) - Private</option>
+<option value="/pamlicoccvote">Pamlico Community College (Grantsboro) - CC</option>
+<option value="/pfeiffervote">Pfeiffer University (Misenheimer) - Private</option>
+<option value="/piedmontccvote">Piedmont Community College (Roxboro) - CC</option>
+<option value="/pittccvote">Pitt Community College (Winterville) - CC</option>
+<option value="/queensvote">Queens University of Charlotte (Charlotte) - Private</option>
+<option value="/randolphccvote">Randolph Community College (Asheboro) - CC</option>
+<option value="/richmondccvote">Richmond Community College (Hamlet) - CC</option>
+<option value="/roanokechowanccvote">Roanoke-Chowan Community College (Ahoskie) - CC</option>
+<option value="/robesonccvote">Robeson Community College (Lumberton) - CC</option>
+<option value="/rockinghamccvote">Rockingham Community College (Wentworth) - CC</option>
+<option value="/rcccvote">Rowan-Cabarrus Community College (Salisbury) - CC</option>
+<option value="/staugustinesvote">Saint Augustine's University (Raleigh) - Private</option>
+<option value="/salemvote">Salem College (Winston-Salem) - Private</option>
+<option value="/sampsonccvote">Sampson Community College (Clinton) - CC</option>
+<option value="/sandhillsccvote">Sandhills Community College (Pinehurst) - CC</option>
+<option value="/shawvote">Shaw University (Raleigh) - Private</option>
+<option value="/spccvote">South Piedmont Community College (Polkton) - CC</option>
+<option value="/southeasternccvote">Southeastern Community College (Whiteville) - CC</option>
+<option value="/southwesternccvote">Southwestern Community College (Sylva) - CC</option>
+<option value="/standrewsvote">St. Andrews University (Laurinburg) - Private</option>
+<option value="/stanlyccvote">Stanly Community College (Albemarle) - CC</option>
+<option value="/surryccvote">Surry Community College (Dobson) - CC</option>
+<option value="/tricountyccvote">Tri-County Community College (Murphy) - CC</option>
+<option value="/uncavote">UNC Asheville (Asheville) - UNC</option>
+<option value="/unccvote">UNC Charlotte (Charlotte) - UNC</option>
+<option value="/uncgvote">UNC Greensboro (Greensboro) - UNC</option>
+<option value="/uncpvote">UNC Pembroke (Pembroke) - UNC</option>
+<option value="/uncsavote">UNC School of the Arts (Winston-Salem) - UNC</option>
+<option value="/uncwvote">UNC Wilmington (Wilmington) - UNC</option>
+<option value="/uncvote">UNC-Chapel Hill (Chapel Hill) - UNC</option>
+<option value="/mountolivevote">University of Mount Olive (Mount Olive) - Private</option>
+<option value="/vgccvote">Vance-Granville Community College (Henderson) - CC</option>
+<option value="/wfuvote">Wake Forest University (Winston-Salem) - Private</option>
+<option value="/waketechvote">Wake Technical Community College (Raleigh) - CC</option>
+<option value="/warrenwilsonvote">Warren Wilson College (Swannanoa) - Private</option>
+<option value="/wayneccvote">Wayne Community College (Goldsboro) - CC</option>
+<option value="/wcuvote">Western Carolina University (Cullowhee) - UNC</option>
+<option value="/wpccvote">Western Piedmont Community College (Morganton) - CC</option>
+<option value="/wilkesccvote">Wilkes Community College (Wilkesboro) - CC</option>
+<option value="/peacevote">William Peace University (Raleigh) - Private</option>
+<option value="/wilsonccvote">Wilson Community College (Wilson) - CC</option>
+<option value="/wingatevote">Wingate University (Wingate) - Private</option>
+<option value="/wssuvote">Winston-Salem State University (Winston-Salem) - UNC</option>
+        </select>
       </div>
     </div>
   </nav>
@@ -114,8 +228,8 @@
   <!-- Hero Section -->
   <section class="relative py-12 sm:py-16 px-4 sm:px-6 border-b border-slate-800/80 overflow-hidden">
     <div class="max-w-4xl mx-auto text-center relative z-10">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold text-sky-400 bg-sky-500/10 border-sky-500/20 mb-4">
-        <span>🩵 UNC-Chapel Hill Voter Guide</span>
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
+        <span>🩵 UNC-Chapel Hill</span>
         <span class="text-slate-600">•</span>
         <span>Orange County, NC</span>
       </div>
@@ -124,7 +238,7 @@
         <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">to Early Voting in Orange County</span>
       </h1>
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Everything UNC-Chapel Hill undergraduate and graduate students need to cast their ballot early. Vote on campus, register on the spot, and make sure your vote counts!
+        Everything UNC-Chapel Hill undergraduate and graduate students need to cast their ballot early. Vote on campus or nearby, register on the spot, and make sure your voice is heard!
       </p>
 
       <!-- Key Stat Pills -->
@@ -135,9 +249,9 @@
           <div class="text-[11px] text-emerald-400 mt-1 font-mono">Open 7 days/wk</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
-          <div class="text-xs text-slate-400 font-medium">Campus Polling Site</div>
-          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Chapel of the Cross</div>
-          <div class="text-[11px] text-blue-400 mt-1 font-mono">Walk or Free Shuttle</div>
+          <div class="text-xs text-slate-400 font-medium">Primary Voting Site</div>
+          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Chapel Of The Cross</div>
+          <div class="text-[11px] text-blue-400 mt-1 font-mono">Chapel Hill, NC</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div class="text-xs text-slate-400 font-medium">Missed Registration?</div>
@@ -145,34 +259,36 @@
           <div class="text-[11px] text-purple-400 mt-1 font-mono">Register & vote at once</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
-          <div class="text-xs text-slate-400 font-medium">Approved Student ID</div>
-          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Physical UNC One Card</div>
-          <div class="text-[11px] text-amber-300 mt-1 font-mono">Physical card only!</div>
+          <div class="text-xs text-slate-400 font-medium">Voter ID Rule</div>
+          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Approved</div>
+          <div class="text-[11px] text-emerald-400 mt-1 font-mono">Physical Student Card</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CRITICAL ALERT: PHYSICAL CARD ONLY -->
-  <section id="voter-id" class="py-8 px-4 sm:px-6 bg-amber-950/20 border-b border-amber-900/40">
+  <!-- CRITICAL VOTER ID RULE SECTION -->
+  <section id="voter-id" class="py-8 px-4 sm:px-6 border-emerald-500/40 bg-emerald-950/20 border-b">
     <div class="max-w-4xl mx-auto">
-      <div class="bg-amber-950/40 border-2 border-amber-500/60 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-start gap-4">
-        <div class="p-3 rounded-xl bg-amber-500/20 text-amber-400 text-2xl shrink-0">
-          ⚠️
-        </div>
-        <div>
-          <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/30 mb-2">Mandatory NC State Law Requirement</span>
-          <h2 class="text-xl font-bold text-white mb-2">You MUST Bring a PHYSICAL Photo ID (No Phone/Digital Cards!)</h2>
-          <p class="text-sm text-amber-100/90 leading-relaxed mb-3">
-            <b>CRITICAL COURT RULING:</b> The NC Court of Appeals issued an injunction prohibiting the use of mobile/digital UNC One Cards for voting. <b>You MUST bring a PHYSICAL, plastic photo ID</b> (physical UNC One Card, NC driver's license, or US passport). If you only have a mobile card, visit the UNC One Card Office in the Student Union to obtain a physical card.
-          </p>
-          <div class="p-3.5 rounded-xl bg-amber-900/30 border border-amber-700/50 text-xs text-amber-200/90 space-y-1.5 font-medium">
-            <p>🚫 <b>Mobile digital IDs on your phone are NOT ACCEPTED</b> at polling sites under North Carolina law.</p>
-            <p>✅ <b>ACCEPTED:</b> Physical UNC One Card, NC Driver's License, US Passport, Military/Veteran ID.</p>
-            <p>💡 <b>Need an ID on the spot?</b> You can still vote! Fill out a Photo ID Exception Form at the polling place or obtain a free voter photo ID from the Orange County Board of Elections.</p>
+      
+        <div class="bg-emerald-950/40 border-2 border-emerald-500/60 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-start gap-4">
+          <div class="p-3 rounded-xl bg-emerald-500/20 text-emerald-300 text-2xl shrink-0">
+            ✓
+          </div>
+          <div>
+            <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-2">Approved by NC State Board of Elections</span>
+            <h2 class="text-xl font-bold text-white mb-2">UNC-Chapel Hill Student ID is Valid for Voting!</h2>
+            <p class="text-sm text-emerald-100/90 leading-relaxed mb-3">
+              The North Carolina State Board of Elections officially approved the <b>Physical UNC One Card</b> for voter photo identification. You can use your physical student ID to cast your ballot.
+            </p>
+            <div class="p-3.5 rounded-xl bg-emerald-900/30 border border-emerald-700/50 text-xs text-emerald-200/90 space-y-1.5 font-medium">
+              <p>⚠️ <b>CRITICAL: PHYSICAL CARD REQUIRED.</b> Digital IDs stored on mobile phones (Apple Wallet, Google Wallet, photos) are <b>NOT ACCEPTED</b> at polling sites under NC law.</p>
+              <p>✅ <b>Other Accepted Photo IDs:</b> NC Driver’s License, US Passport, Military/Veteran ID, or free county BOE ID card.</p>
+              <p>💡 <b>Need an ID on voting day?</b> You can still vote! Fill out a Photo ID Exception Form at the polling place or get a free voter photo ID at the Orange County Board of Elections office.</p>
+            </div>
           </div>
         </div>
-      </div>
+        
     </div>
   </section>
 
@@ -183,8 +299,8 @@
     <section id="polling-site" class="scroll-mt-20">
       <div class="flex items-center justify-between mb-4">
         <div>
-          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Campus Early Voting Site</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Chapel of the Cross (Franklin St)</h2>
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Campus / Nearest Early Voting Site</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Chapel Of The Cross</h2>
         </div>
         <span class="hidden sm:inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
           Open to all Orange County Voters
@@ -199,19 +315,20 @@
               <span>📍 Address & Getting There</span>
             </div>
             <p class="text-base font-bold text-white leading-snug">
-              304 E. Franklin St<br/>Chapel Hill, NC 27514
+              304 E Franklin St Chapel Hill, Nc 27514
             </p>
             <p class="text-xs text-slate-400 mt-2 leading-relaxed">
-              Located directly adjacent to Morehead Planetarium & Science Center on Franklin St. Just steps away from McCorkle Place, Spencer, Cobb, and North Campus residence halls.
+              Official Early Voting location serving UNC-Chapel Hill students, faculty, staff, and all residents of Orange County.
             </p>
 
             <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-2 text-xs text-slate-300 leading-relaxed">
-              <b>Free Chapel Hill Transit:</b> All local buses are fare-free! (Routes CW, CL, D, F, G, S, U, V)<br/><b>Walkable:</b> Central location right on the north edge of campus
+              <p><b>Free Voter Parking:</b> Available at or near the facility during voting hours.</p>
+              <p><b>Flexibility:</b> You can cast your early ballot at <b>any</b> early voting site in Orange County.</p>
             </div>
           </div>
 
           <div class="mt-6 pt-4">
-            <a href="https://maps.google.com/?q=Chapel+of+the+Cross+Chapel+Hill+NC" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs transition shadow-sm">
+            <a href="https://maps.google.com/?q=304+E+FRANKLIN+ST+CHAPEL+HILL,+NC+27514" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
               <span>Open in Google Maps</span>
               <span>↗</span>
             </a>
@@ -247,7 +364,7 @@
                 <tr>
                   <td class="py-3 font-medium text-white">Sundays</td>
                   <td class="py-3 text-slate-400 text-xs">Oct 18 & Oct 25</td>
-                  <td class="py-3 font-mono text-blue-300 font-semibold">12:00 PM – 4:00 PM</td>
+                  <td class="py-3 font-mono text-blue-300 font-semibold">1:00 PM – 5:00 PM</td>
                   <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Afternoon</span></td>
                 </tr>
                 <tr class="bg-amber-500/5 font-semibold">
@@ -260,7 +377,7 @@
             </table>
           </div>
           <p class="text-xs text-slate-400 mt-4 leading-relaxed">
-            💡 <i>During early voting, you can vote at <b>any</b> early voting location in Orange County, regardless of your assigned voting precinct!</i>
+            💡 <i>During early voting, you can vote at <b>any</b> early voting location in Orange County, regardless of your precinct!</i>
           </p>
         </div>
       </div>
@@ -272,7 +389,7 @@
         <span class="text-xs font-mono font-semibold text-purple-400 uppercase tracking-wider">Missed the Voter Registration Deadline?</span>
         <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-3">Same-Day Voter Registration is Available!</h2>
         <p class="text-sm text-slate-300 leading-relaxed mb-6">
-          In North Carolina, if you are not yet registered to vote in Orange County, or if you moved to a new local address, you can <b>register and vote on the same visit</b> exclusively during Early Voting. (Same-day registration is <i>not</i> allowed on Election Day).
+          In North Carolina, if you are not yet registered to vote in Orange County, or if you moved to a new address, you can <b>register and vote on the same visit</b> exclusively during Early Voting. (Same-day registration is <i>not</i> allowed on Election Day).
         </p>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -285,11 +402,11 @@
             <ul class="text-xs text-slate-300 space-y-2">
               <li class="flex items-start gap-2">
                 <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Physical UNC One Card</b> (physical card).</span>
+                <span><b>Photo ID:</b> An approved photo ID (or Physical UNC One Card if approved, NC Driver's License, or US Passport).</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-emerald-400 font-bold">✓</span>
-                <span>On-campus UNC students can use their physical UNC One Card and campus housing proof (viewable on the ConnectCarolina portal or housing assignment letter).</span>
+                <span><b>Proof of Residence:</b> Campus housing verification (residential roster provided to election officials, or housing contract on student portal).</span>
               </li>
             </ul>
           </div>
@@ -303,11 +420,11 @@
             <ul class="text-xs text-slate-300 space-y-2">
               <li class="flex items-start gap-2">
                 <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Approved Photo ID:</b> Physical UNC One Card, NC Driver’s License, or US Passport.</span>
+                <span><b>Photo ID:</b> Approved photo identification.</span>
               </li>
               <li class="flex items-start gap-2">
                 <span class="text-emerald-400 font-bold">✓</span>
-                <span><b>Proof of Residence:</b> Document showing your name and current local Orange County address (university official portal/letter, utility bill, bank statement, paycheck, or lease; can be electronic on your phone).</span>
+                <span><b>Proof of Residence:</b> Document showing your name and current local Orange County address (utility bill, bank statement, paycheck, lease, or university official letter; can be digital on your phone).</span>
               </li>
             </ul>
           </div>
@@ -323,57 +440,94 @@
     <section id="sites" class="scroll-mt-20">
       <div class="mb-6">
         <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Countywide Flexibility</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All 5 Orange County Early Voting Sites</h2>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All 6 Orange County Early Voting Sites</h2>
         <p class="text-sm text-slate-400 mt-1">Any registered Orange County voter can cast a ballot at any of these sites during early voting hours.</p>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         
-        <div class="bg-slate-900 border-2 border-blue-500/60 rounded-xl p-4 shadow-sm relative overflow-hidden">
-          <span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500 text-white">Campus Site</span>
-          <h4 class="font-bold text-white text-base pr-20">Chapel of the Cross (Campus Site)</h4>
-          <p class="text-xs text-slate-300 mt-1">304 E. Franklin St, Chapel Hill 27514</p>
-          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Adjacent to Morehead Planetarium</div>
+        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+          <div>
+            
+            <h4 class="font-bold text-white text-sm pr-16">Carrboro Library Complex</h4>
+            <p class="text-xs text-slate-300 mt-1">203 S Greensboro St Carrboro, Nc 27510</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
+            <a href="https://maps.google.com/?q=203+S+GREENSBORO+ST+CARRBORO,+NC+27510" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
+          </div>
         </div>
         
 
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
-          
-          <h4 class="font-bold text-white text-base pr-20">Seymour Center</h4>
-          <p class="text-xs text-slate-300 mt-1">2551 Homestead Rd, Chapel Hill 27516</p>
-          <div class="text-[11px] text-emerald-400 mt-2 font-mono">North Chapel Hill</div>
+        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+          <div>
+            
+            <h4 class="font-bold text-white text-sm pr-16">Chapel Hill Library</h4>
+            <p class="text-xs text-slate-300 mt-1">100 Library Dr Chapel Hill, Nc 27514</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
+            <a href="https://maps.google.com/?q=100+LIBRARY+DR+CHAPEL+HILL,+NC+27514" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
+          </div>
         </div>
         
 
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
-          
-          <h4 class="font-bold text-white text-base pr-20">Carrboro Town Hall Complex</h4>
-          <p class="text-xs text-slate-300 mt-1">108 Bim St, Carrboro 27510</p>
-          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Downtown Carrboro</div>
+        <div class="rounded-xl p-4 border-2 border-blue-500/70 bg-slate-900 shadow-md relative overflow-hidden flex flex-col justify-between">
+          <div>
+            <span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-600 text-white">Campus / Nearest Site</span>
+            <h4 class="font-bold text-white text-sm pr-16">Chapel Of The Cross</h4>
+            <p class="text-xs text-slate-300 mt-1">304 E Franklin St Chapel Hill, Nc 27514</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
+            <a href="https://maps.google.com/?q=304+E+FRANKLIN+ST+CHAPEL+HILL,+NC+27514" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
+          </div>
         </div>
         
 
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
-          
-          <h4 class="font-bold text-white text-base pr-20">Orange County Board of Elections</h4>
-          <p class="text-xs text-slate-300 mt-1">208 S. Cameron St, Hillsborough 27278</p>
-          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Hillsborough Main Office</div>
+        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+          <div>
+            
+            <h4 class="font-bold text-white text-sm pr-16">Dss Orange Works In Lieu Of Boe Office</h4>
+            <p class="text-xs text-slate-300 mt-1">113 Mayo St Hillsborough, Nc 27278</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
+            <a href="https://maps.google.com/?q=113+MAYO+ST+HILLSBOROUGH,+NC+27278" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
+          </div>
         </div>
         
 
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 shadow-sm relative overflow-hidden">
-          
-          <h4 class="font-bold text-white text-base pr-20">Efland Ruritan Club</h4>
-          <p class="text-xs text-slate-300 mt-1">3009 Forrest Ave, Efland 27243</p>
-          <div class="text-[11px] text-emerald-400 mt-2 font-mono">Western Orange County</div>
+        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+          <div>
+            
+            <h4 class="font-bold text-white text-sm pr-16">Efland Cheeks Community Center</h4>
+            <p class="text-xs text-slate-300 mt-1">117 Richmond Rd Efland, Nc 27243</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
+            <a href="https://maps.google.com/?q=117+RICHMOND+RD+EFLAND,+NC+27243" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
+          </div>
+        </div>
+        
+
+        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+          <div>
+            
+            <h4 class="font-bold text-white text-sm pr-16">Seymour Center</h4>
+            <p class="text-xs text-slate-300 mt-1">2551 Homestead Rd Chapel Hill, Nc 27516</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
+            <a href="https://maps.google.com/?q=2551+HOMESTEAD+RD+CHAPEL+HILL,+NC+27516" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
+          </div>
         </div>
         
       </div>
     </section>
 
-    <!-- Section 4: Checklist & Resources -->
+    <!-- Section 4: Official Resources -->
     <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Checklist -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
         <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
           <span>📋</span>
@@ -382,218 +536,85 @@
         <ul class="space-y-3 text-xs sm:text-sm text-slate-300">
           <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
             <span class="text-blue-400 font-bold shrink-0">1.</span>
-            <span><b>Physical Photo ID:</b> Physical UNC One Card, NC Driver’s License, or US Passport. <i>Double-check you have the plastic card, not your phone!</i></span>
+            <span><b>Physical Photo ID:</b> Bring a physical acceptable photo ID. Remember: digital phone images are not permitted.</span>
           </li>
           <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
             <span class="text-blue-400 font-bold shrink-0">2.</span>
-            <span><b>Proof of Residence (If Registering):</b> Physical campus ID (on campus) or local address document (off campus).</span>
+            <span><b>Proof of Residence (If Registering):</b> Proof of your current address in Orange County.</span>
           </li>
           <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
             <span class="text-blue-400 font-bold shrink-0">3.</span>
-            <span><b>Check Sample Ballot:</b> Look up your sample ballot on <a href="https://www.orangecountync.gov/elections" target="_blank" class="text-blue-400 underline">Orange County Board of Elections</a> to preview candidates before you vote.</span>
+            <span><b>Check Sample Ballot:</b> Look up your sample ballot on the <a href="http://orangecountync.gov/1720/Elections" target="_blank" class="text-blue-400 underline">Orange County Board Of Elections</a> portal.</span>
           </li>
           <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
             <span class="text-blue-400 font-bold shrink-0">4.</span>
-            <span><b>You Can Bring Notes:</b> You are legally permitted to bring a written list or notes into the voting booth (just do not take photos while voting).</span>
+            <span><b>Notes Allowed:</b> You can bring a printed voter guide or written notes into the voting booth.</span>
           </li>
         </ul>
       </div>
 
-      <!-- Quick Helpful Links -->
+      <!-- Board of Elections Contact Card -->
       <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
         <div>
           <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <span>🔗</span>
-            <span>Official Resources & Support</span>
+            <span>🏛️</span>
+            <span>Orange County Board Of Elections</span>
           </h3>
           <div class="space-y-2.5 text-xs sm:text-sm">
-            <a href="https://www.orangecountync.gov/elections" target="_blank" rel="noopener" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-200 transition">
-              <div>
-                <div class="font-semibold text-white">Orange County Board of Elections</div>
-                <div class="text-xs text-slate-400 mt-0.5">Live site wait times & sample ballots</div>
-              </div>
-              <span class="text-slate-400">↗</span>
-            </a>
-            <a href="https://vt.ncsbe.gov/RegLkup/" target="_blank" rel="noopener" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-200 transition">
-              <div>
-                <div class="font-semibold text-white">NC Voter Search (NCSBE)</div>
-                <div class="text-xs text-slate-400 mt-0.5">Verify registration status & view district ballot</div>
-              </div>
-              <span class="text-slate-400">↗</span>
-            </a>
             <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200">
-              <div class="font-semibold text-white">UNC Votes & Carolina Center for Public Service</div>
-              <div class="text-xs text-slate-400 mt-1">Student voting support: <a href="mailto:uncvotes@unc.edu" class="text-sky-400 underline">uncvotes@unc.edu</a> | <a href="https://ccps.unc.edu/" target="_blank" class="text-sky-400 underline">ccps.unc.edu</a></div>
+              <div class="font-semibold text-white">Physical Office</div>
+              <div class="text-xs text-slate-400 mt-1">208 S. CAMERON ST HILLSBOROUGH, NC 27278</div>
             </div>
+            <a href="http://orangecountync.gov/1720/Elections" target="_blank" rel="noopener" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-200 transition">
+              <div>
+                <div class="font-semibold text-white">Official County Election Website</div>
+                <div class="text-xs text-slate-400 mt-0.5">Sample ballots, wait times & office info</div>
+              </div>
+              <span class="text-slate-400">↗</span>
+            </a>
           </div>
         </div>
 
         <div class="mt-4 pt-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-          <span>Need help? Call Orange County BOE:</span>
-          <a href="tel:9192452350" class="font-mono font-bold text-blue-400 hover:underline">(919) 245-2350</a>
+          <span>Need help? Call Election Office:</span>
+          <a href="tel:9192452350" class="font-mono font-bold text-blue-400 hover:underline">919-245-2350</a>
         </div>
       </div>
     </section>
 
-    <!-- Section 5: QR Codes for All Schools -->
+    <!-- Section 5: QR Code Card -->
     <section id="qr-code" class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
-      <div class="max-w-3xl mb-8">
-        <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Campus Early Voting QR Codes</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-2">QR Codes for All Triangle Campuses</h2>
-        <p class="text-sm text-slate-300 leading-relaxed">
-          Spread the word across the Triangle! Scan any campus QR code directly with your phone camera, copy links for dorm group chats and student orgs, or download high-resolution PNG & vector SVG graphics for printing flyers and posters.
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        
-        <div class="rounded-2xl p-4 flex flex-col justify-between border border-slate-800 bg-slate-900/70 hover:border-slate-700 hover:bg-slate-900/90 transition">
-          <div>
-            <div class="flex items-center justify-between gap-1.5 mb-1.5">
-              <div class="flex items-center gap-1.5 min-w-0">
-                <span class="text-lg">🔵</span>
-                <span class="font-bold text-white text-sm truncate">Duke</span>
-              </div>
-              <a href="/dukevote" class="px-2 py-0.5 rounded text-[10px] font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white transition">Visit Guide →</a>
+      <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-between">
+        <div class="max-w-xl text-center sm:text-left">
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Share with Classmates & Dorms</span>
+          <h2 class="text-2xl font-bold text-white mt-1 mb-2">Scan or Share this UNC-CH Voting Guide</h2>
+          <p class="text-sm text-slate-300 leading-relaxed mb-4">
+            Scan with your phone or copy the direct link for dorm group chats, social media, dining hall flyers, and student organizations across UNC-Chapel Hill!
+          </p>
+          <div class="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
+            <div class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm text-blue-300 select-all">
+              https://rannbar-on.com/uncvote
             </div>
-            <div class="text-[11px] text-slate-400 mb-3 font-medium truncate">Durham County</div>
-
-            <div class="bg-white p-3 rounded-xl shadow-md border border-slate-200/10 mb-3 flex items-center justify-center">
-              <img src="data:image/png;base64,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" alt="QR code for Duke University early voting guide" class="w-36 h-36 sm:w-40 sm:h-40 object-contain mx-auto" />
-            </div>
-
-            <div class="text-center font-mono text-[11px] text-slate-300 font-medium py-1.5 px-2 rounded-lg bg-slate-950/80 border border-slate-800/80 mb-3 select-all truncate">
-              rannbar-on.com/dukevote
-            </div>
-          </div>
-
-          <div class="space-y-1.5 pt-1">
-            <button onclick="navigator.clipboard.writeText('https://rannbar-on.com/dukevote'); alert('Copied Duke voting guide link to clipboard!');" class="w-full py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
-              <span>📋</span>
-              <span>Copy Link</span>
+            <button onclick="navigator.clipboard.writeText('https://rannbar-on.com/uncvote'); alert('Link copied to clipboard!');" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
+              Copy Link
             </button>
-            <div class="grid grid-cols-2 gap-1.5">
-              <a href="/dukevote_qr.png" download="Duke_Vote_QR.png" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
-                <span>📥</span><span>PNG</span>
-              </a>
-              <a href="/dukevote_qr.svg" download="Duke_Vote_QR.svg" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
-                <span>📥</span><span>SVG</span>
-              </a>
-            </div>
+            <a href="/uncvote_qr.png" download="UNC-CH_Vote_Early_QR.png" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+              Download PNG
+            </a>
+            <a href="/uncvote_qr.svg" download="UNC-CH_Vote_Early_QR.svg" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+              Download SVG
+            </a>
+            <a href="/campuses" class="px-4 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 font-semibold text-xs transition">
+              All 111 NC Campuses →
+            </a>
           </div>
         </div>
-        
 
-        <div class="rounded-2xl p-4 flex flex-col justify-between border-2 border-sky-400 ring-2 ring-blue-500/20 bg-slate-900 shadow-xl transition">
-          <div>
-            <div class="flex items-center justify-between gap-1.5 mb-1.5">
-              <div class="flex items-center gap-1.5 min-w-0">
-                <span class="text-lg">🩵</span>
-                <span class="font-bold text-white text-sm truncate">UNC-CH</span>
-              </div>
-              <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white text-slate-950 shadow-sm">Current Page</span>
-            </div>
-            <div class="text-[11px] text-slate-400 mb-3 font-medium truncate">Orange County</div>
-
-            <div class="bg-white p-3 rounded-xl shadow-md border border-slate-200/10 mb-3 flex items-center justify-center">
-              <img src="data:image/png;base64,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" alt="QR code for UNC-Chapel Hill early voting guide" class="w-36 h-36 sm:w-40 sm:h-40 object-contain mx-auto" />
-            </div>
-
-            <div class="text-center font-mono text-[11px] text-slate-300 font-medium py-1.5 px-2 rounded-lg bg-slate-950/80 border border-slate-800/80 mb-3 select-all truncate">
-              rannbar-on.com/uncvote
-            </div>
-          </div>
-
-          <div class="space-y-1.5 pt-1">
-            <button onclick="navigator.clipboard.writeText('https://rannbar-on.com/uncvote'); alert('Copied UNC-CH voting guide link to clipboard!');" class="w-full py-2 px-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
-              <span>📋</span>
-              <span>Copy Link</span>
-            </button>
-            <div class="grid grid-cols-2 gap-1.5">
-              <a href="/uncvote_qr.png" download="UNC-CH_Vote_QR.png" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
-                <span>📥</span><span>PNG</span>
-              </a>
-              <a href="/uncvote_qr.svg" download="UNC-CH_Vote_QR.svg" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
-                <span>📥</span><span>SVG</span>
-              </a>
-            </div>
-          </div>
+        <!-- QR Code Visual -->
+        <div class="bg-white p-4 rounded-2xl shadow-2xl border-4 border-blue-500/30 shrink-0 text-center">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACY0lEQVR4nO2bQWrkMBBFX8WCXsqQA/RR7BvkSHM16yg5QEBaBmT+LCR3d7IYOgOdCFK1aGj0Fh+Kkn+VyybujPR0LwmOOuroExTrsRYzkgWA3WwtgeMoDKL1l6MBmCoARqzBlvwMlBmlc4VlAyjPDxPg6JfRXj0tdiPNYH9eA63y1ocLcPSuCLd/yrMAYTBVS+f6DQIc/W90N9K8G0sGKX+/AEf/Ga22rjbeIEA6V0gvGYgCyuMEOPoF9LaEljzp80+PSdp+XKujoVcPAGU3QQXiu5Hmidve+ce1OoqUJ0mtjiZBrJeDD4jX1jBoOteenuX1JEkVW6NaaZnNDxfg6D0RIFZsyXsAJpTO7wYxyygztN7Zu+Mx0FZR2ugXXjPvG6At1sup34RDoAFiDUbMGExArIFFe4AS6B4k5hG0Otqrp0U+vEVz8JI7+LFQJNV26wE9R90n6pg8Le4Jx0B7tq4FtrWUXZKXJ/lzaxT0ZqprxLfAot1IBqLMl2Y5P0yAo19Dy0m2wq3/ky6tlpl1vzGCVkeP4YWt5SRbi5nZDLbGCosk+5MfKsDRu+NaR33AFOvRbwHaovy5NQx6jAOjjsm76o3zOBDP1hDo0Wod/Va7GJcMwKTrzNezNQZ63XlikvR66jYewFZ238sYBv2080Qf8m7vBoAoU22vkn9eq6MN7TtPpS85kWbQxm5m8+4Ofkw0Vmw9nlZ9BiUdbyjH0vor0Q8bauxB8G5KL2+X9Zo9AKEOoNXRhl4nuGZ2umm/SBZa5zWM1t+O7nYMmE5qmekOfre++OQ34Rio+RdBjjr6EPQvlliDtlMSxksAAAAASUVORK5CYII=" alt="QR code for UNC-Chapel Hill student early voting guide" class="w-48 h-48 sm:w-52 sm:h-52 object-contain mx-auto" />
+          <div class="text-[11px] font-bold text-slate-900 mt-2 font-mono">rannbar-on.com/uncvote</div>
         </div>
-        
-
-        <div class="rounded-2xl p-4 flex flex-col justify-between border border-slate-800 bg-slate-900/70 hover:border-slate-700 hover:bg-slate-900/90 transition">
-          <div>
-            <div class="flex items-center justify-between gap-1.5 mb-1.5">
-              <div class="flex items-center gap-1.5 min-w-0">
-                <span class="text-lg">🦅</span>
-                <span class="font-bold text-white text-sm truncate">NCCU</span>
-              </div>
-              <a href="/nccuvote" class="px-2 py-0.5 rounded text-[10px] font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white transition">Visit Guide →</a>
-            </div>
-            <div class="text-[11px] text-slate-400 mb-3 font-medium truncate">Durham County</div>
-
-            <div class="bg-white p-3 rounded-xl shadow-md border border-slate-200/10 mb-3 flex items-center justify-center">
-              <img src="data:image/png;base64,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" alt="QR code for North Carolina Central University early voting guide" class="w-36 h-36 sm:w-40 sm:h-40 object-contain mx-auto" />
-            </div>
-
-            <div class="text-center font-mono text-[11px] text-slate-300 font-medium py-1.5 px-2 rounded-lg bg-slate-950/80 border border-slate-800/80 mb-3 select-all truncate">
-              rannbar-on.com/nccuvote
-            </div>
-          </div>
-
-          <div class="space-y-1.5 pt-1">
-            <button onclick="navigator.clipboard.writeText('https://rannbar-on.com/nccuvote'); alert('Copied NCCU voting guide link to clipboard!');" class="w-full py-2 px-3 rounded-xl bg-rose-700 hover:bg-rose-600 text-white font-semibold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
-              <span>📋</span>
-              <span>Copy Link</span>
-            </button>
-            <div class="grid grid-cols-2 gap-1.5">
-              <a href="/nccuvote_qr.png" download="NCCU_Vote_QR.png" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
-                <span>📥</span><span>PNG</span>
-              </a>
-              <a href="/nccuvote_qr.svg" download="NCCU_Vote_QR.svg" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
-                <span>📥</span><span>SVG</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        
-
-        <div class="rounded-2xl p-4 flex flex-col justify-between border border-slate-800 bg-slate-900/70 hover:border-slate-700 hover:bg-slate-900/90 transition">
-          <div>
-            <div class="flex items-center justify-between gap-1.5 mb-1.5">
-              <div class="flex items-center gap-1.5 min-w-0">
-                <span class="text-lg">🐺</span>
-                <span class="font-bold text-white text-sm truncate">NC State</span>
-              </div>
-              <a href="/ncsuvote" class="px-2 py-0.5 rounded text-[10px] font-semibold text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white transition">Visit Guide →</a>
-            </div>
-            <div class="text-[11px] text-slate-400 mb-3 font-medium truncate">Wake County</div>
-
-            <div class="bg-white p-3 rounded-xl shadow-md border border-slate-200/10 mb-3 flex items-center justify-center">
-              <img src="data:image/png;base64,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" alt="QR code for NC State University early voting guide" class="w-36 h-36 sm:w-40 sm:h-40 object-contain mx-auto" />
-            </div>
-
-            <div class="text-center font-mono text-[11px] text-slate-300 font-medium py-1.5 px-2 rounded-lg bg-slate-950/80 border border-slate-800/80 mb-3 select-all truncate">
-              rannbar-on.com/ncsuvote
-            </div>
-          </div>
-
-          <div class="space-y-1.5 pt-1">
-            <button onclick="navigator.clipboard.writeText('https://rannbar-on.com/ncsuvote'); alert('Copied NC State voting guide link to clipboard!');" class="w-full py-2 px-3 rounded-xl bg-red-700 hover:bg-red-600 text-white font-semibold text-xs transition shadow-sm flex items-center justify-center gap-1.5">
-              <span>📋</span>
-              <span>Copy Link</span>
-            </button>
-            <div class="grid grid-cols-2 gap-1.5">
-              <a href="/ncsuvote_qr.png" download="NC State_Vote_QR.png" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
-                <span>📥</span><span>PNG</span>
-              </a>
-              <a href="/ncsuvote_qr.svg" download="NC State_Vote_QR.svg" class="py-1.5 px-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-[11px] text-center transition flex items-center justify-center gap-1">
-                <span>📥</span><span>SVG</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        
       </div>
     </section>
 
@@ -604,9 +625,10 @@
     <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
       <div>
         <p class="font-medium text-slate-300">Non-partisan student voting guide prepared by Rann Bar-On.</p>
-        <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the Orange County Board of Elections and the NC State Board of Elections.</p>
+        <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the Orange County Board Of Elections and the North Carolina State Board of Elections.</p>
       </div>
       <div class="flex items-center gap-4 text-xs">
+        <a href="/campuses" class="text-blue-400 hover:underline">All NC Campuses</a>
         <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
       </div>
     </div>

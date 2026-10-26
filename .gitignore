@@ -47,3 +47,4 @@ venv/
 !*_qr.svg
 !*/*_qr.png
 !*/*_qr.svg
+.nc_voting_cache/

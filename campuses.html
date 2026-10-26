@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>North Carolina Colleges & Universities Student Voting Directory | Rann Bar-On</title>
+  <meta name="description" content="Complete directory of early voting guides for all 111 colleges, universities, and community colleges across North Carolina. Voter ID rules, polling sites, and QR codes.">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rannbar-on.com/campuses">
+  <meta property="og:title" content="NC Colleges & Universities Student Early Voting Directory">
+  <meta property="og:description" content="Find your campus early voting guide, approved voter ID rules, polling places, and scannable QR codes for all 111 NC colleges and universities.">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>');
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    
+    :root {
+      --bg: #070b14;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
+    <span class="inline-flex items-center gap-1.5">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+      <span>North Carolina Early Voting is <b>OPEN STATEWIDE</b> through <b>Saturday, October 31, 2026</b></span>
+    </span>
+  </div>
+
+  <!-- Header / Navigation -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="https://rannbar-on.com/" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center font-bold text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition">
+          R
+        </div>
+        <div>
+          <span class="font-bold tracking-tight text-white block text-sm sm:text-base leading-none">Rann Bar-On</span>
+          <span class="text-[11px] text-slate-400 font-mono">rannbar-on.com</span>
+        </div>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="https://rannbar-on.com/" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
+          ← Main Website
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="py-12 sm:py-16 px-4 sm:px-6 border-b border-slate-800/80 bg-gradient-to-b from-slate-900/50 to-slate-950">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
+        <span>🏛️ Statewide Student Voting Portal</span>
+        <span class="text-slate-600">•</span>
+        <span>111 NC Higher Education Institutions</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+        North Carolina Colleges & Universities <br class="hidden sm:inline"/>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">Early Voting Guides & QR Directory</span>
+      </h1>
+      <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+        Select your campus below to view your local polling site, official voter ID rules, same-day registration guidelines, and download scannable QR codes for flyers and dorm group chats.
+      </p>
+
+      <!-- Search & Filters Container -->
+      <div class="max-w-3xl mx-auto space-y-4">
+        <!-- Live Search Input -->
+        <div class="relative">
+          <input type="text" id="campus-search" placeholder="Search by college name, city (e.g. Raleigh, Charlotte, Boone), or county..." 
+                 oninput="filterCampuses()"
+                 class="w-full bg-slate-900 border-2 border-slate-700 focus:border-blue-500 rounded-2xl py-3.5 pl-12 pr-4 text-sm sm:text-base text-white placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-500/20 transition shadow-lg" />
+          <div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg">
+            🔍
+          </div>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-2 text-xs font-semibold pt-1">
+          <button onclick="setFilter('all')" id="btn-all" class="filter-btn px-3.5 py-1.5 rounded-xl bg-blue-600 text-white border border-blue-500 transition shadow-sm">
+            All Campuses (111)
+          </button>
+          <button onclick="setFilter('unc')" id="btn-unc" class="filter-btn px-3.5 py-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:bg-slate-800 transition">
+            UNC System (16)
+          </button>
+          <button onclick="setFilter('private')" id="btn-private" class="filter-btn px-3.5 py-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:bg-slate-800 transition">
+            Private Universities & Colleges (37)
+          </button>
+          <button onclick="setFilter('cc')" id="btn-cc" class="filter-btn px-3.5 py-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:bg-slate-800 transition">
+            Community Colleges (58)
+          </button>
+          <button onclick="setFilter('id_approved')" id="btn-id_approved" class="filter-btn px-3.5 py-1.5 rounded-xl bg-slate-900 text-slate-300 border border-slate-700 hover:bg-slate-800 transition">
+            ✓ Student ID Approved (59)
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Directory Cards Grid -->
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex-grow">
+    <div class="flex items-center justify-between mb-6">
+      <div id="results-count" class="text-xs font-mono text-slate-400 font-semibold uppercase tracking-wider">
+        Showing 111 Colleges & Universities
+      </div>
+    </div>
+
+    <div id="campuses-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Populated via JavaScript for instantaneous search -->
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-8 px-4 sm:px-6 mt-16 text-xs text-slate-400">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div>
+        <p class="font-medium text-slate-300">Non-partisan student voting guide directory prepared by Rann Bar-On.</p>
+        <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the North Carolina State Board of Elections and all 100 County Boards of Elections.</p>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Instant Search & Filter Logic -->
+  <script>
+    const campusesData = [{"key": "dukevote", "name": "Duke University", "short_name": "Duke", "type": "Independent University", "county": "Durham County", "city": "Durham", "icon": "\ud83d\udd35", "id_approved": true, "id_card": "Physical DukeCard", "url": "https://rannbar-on.com/dukevote"}, {"key": "uncvote", "name": "UNC-Chapel Hill", "short_name": "UNC-CH", "type": "UNC System", "county": "Orange County", "city": "Chapel Hill", "icon": "\ud83e\ude75", "id_approved": true, "id_card": "Physical UNC One Card", "url": "https://rannbar-on.com/uncvote"}, {"key": "nccuvote", "name": "North Carolina Central University", "short_name": "NCCU", "type": "UNC System", "county": "Durham County", "city": "Durham", "icon": "\ud83e\udd85", "id_approved": true, "id_card": "Physical NCCU Eagle Card", "url": "https://rannbar-on.com/nccuvote"}, {"key": "ncsuvote", "name": "North Carolina State University", "short_name": "NC State", "type": "UNC System", "county": "Wake County", "city": "Raleigh", "icon": "\ud83d\udc3a", "id_approved": true, "id_card": "Physical Wolfpack One Card", "url": "https://rannbar-on.com/ncsuvote"}, {"key": "appstatevote", "name": "Appalachian State University", "short_name": "App State", "type": "UNC System", "county": "Watauga County", "city": "Boone", "icon": "\u26f0\ufe0f", "id_approved": true, "id_card": "Physical AppCard", "url": "https://rannbar-on.com/appstatevote"}, {"key": "ecuvote", "name": "East Carolina University", "short_name": "ECU", "type": "UNC System", "county": "Pitt County", "city": "Greenville", "icon": "\ud83c\udff4\u200d\u2620\ufe0f", "id_approved": true, "id_card": "Physical ECU 1 Card", "url": "https://rannbar-on.com/ecuvote"}, {"key": "ecsuvote", "name": "Elizabeth City State University", "short_name": "ECSU", "type": "UNC System", "county": "Pasquotank County", "city": "Elizabeth City", "icon": "\u2693", "id_approved": true, "id_card": "Physical ECSU Viking Card", "url": "https://rannbar-on.com/ecsuvote"}, {"key": "fsuvote", "name": "Fayetteville State University", "short_name": "FSU", "type": "UNC System", "county": "Cumberland County", "city": "Fayetteville", "icon": "\ud83d\udc0e", "id_approved": true, "id_card": "Physical Bronco OneCard", "url": "https://rannbar-on.com/fsuvote"}, {"key": "ncatvote", "name": "North Carolina A&T State University", "short_name": "NC A&T", "type": "UNC System", "county": "Guilford County", "city": "Greensboro", "icon": "Aggies", "id_approved": true, "id_card": "Physical Aggie OneCard", "url": "https://rannbar-on.com/ncatvote"}, {"key": "uncavote", "name": "UNC Asheville", "short_name": "UNC Asheville", "type": "UNC System", "county": "Buncombe County", "city": "Asheville", "icon": "\ud83d\udc15", "id_approved": true, "id_card": "Physical OneCard", "url": "https://rannbar-on.com/uncavote"}, {"key": "unccvote", "name": "UNC Charlotte", "short_name": "UNC Charlotte", "type": "UNC System", "county": "Mecklenburg County", "city": "Charlotte", "icon": "\u26cf\ufe0f", "id_approved": true, "id_card": "Physical 49er ID Card (Physical only)", "url": "https://rannbar-on.com/unccvote"}, {"key": "uncgvote", "name": "UNC Greensboro", "short_name": "UNCG", "type": "UNC System", "county": "Guilford County", "city": "Greensboro", "icon": "Spartans", "id_approved": true, "id_card": "Physical SpartanCard", "url": "https://rannbar-on.com/uncgvote"}, {"key": "uncpvote", "name": "UNC Pembroke", "short_name": "UNC Pembroke", "type": "UNC System", "county": "Robeson County", "city": "Pembroke", "icon": "Braves", "id_approved": true, "id_card": "Physical BraveOne Card", "url": "https://rannbar-on.com/uncpvote"}, {"key": "uncsavote", "name": "UNC School of the Arts", "short_name": "UNCSA", "type": "UNC System", "county": "Forsyth County", "city": "Winston-Salem", "icon": "\ud83c\udfad", "id_approved": true, "id_card": "Physical UNCSA One Card", "url": "https://rannbar-on.com/uncsavote"}, {"key": "uncwvote", "name": "UNC Wilmington", "short_name": "UNCW", "type": "UNC System", "county": "New Hanover County", "city": "Wilmington", "icon": "\ud83e\udd85", "id_approved": true, "id_card": "Physical UNCW One Card", "url": "https://rannbar-on.com/uncwvote"}, {"key": "wcuvote", "name": "Western Carolina University", "short_name": "WCU", "type": "UNC System", "county": "Jackson County", "city": "Cullowhee", "icon": "Catamounts", "id_approved": true, "id_card": "Physical CatCard", "url": "https://rannbar-on.com/wcuvote"}, {"key": "wssuvote", "name": "Winston-Salem State University", "short_name": "WSSU", "type": "UNC System", "county": "Forsyth County", "city": "Winston-Salem", "icon": "\ud83d\udc0f", "id_approved": true, "id_card": "Physical RamCard", "url": "https://rannbar-on.com/wssuvote"}, {"key": "wfuvote", "name": "Wake Forest University", "short_name": "Wake Forest", "type": "Independent University", "county": "Forsyth County", "city": "Winston-Salem", "icon": "\ud83c\udfa9", "id_approved": true, "id_card": "Physical Deacon OneCard", "url": "https://rannbar-on.com/wfuvote"}, {"key": "elonvote", "name": "Elon University", "short_name": "Elon", "type": "Independent University", "county": "Alamance County", "city": "Elon", "icon": "Phoenix", "id_approved": true, "id_card": "Physical Phoenix Card", "url": "https://rannbar-on.com/elonvote"}, {"key": "davidsonvote", "name": "Davidson College", "short_name": "Davidson", "type": "Independent College", "county": "Mecklenburg County", "city": "Davidson", "icon": "Wildcats", "id_approved": true, "id_card": "Physical CatCard", "url": "https://rannbar-on.com/davidsonvote"}, {"key": "campbellvote", "name": "Campbell University", "short_name": "Campbell", "type": "Independent University", "county": "Harnett County", "city": "Buies Creek", "icon": "Fighting Camels", "id_approved": true, "id_card": "Student Voter ID Card", "url": "https://rannbar-on.com/campbellvote"}, {"key": "highpointvote", "name": "High Point University", "short_name": "High Point", "type": "Independent University", "county": "Guilford County", "city": "High Point", "icon": "Panthers", "id_approved": false, "id_card": "HPU Passport (Not Approved by State Board)", "url": "https://rannbar-on.com/highpointvote"}, {"key": "meredithvote", "name": "Meredith College", "short_name": "Meredith", "type": "Independent College", "county": "Wake County", "city": "Raleigh", "icon": "Avenging Angels", "id_approved": true, "id_card": "Physical CamCard", "url": "https://rannbar-on.com/meredithvote"}, {"key": "peacevote", "name": "William Peace University", "short_name": "William Peace", "type": "Independent University", "county": "Wake County", "city": "Raleigh", "icon": "Pacers", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/peacevote"}, {"key": "shawvote", "name": "Shaw University", "short_name": "Shaw", "type": "Independent University", "county": "Wake County", "city": "Raleigh", "icon": "Bears", "id_approved": true, "id_card": "Physical Shaw ID Card", "url": "https://rannbar-on.com/shawvote"}, {"key": "staugustinesvote", "name": "Saint Augustine's University", "short_name": "St. Augustine's", "type": "Independent University", "county": "Wake County", "city": "Raleigh", "icon": "Falcons", "id_approved": true, "id_card": "Physical SAU Student ID", "url": "https://rannbar-on.com/staugustinesvote"}, {"key": "queensvote", "name": "Queens University of Charlotte", "short_name": "Queens Charlotte", "type": "Independent University", "county": "Mecklenburg County", "city": "Charlotte", "icon": "Royals", "id_approved": true, "id_card": "Physical Queens Student ID", "url": "https://rannbar-on.com/queensvote"}, {"key": "jcsuvote", "name": "Johnson C. Smith University", "short_name": "JCSU", "type": "Independent University", "county": "Mecklenburg County", "city": "Charlotte", "icon": "Golden Bulls", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/jcsuvote"}, {"key": "bartonvote", "name": "Barton College", "short_name": "Barton", "type": "Independent College", "county": "Wilson County", "city": "Wilson", "icon": "Bulldogs", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/bartonvote"}, {"key": "belmontabbeyvote", "name": "Belmont Abbey College", "short_name": "Belmont Abbey", "type": "Independent College", "county": "Gaston County", "city": "Belmont", "icon": "Crusaders", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/belmontabbeyvote"}, {"key": "bennettvote", "name": "Bennett College", "short_name": "Bennett", "type": "Independent College", "county": "Guilford County", "city": "Greensboro", "icon": "Belles", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/bennettvote"}, {"key": "brevardvote", "name": "Brevard College", "short_name": "Brevard", "type": "Independent College", "county": "Transylvania County", "city": "Brevard", "icon": "Tornados", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/brevardvote"}, {"key": "cabarrusvote", "name": "Cabarrus College of Health Sciences", "short_name": "Cabarrus Health", "type": "Independent College", "county": "Cabarrus County", "city": "Concord", "icon": "\u2695\ufe0f", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/cabarrusvote"}, {"key": "catawbavote", "name": "Catawba College", "short_name": "Catawba", "type": "Independent College", "county": "Rowan County", "city": "Salisbury", "icon": "Indians", "id_approved": true, "id_card": "Physical Catawba One Card", "url": "https://rannbar-on.com/catawbavote"}, {"key": "chowanvote", "name": "Chowan University", "short_name": "Chowan", "type": "Independent University", "county": "Hertford County", "city": "Murfreesboro", "icon": "Hawks", "id_approved": true, "id_card": "Physical HawksCard", "url": "https://rannbar-on.com/chowanvote"}, {"key": "gardnerwebbvote", "name": "Gardner-Webb University", "short_name": "Gardner-Webb", "type": "Independent University", "county": "Cleveland County", "city": "Boiling Springs", "icon": "Runnin Bulldogs", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/gardnerwebbvote"}, {"key": "greensborovote", "name": "Greensboro College", "short_name": "Greensboro College", "type": "Independent College", "county": "Guilford County", "city": "Greensboro", "icon": "Pride", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/greensborovote"}, {"key": "guilfordvote", "name": "Guilford College", "short_name": "Guilford College", "type": "Independent College", "county": "Guilford County", "city": "Greensboro", "icon": "Quakers", "id_approved": true, "id_card": "Physical Guilford Student ID", "url": "https://rannbar-on.com/guilfordvote"}, {"key": "leesmcraevote", "name": "Lees-McRae College", "short_name": "Lees-McRae", "type": "Independent College", "county": "Avery County", "city": "Banner Elk", "icon": "Bobcats", "id_approved": true, "id_card": "Physical Lees-McRae Student ID", "url": "https://rannbar-on.com/leesmcraevote"}, {"key": "lenoirrhynevote", "name": "Lenoir-Rhyne University", "short_name": "Lenoir-Rhyne", "type": "Independent University", "county": "Catawba County", "city": "Hickory", "icon": "Bears", "id_approved": true, "id_card": "Physical LR Student ID", "url": "https://rannbar-on.com/lenoirrhynevote"}, {"key": "livingstonevote", "name": "Livingstone College", "short_name": "Livingstone", "type": "Independent College", "county": "Rowan County", "city": "Salisbury", "icon": "Blue Bears", "id_approved": true, "id_card": "Physical Blue Bear Card", "url": "https://rannbar-on.com/livingstonevote"}, {"key": "louisburgvote", "name": "Louisburg College", "short_name": "Louisburg", "type": "Independent College", "county": "Franklin County", "city": "Louisburg", "icon": "Hurricanes", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/louisburgvote"}, {"key": "marshillvote", "name": "Mars Hill University", "short_name": "Mars Hill", "type": "Independent University", "county": "Madison County", "city": "Mars Hill", "icon": "Lions", "id_approved": true, "id_card": "Physical Mars Hill Student ID", "url": "https://rannbar-on.com/marshillvote"}, {"key": "methodistvote", "name": "Methodist University", "short_name": "Methodist", "type": "Independent University", "county": "Cumberland County", "city": "Fayetteville", "icon": "Monarchs", "id_approved": true, "id_card": "Physical Monarch Card", "url": "https://rannbar-on.com/methodistvote"}, {"key": "macuvote", "name": "Mid-Atlantic Christian University", "short_name": "MACU", "type": "Independent University", "county": "Pasquotank County", "city": "Elizabeth City", "icon": "Mustangs", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/macuvote"}, {"key": "montreatvote", "name": "Montreat College", "short_name": "Montreat", "type": "Independent College", "county": "Buncombe County", "city": "Montreat", "icon": "Cavaliers", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/montreatvote"}, {"key": "ncwesleyanvote", "name": "North Carolina Wesleyan University", "short_name": "NC Wesleyan", "type": "Independent University", "county": "Nash County", "city": "Rocky Mount", "icon": "Battling Bishops", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/ncwesleyanvote"}, {"key": "pfeiffervote", "name": "Pfeiffer University", "short_name": "Pfeiffer", "type": "Independent University", "county": "Stanly County", "city": "Misenheimer", "icon": "Falcons", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/pfeiffervote"}, {"key": "salemvote", "name": "Salem College", "short_name": "Salem College", "type": "Independent College", "county": "Forsyth County", "city": "Winston-Salem", "icon": "Spirits", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/salemvote"}, {"key": "standrewsvote", "name": "St. Andrews University", "short_name": "St. Andrews", "type": "Independent University", "county": "Scotland County", "city": "Laurinburg", "icon": "Knights", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/standrewsvote"}, {"key": "mountolivevote", "name": "University of Mount Olive", "short_name": "Mount Olive", "type": "Independent University", "county": "Wayne County", "city": "Mount Olive", "icon": "Trojans", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/mountolivevote"}, {"key": "warrenwilsonvote", "name": "Warren Wilson College", "short_name": "Warren Wilson", "type": "Independent College", "county": "Buncombe County", "city": "Swannanoa", "icon": "Owls", "id_approved": true, "id_card": "Physical WWC Student ID", "url": "https://rannbar-on.com/warrenwilsonvote"}, {"key": "wingatevote", "name": "Wingate University", "short_name": "Wingate", "type": "Independent University", "county": "Union County", "city": "Wingate", "icon": "Bulldogs", "id_approved": true, "id_card": "Physical Wingate Student ID", "url": "https://rannbar-on.com/wingatevote"}, {"key": "alamanceccvote", "name": "Alamance Community College", "short_name": "Alamance CC", "type": "NC Community College", "county": "Alamance County", "city": "Graham", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical ACC Student ID", "url": "https://rannbar-on.com/alamanceccvote"}, {"key": "abtechvote", "name": "Asheville-Buncombe Technical Community College", "short_name": "A-B Tech", "type": "NC Community College", "county": "Buncombe County", "city": "Asheville", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical A-B Tech Student ID", "url": "https://rannbar-on.com/abtechvote"}, {"key": "beaufortccvote", "name": "Beaufort County Community College", "short_name": "Beaufort CC", "type": "NC Community College", "county": "Beaufort County", "city": "Washington", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical BCCC Student ID", "url": "https://rannbar-on.com/beaufortccvote"}, {"key": "bladenccvote", "name": "Bladen Community College", "short_name": "Bladen CC", "type": "NC Community College", "county": "Bladen County", "city": "Dublin", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/bladenccvote"}, {"key": "blueridgeccvote", "name": "Blue Ridge Community College", "short_name": "Blue Ridge CC", "type": "NC Community College", "county": "Henderson County", "city": "Flat Rock", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/blueridgeccvote"}, {"key": "brunswickccvote", "name": "Brunswick Community College", "short_name": "Brunswick CC", "type": "NC Community College", "county": "Brunswick County", "city": "Bolivia", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/brunswickccvote"}, {"key": "caldwellccvote", "name": "Caldwell Community College & Technical Institute", "short_name": "Caldwell CC", "type": "NC Community College", "county": "Caldwell County", "city": "Hudson", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical CCC&TI Student ID", "url": "https://rannbar-on.com/caldwellccvote"}, {"key": "capefearccvote", "name": "Cape Fear Community College", "short_name": "Cape Fear CC", "type": "NC Community College", "county": "New Hanover County", "city": "Wilmington", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical CFCC Student ID", "url": "https://rannbar-on.com/capefearccvote"}, {"key": "carteretccvote", "name": "Carteret Community College", "short_name": "Carteret CC", "type": "NC Community College", "county": "Carteret County", "city": "Morehead City", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/carteretccvote"}, {"key": "cvccvote", "name": "Catawba Valley Community College", "short_name": "Catawba Valley CC", "type": "NC Community College", "county": "Catawba County", "city": "Hickory", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/cvccvote"}, {"key": "ccccvote", "name": "Central Carolina Community College", "short_name": "Central Carolina CC", "type": "NC Community College", "county": "Lee County", "city": "Sanford", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/ccccvote"}, {"key": "cpccvote", "name": "Central Piedmont Community College", "short_name": "CPCC", "type": "NC Community College", "county": "Mecklenburg County", "city": "Charlotte", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/cpccvote"}, {"key": "clevelandccvote", "name": "Cleveland Community College", "short_name": "Cleveland CC", "type": "NC Community College", "county": "Cleveland County", "city": "Shelby", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical CCC Student ID", "url": "https://rannbar-on.com/clevelandccvote"}, {"key": "coastalcarolinaccvote", "name": "Coastal Carolina Community College", "short_name": "Coastal Carolina CC", "type": "NC Community College", "county": "Onslow County", "city": "Jacksonville", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/coastalcarolinaccvote"}, {"key": "albemarleccvote", "name": "College of The Albemarle", "short_name": "College of Albemarle", "type": "NC Community College", "county": "Pasquotank County", "city": "Elizabeth City", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical COA Student ID", "url": "https://rannbar-on.com/albemarleccvote"}, {"key": "cravenccvote", "name": "Craven Community College", "short_name": "Craven CC", "type": "NC Community College", "county": "Craven County", "city": "New Bern", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/cravenccvote"}, {"key": "davidsondavieccvote", "name": "Davidson-Davie Community College", "short_name": "Davidson-Davie CC", "type": "NC Community College", "county": "Davidson County", "city": "Thomasville", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical DDCC Student Voter ID", "url": "https://rannbar-on.com/davidsondavieccvote"}, {"key": "durhamtechvote", "name": "Durham Technical Community College", "short_name": "Durham Tech", "type": "NC Community College", "county": "Durham County", "city": "Durham", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical Durham Tech Student ID", "url": "https://rannbar-on.com/durhamtechvote"}, {"key": "edgecombeccvote", "name": "Edgecombe Community College", "short_name": "Edgecombe CC", "type": "NC Community College", "county": "Edgecombe County", "city": "Tarboro", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/edgecombeccvote"}, {"key": "faytechccvote", "name": "Fayetteville Technical Community College", "short_name": "Fayetteville Tech", "type": "NC Community College", "county": "Cumberland County", "city": "Fayetteville", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/faytechccvote"}, {"key": "forsythtechvote", "name": "Forsyth Technical Community College", "short_name": "Forsyth Tech", "type": "NC Community College", "county": "Forsyth County", "city": "Winston-Salem", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/forsythtechvote"}, {"key": "gastonvote", "name": "Gaston College", "short_name": "Gaston College", "type": "NC Community College", "county": "Gaston County", "city": "Dallas", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/gastonvote"}, {"key": "gtccvote", "name": "Guilford Technical Community College", "short_name": "GTCC", "type": "NC Community College", "county": "Guilford County", "city": "Jamestown", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/gtccvote"}, {"key": "halifaxccvote", "name": "Halifax Community College", "short_name": "Halifax CC", "type": "NC Community College", "county": "Halifax County", "city": "Weldon", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical HCC Student ID", "url": "https://rannbar-on.com/halifaxccvote"}, {"key": "haywoodccvote", "name": "Haywood Community College", "short_name": "Haywood CC", "type": "NC Community College", "county": "Haywood County", "city": "Clyde", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/haywoodccvote"}, {"key": "isothermalccvote", "name": "Isothermal Community College", "short_name": "Isothermal CC", "type": "NC Community College", "county": "Rutherford County", "city": "Spindale", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical ICC Student ID", "url": "https://rannbar-on.com/isothermalccvote"}, {"key": "jamesspruntccvote", "name": "James Sprunt Community College", "short_name": "James Sprunt CC", "type": "NC Community College", "county": "Duplin County", "city": "Kenansville", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical JSCC Student ID", "url": "https://rannbar-on.com/jamesspruntccvote"}, {"key": "johnstonccvote", "name": "Johnston Community College", "short_name": "Johnston CC", "type": "NC Community College", "county": "Johnston County", "city": "Smithfield", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/johnstonccvote"}, {"key": "lenoirccvote", "name": "Lenoir Community College", "short_name": "Lenoir CC", "type": "NC Community College", "county": "Lenoir County", "city": "Kinston", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/lenoirccvote"}, {"key": "martinccvote", "name": "Martin Community College", "short_name": "Martin CC", "type": "NC Community College", "county": "Martin County", "city": "Williamston", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/martinccvote"}, {"key": "maylandccvote", "name": "Mayland Community College", "short_name": "Mayland CC", "type": "NC Community College", "county": "Mitchell County", "city": "Spruce Pine", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical Mayland Student ID", "url": "https://rannbar-on.com/maylandccvote"}, {"key": "mcdowelltechvote", "name": "McDowell Technical Community College", "short_name": "McDowell Tech", "type": "NC Community College", "county": "Mcdowell County", "city": "Marion", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/mcdowelltechvote"}, {"key": "mitchellccvote", "name": "Mitchell Community College", "short_name": "Mitchell CC", "type": "NC Community College", "county": "Iredell County", "city": "Statesville", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/mitchellccvote"}, {"key": "montgomeryccvote", "name": "Montgomery Community College", "short_name": "Montgomery CC", "type": "NC Community College", "county": "Montgomery County", "city": "Troy", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/montgomeryccvote"}, {"key": "nashccvote", "name": "Nash Community College", "short_name": "Nash CC", "type": "NC Community College", "county": "Nash County", "city": "Rocky Mount", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/nashccvote"}, {"key": "pamlicoccvote", "name": "Pamlico Community College", "short_name": "Pamlico CC", "type": "NC Community College", "county": "Pamlico County", "city": "Grantsboro", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/pamlicoccvote"}, {"key": "piedmontccvote", "name": "Piedmont Community College", "short_name": "Piedmont CC", "type": "NC Community College", "county": "Person County", "city": "Roxboro", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical PCC Student ID", "url": "https://rannbar-on.com/piedmontccvote"}, {"key": "pittccvote", "name": "Pitt Community College", "short_name": "Pitt CC", "type": "NC Community College", "county": "Pitt County", "city": "Winterville", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical PCC Student ID", "url": "https://rannbar-on.com/pittccvote"}, {"key": "randolphccvote", "name": "Randolph Community College", "short_name": "Randolph CC", "type": "NC Community College", "county": "Randolph County", "city": "Asheboro", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical RCC Student ID", "url": "https://rannbar-on.com/randolphccvote"}, {"key": "richmondccvote", "name": "Richmond Community College", "short_name": "Richmond CC", "type": "NC Community College", "county": "Richmond County", "city": "Hamlet", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/richmondccvote"}, {"key": "roanokechowanccvote", "name": "Roanoke-Chowan Community College", "short_name": "Roanoke-Chowan CC", "type": "NC Community College", "county": "Hertford County", "city": "Ahoskie", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/roanokechowanccvote"}, {"key": "robesonccvote", "name": "Robeson Community College", "short_name": "Robeson CC", "type": "NC Community College", "county": "Robeson County", "city": "Lumberton", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/robesonccvote"}, {"key": "rockinghamccvote", "name": "Rockingham Community College", "short_name": "Rockingham CC", "type": "NC Community College", "county": "Rockingham County", "city": "Wentworth", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/rockinghamccvote"}, {"key": "rcccvote", "name": "Rowan-Cabarrus Community College", "short_name": "Rowan-Cabarrus CC", "type": "NC Community College", "county": "Rowan County", "city": "Salisbury", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical RCCC Student ID", "url": "https://rannbar-on.com/rcccvote"}, {"key": "sampsonccvote", "name": "Sampson Community College", "short_name": "Sampson CC", "type": "NC Community College", "county": "Sampson County", "city": "Clinton", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/sampsonccvote"}, {"key": "sandhillsccvote", "name": "Sandhills Community College", "short_name": "Sandhills CC", "type": "NC Community College", "county": "Moore County", "city": "Pinehurst", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical Sandhills Student ID", "url": "https://rannbar-on.com/sandhillsccvote"}, {"key": "spccvote", "name": "South Piedmont Community College", "short_name": "South Piedmont CC", "type": "NC Community College", "county": "Union County", "city": "Polkton", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/spccvote"}, {"key": "southeasternccvote", "name": "Southeastern Community College", "short_name": "Southeastern CC", "type": "NC Community College", "county": "Columbus County", "city": "Whiteville", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/southeasternccvote"}, {"key": "southwesternccvote", "name": "Southwestern Community College", "short_name": "Southwestern CC", "type": "NC Community College", "county": "Jackson County", "city": "Sylva", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical SCC Student ID", "url": "https://rannbar-on.com/southwesternccvote"}, {"key": "stanlyccvote", "name": "Stanly Community College", "short_name": "Stanly CC", "type": "NC Community College", "county": "Stanly County", "city": "Albemarle", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/stanlyccvote"}, {"key": "surryccvote", "name": "Surry Community College", "short_name": "Surry CC", "type": "NC Community College", "county": "Surry County", "city": "Dobson", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/surryccvote"}, {"key": "tricountyccvote", "name": "Tri-County Community College", "short_name": "Tri-County CC", "type": "NC Community College", "county": "Cherokee County", "city": "Murphy", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/tricountyccvote"}, {"key": "vgccvote", "name": "Vance-Granville Community College", "short_name": "Vance-Granville CC", "type": "NC Community College", "county": "Vance County", "city": "Henderson", "icon": "\ud83c\udf93", "id_approved": false, "id_card": "Student ID (Not Approved by State Board)", "url": "https://rannbar-on.com/vgccvote"}, {"key": "waketechvote", "name": "Wake Technical Community College", "short_name": "Wake Tech", "type": "NC Community College", "county": "Wake County", "city": "Raleigh", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical Wake Tech Student ID", "url": "https://rannbar-on.com/waketechvote"}, {"key": "wayneccvote", "name": "Wayne Community College", "short_name": "Wayne CC", "type": "NC Community College", "county": "Wayne County", "city": "Goldsboro", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical WCC Student ID", "url": "https://rannbar-on.com/wayneccvote"}, {"key": "wpccvote", "name": "Western Piedmont Community College", "short_name": "Western Piedmont CC", "type": "NC Community College", "county": "Burke County", "city": "Morganton", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical WPCC Student ID", "url": "https://rannbar-on.com/wpccvote"}, {"key": "wilkesccvote", "name": "Wilkes Community College", "short_name": "Wilkes CC", "type": "NC Community College", "county": "Wilkes County", "city": "Wilkesboro", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical WCC Student ID", "url": "https://rannbar-on.com/wilkesccvote"}, {"key": "wilsonccvote", "name": "Wilson Community College", "short_name": "Wilson CC", "type": "NC Community College", "county": "Wilson County", "city": "Wilson", "icon": "\ud83c\udf93", "id_approved": true, "id_card": "Physical WCC Student ID", "url": "https://rannbar-on.com/wilsonccvote"}];
+    let currentFilter = 'all';
+
+    function renderCampuses(list) {
+      const grid = document.getElementById('campuses-grid');
+      const countEl = document.getElementById('results-count');
+      countEl.innerText = `Showing ${list.length} Colleges & Universities`;
+
+      if (list.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-12 bg-slate-900 border border-slate-800 rounded-2xl p-8">
+            <div class="text-3xl mb-2">🔍</div>
+            <h3 class="text-lg font-bold text-white">No campuses matched your search</h3>
+            <p class="text-xs text-slate-400 mt-1">Try searching for a different college name, municipality, or county.</p>
+            <button onclick="document.getElementById('campus-search').value = ''; setFilter('all');" class="mt-4 px-4 py-2 rounded-xl bg-blue-600 text-white font-semibold text-xs">Reset Search</button>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = list.map(c => {
+        const idBadge = c.id_approved 
+          ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✓ Approved Student ID</span>`
+          : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20">⚠️ Alternative Photo ID</span>`;
+
+        const typeColor = c.type === 'UNC System' 
+          ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' 
+          : (c.type.includes('Community') ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' : 'bg-purple-500/10 text-purple-400 border-purple-500/20');
+
+        return `
+        <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 shadow-sm flex flex-col justify-between transition hover:-translate-y-0.5">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-2">
+              <span class="text-lg">${c.icon}</span>
+              <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${typeColor}">${c.type}</span>
+            </div>
+            <h3 class="font-bold text-white text-base leading-snug">${c.name}</h3>
+            <p class="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
+              <span>📍 ${c.city}, NC</span>
+              <span>•</span>
+              <span class="font-medium text-slate-300">${c.county}</span>
+            </p>
+            <div class="mt-3">
+              ${idBadge}
+            </div>
+          </div>
+
+          <div class="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
+            <a href="/${c.key}" class="flex-grow py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs text-center transition shadow-sm">
+              View Guide →
+            </a>
+            <a href="/${c.key}_qr.png" download="${c.short_name}_Vote_QR.png" class="py-2 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition" title="Download QR PNG">
+              📥 QR
+            </a>
+          </div>
+        </div>
+        `;
+      }).join('');
+    }
+
+    function filterCampuses() {
+      const query = document.getElementById('campus-search').value.toLowerCase().trim();
+      
+      const filtered = campusesData.filter(c => {
+        const matchesQuery = !query || 
+          c.name.toLowerCase().includes(query) || 
+          c.short_name.toLowerCase().includes(query) || 
+          c.city.toLowerCase().includes(query) || 
+          c.county.toLowerCase().includes(query);
+
+        if (!matchesQuery) return false;
+
+        if (currentFilter === 'unc') return c.type === 'UNC System';
+        if (currentFilter === 'private') return c.type.includes('Independent');
+        if (currentFilter === 'cc') return c.type.includes('Community');
+        if (currentFilter === 'id_approved') return c.id_approved === true;
+
+        return true;
+      });
+
+      renderCampuses(filtered);
+    }
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-500');
+        btn.classList.add('bg-slate-900', 'text-slate-300', 'border-slate-700');
+      });
+      const activeBtn = document.getElementById(`btn-${filter}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-900', 'text-slate-300', 'border-slate-700');
+        activeBtn.classList.add('bg-blue-600', 'text-white', 'border-blue-500');
+      }
+      filterCampuses();
+    }
+
+    // Initial render
+    renderCampuses(campusesData);
+  </script>
+
+</body>
+</html>

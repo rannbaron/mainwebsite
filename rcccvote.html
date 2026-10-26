@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rowan-Cabarrus CC Student Guide to Early Voting in Rowan County | Rann Bar-On</title>
+  <meta name="description" content="Complete early voting guide for Rowan-Cabarrus Community College students in Rowan County, NC: voting sites, voter ID rules, same-day registration, and hours.">
+  
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rannbar-on.com/rcccvote">
+  <meta property="og:title" content="Rowan-Cabarrus CC Student Guide to Early Voting in Rowan County">
+  <meta property="og:description" content="Everything Rowan-Cabarrus Community College students need to cast their ballot early in Rowan County: polling locations, voter ID rules, and same-day registration.">
+  <meta property="og:image" content="https://rannbar-on.com/rcccvote_qr.png">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>');
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    
+    :root {
+      --bg: #070b14;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b1120;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
+    <span class="inline-flex items-center gap-1.5">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+      <span>Early Voting in Rowan County is <b>OPEN NOW</b> through <b>Saturday, October 31, 2026</b></span>
+    </span>
+  </div>
+
+  <!-- Header / Navigation -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="https://rannbar-on.com/" class="flex items-center gap-2 group">
+        <div class="w-8 h-8 rounded-lg bg-blue-500/20 border border-blue-500/40 flex items-center justify-center font-bold text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition">
+          R
+        </div>
+        <div>
+          <span class="font-bold tracking-tight text-white block text-sm sm:text-base leading-none">Rann Bar-On</span>
+          <span class="text-[11px] text-slate-400 font-mono">rannbar-on.com</span>
+        </div>
+      </a>
+      <div class="flex items-center gap-2.5">
+        <a href="/campuses" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
+          <span>🏛️</span>
+          <span class="hidden sm:inline">All NC Campuses</span>
+        </a>
+        <a href="#voter-id" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 hover:bg-amber-500/20 transition">
+          ⚠️ Voter ID
+        </a>
+        <a href="#qr-code" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm">
+          📱 QR Code
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Campus Quick Jump Selector Bar -->
+  <nav class="bg-slate-900/95 border-b border-slate-800/80 py-2.5 px-4 backdrop-blur shadow-inner">
+    <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <a href="/campuses" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 text-blue-300 font-bold text-xs transition">
+          <span>🏛️</span>
+          <span>Browse All 111 NC Campuses</span>
+        </a>
+      </div>
+      
+      <!-- Quick Jump Campus Selector -->
+      <div class="flex items-center gap-2">
+        <label for="campus-quick-jump" class="text-xs text-slate-400 font-medium hidden sm:inline">Switch Campus:</label>
+        <select id="campus-quick-jump" onchange="if(this.value) window.location.href=this.value;" class="bg-slate-950 border border-slate-700 text-xs text-slate-200 rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-blue-500 font-medium">
+          <option value="">Jump to another NC College/University...</option>
+          <option value="/alamanceccvote">Alamance Community College (Graham) - CC</option>
+<option value="/appstatevote">Appalachian State University (Boone) - UNC</option>
+<option value="/abtechvote">Asheville-Buncombe Technical Community College (Asheville) - CC</option>
+<option value="/bartonvote">Barton College (Wilson) - Private</option>
+<option value="/beaufortccvote">Beaufort County Community College (Washington) - CC</option>
+<option value="/belmontabbeyvote">Belmont Abbey College (Belmont) - Private</option>
+<option value="/bennettvote">Bennett College (Greensboro) - Private</option>
+<option value="/bladenccvote">Bladen Community College (Dublin) - CC</option>
+<option value="/blueridgeccvote">Blue Ridge Community College (Flat Rock) - CC</option>
+<option value="/brevardvote">Brevard College (Brevard) - Private</option>
+<option value="/brunswickccvote">Brunswick Community College (Bolivia) - CC</option>
+<option value="/cabarrusvote">Cabarrus College of Health Sciences (Concord) - Private</option>
+<option value="/caldwellccvote">Caldwell Community College & Technical Institute (Hudson) - CC</option>
+<option value="/campbellvote">Campbell University (Buies Creek) - Private</option>
+<option value="/capefearccvote">Cape Fear Community College (Wilmington) - CC</option>
+<option value="/carteretccvote">Carteret Community College (Morehead City) - CC</option>
+<option value="/catawbavote">Catawba College (Salisbury) - Private</option>
+<option value="/cvccvote">Catawba Valley Community College (Hickory) - CC</option>
+<option value="/ccccvote">Central Carolina Community College (Sanford) - CC</option>
+<option value="/cpccvote">Central Piedmont Community College (Charlotte) - CC</option>
+<option value="/chowanvote">Chowan University (Murfreesboro) - Private</option>
+<option value="/clevelandccvote">Cleveland Community College (Shelby) - CC</option>
+<option value="/coastalcarolinaccvote">Coastal Carolina Community College (Jacksonville) - CC</option>
+<option value="/albemarleccvote">College of The Albemarle (Elizabeth City) - CC</option>
+<option value="/cravenccvote">Craven Community College (New Bern) - CC</option>
+<option value="/davidsonvote">Davidson College (Davidson) - Private</option>
+<option value="/davidsondavieccvote">Davidson-Davie Community College (Thomasville) - CC</option>
+<option value="/dukevote">Duke University (Durham) - Private</option>
+<option value="/durhamtechvote">Durham Technical Community College (Durham) - CC</option>
+<option value="/ecuvote">East Carolina University (Greenville) - UNC</option>
+<option value="/edgecombeccvote">Edgecombe Community College (Tarboro) - CC</option>
+<option value="/ecsuvote">Elizabeth City State University (Elizabeth City) - UNC</option>
+<option value="/elonvote">Elon University (Elon) - Private</option>
+<option value="/fsuvote">Fayetteville State University (Fayetteville) - UNC</option>
+<option value="/faytechccvote">Fayetteville Technical Community College (Fayetteville) - CC</option>
+<option value="/forsythtechvote">Forsyth Technical Community College (Winston-Salem) - CC</option>
+<option value="/gardnerwebbvote">Gardner-Webb University (Boiling Springs) - Private</option>
+<option value="/gastonvote">Gaston College (Dallas) - CC</option>
+<option value="/greensborovote">Greensboro College (Greensboro) - Private</option>
+<option value="/guilfordvote">Guilford College (Greensboro) - Private</option>
+<option value="/gtccvote">Guilford Technical Community College (Jamestown) - CC</option>
+<option value="/halifaxccvote">Halifax Community College (Weldon) - CC</option>
+<option value="/haywoodccvote">Haywood Community College (Clyde) - CC</option>
+<option value="/highpointvote">High Point University (High Point) - Private</option>
+<option value="/isothermalccvote">Isothermal Community College (Spindale) - CC</option>
+<option value="/jamesspruntccvote">James Sprunt Community College (Kenansville) - CC</option>
+<option value="/jcsuvote">Johnson C. Smith University (Charlotte) - Private</option>
+<option value="/johnstonccvote">Johnston Community College (Smithfield) - CC</option>
+<option value="/leesmcraevote">Lees-McRae College (Banner Elk) - Private</option>
+<option value="/lenoirccvote">Lenoir Community College (Kinston) - CC</option>
+<option value="/lenoirrhynevote">Lenoir-Rhyne University (Hickory) - Private</option>
+<option value="/livingstonevote">Livingstone College (Salisbury) - Private</option>
+<option value="/louisburgvote">Louisburg College (Louisburg) - Private</option>
+<option value="/marshillvote">Mars Hill University (Mars Hill) - Private</option>
+<option value="/martinccvote">Martin Community College (Williamston) - CC</option>
+<option value="/maylandccvote">Mayland Community College (Spruce Pine) - CC</option>
+<option value="/mcdowelltechvote">McDowell Technical Community College (Marion) - CC</option>
+<option value="/meredithvote">Meredith College (Raleigh) - Private</option>
+<option value="/methodistvote">Methodist University (Fayetteville) - Private</option>
+<option value="/macuvote">Mid-Atlantic Christian University (Elizabeth City) - Private</option>
+<option value="/mitchellccvote">Mitchell Community College (Statesville) - CC</option>
+<option value="/montgomeryccvote">Montgomery Community College (Troy) - CC</option>
+<option value="/montreatvote">Montreat College (Montreat) - Private</option>
+<option value="/nashccvote">Nash Community College (Rocky Mount) - CC</option>
+<option value="/ncatvote">North Carolina A&T State University (Greensboro) - UNC</option>
+<option value="/nccuvote">North Carolina Central University (Durham) - UNC</option>
+<option value="/ncsuvote">North Carolina State University (Raleigh) - UNC</option>
+<option value="/ncwesleyanvote">North Carolina Wesleyan University (Rocky Mount) - Private</option>
+<option value="/pamlicoccvote">Pamlico Community College (Grantsboro) - CC</option>
+<option value="/pfeiffervote">Pfeiffer University (Misenheimer) - Private</option>
+<option value="/piedmontccvote">Piedmont Community College (Roxboro) - CC</option>
+<option value="/pittccvote">Pitt Community College (Winterville) - CC</option>
+<option value="/queensvote">Queens University of Charlotte (Charlotte) - Private</option>
+<option value="/randolphccvote">Randolph Community College (Asheboro) - CC</option>
+<option value="/richmondccvote">Richmond Community College (Hamlet) - CC</option>
+<option value="/roanokechowanccvote">Roanoke-Chowan Community College (Ahoskie) - CC</option>
+<option value="/robesonccvote">Robeson Community College (Lumberton) - CC</option>
+<option value="/rockinghamccvote">Rockingham Community College (Wentworth) - CC</option>
+<option value="/rcccvote">Rowan-Cabarrus Community College (Salisbury) - CC</option>
+<option value="/staugustinesvote">Saint Augustine's University (Raleigh) - Private</option>
+<option value="/salemvote">Salem College (Winston-Salem) - Private</option>
+<option value="/sampsonccvote">Sampson Community College (Clinton) - CC</option>
+<option value="/sandhillsccvote">Sandhills Community College (Pinehurst) - CC</option>
+<option value="/shawvote">Shaw University (Raleigh) - Private</option>
+<option value="/spccvote">South Piedmont Community College (Polkton) - CC</option>
+<option value="/southeasternccvote">Southeastern Community College (Whiteville) - CC</option>
+<option value="/southwesternccvote">Southwestern Community College (Sylva) - CC</option>
+<option value="/standrewsvote">St. Andrews University (Laurinburg) - Private</option>
+<option value="/stanlyccvote">Stanly Community College (Albemarle) - CC</option>
+<option value="/surryccvote">Surry Community College (Dobson) - CC</option>
+<option value="/tricountyccvote">Tri-County Community College (Murphy) - CC</option>
+<option value="/uncavote">UNC Asheville (Asheville) - UNC</option>
+<option value="/unccvote">UNC Charlotte (Charlotte) - UNC</option>
+<option value="/uncgvote">UNC Greensboro (Greensboro) - UNC</option>
+<option value="/uncpvote">UNC Pembroke (Pembroke) - UNC</option>
+<option value="/uncsavote">UNC School of the Arts (Winston-Salem) - UNC</option>
+<option value="/uncwvote">UNC Wilmington (Wilmington) - UNC</option>
+<option value="/uncvote">UNC-Chapel Hill (Chapel Hill) - UNC</option>
+<option value="/mountolivevote">University of Mount Olive (Mount Olive) - Private</option>
+<option value="/vgccvote">Vance-Granville Community College (Henderson) - CC</option>
+<option value="/wfuvote">Wake Forest University (Winston-Salem) - Private</option>
+<option value="/waketechvote">Wake Technical Community College (Raleigh) - CC</option>
+<option value="/warrenwilsonvote">Warren Wilson College (Swannanoa) - Private</option>
+<option value="/wayneccvote">Wayne Community College (Goldsboro) - CC</option>
+<option value="/wcuvote">Western Carolina University (Cullowhee) - UNC</option>
+<option value="/wpccvote">Western Piedmont Community College (Morganton) - CC</option>
+<option value="/wilkesccvote">Wilkes Community College (Wilkesboro) - CC</option>
+<option value="/peacevote">William Peace University (Raleigh) - Private</option>
+<option value="/wilsonccvote">Wilson Community College (Wilson) - CC</option>
+<option value="/wingatevote">Wingate University (Wingate) - Private</option>
+<option value="/wssuvote">Winston-Salem State University (Winston-Salem) - UNC</option>
+        </select>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative py-12 sm:py-16 px-4 sm:px-6 border-b border-slate-800/80 overflow-hidden">
+    <div class="max-w-4xl mx-auto text-center relative z-10">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
+        <span>🎓 Rowan-Cabarrus Community College</span>
+        <span class="text-slate-600">•</span>
+        <span>Rowan County, NC</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-white mb-4 leading-tight">
+        Rowan-Cabarrus CC Student Guide <br class="hidden sm:inline"/>
+        <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">to Early Voting in Rowan County</span>
+      </h1>
+      <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
+        Everything Rowan-Cabarrus Community College undergraduate and graduate students need to cast their ballot early. Vote on campus or nearby, register on the spot, and make sure your voice is heard!
+      </p>
+
+      <!-- Key Stat Pills -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-3xl mx-auto text-left">
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
+          <div class="text-xs text-slate-400 font-medium">Early Voting Window</div>
+          <div class="text-base font-bold text-white mt-0.5">Oct 15 – Oct 31</div>
+          <div class="text-[11px] text-emerald-400 mt-1 font-mono">Open 7 days/wk</div>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
+          <div class="text-xs text-slate-400 font-medium">Primary Voting Site</div>
+          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Rowan County Board Of Elections Office</div>
+          <div class="text-[11px] text-blue-400 mt-1 font-mono">Salisbury, NC</div>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
+          <div class="text-xs text-slate-400 font-medium">Missed Registration?</div>
+          <div class="text-base font-bold text-white mt-0.5">Same-Day Reg</div>
+          <div class="text-[11px] text-purple-400 mt-1 font-mono">Register & vote at once</div>
+        </div>
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
+          <div class="text-xs text-slate-400 font-medium">Voter ID Rule</div>
+          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Approved</div>
+          <div class="text-[11px] text-emerald-400 mt-1 font-mono">Physical Student Card</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRITICAL VOTER ID RULE SECTION -->
+  <section id="voter-id" class="py-8 px-4 sm:px-6 border-emerald-500/40 bg-emerald-950/20 border-b">
+    <div class="max-w-4xl mx-auto">
+      
+        <div class="bg-emerald-950/40 border-2 border-emerald-500/60 rounded-2xl p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-start gap-4">
+          <div class="p-3 rounded-xl bg-emerald-500/20 text-emerald-300 text-2xl shrink-0">
+            ✓
+          </div>
+          <div>
+            <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-2">Approved by NC State Board of Elections</span>
+            <h2 class="text-xl font-bold text-white mb-2">Rowan-Cabarrus Community College Student ID is Valid for Voting!</h2>
+            <p class="text-sm text-emerald-100/90 leading-relaxed mb-3">
+              The North Carolina State Board of Elections officially approved the <b>Physical RCCC Student ID</b> for voter photo identification. You can use your physical student ID to cast your ballot.
+            </p>
+            <div class="p-3.5 rounded-xl bg-emerald-900/30 border border-emerald-700/50 text-xs text-emerald-200/90 space-y-1.5 font-medium">
+              <p>⚠️ <b>CRITICAL: PHYSICAL CARD REQUIRED.</b> Digital IDs stored on mobile phones (Apple Wallet, Google Wallet, photos) are <b>NOT ACCEPTED</b> at polling sites under NC law.</p>
+              <p>✅ <b>Other Accepted Photo IDs:</b> NC Driver’s License, US Passport, Military/Veteran ID, or free county BOE ID card.</p>
+              <p>💡 <b>Need an ID on voting day?</b> You can still vote! Fill out a Photo ID Exception Form at the polling place or get a free voter photo ID at the Rowan County Board of Elections office.</p>
+            </div>
+          </div>
+        </div>
+        
+    </div>
+  </section>
+
+  <!-- Main Content Container -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
+
+    <!-- Section 1: Campus Polling Site -->
+    <section id="polling-site" class="scroll-mt-20">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Campus / Nearest Early Voting Site</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Rowan County Board Of Elections Office</h2>
+        </div>
+        <span class="hidden sm:inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          Open to all Rowan County Voters
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Left: Address & Directions -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:col-span-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-2 text-sm font-semibold text-slate-300 mb-2">
+              <span>📍 Address & Getting There</span>
+            </div>
+            <p class="text-base font-bold text-white leading-snug">
+              1935 Jake Alexander Blvd W Salisbury, Nc 28147
+            </p>
+            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+              Official Early Voting location serving Rowan-Cabarrus Community College students, faculty, staff, and all residents of Rowan County.
+            </p>
+
+            <div class="mt-4 pt-4 border-t border-slate-800/80 space-y-2 text-xs text-slate-300 leading-relaxed">
+              <p><b>Free Voter Parking:</b> Available at or near the facility during voting hours.</p>
+              <p><b>Flexibility:</b> You can cast your early ballot at <b>any</b> early voting site in Rowan County.</p>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4">
+            <a href="https://maps.google.com/?q=1935+JAKE+ALEXANDER+BLVD+W+SALISBURY,+NC+28147" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
+              <span>Open in Google Maps</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Early Voting Hours Schedule -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:col-span-2">
+          <h3 class="text-sm font-bold text-slate-200 uppercase tracking-wider mb-3">Rowan County Early Voting Hours Schedule</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead>
+                <tr class="border-b border-slate-800 text-xs text-slate-400 font-mono">
+                  <th class="py-2.5 font-semibold">Days</th>
+                  <th class="py-2.5 font-semibold">Dates</th>
+                  <th class="py-2.5 font-semibold">Hours</th>
+                  <th class="py-2.5 font-semibold text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60">
+                <tr>
+                  <td class="py-3 font-medium text-white">Mondays – Fridays</td>
+                  <td class="py-3 text-slate-400 text-xs">Oct 15 – Oct 30</td>
+                  <td class="py-3 font-mono text-emerald-400 font-semibold">8:00 AM – 7:30 PM</td>
+                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Extended</span></td>
+                </tr>
+                <tr>
+                  <td class="py-3 font-medium text-white">Saturdays</td>
+                  <td class="py-3 text-slate-400 text-xs">Oct 17 & Oct 24</td>
+                  <td class="py-3 font-mono text-blue-300 font-semibold">8:00 AM – 3:00 PM</td>
+                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Weekend</span></td>
+                </tr>
+                <tr>
+                  <td class="py-3 font-medium text-white">Sundays</td>
+                  <td class="py-3 text-slate-400 text-xs">Oct 18 & Oct 25</td>
+                  <td class="py-3 font-mono text-blue-300 font-semibold">1:00 PM – 5:00 PM</td>
+                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-800 text-slate-300">Afternoon</span></td>
+                </tr>
+                <tr class="bg-amber-500/5 font-semibold">
+                  <td class="py-3 text-amber-300">Final Saturday (Last Day!)</td>
+                  <td class="py-3 text-amber-200 text-xs">Saturday, Oct 31</td>
+                  <td class="py-3 font-mono text-amber-300 font-bold">8:00 AM – 3:00 PM</td>
+                  <td class="py-3 text-right"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">Closes 3 PM</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-slate-400 mt-4 leading-relaxed">
+            💡 <i>During early voting, you can vote at <b>any</b> early voting location in Rowan County, regardless of your precinct!</i>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Same-Day Registration -->
+    <section id="registration" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 scroll-mt-20">
+      <div class="max-w-3xl">
+        <span class="text-xs font-mono font-semibold text-purple-400 uppercase tracking-wider">Missed the Voter Registration Deadline?</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 mb-3">Same-Day Voter Registration is Available!</h2>
+        <p class="text-sm text-slate-300 leading-relaxed mb-6">
+          In North Carolina, if you are not yet registered to vote in Rowan County, or if you moved to a new address, you can <b>register and vote on the same visit</b> exclusively during Early Voting. (Same-day registration is <i>not</i> allowed on Election Day).
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- On Campus Students -->
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-blue-500/10 text-blue-400 font-bold text-xs mb-3">
+              <span>🏠 On-Campus Residents</span>
+            </div>
+            <h4 class="text-sm font-bold text-white mb-1.5">What to Bring:</h4>
+            <ul class="text-xs text-slate-300 space-y-2">
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><b>Photo ID:</b> An approved photo ID (or Physical RCCC Student ID if approved, NC Driver's License, or US Passport).</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><b>Proof of Residence:</b> Campus housing verification (residential roster provided to election officials, or housing contract on student portal).</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Off Campus Students -->
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-5">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-purple-500/10 text-purple-400 font-bold text-xs mb-3">
+              <span>🏢 Off-Campus Residents</span>
+            </div>
+            <h4 class="text-sm font-bold text-white mb-1.5">What to Bring:</h4>
+            <ul class="text-xs text-slate-300 space-y-2">
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><b>Photo ID:</b> Approved photo identification.</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-emerald-400 font-bold">✓</span>
+                <span><b>Proof of Residence:</b> Document showing your name and current local Rowan County address (utility bill, bank statement, paycheck, lease, or university official letter; can be digital on your phone).</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-6 p-4 rounded-xl bg-slate-950 border border-slate-800/80 text-xs text-slate-400 leading-relaxed">
+          ⚖️ <b>Student Voting Rights:</b> College students have the established legal right to choose whether to register and vote at their college address or their permanent home address. You must choose one and vote only once per election.
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: All Early Voting Sites in County -->
+    <section id="sites" class="scroll-mt-20">
+      <div class="mb-6">
+        <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Countywide Flexibility</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All 3 Rowan County Early Voting Sites</h2>
+        <p class="text-sm text-slate-400 mt-1">Any registered Rowan County voter can cast a ballot at any of these sites during early voting hours.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        
+        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+          <div>
+            
+            <h4 class="font-bold text-white text-sm pr-16">Rockwell American Legion Building</h4>
+            <p class="text-xs text-slate-300 mt-1">8580 Us Hwy 52 Rockwell, Nc 28138</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
+            <a href="https://maps.google.com/?q=8580+US+HWY+52+ROCKWELL,+NC+28138" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
+          </div>
+        </div>
+        
+
+        <div class="rounded-xl p-4 border-2 border-blue-500/70 bg-slate-900 shadow-md relative overflow-hidden flex flex-col justify-between">
+          <div>
+            <span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-600 text-white">Campus / Nearest Site</span>
+            <h4 class="font-bold text-white text-sm pr-16">Rowan County Board Of Elections Office</h4>
+            <p class="text-xs text-slate-300 mt-1">1935 Jake Alexander Blvd W Salisbury, Nc 28147</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
+            <a href="https://maps.google.com/?q=1935+JAKE+ALEXANDER+BLVD+W+SALISBURY,+NC+28147" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
+          </div>
+        </div>
+        
+
+        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+          <div>
+            
+            <h4 class="font-bold text-white text-sm pr-16">South Branch Rowan Public Library</h4>
+            <p class="text-xs text-slate-300 mt-1">920 Kimball Rd China Grove, Nc 28023</p>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+            <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
+            <a href="https://maps.google.com/?q=920+KIMBALL+RD+CHINA+GROVE,+NC+28023" target="_blank" rel="noopener" class="text-xs text-blue-400 hover:underline font-semibold flex items-center gap-1">Map ↗</a>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+
+    <!-- Section 4: Official Resources -->
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+          <span>📋</span>
+          <span>Pre-Voting Checklist</span>
+        </h3>
+        <ul class="space-y-3 text-xs sm:text-sm text-slate-300">
+          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
+            <span class="text-blue-400 font-bold shrink-0">1.</span>
+            <span><b>Physical Photo ID:</b> Bring a physical acceptable photo ID. Remember: digital phone images are not permitted.</span>
+          </li>
+          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
+            <span class="text-blue-400 font-bold shrink-0">2.</span>
+            <span><b>Proof of Residence (If Registering):</b> Proof of your current address in Rowan County.</span>
+          </li>
+          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
+            <span class="text-blue-400 font-bold shrink-0">3.</span>
+            <span><b>Check Sample Ballot:</b> Look up your sample ballot on the <a href="http://www.rowancountync.gov/elections" target="_blank" class="text-blue-400 underline">Rowan County Board Of Elections</a> portal.</span>
+          </li>
+          <li class="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80">
+            <span class="text-blue-400 font-bold shrink-0">4.</span>
+            <span><b>Notes Allowed:</b> You can bring a printed voter guide or written notes into the voting booth.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Board of Elections Contact Card -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <span>🏛️</span>
+            <span>Rowan County Board Of Elections</span>
+          </h3>
+          <div class="space-y-2.5 text-xs sm:text-sm">
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-slate-200">
+              <div class="font-semibold text-white">Physical Office</div>
+              <div class="text-xs text-slate-400 mt-1">1935 JAKE ALEXANDER BLVD W SALISBURY, NC 28147</div>
+            </div>
+            <a href="http://www.rowancountync.gov/elections" target="_blank" rel="noopener" class="flex items-center justify-between p-3 rounded-xl bg-slate-950 hover:bg-slate-800/80 border border-slate-800 text-slate-200 transition">
+              <div>
+                <div class="font-semibold text-white">Official County Election Website</div>
+                <div class="text-xs text-slate-400 mt-0.5">Sample ballots, wait times & office info</div>
+              </div>
+              <span class="text-slate-400">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
+          <span>Need help? Call Election Office:</span>
+          <a href="tel:7042168140" class="font-mono font-bold text-blue-400 hover:underline">704-216-8140</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: QR Code Card -->
+    <section id="qr-code" class="bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 scroll-mt-20 shadow-xl">
+      <div class="flex flex-col sm:flex-row items-center gap-6 sm:gap-8 justify-between">
+        <div class="max-w-xl text-center sm:text-left">
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Share with Classmates & Dorms</span>
+          <h2 class="text-2xl font-bold text-white mt-1 mb-2">Scan or Share this Rowan-Cabarrus CC Voting Guide</h2>
+          <p class="text-sm text-slate-300 leading-relaxed mb-4">
+            Scan with your phone or copy the direct link for dorm group chats, social media, dining hall flyers, and student organizations across Rowan-Cabarrus Community College!
+          </p>
+          <div class="flex flex-wrap items-center gap-3 justify-center sm:justify-start">
+            <div class="px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs sm:text-sm text-blue-300 select-all">
+              https://rannbar-on.com/rcccvote
+            </div>
+            <button onclick="navigator.clipboard.writeText('https://rannbar-on.com/rcccvote'); alert('Link copied to clipboard!');" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
+              Copy Link
+            </button>
+            <a href="/rcccvote_qr.png" download="Rowan-Cabarrus CC_Vote_Early_QR.png" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+              Download PNG
+            </a>
+            <a href="/rcccvote_qr.svg" download="Rowan-Cabarrus CC_Vote_Early_QR.svg" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
+              Download SVG
+            </a>
+            <a href="/campuses" class="px-4 py-2 rounded-xl bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 border border-indigo-500/40 font-semibold text-xs transition">
+              All 111 NC Campuses →
+            </a>
+          </div>
+        </div>
+
+        <!-- QR Code Visual -->
+        <div class="bg-white p-4 rounded-2xl shadow-2xl border-4 border-blue-500/30 shrink-0 text-center">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUoAAAFKAQAAAABTUiuoAAACYklEQVR4nO2bTYrjMBCFv2oJemlDDpCjyFebm1lHyQEG7GVA5s1Csp3ugaHDkLahSwsT29/iQaFXP1ZMfHHlt6+S4Kijjr7BbG0NgA1zxAYWM7PI+iqeRKujBEnSgyVqnN9FmoAkSZpeK8DRp9C2e1is3V7vphGoO294uQBHv7Tip3vl693E/C5LY/kGAY7+R7RIt3dBV/irWDxcq6MVlVSAOUK+FshmRu4BOql54km0/mQ0smUrIBRLt1gsTZf6i1zfhZcJcPS5aHW755WWt3KPKffhgx0ertVRpClIY1cgTUH7RWNX0NiprfFwrY5SW609PFJBI1C7rKSyBvRwrY7WmlD5ejfowACM7ne0zSKNrrxMgKNP7q0CdaAxBe2bqc4yIKgVhodrdbRZn1Sq69HCUx6dcMSd8BQorYTYU1bXJhgtecmrjPOgzfXaak5IklQvNWX53joPulitCeuonSD96heDOSLd4rrfTqH1Z6MRuhIFd6OOLOYepWlBzIvpoXc+XKujW7+19cn18VoitnrDnfAUaAvFnrzS9l0y1WdBXhOeCO0KNrAOL4BWy+d+sb1EPIfWH45GmC81IAahkPsJZQsiD2AQiyWdQqujjx2VpjWN7XW7djs8XKujb49nnrbGWLdYjdEG8Ar+NGgEwuqEcw/Ml2LbMzEvRrrFcgKtjtYZfAtPVyJ5CIi5N7WPyqHUr//Ha3WUPTOtTdc2O9yY5P3WCdGuQO6D6nmaVmV8pwBH/73a18jt3pIWUx5o50DdCc+EfjjzNF9q2CxN/Zq85strBTj6BGr+jyBHHX0J+ge2jaCyBb/zhwAAAABJRU5ErkJggg==" alt="QR code for Rowan-Cabarrus Community College student early voting guide" class="w-48 h-48 sm:w-52 sm:h-52 object-contain mx-auto" />
+          <div class="text-[11px] font-bold text-slate-900 mt-2 font-mono">rannbar-on.com/rcccvote</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-8 px-4 sm:px-6 mt-16 text-xs text-slate-400">
+    <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div>
+        <p class="font-medium text-slate-300">Non-partisan student voting guide prepared by Rann Bar-On.</p>
+        <p class="text-[11px] text-slate-500 mt-0.5">Official voting data sourced from the Rowan County Board Of Elections and the North Carolina State Board of Elections.</p>
+      </div>
+      <div class="flex items-center gap-4 text-xs">
+        <a href="/campuses" class="text-blue-400 hover:underline">All NC Campuses</a>
+        <a href="https://rannbar-on.com/" class="text-blue-400 hover:underline">rannbar-on.com Home</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
