@@ -22,9 +22,7 @@ import subprocess
 import time
 
 MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(MAIN_DIR, 'data')
 CACHE_DIR = os.path.join(MAIN_DIR, '.nc_voting_cache')
-os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36'
@@ -154,9 +152,7 @@ def fetch_and_update_county_boe():
         boe_path = os.path.join(CACHE_DIR, 'county_boe_info.json')
         with open(boe_path, 'w', encoding='utf-8') as f:
             json.dump(counties, f, indent=2)
-        with open(os.path.join(DATA_DIR, 'county_boe.json'), 'w', encoding='utf-8') as f:
-            json.dump(counties, f, indent=2)
-        log(f"Updated {len(counties)} County Boards of Elections in cache and data/.")
+        log(f"Updated {len(counties)} County Boards of Elections in cache.")
         return counties
     else:
         log("Warning: Could not extract window.boeinfoCountyData from BOEInfo page.")
@@ -218,34 +214,37 @@ def fetch_and_update_early_voting_sites(election_info):
 
     with open(sites_path, 'w', encoding='utf-8') as f:
         json.dump(county_sites, f, indent=2)
-    with open(os.path.join(DATA_DIR, 'county_sites.json'), 'w', encoding='utf-8') as f:
-        json.dump(county_sites, f, indent=2)
 
-    log(f"Successfully cached early voting sites for {len(county_sites)} counties in cache and data/ (total {sites_found_count} sites updated).")
+    log(f"Successfully cached early voting sites for {len(county_sites)} counties (total {sites_found_count} sites updated).")
 
 def run_platform_build(force_eday=False):
     """
-    Executes the unified NC Student Voting platform build script.
-    During Early Voting: runs build.py.
-    After Early Voting ends: runs build.py --eday to replace all guides with Election Day precinct info.
+    Executes the appropriate NC Student Voting platform build scripts.
+    During Early Voting: runs build_entire_nc_voting_system.py.
+    After Early Voting ends: replaces all guides with Election Day voting info via generate_election_day_pages.py.
     """
     now = datetime.datetime.now()
     # Early voting for 2026 General concludes Saturday, October 31, 2026 at 3:00 PM EDT
     early_voting_ended = force_eday or (now >= datetime.datetime(2026, 10, 31, 15, 0, 0))
 
-    build_cmd = [sys.executable, os.path.join(MAIN_DIR, 'build.py')]
     if early_voting_ended:
-        log("Early voting has ended. Running build.py with --eday to generate Election Day precinct guides...")
-        build_cmd.append('--eday')
+        log("Early voting has ended. Running Election Day generator to replace all guides with Election Day precinct info...")
+        cmd_ed = [sys.executable, os.path.join(MAIN_DIR, 'generate_election_day_pages.py')]
+        log(f"Running: {' '.join(cmd_ed)}")
+        res_ed = subprocess.run(cmd_ed, cwd=MAIN_DIR, capture_output=True, text=True)
+        if res_ed.returncode != 0:
+            log(f"Election Day generator failed: {res_ed.stderr}")
+        else:
+            log("Election Day pages successfully generated and replaced.")
     else:
-        log("Early voting is active. Building statewide early voting guides with plain hours and nearest voting sites...")
-
-    log(f"Running: {' '.join(build_cmd)}")
-    res = subprocess.run(build_cmd, cwd=MAIN_DIR, capture_output=True, text=True)
-    if res.returncode != 0:
-        log(f"Build failed: {res.stderr}")
-    else:
-        log("Statewide platform build completed successfully.")
+        log("Early voting is currently active. Building statewide early voting guides with Sunday hours and precinct geolocation...")
+        cmd_build = [sys.executable, os.path.join(MAIN_DIR, 'build_entire_nc_voting_system.py')]
+        log(f"Running: {' '.join(cmd_build)}")
+        res = subprocess.run(cmd_build, cwd=MAIN_DIR, capture_output=True, text=True)
+        if res.returncode != 0:
+            log(f"Build failed: {res.stderr}")
+        else:
+            log("Main statewide platform build completed successfully.")
 
 def git_commit_and_push_if_changed(election_info):
     """

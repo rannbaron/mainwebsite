@@ -2,75 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="5; url=/campuses">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="3; url=/campuses">
   <title>St. Andrews University Voting Information | Rann Bar-On</title>
-  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body data-campus="St. Andrews University" data-key="standrewsvote">
-  <div class="container">
-    <header>
-      <div class="nav-links">
-        <a href="/campuses" class="site-title">North Carolina Student Voting</a>
-        <a href="/campuses">All 110 campuses</a>
-        <a href="/vote">Main QR portal</a>
-        <a href="/stats">Usage stats</a>
-      </div>
-    </header>
-
-    <main>
-      <h1>St. Andrews University</h1>
-      <p>Laurinburg, NC | Scotland County</p>
-
-      <div class="callout callout-warning">
-        <p><strong>Campus closed:</strong> St. Andrews University ceased academic operations on May 5, 2025 following revocation of accreditation by SACSCOC. It is not an active polling precinct or higher education institution for the 2026 election cycle.</p>
-      </div>
-
-      <p>If you are a resident of Scotland County, you can find your voter registration details, voting precinct, and photo ID requirements through the Scotland County Board of Elections:</p>
-      <p>
-        Scotland County Board of Elections<br>
-        231 E. Cronly Street, Suite L, Laurinburg, NC 28352<br>
-        Phone: <a href="tel:910-277-2595">910-277-2595</a><br>
-        Website: <a href="https://www.scotlandcounty.org/218/Board-of-Elections" target="_blank" rel="noopener">https://www.scotlandcounty.org/218/Board-of-Elections</a>
-      </p>
-
-      <p><a href="/campuses">Go to the active 110 North Carolina campus voting directory</a></p>
-    </main>
-
-    <footer>
-      <div>Maintained by Rann Bar-On as an open-source public service under the <a href="https://github.com/rannbaron/mainwebsite/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>.</div>
-      <div class="footer-links">
-        <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener">Source code on GitHub</a>
-        <a href="https://github.com/rannbaron/mainwebsite/issues" target="_blank" rel="noopener">Report an issue</a>
-        <a href="https://github.com/rannbaron/mainwebsite/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
-        <a href="/campuses">All 110 campuses</a>
-        <a href="#support-modal" id="support-link">Help maintain this site</a>
-        <a href="/stats">Usage tracker</a>
-      </div>
-    </footer>
+<body class="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-4 text-center font-sans">
+  <div class="max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl">
+    <span class="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30 mb-4">Campus Closed</span>
+    <h1 class="text-2xl font-bold text-white mb-3">St. Andrews University</h1>
+    <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+      St. Andrews University in Laurinburg permanently closed in May 2025. You are being redirected to the active North Carolina Campus Voting Directory.
+    </p>
+    <a href="/campuses" class="inline-block py-2.5 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition">
+      Go to All 110 NC Campuses Directory →
+    </a>
   </div>
-
-<dialog id="support-dialog">
-  <h2 style="margin-top: 0; font-size: 18px;">Help maintain this site</h2>
-  <p style="font-size: 14px;">This platform is maintained independently by Rann Bar-On as a free, open-source public service for North Carolina students. Contributions help cover hosting, domain renewal, and ongoing election verification.</p>
-  <div class="support-qr-grid">
-    <div class="support-qr-card">
-      <img src="/venmo_qr.png" alt="Venmo QR Code">
-      <div style="font-weight: 600; font-size: 14px;">Venmo</div>
-      <div style="font-size: 13px;"><a href="https://venmo.com/Ran-Baron" target="_blank" rel="noopener">@Ran-Baron</a></div>
-    </div>
-    <div class="support-qr-card">
-      <img src="/cashapp_qr.png" alt="Cash App QR Code">
-      <div style="font-weight: 600; font-size: 14px;">Cash App</div>
-      <div style="font-size: 13px;"><a href="https://cash.app/$RanBaron" target="_blank" rel="noopener">$RanBaron</a></div>
-    </div>
-  </div>
-  <div style="text-align: right; margin-top: 16px;">
-    <button type="button" class="btn btn-secondary" id="support-dialog-close">Close</button>
-  </div>
-</dialog>
-
-  <script src="/voting.js"></script>
-  <script src="/tracker.js"></script>
 </body>
 </html>

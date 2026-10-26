@@ -1,744 +1,190 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Usage Analytics | North Carolina Student Voting</title>
-  <link rel="stylesheet" href="/style.css">
+  <title>Usage Tracker & Campus Visitor Analytics | NC Student Voting Platform</title>
+  <meta name="description" content="Live visitor metrics and campus breakdown for the North Carolina Student Voting Platform across all 110 colleges and universities.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #070b14; color: #f8fafc; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
 </head>
-<body data-campus="Usage Analytics" data-key="stats">
-  <div class="container">
-    <header>
-      <div class="nav-links">
-        <a href="/campuses" class="site-title">North Carolina Student Voting</a>
-        <a href="/campuses">All 110 campuses</a>
-        <a href="/vote">Main QR portal</a>
-        <a href="/stats">Usage stats</a>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased" data-campus="Usage Analytics Portal" data-key="stats">
+
+  <!-- TOP BANNER -->
+  <aside aria-label="Official verification notice" class="bg-slate-900 border-b border-slate-800 text-xs text-slate-300 py-2 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30 uppercase tracking-wide">Usage Tracker</span>
+        <span>Visitor & Campus Telemetry Dashboard</span>
       </div>
-    </header>
-
-    <main>
-      <h1>Visitor analytics and telemetry</h1>
-      <p>Usage across all 110 North Carolina higher education campus voting guides is tracked using privacy-preserving, cookie-free telemetry hosted via GoatCounter.</p>
-
-      <h2>Live analytics dashboard</h2>
-      <p>Aggregated visitor counts, daily trends, referring domains, and per-campus breakdown can be viewed directly on the public GoatCounter dashboard:</p>
-      <p><a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener" class="btn">View GoatCounter analytics dashboard</a></p>
-
-      <h2>Tracked institutions</h2>
-      <p>Every campus voting guide includes lightweight logging tracking visitor engagement by path:</p>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Institution</th>
-            <th>Path</th>
-            <th>City</th>
-            <th>County</th>
-          </tr>
-        </thead>
-        <tbody>
-    <tr>
-      <td><a href="/alamanceccvote">Alamance Community College</a></td>
-      <td>/alamanceccvote</td>
-      <td>Graham, NC</td>
-      <td>Alamance County</td>
-    </tr>
-    <tr>
-      <td><a href="/appstatevote">Appalachian State University</a></td>
-      <td>/appstatevote</td>
-      <td>Boone, NC</td>
-      <td>Watauga County</td>
-    </tr>
-    <tr>
-      <td><a href="/abtechvote">Asheville-Buncombe Technical Community College</a></td>
-      <td>/abtechvote</td>
-      <td>Asheville, NC</td>
-      <td>Buncombe County</td>
-    </tr>
-    <tr>
-      <td><a href="/bartonvote">Barton College</a></td>
-      <td>/bartonvote</td>
-      <td>Wilson, NC</td>
-      <td>Wilson County</td>
-    </tr>
-    <tr>
-      <td><a href="/beaufortccvote">Beaufort County Community College</a></td>
-      <td>/beaufortccvote</td>
-      <td>Washington, NC</td>
-      <td>Beaufort County</td>
-    </tr>
-    <tr>
-      <td><a href="/belmontabbeyvote">Belmont Abbey College</a></td>
-      <td>/belmontabbeyvote</td>
-      <td>Belmont, NC</td>
-      <td>Gaston County</td>
-    </tr>
-    <tr>
-      <td><a href="/bennettvote">Bennett College</a></td>
-      <td>/bennettvote</td>
-      <td>Greensboro, NC</td>
-      <td>Guilford County</td>
-    </tr>
-    <tr>
-      <td><a href="/bladenccvote">Bladen Community College</a></td>
-      <td>/bladenccvote</td>
-      <td>Dublin, NC</td>
-      <td>Bladen County</td>
-    </tr>
-    <tr>
-      <td><a href="/blueridgeccvote">Blue Ridge Community College</a></td>
-      <td>/blueridgeccvote</td>
-      <td>Flat Rock, NC</td>
-      <td>Henderson County</td>
-    </tr>
-    <tr>
-      <td><a href="/brevardvote">Brevard College</a></td>
-      <td>/brevardvote</td>
-      <td>Brevard, NC</td>
-      <td>Transylvania County</td>
-    </tr>
-    <tr>
-      <td><a href="/brunswickccvote">Brunswick Community College</a></td>
-      <td>/brunswickccvote</td>
-      <td>Bolivia, NC</td>
-      <td>Brunswick County</td>
-    </tr>
-    <tr>
-      <td><a href="/cabarrusvote">Cabarrus College of Health Sciences</a></td>
-      <td>/cabarrusvote</td>
-      <td>Concord, NC</td>
-      <td>Cabarrus County</td>
-    </tr>
-    <tr>
-      <td><a href="/caldwellccvote">Caldwell Community College & Technical Institute</a></td>
-      <td>/caldwellccvote</td>
-      <td>Hudson, NC</td>
-      <td>Caldwell County</td>
-    </tr>
-    <tr>
-      <td><a href="/campbellvote">Campbell University</a></td>
-      <td>/campbellvote</td>
-      <td>Buies Creek, NC</td>
-      <td>Harnett County</td>
-    </tr>
-    <tr>
-      <td><a href="/capefearccvote">Cape Fear Community College</a></td>
-      <td>/capefearccvote</td>
-      <td>Wilmington, NC</td>
-      <td>New Hanover County</td>
-    </tr>
-    <tr>
-      <td><a href="/carteretccvote">Carteret Community College</a></td>
-      <td>/carteretccvote</td>
-      <td>Morehead City, NC</td>
-      <td>Carteret County</td>
-    </tr>
-    <tr>
-      <td><a href="/catawbavote">Catawba College</a></td>
-      <td>/catawbavote</td>
-      <td>Salisbury, NC</td>
-      <td>Rowan County</td>
-    </tr>
-    <tr>
-      <td><a href="/cvccvote">Catawba Valley Community College</a></td>
-      <td>/cvccvote</td>
-      <td>Hickory, NC</td>
-      <td>Catawba County</td>
-    </tr>
-    <tr>
-      <td><a href="/ccccvote">Central Carolina Community College</a></td>
-      <td>/ccccvote</td>
-      <td>Sanford, NC</td>
-      <td>Lee County</td>
-    </tr>
-    <tr>
-      <td><a href="/cpccvote">Central Piedmont Community College</a></td>
-      <td>/cpccvote</td>
-      <td>Charlotte, NC</td>
-      <td>Mecklenburg County</td>
-    </tr>
-    <tr>
-      <td><a href="/chowanvote">Chowan University</a></td>
-      <td>/chowanvote</td>
-      <td>Murfreesboro, NC</td>
-      <td>Hertford County</td>
-    </tr>
-    <tr>
-      <td><a href="/clevelandccvote">Cleveland Community College</a></td>
-      <td>/clevelandccvote</td>
-      <td>Shelby, NC</td>
-      <td>Cleveland County</td>
-    </tr>
-    <tr>
-      <td><a href="/coastalcarolinaccvote">Coastal Carolina Community College</a></td>
-      <td>/coastalcarolinaccvote</td>
-      <td>Jacksonville, NC</td>
-      <td>Onslow County</td>
-    </tr>
-    <tr>
-      <td><a href="/albemarleccvote">College of The Albemarle</a></td>
-      <td>/albemarleccvote</td>
-      <td>Elizabeth City, NC</td>
-      <td>Pasquotank County</td>
-    </tr>
-    <tr>
-      <td><a href="/cravenccvote">Craven Community College</a></td>
-      <td>/cravenccvote</td>
-      <td>New Bern, NC</td>
-      <td>Craven County</td>
-    </tr>
-    <tr>
-      <td><a href="/davidsonvote">Davidson College</a></td>
-      <td>/davidsonvote</td>
-      <td>Davidson, NC</td>
-      <td>Mecklenburg County</td>
-    </tr>
-    <tr>
-      <td><a href="/davidsondavieccvote">Davidson-Davie Community College</a></td>
-      <td>/davidsondavieccvote</td>
-      <td>Thomasville, NC</td>
-      <td>Davidson County</td>
-    </tr>
-    <tr>
-      <td><a href="/dukevote">Duke University</a></td>
-      <td>/dukevote</td>
-      <td>Durham, NC</td>
-      <td>Durham County</td>
-    </tr>
-    <tr>
-      <td><a href="/durhamtechvote">Durham Technical Community College</a></td>
-      <td>/durhamtechvote</td>
-      <td>Durham, NC</td>
-      <td>Durham County</td>
-    </tr>
-    <tr>
-      <td><a href="/ecuvote">East Carolina University</a></td>
-      <td>/ecuvote</td>
-      <td>Greenville, NC</td>
-      <td>Pitt County</td>
-    </tr>
-    <tr>
-      <td><a href="/edgecombeccvote">Edgecombe Community College</a></td>
-      <td>/edgecombeccvote</td>
-      <td>Tarboro, NC</td>
-      <td>Edgecombe County</td>
-    </tr>
-    <tr>
-      <td><a href="/ecsuvote">Elizabeth City State University</a></td>
-      <td>/ecsuvote</td>
-      <td>Elizabeth City, NC</td>
-      <td>Pasquotank County</td>
-    </tr>
-    <tr>
-      <td><a href="/elonvote">Elon University</a></td>
-      <td>/elonvote</td>
-      <td>Elon, NC</td>
-      <td>Alamance County</td>
-    </tr>
-    <tr>
-      <td><a href="/fsuvote">Fayetteville State University</a></td>
-      <td>/fsuvote</td>
-      <td>Fayetteville, NC</td>
-      <td>Cumberland County</td>
-    </tr>
-    <tr>
-      <td><a href="/faytechccvote">Fayetteville Technical Community College</a></td>
-      <td>/faytechccvote</td>
-      <td>Fayetteville, NC</td>
-      <td>Cumberland County</td>
-    </tr>
-    <tr>
-      <td><a href="/forsythtechvote">Forsyth Technical Community College</a></td>
-      <td>/forsythtechvote</td>
-      <td>Winston-Salem, NC</td>
-      <td>Forsyth County</td>
-    </tr>
-    <tr>
-      <td><a href="/gardnerwebbvote">Gardner-Webb University</a></td>
-      <td>/gardnerwebbvote</td>
-      <td>Boiling Springs, NC</td>
-      <td>Cleveland County</td>
-    </tr>
-    <tr>
-      <td><a href="/gastonvote">Gaston College</a></td>
-      <td>/gastonvote</td>
-      <td>Dallas, NC</td>
-      <td>Gaston County</td>
-    </tr>
-    <tr>
-      <td><a href="/greensborovote">Greensboro College</a></td>
-      <td>/greensborovote</td>
-      <td>Greensboro, NC</td>
-      <td>Guilford County</td>
-    </tr>
-    <tr>
-      <td><a href="/guilfordvote">Guilford College</a></td>
-      <td>/guilfordvote</td>
-      <td>Greensboro, NC</td>
-      <td>Guilford County</td>
-    </tr>
-    <tr>
-      <td><a href="/gtccvote">Guilford Technical Community College</a></td>
-      <td>/gtccvote</td>
-      <td>Jamestown, NC</td>
-      <td>Guilford County</td>
-    </tr>
-    <tr>
-      <td><a href="/halifaxccvote">Halifax Community College</a></td>
-      <td>/halifaxccvote</td>
-      <td>Weldon, NC</td>
-      <td>Halifax County</td>
-    </tr>
-    <tr>
-      <td><a href="/haywoodccvote">Haywood Community College</a></td>
-      <td>/haywoodccvote</td>
-      <td>Clyde, NC</td>
-      <td>Haywood County</td>
-    </tr>
-    <tr>
-      <td><a href="/highpointvote">High Point University</a></td>
-      <td>/highpointvote</td>
-      <td>High Point, NC</td>
-      <td>Guilford County</td>
-    </tr>
-    <tr>
-      <td><a href="/isothermalccvote">Isothermal Community College</a></td>
-      <td>/isothermalccvote</td>
-      <td>Spindale, NC</td>
-      <td>Rutherford County</td>
-    </tr>
-    <tr>
-      <td><a href="/jamesspruntccvote">James Sprunt Community College</a></td>
-      <td>/jamesspruntccvote</td>
-      <td>Kenansville, NC</td>
-      <td>Duplin County</td>
-    </tr>
-    <tr>
-      <td><a href="/jcsuvote">Johnson C. Smith University</a></td>
-      <td>/jcsuvote</td>
-      <td>Charlotte, NC</td>
-      <td>Mecklenburg County</td>
-    </tr>
-    <tr>
-      <td><a href="/johnstonccvote">Johnston Community College</a></td>
-      <td>/johnstonccvote</td>
-      <td>Smithfield, NC</td>
-      <td>Johnston County</td>
-    </tr>
-    <tr>
-      <td><a href="/leesmcraevote">Lees-McRae College</a></td>
-      <td>/leesmcraevote</td>
-      <td>Banner Elk, NC</td>
-      <td>Avery County</td>
-    </tr>
-    <tr>
-      <td><a href="/lenoirccvote">Lenoir Community College</a></td>
-      <td>/lenoirccvote</td>
-      <td>Kinston, NC</td>
-      <td>Lenoir County</td>
-    </tr>
-    <tr>
-      <td><a href="/lenoirrhynevote">Lenoir-Rhyne University</a></td>
-      <td>/lenoirrhynevote</td>
-      <td>Hickory, NC</td>
-      <td>Catawba County</td>
-    </tr>
-    <tr>
-      <td><a href="/livingstonevote">Livingstone College</a></td>
-      <td>/livingstonevote</td>
-      <td>Salisbury, NC</td>
-      <td>Rowan County</td>
-    </tr>
-    <tr>
-      <td><a href="/louisburgvote">Louisburg College</a></td>
-      <td>/louisburgvote</td>
-      <td>Louisburg, NC</td>
-      <td>Franklin County</td>
-    </tr>
-    <tr>
-      <td><a href="/marshillvote">Mars Hill University</a></td>
-      <td>/marshillvote</td>
-      <td>Mars Hill, NC</td>
-      <td>Madison County</td>
-    </tr>
-    <tr>
-      <td><a href="/martinccvote">Martin Community College</a></td>
-      <td>/martinccvote</td>
-      <td>Williamston, NC</td>
-      <td>Martin County</td>
-    </tr>
-    <tr>
-      <td><a href="/maylandccvote">Mayland Community College</a></td>
-      <td>/maylandccvote</td>
-      <td>Spruce Pine, NC</td>
-      <td>Mitchell County</td>
-    </tr>
-    <tr>
-      <td><a href="/mcdowelltechvote">McDowell Technical Community College</a></td>
-      <td>/mcdowelltechvote</td>
-      <td>Marion, NC</td>
-      <td>Mcdowell County</td>
-    </tr>
-    <tr>
-      <td><a href="/meredithvote">Meredith College</a></td>
-      <td>/meredithvote</td>
-      <td>Raleigh, NC</td>
-      <td>Wake County</td>
-    </tr>
-    <tr>
-      <td><a href="/methodistvote">Methodist University</a></td>
-      <td>/methodistvote</td>
-      <td>Fayetteville, NC</td>
-      <td>Cumberland County</td>
-    </tr>
-    <tr>
-      <td><a href="/macuvote">Mid-Atlantic Christian University</a></td>
-      <td>/macuvote</td>
-      <td>Elizabeth City, NC</td>
-      <td>Pasquotank County</td>
-    </tr>
-    <tr>
-      <td><a href="/mitchellccvote">Mitchell Community College</a></td>
-      <td>/mitchellccvote</td>
-      <td>Statesville, NC</td>
-      <td>Iredell County</td>
-    </tr>
-    <tr>
-      <td><a href="/montgomeryccvote">Montgomery Community College</a></td>
-      <td>/montgomeryccvote</td>
-      <td>Troy, NC</td>
-      <td>Montgomery County</td>
-    </tr>
-    <tr>
-      <td><a href="/montreatvote">Montreat College</a></td>
-      <td>/montreatvote</td>
-      <td>Montreat, NC</td>
-      <td>Buncombe County</td>
-    </tr>
-    <tr>
-      <td><a href="/nashccvote">Nash Community College</a></td>
-      <td>/nashccvote</td>
-      <td>Rocky Mount, NC</td>
-      <td>Nash County</td>
-    </tr>
-    <tr>
-      <td><a href="/ncatvote">North Carolina A&T State University</a></td>
-      <td>/ncatvote</td>
-      <td>Greensboro, NC</td>
-      <td>Guilford County</td>
-    </tr>
-    <tr>
-      <td><a href="/nccuvote">North Carolina Central University</a></td>
-      <td>/nccuvote</td>
-      <td>Durham, NC</td>
-      <td>Durham County</td>
-    </tr>
-    <tr>
-      <td><a href="/ncsuvote">North Carolina State University</a></td>
-      <td>/ncsuvote</td>
-      <td>Raleigh, NC</td>
-      <td>Wake County</td>
-    </tr>
-    <tr>
-      <td><a href="/ncwesleyanvote">North Carolina Wesleyan University</a></td>
-      <td>/ncwesleyanvote</td>
-      <td>Rocky Mount, NC</td>
-      <td>Nash County</td>
-    </tr>
-    <tr>
-      <td><a href="/pamlicoccvote">Pamlico Community College</a></td>
-      <td>/pamlicoccvote</td>
-      <td>Grantsboro, NC</td>
-      <td>Pamlico County</td>
-    </tr>
-    <tr>
-      <td><a href="/pfeiffervote">Pfeiffer University</a></td>
-      <td>/pfeiffervote</td>
-      <td>Misenheimer, NC</td>
-      <td>Stanly County</td>
-    </tr>
-    <tr>
-      <td><a href="/piedmontccvote">Piedmont Community College</a></td>
-      <td>/piedmontccvote</td>
-      <td>Roxboro, NC</td>
-      <td>Person County</td>
-    </tr>
-    <tr>
-      <td><a href="/pittccvote">Pitt Community College</a></td>
-      <td>/pittccvote</td>
-      <td>Winterville, NC</td>
-      <td>Pitt County</td>
-    </tr>
-    <tr>
-      <td><a href="/queensvote">Queens University of Charlotte</a></td>
-      <td>/queensvote</td>
-      <td>Charlotte, NC</td>
-      <td>Mecklenburg County</td>
-    </tr>
-    <tr>
-      <td><a href="/randolphccvote">Randolph Community College</a></td>
-      <td>/randolphccvote</td>
-      <td>Asheboro, NC</td>
-      <td>Randolph County</td>
-    </tr>
-    <tr>
-      <td><a href="/richmondccvote">Richmond Community College</a></td>
-      <td>/richmondccvote</td>
-      <td>Hamlet, NC</td>
-      <td>Richmond County</td>
-    </tr>
-    <tr>
-      <td><a href="/roanokechowanccvote">Roanoke-Chowan Community College</a></td>
-      <td>/roanokechowanccvote</td>
-      <td>Ahoskie, NC</td>
-      <td>Hertford County</td>
-    </tr>
-    <tr>
-      <td><a href="/robesonccvote">Robeson Community College</a></td>
-      <td>/robesonccvote</td>
-      <td>Lumberton, NC</td>
-      <td>Robeson County</td>
-    </tr>
-    <tr>
-      <td><a href="/rockinghamccvote">Rockingham Community College</a></td>
-      <td>/rockinghamccvote</td>
-      <td>Wentworth, NC</td>
-      <td>Rockingham County</td>
-    </tr>
-    <tr>
-      <td><a href="/rcccvote">Rowan-Cabarrus Community College</a></td>
-      <td>/rcccvote</td>
-      <td>Salisbury, NC</td>
-      <td>Rowan County</td>
-    </tr>
-    <tr>
-      <td><a href="/staugustinesvote">Saint Augustine's University</a></td>
-      <td>/staugustinesvote</td>
-      <td>Raleigh, NC</td>
-      <td>Wake County</td>
-    </tr>
-    <tr>
-      <td><a href="/salemvote">Salem College</a></td>
-      <td>/salemvote</td>
-      <td>Winston-Salem, NC</td>
-      <td>Forsyth County</td>
-    </tr>
-    <tr>
-      <td><a href="/sampsonccvote">Sampson Community College</a></td>
-      <td>/sampsonccvote</td>
-      <td>Clinton, NC</td>
-      <td>Sampson County</td>
-    </tr>
-    <tr>
-      <td><a href="/sandhillsccvote">Sandhills Community College</a></td>
-      <td>/sandhillsccvote</td>
-      <td>Pinehurst, NC</td>
-      <td>Moore County</td>
-    </tr>
-    <tr>
-      <td><a href="/shawvote">Shaw University</a></td>
-      <td>/shawvote</td>
-      <td>Raleigh, NC</td>
-      <td>Wake County</td>
-    </tr>
-    <tr>
-      <td><a href="/spccvote">South Piedmont Community College</a></td>
-      <td>/spccvote</td>
-      <td>Polkton, NC</td>
-      <td>Union County</td>
-    </tr>
-    <tr>
-      <td><a href="/southeasternccvote">Southeastern Community College</a></td>
-      <td>/southeasternccvote</td>
-      <td>Whiteville, NC</td>
-      <td>Columbus County</td>
-    </tr>
-    <tr>
-      <td><a href="/southwesternccvote">Southwestern Community College</a></td>
-      <td>/southwesternccvote</td>
-      <td>Sylva, NC</td>
-      <td>Jackson County</td>
-    </tr>
-    <tr>
-      <td><a href="/stanlyccvote">Stanly Community College</a></td>
-      <td>/stanlyccvote</td>
-      <td>Albemarle, NC</td>
-      <td>Stanly County</td>
-    </tr>
-    <tr>
-      <td><a href="/surryccvote">Surry Community College</a></td>
-      <td>/surryccvote</td>
-      <td>Dobson, NC</td>
-      <td>Surry County</td>
-    </tr>
-    <tr>
-      <td><a href="/tricountyccvote">Tri-County Community College</a></td>
-      <td>/tricountyccvote</td>
-      <td>Murphy, NC</td>
-      <td>Cherokee County</td>
-    </tr>
-    <tr>
-      <td><a href="/uncavote">UNC Asheville</a></td>
-      <td>/uncavote</td>
-      <td>Asheville, NC</td>
-      <td>Buncombe County</td>
-    </tr>
-    <tr>
-      <td><a href="/unccvote">UNC Charlotte</a></td>
-      <td>/unccvote</td>
-      <td>Charlotte, NC</td>
-      <td>Mecklenburg County</td>
-    </tr>
-    <tr>
-      <td><a href="/uncgvote">UNC Greensboro</a></td>
-      <td>/uncgvote</td>
-      <td>Greensboro, NC</td>
-      <td>Guilford County</td>
-    </tr>
-    <tr>
-      <td><a href="/uncpvote">UNC Pembroke</a></td>
-      <td>/uncpvote</td>
-      <td>Pembroke, NC</td>
-      <td>Robeson County</td>
-    </tr>
-    <tr>
-      <td><a href="/uncsavote">UNC School of the Arts</a></td>
-      <td>/uncsavote</td>
-      <td>Winston-Salem, NC</td>
-      <td>Forsyth County</td>
-    </tr>
-    <tr>
-      <td><a href="/uncwvote">UNC Wilmington</a></td>
-      <td>/uncwvote</td>
-      <td>Wilmington, NC</td>
-      <td>New Hanover County</td>
-    </tr>
-    <tr>
-      <td><a href="/uncvote">UNC-Chapel Hill</a></td>
-      <td>/uncvote</td>
-      <td>Chapel Hill, NC</td>
-      <td>Orange County</td>
-    </tr>
-    <tr>
-      <td><a href="/mountolivevote">University of Mount Olive</a></td>
-      <td>/mountolivevote</td>
-      <td>Mount Olive, NC</td>
-      <td>Wayne County</td>
-    </tr>
-    <tr>
-      <td><a href="/vgccvote">Vance-Granville Community College</a></td>
-      <td>/vgccvote</td>
-      <td>Henderson, NC</td>
-      <td>Vance County</td>
-    </tr>
-    <tr>
-      <td><a href="/wfuvote">Wake Forest University</a></td>
-      <td>/wfuvote</td>
-      <td>Winston-Salem, NC</td>
-      <td>Forsyth County</td>
-    </tr>
-    <tr>
-      <td><a href="/waketechvote">Wake Technical Community College</a></td>
-      <td>/waketechvote</td>
-      <td>Raleigh, NC</td>
-      <td>Wake County</td>
-    </tr>
-    <tr>
-      <td><a href="/warrenwilsonvote">Warren Wilson College</a></td>
-      <td>/warrenwilsonvote</td>
-      <td>Swannanoa, NC</td>
-      <td>Buncombe County</td>
-    </tr>
-    <tr>
-      <td><a href="/wayneccvote">Wayne Community College</a></td>
-      <td>/wayneccvote</td>
-      <td>Goldsboro, NC</td>
-      <td>Wayne County</td>
-    </tr>
-    <tr>
-      <td><a href="/wcuvote">Western Carolina University</a></td>
-      <td>/wcuvote</td>
-      <td>Cullowhee, NC</td>
-      <td>Jackson County</td>
-    </tr>
-    <tr>
-      <td><a href="/wpccvote">Western Piedmont Community College</a></td>
-      <td>/wpccvote</td>
-      <td>Morganton, NC</td>
-      <td>Burke County</td>
-    </tr>
-    <tr>
-      <td><a href="/wilkesccvote">Wilkes Community College</a></td>
-      <td>/wilkesccvote</td>
-      <td>Wilkesboro, NC</td>
-      <td>Wilkes County</td>
-    </tr>
-    <tr>
-      <td><a href="/peacevote">William Peace University</a></td>
-      <td>/peacevote</td>
-      <td>Raleigh, NC</td>
-      <td>Wake County</td>
-    </tr>
-    <tr>
-      <td><a href="/wilsonccvote">Wilson Community College</a></td>
-      <td>/wilsonccvote</td>
-      <td>Wilson, NC</td>
-      <td>Wilson County</td>
-    </tr>
-    <tr>
-      <td><a href="/wingatevote">Wingate University</a></td>
-      <td>/wingatevote</td>
-      <td>Wingate, NC</td>
-      <td>Union County</td>
-    </tr>
-    <tr>
-      <td><a href="/wssuvote">Winston-Salem State University</a></td>
-      <td>/wssuvote</td>
-      <td>Winston-Salem, NC</td>
-      <td>Forsyth County</td>
-    </tr>
-        </tbody>
-      </table>
-
-      <div class="verification-note">
-        GoatCounter telemetry does not store personal data, track users across sites, or set tracking cookies.
+      <div class="flex items-center gap-4 text-slate-400 text-[11px]">
+        <span>Powered by Privacy-Friendly Analytics</span>
+        <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener" class="text-blue-400 hover:text-blue-300 underline font-medium">GoatCounter Dashboard &rarr;</a>
       </div>
-    </main>
-
-    <footer>
-      <div>Maintained by Rann Bar-On as an open-source public service under the <a href="https://github.com/rannbaron/mainwebsite/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>.</div>
-      <div class="footer-links">
-        <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener">Source code on GitHub</a>
-        <a href="https://github.com/rannbaron/mainwebsite/issues" target="_blank" rel="noopener">Report an issue</a>
-        <a href="https://github.com/rannbaron/mainwebsite/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
-        <a href="/campuses">All 110 campuses</a>
-        <a href="#support-modal" id="support-link">Help maintain this site</a>
-        <a href="/stats">Usage tracker</a>
-      </div>
-    </footer>
-  </div>
-
-<dialog id="support-dialog">
-  <h2 style="margin-top: 0; font-size: 18px;">Help maintain this site</h2>
-  <p style="font-size: 14px;">This platform is maintained independently by Rann Bar-On as a free, open-source public service for North Carolina students. Contributions help cover hosting, domain renewal, and ongoing election verification.</p>
-  <div class="support-qr-grid">
-    <div class="support-qr-card">
-      <img src="/venmo_qr.png" alt="Venmo QR Code">
-      <div style="font-weight: 600; font-size: 14px;">Venmo</div>
-      <div style="font-size: 13px;"><a href="https://venmo.com/Ran-Baron" target="_blank" rel="noopener">@Ran-Baron</a></div>
     </div>
-    <div class="support-qr-card">
-      <img src="/cashapp_qr.png" alt="Cash App QR Code">
-      <div style="font-weight: 600; font-size: 14px;">Cash App</div>
-      <div style="font-size: 13px;"><a href="https://cash.app/$RanBaron" target="_blank" rel="noopener">$RanBaron</a></div>
-    </div>
-  </div>
-  <div style="text-align: right; margin-top: 16px;">
-    <button type="button" class="btn btn-secondary" id="support-dialog-close">Close</button>
-  </div>
-</dialog>
+  </aside>
 
-  <script src="/voting.js"></script>
+  <!-- Navigation Header -->
+  <header class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur-md border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="/campuses" class="flex items-center gap-2">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-rose-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-md text-xs font-mono">NC</div>
+        <span class="font-bold text-slate-100 text-sm">NC Student Voting</span>
+      </a>
+      <div class="flex items-center gap-3">
+        <a href="/campuses" class="text-xs font-medium px-3.5 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">Directory (110 Campuses)</a>
+        <a href="/vote" class="text-xs font-medium px-3.5 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">Statewide /vote</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-12 space-y-10">
+    <div class="text-center space-y-4">
+      <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/30">
+        [ANALYTICS] &bull; 110 Campuses Tracked Statewide
+      </span>
+      <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+        Visitor Traffic & <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-emerald-300 to-purple-400">Campus Breakdown Analytics</span>
+      </h1>
+      <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+        Every visit across all 110 North Carolina colleges and universities is tracked in real time. You can see the total number of visitors, unique visits, and exact student traffic per campus.
+      </p>
+    </div>
+
+    <!-- Live Dashboard Card -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-slate-800">
+        <div>
+          <span class="text-xs font-mono font-semibold text-emerald-400 uppercase tracking-wider">Live Analytics Engine</span>
+          <h2 class="text-2xl font-bold text-white mt-1">GoatCounter Web Dashboard</h2>
+          <p class="text-xs text-slate-300 mt-1">
+            Privacy-first, cookie-free, GDPR-compliant analytics hosted at <code class="text-blue-300 font-mono">rannbaron.goatcounter.com</code>.
+          </p>
+        </div>
+        <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener" class="py-3 px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-md inline-flex items-center gap-1.5 shrink-0">
+          <span>Open GoatCounter Dashboard</span>
+          <span>&rarr;</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800">
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">Total Coverage</div>
+          <div class="text-2xl font-bold text-white">110 Campuses</div>
+          <div class="text-xs text-slate-400 mt-1">16 UNC, 58 CC, 36 Private</div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800">
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">Campus Identification</div>
+          <div class="text-2xl font-bold text-emerald-400">100% URL Granular</div>
+          <div class="text-xs text-slate-400 mt-1">Each campus has its own slug (/dukevote, etc.)</div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-slate-950/80 border border-slate-800">
+          <div class="text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">Event Tracking</div>
+          <div class="text-2xl font-bold text-purple-400">Interactions Logged</div>
+          <div class="text-xs text-slate-400 mt-1">Directions, Geolocation, Voter Guides</div>
+        </div>
+      </div>
+
+      <!-- Setup & Access Instructions -->
+      <div class="p-5 rounded-2xl bg-slate-950/90 border border-blue-500/30 space-y-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-mono text-xs">[SETUP]</span>
+          <span>How to Access Your Live Analytics</span>
+        </h3>
+        <ol class="list-decimal pl-5 space-y-1.5 text-xs text-slate-300 leading-relaxed">
+          <li>Visit <a href="https://www.goatcounter.com/signup" target="_blank" rel="noopener" class="text-blue-400 underline font-semibold">goatcounter.com/signup</a>.</li>
+          <li>Enter <code class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-blue-300 font-mono">rannbaron</code> as your site code, enter your email address and password.</li>
+          <li>Once created, sign in at <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener" class="text-blue-400 underline font-semibold">rannbaron.goatcounter.com</a>.</li>
+          <li>You will see a live chart showing total visits, daily visitor count, and a table of paths sorted by traffic (e.g. <code class="text-slate-200 font-mono">/dukevote</code>, <code class="text-slate-200 font-mono">/uncvote</code>, <code class="text-slate-200 font-mono">/ncsuvote</code>, <code class="text-slate-200 font-mono">/vote</code>) showing exactly which campuses are visiting most.</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- Campus Tracking Keys Reference -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl space-y-4">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div>
+          <h2 class="text-xl font-bold text-white">Campus Path Slugs Directory</h2>
+          <p class="text-xs text-slate-400">Search any institution to see its tracked path slug.</p>
+        </div>
+        <input type="text" id="slug-search" placeholder="Search campus or slug..." oninput="filterSlugs()" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      </div>
+
+      <div class="max-h-96 overflow-y-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-slate-950 text-slate-400 font-mono uppercase sticky top-0 border-b border-slate-800">
+            <tr>
+              <th class="py-2.5 px-4">Campus Name</th>
+              <th class="py-2.5 px-4">Tracking Slug</th>
+              <th class="py-2.5 px-4">Direct Link</th>
+            </tr>
+          </thead>
+          <tbody id="slug-tbody" class="divide-y divide-slate-800/60 font-medium"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <footer class="mt-auto border-t border-slate-800/80 bg-slate-950 py-8 px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left text-xs text-slate-400">
+      <div>North Carolina Student Voting Platform &bull; Usage Telemetry</div>
+      <div class="flex gap-4">
+        <a href="/campuses" class="hover:text-white transition">All 110 Campuses</a>
+        <a href="/vote" class="hover:text-white transition">Dynamic /vote</a>
+        <a href="https://gitlab.oit.duke.edu/rb6/mainwebsite" target="_blank" rel="noopener" class="hover:text-white transition">GitLab Source</a>
+        <a href="https://gitlab.oit.duke.edu/rb6/mainwebsite/-/issues" target="_blank" rel="noopener" class="hover:text-white transition">GitLab Bug Tracker</a>
+        <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener" class="hover:text-white transition">GoatCounter Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/tracker.js"></script>
+  <script>
+    fetch('/.nc_voting_cache/all_institutions.json')
+      .then(r => r.json())
+      .then(insts => {
+        window.allInstitutions = insts.filter(i => i.key !== 'standrewsvote');
+        renderSlugs(window.allInstitutions);
+      })
+      .catch(() => {
+        // Fallback list
+        const fallback = [
+          { name: "Duke University", key: "dukevote" },
+          { name: "UNC-Chapel Hill", key: "uncvote" },
+          { name: "NC State University", key: "ncsuvote" },
+          { name: "NC Central University", key: "nccuvote" },
+          { name: "Appalachian State University", key: "appstatevote" },
+          { name: "East Carolina University", key: "ecuvote" },
+          { name: "UNC Charlotte", key: "unccvote" }
+        ];
+        renderSlugs(fallback);
+      });
+
+    function renderSlugs(list) {
+      const tbody = document.getElementById('slug-tbody');
+      tbody.innerHTML = list.map(i => `
+        <tr class="hover:bg-slate-950/60 transition">
+          <td class="py-2.5 px-4 text-slate-200 font-semibold">${i.name}</td>
+          <td class="py-2.5 px-4 font-mono text-blue-300">/${i.key}</td>
+          <td class="py-2.5 px-4">
+            <a href="/${i.key}" target="_blank" class="text-rose-400 hover:underline">Open Guide &rarr;</a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function filterSlugs() {
+      const q = document.getElementById('slug-search').value.toLowerCase().trim();
+      if (!window.allInstitutions) return;
+      const filtered = window.allInstitutions.filter(i => i.name.toLowerCase().includes(q) || i.key.toLowerCase().includes(q));
+      renderSlugs(filtered);
+    }
+  </script>
 </body>
 </html>
