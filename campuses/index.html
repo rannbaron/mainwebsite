@@ -378,7 +378,20 @@
     }
 
     // Check if location is already saved in session
+    function checkElectionDayMode() {
+      const EARLY_VOTING_DEADLINE = new Date('2026-10-31T15:00:00-04:00');
+      const urlParams = new URLSearchParams(window.location.search);
+      if (new Date() >= EARLY_VOTING_DEADLINE || urlParams.get('mode') === 'election_day') {
+        const topBar = document.querySelector('body > div:first-child');
+        if (topBar) {
+          topBar.className = 'bg-gradient-to-r from-red-950 via-rose-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-bold text-slate-100 border-b border-rose-900/50 shadow-md';
+          topBar.innerHTML = '<span class="inline-flex items-center gap-2"><span class="relative flex h-2.5 w-2.5"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-rose-500"></span></span><span>🔴 Early Voting Has Ended • <b>ELECTION DAY IS TUESDAY, NOVEMBER 3, 2026</b> • Polls Open <b>6:30 AM – 7:30 PM</b></span></span>';
+        }
+      }
+    }
+
     window.addEventListener('DOMContentLoaded', () => {
+      checkElectionDayMode();
       const savedLat = sessionStorage.getItem('nc_user_lat');
       const savedLon = sessionStorage.getItem('nc_user_lon');
       if (savedLat && savedLon) {
