@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Montreat Student Guide to Early Voting in Buncombe County | Rann Bar-On</title>
-  <meta name="description" content="Complete early voting guide for Montreat College students in Buncombe County, NC: voting sites, voter ID rules, local voter guides (Democratic, Republican, Independent), same-day registration, and hours.">
+  <meta name="description" content="Complete early voting guide for Montreat College students in Buncombe County, NC: voting sites, dynamic geolocation, voter ID rules, candidate guides (Dem, Rep, Ind), and hours.">
   
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rannbar-on.com/montreatvote">
   <meta property="og:title" content="Montreat Student Guide to Early Voting in Buncombe County">
-  <meta property="og:description" content="Everything Montreat College students need to cast their ballot early in Buncombe County: polling locations, voter ID rules, candidate guides, and same-day registration.">
+  <meta property="og:description" content="Everything Montreat College students need to cast their ballot early in Buncombe County: dynamic nearest site detection, voter ID rules, and same-day registration.">
   <meta property="og:image" content="https://rannbar-on.com/montreatvote_qr.png">
 
   <!-- Tailwind CSS -->
@@ -56,6 +56,24 @@
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
 
+  <!-- Auto-Location Redirect Banner (Hidden by default, shown if user is closer to another campus) -->
+  <div id="cross-campus-banner" class="hidden bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 text-white px-4 py-3 text-center text-xs sm:text-sm font-semibold shadow-xl border-b border-indigo-500/40 relative z-50">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">📍</span>
+        <span id="cross-campus-text">Location detected: You are closer to another campus.</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a id="cross-campus-link" href="#" class="px-3.5 py-1.5 rounded-lg bg-white text-slate-950 font-bold text-xs hover:bg-slate-100 transition shadow-sm">
+          Switch Guide Now →
+        </a>
+        <button onclick="cancelRedirect()" class="px-2.5 py-1.5 rounded-lg bg-black/20 hover:bg-black/40 text-white text-xs transition">
+          Stay on this page
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Top Announcement Bar -->
   <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
     <span class="inline-flex items-center gap-1.5">
@@ -80,14 +98,18 @@
         </div>
       </a>
       <div class="flex items-center gap-2 sm:gap-2.5">
+        <button onclick="detectNearestSite()" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 hover:bg-blue-500/30 transition">
+          <span>📍</span>
+          <span class="hidden sm:inline">Detect Nearest Site</span>
+        </button>
         <a href="#voter-guides" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
-          🗳️ Voter Guides
+          🗳️ Guides
         </a>
         <a href="#voter-id" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 hover:bg-amber-500/20 transition">
           ⚠️ Voter ID
         </a>
         <a href="#qr-code" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm">
-          📱 QR Code
+          📱 QR
         </a>
       </div>
     </div>
@@ -237,7 +259,7 @@
         <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">to Early Voting in Buncombe County</span>
       </h1>
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Everything Montreat College undergraduate and graduate students need to cast their ballot early. Vote on campus or nearby, compare candidate guides from all perspectives, and make sure your voice is heard!
+        Everything Montreat College undergraduate and graduate students need to cast their ballot early. Detect your nearest polling location, compare candidate guides from all perspectives, and make sure your voice is heard!
       </p>
 
       <!-- Key Stat Pills -->
@@ -249,8 +271,8 @@
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div class="text-xs text-slate-400 font-medium">Primary Voting Site</div>
-          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Black Mountain Branch Library</div>
-          <div class="text-[11px] text-blue-400 mt-1 font-mono">Montreat, NC</div>
+          <div id="stat-primary-site" class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">Black Mountain Branch Library</div>
+          <div id="stat-primary-dist" class="text-[11px] text-blue-400 mt-1 font-mono">Montreat, NC</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div class="text-xs text-slate-400 font-medium">Missed Registration?</div>
@@ -299,14 +321,37 @@
   <!-- Main Content Container -->
   <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
 
-    <!-- Section 1: Campus Polling Site -->
+    <!-- Section 1: Campus Polling Site with Geolocation Finder -->
     <section id="polling-site" class="scroll-mt-20">
+      
+      <!-- Interactive Geolocation Discovery Card -->
+      <div class="bg-gradient-to-r from-blue-950/40 via-indigo-950/30 to-slate-900 border border-blue-500/30 rounded-2xl p-4 sm:p-5 mb-6 shadow-md">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-lg">📍</span>
+              <h3 class="text-sm font-bold text-white">Find Your Nearest Polling Location Dynamically</h3>
+            </div>
+            <p class="text-xs text-slate-300 mt-1">
+              Allow location access to update this page with exact distances to all Buncombe County early voting sites and locate your closest voting site.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="detectNearestSite()" id="btn-detect-loc" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm flex items-center gap-1.5">
+              <span>📍</span>
+              <span>Detect My Location</span>
+            </button>
+          </div>
+        </div>
+        <div id="geo-status-banner" class="mt-3 text-xs hidden"></div>
+      </div>
+
       <div class="flex items-center justify-between mb-4">
         <div>
           <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Campus / Nearest Early Voting Site</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Black Mountain Branch Library</h2>
+          <h2 id="main-site-title" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">Black Mountain Branch Library</h2>
         </div>
-        <span class="hidden sm:inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+        <span id="site-open-tag" class="hidden sm:inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
           Open to all Buncombe County Voters
         </span>
       </div>
@@ -318,10 +363,10 @@
             <div class="flex items-center gap-2 text-sm font-semibold text-slate-300 mb-2">
               <span>📍 Address & Getting There</span>
             </div>
-            <p class="text-base font-bold text-white leading-snug">
+            <p id="main-site-addr" class="text-base font-bold text-white leading-snug">
               105 N Dougherty St Black Mountain, Nc 28711
             </p>
-            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+            <p id="main-site-desc" class="text-xs text-slate-400 mt-2 leading-relaxed">
               Official Early Voting location serving Montreat College students, faculty, staff, and all residents of Buncombe County.
             </p>
 
@@ -332,7 +377,7 @@
           </div>
 
           <div class="mt-6 pt-4">
-            <a href="https://maps.google.com/?q=105+N+DOUGHERTY+ST+BLACK+MOUNTAIN,+NC+28711" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
+            <a id="main-site-maps" href="https://maps.google.com/?q=105+N+DOUGHERTY+ST+BLACK+MOUNTAIN,+NC+28711" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
               <span>Open in Google Maps</span>
               <span>↗</span>
             </a>
@@ -554,19 +599,23 @@
 
     <!-- Section 4: All Early Voting Sites in County -->
     <section id="sites" class="scroll-mt-20">
-      <div class="mb-6">
-        <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Countywide Flexibility</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All 13 Buncombe County Early Voting Sites</h2>
-        <p class="text-sm text-slate-400 mt-1">Any registered Buncombe County voter can cast a ballot at any of these sites during early voting hours.</p>
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Countywide Flexibility</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All 13 Buncombe County Early Voting Sites</h2>
+          <p class="text-sm text-slate-400 mt-1">Any registered Buncombe County voter can cast a ballot at any of these sites during early voting hours.</p>
+        </div>
+        <div id="sites-sort-status" class="text-xs text-emerald-400 font-medium"></div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div id="all-sites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-0" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.612178" data-lon="-82.420644" data-index="0">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">Bee Tree Fire Department</h4>
-            <p class="text-xs text-slate-300 mt-1">510 Bee Tree Rd Swannanoa, Nc 28778</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">Bee Tree Fire Department</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">510 Bee Tree Rd Swannanoa, Nc 28778</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -575,11 +624,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border-2 border-blue-500/70 bg-slate-900 shadow-md relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-1" class="site-card rounded-xl p-4 border-2 border-blue-500/70 bg-slate-900 shadow-md relative overflow-hidden flex flex-col justify-between" data-lat="35.616143" data-lon="-82.322796" data-index="1">
           <div>
-            <span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-600 text-white">Campus / Nearest Site</span>
-            <h4 class="font-bold text-white text-sm pr-16">Black Mountain Branch Library</h4>
-            <p class="text-xs text-slate-300 mt-1">105 N Dougherty St Black Mountain, Nc 28711</p>
+            <span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-600 text-white default-campus-badge">Campus / Nearest Site</span>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">Black Mountain Branch Library</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">105 N Dougherty St Black Mountain, Nc 28711</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -588,11 +638,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-2" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.577974" data-lon="-82.56224" data-index="2">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">Dr. Wesley Grant Southside Center</h4>
-            <p class="text-xs text-slate-300 mt-1">285 Livingston St Asheville, Nc 28801</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">Dr. Wesley Grant Southside Center</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">285 Livingston St Asheville, Nc 28801</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -601,11 +652,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-3" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.588254" data-lon="-82.503312" data-index="3">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">East Asheville Branch Library</h4>
-            <p class="text-xs text-slate-300 mt-1">3 Avon Rd Asheville, Nc 28805</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">East Asheville Branch Library</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">3 Avon Rd Asheville, Nc 28805</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -614,11 +666,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-4" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.538901" data-lon="-82.652095" data-index="4">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">Enka/Candler Branch Library</h4>
-            <p class="text-xs text-slate-300 mt-1">1404 Sand Hill Rd Candler, Nc 28715</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">Enka/Candler Branch Library</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">1404 Sand Hill Rd Candler, Nc 28715</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -627,11 +680,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-5" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.524962" data-lon="-82.413638" data-index="5">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">Fairview Branch Library</h4>
-            <p class="text-xs text-slate-300 mt-1">1 Taylor Rd Fairview, Nc 28730</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">Fairview Branch Library</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">1 Taylor Rd Fairview, Nc 28730</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -640,11 +694,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-6" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.549409" data-lon="-82.527651" data-index="6">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">Friendship Community Center</h4>
-            <p class="text-xs text-slate-300 mt-1">142 Shiloh Rd Asheville, Nc 28803</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">Friendship Community Center</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">142 Shiloh Rd Asheville, Nc 28803</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -653,11 +708,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-7" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.657352" data-lon="-82.713786" data-index="7">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">Leicester Community Center</h4>
-            <p class="text-xs text-slate-300 mt-1">2979 New Leicester Hwy Leicester, Nc 28748</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">Leicester Community Center</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">2979 New Leicester Hwy Leicester, Nc 28748</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -666,11 +722,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-8" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.632629" data-lon="-82.55559" data-index="8">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">North Asheville Branch Library</h4>
-            <p class="text-xs text-slate-300 mt-1">1030 Merrimon Ave Asheville, Nc 28804</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">North Asheville Branch Library</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">1030 Merrimon Ave Asheville, Nc 28804</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -679,11 +736,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-9" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.48811" data-lon="-82.537026" data-index="9">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">South Buncombe Branch Library</h4>
-            <p class="text-xs text-slate-300 mt-1">260 Overlook Rd Asheville, Nc 28803</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">South Buncombe Branch Library</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">260 Overlook Rd Asheville, Nc 28803</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -692,11 +750,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-10" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.483272" data-lon="-82.739602" data-index="10">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">Upper Hominy Fire & Rescue Department</h4>
-            <p class="text-xs text-slate-300 mt-1">1795 Pisgah Hwy Candler, Nc 28715</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">Upper Hominy Fire & Rescue Department</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">1795 Pisgah Hwy Candler, Nc 28715</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -705,11 +764,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-11" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.690549" data-lon="-82.569068" data-index="11">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">Weaverville Community Center</h4>
-            <p class="text-xs text-slate-300 mt-1">60 Lakeshore Dr Weaverville, Nc 28787</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">Weaverville Community Center</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">60 Lakeshore Dr Weaverville, Nc 28787</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -718,11 +778,12 @@
         </div>
         
 
-        <div class="rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-12" class="site-card rounded-xl p-4 border border-slate-800 bg-slate-900/70 relative overflow-hidden flex flex-col justify-between" data-lat="35.580787" data-lon="-82.601698" data-index="12">
           <div>
             
-            <h4 class="font-bold text-white text-sm pr-16">West Asheville Branch Library</h4>
-            <p class="text-xs text-slate-300 mt-1">942 Haywood Rd Asheville, Nc 28806</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">West Asheville Branch Library</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">942 Haywood Rd Asheville, Nc 28806</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -840,6 +901,158 @@
       </div>
     </div>
   </footer>
+
+  <!-- Geolocation & Dynamic Polling Site Script -->
+  <script>
+    const currentCampusKey = "montreatvote";
+    const currentCampusName = "Montreat College";
+    const allCampuses = [{"key": "dukevote", "name": "Duke University", "short_name": "Duke", "city": "Durham", "county": "Durham County", "lat": 35.9985, "lon": -78.933109}, {"key": "uncvote", "name": "UNC-Chapel Hill", "short_name": "UNC-CH", "city": "Chapel Hill", "county": "Orange County", "lat": 35.9146, "lon": -79.050048}, {"key": "nccuvote", "name": "North Carolina Central University", "short_name": "NCCU", "city": "Durham", "county": "Durham County", "lat": 35.97179, "lon": -78.895268}, {"key": "ncsuvote", "name": "North Carolina State University", "short_name": "NC State", "city": "Raleigh", "county": "Wake County", "lat": 35.784342, "lon": -78.685202}, {"key": "appstatevote", "name": "Appalachian State University", "short_name": "App State", "city": "Boone", "county": "Watauga County", "lat": 36.214799, "lon": -81.678922}, {"key": "ecuvote", "name": "East Carolina University", "short_name": "ECU", "city": "Greenville", "county": "Pitt County", "lat": 35.605615, "lon": -77.369303}, {"key": "ecsuvote", "name": "Elizabeth City State University", "short_name": "ECSU", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "fsuvote", "name": "Fayetteville State University", "short_name": "FSU", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "ncatvote", "name": "North Carolina A&T State University", "short_name": "NC A&T", "city": "Greensboro", "county": "Guilford County", "lat": 35.968303, "lon": -79.983827}, {"key": "uncavote", "name": "UNC Asheville", "short_name": "UNC Asheville", "city": "Asheville", "county": "Buncombe County", "lat": 35.577974, "lon": -82.56224}, {"key": "unccvote", "name": "UNC Charlotte", "short_name": "UNC Charlotte", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.30309, "lon": -80.746478}, {"key": "uncgvote", "name": "UNC Greensboro", "short_name": "UNCG", "city": "Greensboro", "county": "Guilford County", "lat": 36.06421, "lon": -79.789791}, {"key": "uncpvote", "name": "UNC Pembroke", "short_name": "UNC Pembroke", "city": "Pembroke", "county": "Robeson County", "lat": 34.676159, "lon": -79.193097}, {"key": "uncsavote", "name": "UNC School of the Arts", "short_name": "UNCSA", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.05471, "lon": -80.252848}, {"key": "uncwvote", "name": "UNC Wilmington", "short_name": "UNCW", "city": "Wilmington", "county": "New Hanover County", "lat": 34.23293, "lon": -77.828256}, {"key": "wcuvote", "name": "Western Carolina University", "short_name": "WCU", "city": "Cullowhee", "county": "Jackson County", "lat": 35.290995, "lon": -83.181647}, {"key": "wssuvote", "name": "Winston-Salem State University", "short_name": "WSSU", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.086876, "lon": -80.223984}, {"key": "wfuvote", "name": "Wake Forest University", "short_name": "Wake Forest", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.130275, "lon": -80.292407}, {"key": "elonvote", "name": "Elon University", "short_name": "Elon", "city": "Elon", "county": "Alamance County", "lat": 36.106958, "lon": -79.442531}, {"key": "davidsonvote", "name": "Davidson College", "short_name": "Davidson", "city": "Davidson", "county": "Mecklenburg County", "lat": 35.481877, "lon": -80.858925}, {"key": "campbellvote", "name": "Campbell University", "short_name": "Campbell", "city": "Buies Creek", "county": "Harnett County", "lat": 35.420412, "lon": -78.811616}, {"key": "highpointvote", "name": "High Point University", "short_name": "High Point", "city": "High Point", "county": "Guilford County", "lat": 35.99141, "lon": -80.00727}, {"key": "meredithvote", "name": "Meredith College", "short_name": "Meredith", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "peacevote", "name": "William Peace University", "short_name": "William Peace", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "shawvote", "name": "Shaw University", "short_name": "Shaw", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "staugustinesvote", "name": "Saint Augustine's University", "short_name": "St. Augustine's", "city": "Raleigh", "county": "Wake County", "lat": 35.769649, "lon": -78.630653}, {"key": "queensvote", "name": "Queens University of Charlotte", "short_name": "Queens Charlotte", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.160511, "lon": -80.85762}, {"key": "jcsuvote", "name": "Johnson C. Smith University", "short_name": "JCSU", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.267703, "lon": -80.853434}, {"key": "bartonvote", "name": "Barton College", "short_name": "Barton", "city": "Wilson", "county": "Wilson County", "lat": 35.706725, "lon": -77.927636}, {"key": "belmontabbeyvote", "name": "Belmont Abbey College", "short_name": "Belmont Abbey", "city": "Belmont", "county": "Gaston County", "lat": 35.262841, "lon": -81.187914}, {"key": "bennettvote", "name": "Bennett College", "short_name": "Bennett", "city": "Greensboro", "county": "Guilford County", "lat": 35.968303, "lon": -79.983827}, {"key": "brevardvote", "name": "Brevard College", "short_name": "Brevard", "city": "Brevard", "county": "Transylvania County", "lat": 35.231357, "lon": -82.73485}, {"key": "cabarrusvote", "name": "Cabarrus College of Health Sciences", "short_name": "Cabarrus Health", "city": "Concord", "county": "Cabarrus County", "lat": 35.419006, "lon": -80.679197}, {"key": "catawbavote", "name": "Catawba College", "short_name": "Catawba", "city": "Salisbury", "county": "Rowan County", "lat": 35.692328, "lon": -80.513605}, {"key": "chowanvote", "name": "Chowan University", "short_name": "Chowan", "city": "Murfreesboro", "county": "Hertford County", "lat": 36.278202, "lon": -76.980603}, {"key": "gardnerwebbvote", "name": "Gardner-Webb University", "short_name": "Gardner-Webb", "city": "Boiling Springs", "county": "Cleveland County", "lat": 35.292333, "lon": -81.556195}, {"key": "greensborovote", "name": "Greensboro College", "short_name": "Greensboro College", "city": "Greensboro", "county": "Guilford County", "lat": 36.084948, "lon": -79.738411}, {"key": "guilfordvote", "name": "Guilford College", "short_name": "Guilford College", "city": "Greensboro", "county": "Guilford County", "lat": 36.10377, "lon": -79.909906}, {"key": "leesmcraevote", "name": "Lees-McRae College", "short_name": "Lees-McRae", "city": "Banner Elk", "county": "Avery County", "lat": 36.082276, "lon": -81.924143}, {"key": "lenoirrhynevote", "name": "Lenoir-Rhyne University", "short_name": "Lenoir-Rhyne", "city": "Hickory", "county": "Catawba County", "lat": 35.70178, "lon": -81.218879}, {"key": "livingstonevote", "name": "Livingstone College", "short_name": "Livingstone", "city": "Salisbury", "county": "Rowan County", "lat": 35.692328, "lon": -80.513605}, {"key": "louisburgvote", "name": "Louisburg College", "short_name": "Louisburg", "city": "Louisburg", "county": "Franklin County", "lat": 36.090876, "lon": -78.298034}, {"key": "marshillvote", "name": "Mars Hill University", "short_name": "Mars Hill", "city": "Mars Hill", "county": "Madison County", "lat": 35.804638, "lon": -82.660152}, {"key": "methodistvote", "name": "Methodist University", "short_name": "Methodist", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "macuvote", "name": "Mid-Atlantic Christian University", "short_name": "MACU", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "montreatvote", "name": "Montreat College", "short_name": "Montreat", "city": "Montreat", "county": "Buncombe County", "lat": 35.616143, "lon": -82.322796}, {"key": "ncwesleyanvote", "name": "North Carolina Wesleyan University", "short_name": "NC Wesleyan", "city": "Rocky Mount", "county": "Nash County", "lat": 35.97199, "lon": -77.946848}, {"key": "pfeiffervote", "name": "Pfeiffer University", "short_name": "Pfeiffer", "city": "Misenheimer", "county": "Stanly County", "lat": 35.366337, "lon": -80.196747}, {"key": "salemvote", "name": "Salem College", "short_name": "Salem College", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.05471, "lon": -80.252848}, {"key": "standrewsvote", "name": "St. Andrews University", "short_name": "St. Andrews", "city": "Laurinburg", "county": "Scotland County", "lat": 34.774638, "lon": -79.459863}, {"key": "mountolivevote", "name": "University of Mount Olive", "short_name": "Mount Olive", "city": "Mount Olive", "county": "Wayne County", "lat": 35.405461, "lon": -77.944283}, {"key": "warrenwilsonvote", "name": "Warren Wilson College", "short_name": "Warren Wilson", "city": "Swannanoa", "county": "Buncombe County", "lat": 35.588254, "lon": -82.503312}, {"key": "wingatevote", "name": "Wingate University", "short_name": "Wingate", "city": "Wingate", "county": "Union County", "lat": 34.980897, "lon": -80.546006}, {"key": "alamanceccvote", "name": "Alamance Community College", "short_name": "Alamance CC", "city": "Graham", "county": "Alamance County", "lat": 36.106958, "lon": -79.442531}, {"key": "abtechvote", "name": "Asheville-Buncombe Technical Community College", "short_name": "A-B Tech", "city": "Asheville", "county": "Buncombe County", "lat": 35.612178, "lon": -82.420644}, {"key": "beaufortccvote", "name": "Beaufort County Community College", "short_name": "Beaufort CC", "city": "Washington", "county": "Beaufort County", "lat": 35.549611, "lon": -77.036244}, {"key": "bladenccvote", "name": "Bladen Community College", "short_name": "Bladen CC", "city": "Dublin", "county": "Bladen County", "lat": 34.382924, "lon": -78.3277}, {"key": "blueridgeccvote", "name": "Blue Ridge Community College", "short_name": "Blue Ridge CC", "city": "Flat Rock", "county": "Henderson County", "lat": 35.382841, "lon": -82.357051}, {"key": "brunswickccvote", "name": "Brunswick Community College", "short_name": "Brunswick CC", "city": "Bolivia", "county": "Brunswick County", "lat": 34.016602, "lon": -78.268877}, {"key": "caldwellccvote", "name": "Caldwell Community College & Technical Institute", "short_name": "Caldwell CC", "city": "Hudson", "county": "Caldwell County", "lat": 35.922058, "lon": -81.523627}, {"key": "capefearccvote", "name": "Cape Fear Community College", "short_name": "Cape Fear CC", "city": "Wilmington", "county": "New Hanover County", "lat": 34.045063, "lon": -77.899908}, {"key": "carteretccvote", "name": "Carteret Community College", "short_name": "Carteret CC", "city": "Morehead City", "county": "Carteret County", "lat": 34.72871, "lon": -76.639023}, {"key": "cvccvote", "name": "Catawba Valley Community College", "short_name": "Catawba Valley CC", "city": "Hickory", "county": "Catawba County", "lat": 35.70178, "lon": -81.218879}, {"key": "ccccvote", "name": "Central Carolina Community College", "short_name": "Central Carolina CC", "city": "Sanford", "county": "Lee County", "lat": 35.481093, "lon": -79.175067}, {"key": "cpccvote", "name": "Central Piedmont Community College", "short_name": "CPCC", "city": "Charlotte", "county": "Mecklenburg County", "lat": 35.392892, "lon": -80.840476}, {"key": "clevelandccvote", "name": "Cleveland Community College", "short_name": "Cleveland CC", "city": "Shelby", "county": "Cleveland County", "lat": 35.292333, "lon": -81.556195}, {"key": "coastalcarolinaccvote", "name": "Coastal Carolina Community College", "short_name": "Coastal Carolina CC", "city": "Jacksonville", "county": "Onslow County", "lat": 34.793989, "lon": -77.397753}, {"key": "albemarleccvote", "name": "College of The Albemarle", "short_name": "College of Albemarle", "city": "Elizabeth City", "county": "Pasquotank County", "lat": 36.284126, "lon": -76.20733}, {"key": "cravenccvote", "name": "Craven Community College", "short_name": "Craven CC", "city": "New Bern", "county": "Craven County", "lat": 35.108227, "lon": -77.037331}, {"key": "davidsondavieccvote", "name": "Davidson-Davie Community College", "short_name": "Davidson-Davie CC", "city": "Thomasville", "county": "Davidson County", "lat": 35.954823, "lon": -80.292712}, {"key": "durhamtechvote", "name": "Durham Technical Community College", "short_name": "Durham Tech", "city": "Durham", "county": "Durham County", "lat": 35.948836, "lon": -78.922106}, {"key": "edgecombeccvote", "name": "Edgecombe Community College", "short_name": "Edgecombe CC", "city": "Tarboro", "county": "Edgecombe County", "lat": 35.896546, "lon": -77.532115}, {"key": "faytechccvote", "name": "Fayetteville Technical Community College", "short_name": "Fayetteville Tech", "city": "Fayetteville", "county": "Cumberland County", "lat": 35.059015, "lon": -78.993508}, {"key": "forsythtechvote", "name": "Forsyth Technical Community College", "short_name": "Forsyth Tech", "city": "Winston-Salem", "county": "Forsyth County", "lat": 36.155829, "lon": -80.270804}, {"key": "gastonvote", "name": "Gaston College", "short_name": "Gaston College", "city": "Dallas", "county": "Gaston County", "lat": 35.262841, "lon": -81.187914}, {"key": "gtccvote", "name": "Guilford Technical Community College", "short_name": "GTCC", "city": "Jamestown", "county": "Guilford County", "lat": 36.054025, "lon": -79.751959}, {"key": "halifaxccvote", "name": "Halifax Community College", "short_name": "Halifax CC", "city": "Weldon", "county": "Halifax County", "lat": 36.322386, "lon": -77.589158}, {"key": "haywoodccvote", "name": "Haywood Community College", "short_name": "Haywood CC", "city": "Clyde", "county": "Haywood County", "lat": 35.518414, "lon": -82.98872}, {"key": "isothermalccvote", "name": "Isothermal Community College", "short_name": "Isothermal CC", "city": "Spindale", "county": "Rutherford County", "lat": 35.337435, "lon": -81.911191}, {"key": "jamesspruntccvote", "name": "James Sprunt Community College", "short_name": "James Sprunt CC", "city": "Kenansville", "county": "Duplin County", "lat": 34.738645, "lon": -77.988884}, {"key": "johnstonccvote", "name": "Johnston Community College", "short_name": "Johnston CC", "city": "Smithfield", "county": "Johnston County", "lat": 35.693855, "lon": -78.376312}, {"key": "lenoirccvote", "name": "Lenoir Community College", "short_name": "Lenoir CC", "city": "Kinston", "county": "Lenoir County", "lat": 35.241249, "lon": -77.6192}, {"key": "martinccvote", "name": "Martin Community College", "short_name": "Martin CC", "city": "Williamston", "county": "Martin County", "lat": 35.856397, "lon": -77.051819}, {"key": "maylandccvote", "name": "Mayland Community College", "short_name": "Mayland CC", "city": "Spruce Pine", "county": "Mitchell County", "lat": 36.015447, "lon": -82.158381}, {"key": "mcdowelltechvote", "name": "McDowell Technical Community College", "short_name": "McDowell Tech", "city": "Marion", "county": "Mcdowell County", "lat": 35.663264, "lon": -81.977045}, {"key": "mitchellccvote", "name": "Mitchell Community College", "short_name": "Mitchell CC", "city": "Statesville", "county": "Iredell County", "lat": 35.942344, "lon": -80.776667}, {"key": "montgomeryccvote", "name": "Montgomery Community College", "short_name": "Montgomery CC", "city": "Troy", "county": "Montgomery County", "lat": 35.360174, "lon": -79.782085}, {"key": "nashccvote", "name": "Nash Community College", "short_name": "Nash CC", "city": "Rocky Mount", "county": "Nash County", "lat": 35.97199, "lon": -77.946848}, {"key": "pamlicoccvote", "name": "Pamlico Community College", "short_name": "Pamlico CC", "city": "Grantsboro", "county": "Pamlico County", "lat": 35.143237, "lon": -76.771045}, {"key": "piedmontccvote", "name": "Piedmont Community College", "short_name": "Piedmont CC", "city": "Roxboro", "county": "Person County", "lat": 36.395993, "lon": -78.994187}, {"key": "pittccvote", "name": "Pitt Community College", "short_name": "Pitt CC", "city": "Winterville", "county": "Pitt County", "lat": 35.549076, "lon": -77.34883}, {"key": "randolphccvote", "name": "Randolph Community College", "short_name": "Randolph CC", "city": "Asheboro", "county": "Randolph County", "lat": 35.893725, "lon": -79.934697}, {"key": "richmondccvote", "name": "Richmond Community College", "short_name": "Richmond CC", "city": "Hamlet", "county": "Richmond County", "lat": 34.932393, "lon": -79.782669}, {"key": "roanokechowanccvote", "name": "Roanoke-Chowan Community College", "short_name": "Roanoke-Chowan CC", "city": "Ahoskie", "county": "Hertford County", "lat": 36.278202, "lon": -76.980603}, {"key": "robesonccvote", "name": "Robeson Community College", "short_name": "Robeson CC", "city": "Lumberton", "county": "Robeson County", "lat": 34.494386, "lon": -79.113837}, {"key": "rockinghamccvote", "name": "Rockingham Community College", "short_name": "Rockingham CC", "city": "Wentworth", "county": "Rockingham County", "lat": 36.393531, "lon": -79.749993}, {"key": "rcccvote", "name": "Rowan-Cabarrus Community College", "short_name": "Rowan-Cabarrus CC", "city": "Salisbury", "county": "Rowan County", "lat": 35.565516, "lon": -80.418345}, {"key": "sampsonccvote", "name": "Sampson Community College", "short_name": "Sampson CC", "city": "Clinton", "county": "Sampson County", "lat": 34.997388, "lon": -78.31102}, {"key": "sandhillsccvote", "name": "Sandhills Community College", "short_name": "Sandhills CC", "city": "Pinehurst", "county": "Moore County", "lat": 35.135607, "lon": -79.428411}, {"key": "spccvote", "name": "South Piedmont Community College", "short_name": "South Piedmont CC", "city": "Polkton", "county": "Union County", "lat": 34.991177, "lon": -80.3637}, {"key": "southeasternccvote", "name": "Southeastern Community College", "short_name": "Southeastern CC", "city": "Whiteville", "county": "Columbus County", "lat": 34.323492, "lon": -78.824376}, {"key": "southwesternccvote", "name": "Southwestern Community College", "short_name": "Southwestern CC", "city": "Sylva", "county": "Jackson County", "lat": 35.110468, "lon": -83.10432}, {"key": "stanlyccvote", "name": "Stanly Community College", "short_name": "Stanly CC", "city": "Albemarle", "county": "Stanly County", "lat": 35.366337, "lon": -80.196747}, {"key": "surryccvote", "name": "Surry Community College", "short_name": "Surry CC", "city": "Dobson", "county": "Surry County", "lat": 36.392873, "lon": -80.706974}, {"key": "tricountyccvote", "name": "Tri-County Community College", "short_name": "Tri-County CC", "city": "Murphy", "county": "Cherokee County", "lat": 35.087131, "lon": -84.033986}, {"key": "vgccvote", "name": "Vance-Granville Community College", "short_name": "Vance-Granville CC", "city": "Henderson", "county": "Vance County", "lat": 36.338143, "lon": -78.401642}, {"key": "waketechvote", "name": "Wake Technical Community College", "short_name": "Wake Tech", "city": "Raleigh", "county": "Wake County", "lat": 35.771631, "lon": -78.570208}, {"key": "wayneccvote", "name": "Wayne Community College", "short_name": "Wayne CC", "city": "Goldsboro", "county": "Wayne County", "lat": 35.405461, "lon": -77.944283}, {"key": "wpccvote", "name": "Western Piedmont Community College", "short_name": "Western Piedmont CC", "city": "Morganton", "county": "Burke County", "lat": 35.724735, "lon": -81.661102}, {"key": "wilkesccvote", "name": "Wilkes Community College", "short_name": "Wilkes CC", "city": "Wilkesboro", "county": "Wilkes County", "lat": 36.149105, "lon": -81.153576}, {"key": "wilsonccvote", "name": "Wilson Community College", "short_name": "Wilson CC", "city": "Wilson", "county": "Wilson County", "lat": 35.706725, "lon": -77.927636}];
+    const countySites = [{"name": "Bee Tree Fire Department", "addr": "510 Bee Tree Rd Swannanoa, Nc 28778", "lat": 35.612178, "lon": -82.420644, "maps": "https://maps.google.com/?q=510+BEE+TREE+RD+SWANNANOA,+NC+28778"}, {"name": "Black Mountain Branch Library", "addr": "105 N Dougherty St Black Mountain, Nc 28711", "lat": 35.616143, "lon": -82.322796, "maps": "https://maps.google.com/?q=105+N+DOUGHERTY+ST+BLACK+MOUNTAIN,+NC+28711"}, {"name": "Dr. Wesley Grant Southside Center", "addr": "285 Livingston St Asheville, Nc 28801", "lat": 35.577974, "lon": -82.56224, "maps": "https://maps.google.com/?q=285+LIVINGSTON+ST+ASHEVILLE,+NC+28801"}, {"name": "East Asheville Branch Library", "addr": "3 Avon Rd Asheville, Nc 28805", "lat": 35.588254, "lon": -82.503312, "maps": "https://maps.google.com/?q=3+AVON+RD+ASHEVILLE,+NC+28805"}, {"name": "Enka/Candler Branch Library", "addr": "1404 Sand Hill Rd Candler, Nc 28715", "lat": 35.538901, "lon": -82.652095, "maps": "https://maps.google.com/?q=1404+SAND+HILL+RD+CANDLER,+NC+28715"}, {"name": "Fairview Branch Library", "addr": "1 Taylor Rd Fairview, Nc 28730", "lat": 35.524962, "lon": -82.413638, "maps": "https://maps.google.com/?q=1+TAYLOR+RD+FAIRVIEW,+NC+28730"}, {"name": "Friendship Community Center", "addr": "142 Shiloh Rd Asheville, Nc 28803", "lat": 35.549409, "lon": -82.527651, "maps": "https://maps.google.com/?q=142+SHILOH+RD+ASHEVILLE,+NC+28803"}, {"name": "Leicester Community Center", "addr": "2979 New Leicester Hwy Leicester, Nc 28748", "lat": 35.657352, "lon": -82.713786, "maps": "https://maps.google.com/?q=2979+NEW+LEICESTER+HWY+LEICESTER,+NC+28748"}, {"name": "North Asheville Branch Library", "addr": "1030 Merrimon Ave Asheville, Nc 28804", "lat": 35.632629, "lon": -82.55559, "maps": "https://maps.google.com/?q=1030+MERRIMON+AVE+ASHEVILLE,+NC+28804"}, {"name": "South Buncombe Branch Library", "addr": "260 Overlook Rd Asheville, Nc 28803", "lat": 35.48811, "lon": -82.537026, "maps": "https://maps.google.com/?q=260+OVERLOOK+RD+ASHEVILLE,+NC+28803"}, {"name": "Upper Hominy Fire & Rescue Department", "addr": "1795 Pisgah Hwy Candler, Nc 28715", "lat": 35.483272, "lon": -82.739602, "maps": "https://maps.google.com/?q=1795+PISGAH+HWY+CANDLER,+NC+28715"}, {"name": "Weaverville Community Center", "addr": "60 Lakeshore Dr Weaverville, Nc 28787", "lat": 35.690549, "lon": -82.569068, "maps": "https://maps.google.com/?q=60+LAKESHORE+DR+WEAVERVILLE,+NC+28787"}, {"name": "West Asheville Branch Library", "addr": "942 Haywood Rd Asheville, Nc 28806", "lat": 35.580787, "lon": -82.601698, "maps": "https://maps.google.com/?q=942+HAYWOOD+RD+ASHEVILLE,+NC+28806"}];
+    let redirectTimer = null;
+
+    function haversine(lat1, lon1, lat2, lon2) {
+      const R = 3958.8; // miles
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return Math.round(R * c * 10) / 10;
+    }
+
+    function cancelRedirect() {
+      if (redirectTimer) {
+        clearInterval(redirectTimer);
+        redirectTimer = null;
+      }
+      document.getElementById('cross-campus-banner').classList.add('hidden');
+    }
+
+    function detectNearestSite() {
+      if (!navigator.geolocation) {
+        alert("Geolocation is not supported by your browser.");
+        return;
+      }
+
+      const statusEl = document.getElementById('geo-status-banner');
+      statusEl.className = 'mt-3 text-xs text-blue-400 font-medium flex items-center gap-2';
+      statusEl.innerHTML = '<span class="animate-spin">⏳</span> Detecting your location...';
+      statusEl.classList.remove('hidden');
+
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const uLat = position.coords.latitude;
+          const uLon = position.coords.longitude;
+          sessionStorage.setItem('nc_user_lat', uLat);
+          sessionStorage.setItem('nc_user_lon', uLon);
+
+          applyLocation(uLat, uLon);
+        },
+        error => {
+          statusEl.className = 'mt-3 text-xs text-amber-400 font-medium';
+          statusEl.innerText = "Location permission was denied or unavailable. You can still browse manually!";
+        },
+        { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }
+      );
+    }
+
+    function applyLocation(uLat, uLon) {
+      const statusEl = document.getElementById('geo-status-banner');
+
+      // 1. Calculate distances to all county early voting sites
+      if (countySites && countySites.length > 0) {
+        countySites.forEach((s, idx) => {
+          s.distance = haversine(uLat, uLon, s.lat, s.lon);
+          s.elemIndex = idx;
+        });
+
+        // Sort sites by proximity
+        const sortedSites = [...countySites].sort((a, b) => a.distance - b.distance);
+        const nearestSite = sortedSites[0];
+
+        // Update hero primary site dynamically
+        const mainTitle = document.getElementById('main-site-title');
+        const mainAddr = document.getElementById('main-site-addr');
+        const mainMaps = document.getElementById('main-site-maps');
+        const statSite = document.getElementById('stat-primary-site');
+        const statDist = document.getElementById('stat-primary-dist');
+
+        if (mainTitle && nearestSite) {
+          mainTitle.innerText = `${nearestSite.name} (${nearestSite.distance} mi away)`;
+          mainAddr.innerText = nearestSite.addr;
+          mainMaps.href = nearestSite.maps;
+          if (statSite) statSite.innerText = nearestSite.name;
+          if (statDist) statDist.innerText = `📍 ${nearestSite.distance} miles away`;
+        }
+
+        // Update all cards in the county sites grid
+        sortedSites.forEach((s, rank) => {
+          const card = document.getElementById(`site-card-${s.elemIndex}`);
+          if (card) {
+            const tag = card.querySelector('.distance-tag');
+            if (tag) {
+              tag.innerHTML = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${rank === 0 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-300'}">📍 ${s.distance} mi away</span>`;
+            }
+            if (rank === 0) {
+              card.classList.remove('border-slate-800');
+              card.classList.add('border-2', 'border-emerald-500', 'ring-2', 'ring-emerald-500/20');
+            }
+          }
+        });
+
+        statusEl.className = 'mt-3 text-xs text-emerald-400 font-medium flex items-center gap-2';
+        statusEl.innerHTML = `✓ Located! Your closest early voting site is <b>${nearestSite.name}</b> (<b>${nearestSite.distance} miles away</b>).`;
+      }
+
+      // 2. Check if user is physically closer to a DIFFERENT campus in NC
+      const sortedCampuses = [...allCampuses].map(c => ({
+        ...c,
+        dist: haversine(uLat, uLon, c.lat, c.lon)
+      })).sort((a, b) => a.dist - b.dist);
+
+      const closestCampus = sortedCampuses[0];
+      if (closestCampus && closestCampus.key !== currentCampusKey && closestCampus.dist < 50) {
+        // User is closer to a different campus!
+        const banner = document.getElementById('cross-campus-banner');
+        const bannerText = document.getElementById('cross-campus-text');
+        const bannerLink = document.getElementById('cross-campus-link');
+
+        let secondsLeft = 4;
+        bannerText.innerHTML = `📍 We noticed you are closest to <b>${closestCampus.name}</b> in ${closestCampus.city} (<b>${closestCampus.dist} mi away</b>). Redirecting in <span id="redir-sec">${secondsLeft}</span>s...`;
+        bannerLink.href = `/${closestCampus.key}?autoloc=1`;
+        bannerLink.innerText = `Go to ${closestCampus.short_name} Guide →`;
+        banner.classList.remove('hidden');
+
+        // Check if user arrived via auto-redirect query param
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('autoloc') !== '1') {
+          redirectTimer = setInterval(() => {
+            secondsLeft -= 1;
+            const secEl = document.getElementById('redir-sec');
+            if (secEl) secEl.innerText = secondsLeft;
+            if (secondsLeft <= 0) {
+              clearInterval(redirectTimer);
+              window.location.href = `/${closestCampus.key}?autoloc=1`;
+            }
+          }, 1000);
+        }
+      }
+    }
+
+    // Check if location was already detected or requested via URL
+    window.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const savedLat = sessionStorage.getItem('nc_user_lat');
+      const savedLon = sessionStorage.getItem('nc_user_lon');
+
+      if (urlParams.get('autoloc') === '1' && savedLat && savedLon) {
+        applyLocation(parseFloat(savedLat), parseFloat(savedLon));
+      } else if (savedLat && savedLon) {
+        applyLocation(parseFloat(savedLat), parseFloat(savedLon));
+      }
+    });
+  </script>
 
 </body>
 </html>

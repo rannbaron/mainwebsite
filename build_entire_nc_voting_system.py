@@ -21,6 +21,11 @@ boe_by_county = {c['Name'].upper(): c for c in boe_list}
 with open(f'{CACHE_DIR}/county_early_voting_sites.json', 'r', encoding='utf-8') as f:
     sites_by_county = json.load(f)
 
+with open(f'{CACHE_DIR}/campus_geo_data.json', 'r', encoding='utf-8') as f:
+    campus_geo_list = json.load(f)
+
+campus_geo_json_str = json.dumps(campus_geo_list)
+
 print(f"Loaded {len(institutions)} institutions, {len(boe_by_county)} counties.")
 
 # 2. Local County Party URL Mappings
@@ -115,8 +120,8 @@ def get_best_site(inst, county_sites):
     
     return county_sites[0]
 
-# 5. Generate individual voting guide pages
-print("3. Generating individual campus voting guide pages with 3 balanced voter guides...")
+# 5. Generate individual voting guide pages with dynamic geolocation
+print("3. Generating individual campus voting guide pages with Geolocation...")
 
 for inst in institutions:
     key = inst['key']
@@ -138,10 +143,26 @@ for inst in institutions:
         p_name = primary_site['Name'].title()
         p_addr = primary_site['SiteAddressComplete'].title()
         p_maps = primary_site.get('DirectionURL', f"https://maps.google.com/?q={p_addr.replace(' ', '+')}")
+        p_lat = primary_site.get('SiteCoordLat', 35.7796)
+        p_lon = primary_site.get('SiteCoordLong', -78.6382)
     else:
         p_name = f"{c_display} Early Voting Center"
         p_addr = boe_addr
         p_maps = f"https://maps.google.com/?q={boe_addr.replace(' ', '+')}"
+        p_lat = 35.7796
+        p_lon = -78.6382
+
+    # Prepare county sites json for client-side JS
+    county_sites_data = []
+    for s in county_sites:
+        county_sites_data.append({
+            'name': s['Name'].title(),
+            'addr': s['SiteAddressComplete'].title(),
+            'lat': s.get('SiteCoordLat', 0),
+            'lon': s.get('SiteCoordLong', 0),
+            'maps': s.get('DirectionURL', f"https://maps.google.com/?q={s['SiteAddressComplete'].replace(' ', '+')}")
+        })
+    county_sites_json_str = json.dumps(county_sites_data)
 
     # Student ID section
     if inst['id_approved']:
@@ -196,19 +217,20 @@ for inst in institutions:
 
     # Build All Sites Cards for this county
     site_cards = []
-    for s in county_sites:
+    for idx, s in enumerate(county_sites):
         s_title = s['Name'].title()
         s_address = s['SiteAddressComplete'].title()
         is_highlight = (primary_site and s['Name'] == primary_site['Name'])
         border_cls = 'border-2 border-blue-500/70 bg-slate-900 shadow-md' if is_highlight else 'border border-slate-800 bg-slate-900/70'
-        badge_html = '<span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-600 text-white">Campus / Nearest Site</span>' if is_highlight else ''
+        badge_html = '<span class="absolute top-2 right-2 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-600 text-white default-campus-badge">Campus / Nearest Site</span>' if is_highlight else ''
         dir_url = s.get('DirectionURL', f"https://maps.google.com/?q={s_address.replace(' ', '+')}")
         site_cards.append(f'''
-        <div class="rounded-xl p-4 {border_cls} relative overflow-hidden flex flex-col justify-between">
+        <div id="site-card-{idx}" class="site-card rounded-xl p-4 {border_cls} relative overflow-hidden flex flex-col justify-between" data-lat="{s.get('SiteCoordLat', 0)}" data-lon="{s.get('SiteCoordLong', 0)}" data-index="{idx}">
           <div>
             {badge_html}
-            <h4 class="font-bold text-white text-sm pr-16">{s_title}</h4>
-            <p class="text-xs text-slate-300 mt-1">{s_address}</p>
+            <div class="distance-tag mb-1"></div>
+            <h4 class="site-title font-bold text-white text-sm pr-16">{s_title}</h4>
+            <p class="site-addr text-xs text-slate-300 mt-1">{s_address}</p>
           </div>
           <div class="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
             <span class="text-[11px] text-emerald-400 font-mono">Open Early Voting</span>
@@ -226,12 +248,12 @@ for inst in institutions:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{inst['short_name']} Student Guide to Early Voting in {c_display} | Rann Bar-On</title>
-  <meta name="description" content="Complete early voting guide for {inst['name']} students in {c_display}, NC: voting sites, voter ID rules, local voter guides (Democratic, Republican, Independent), same-day registration, and hours.">
+  <meta name="description" content="Complete early voting guide for {inst['name']} students in {c_display}, NC: voting sites, dynamic geolocation, voter ID rules, candidate guides (Dem, Rep, Ind), and hours.">
   
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rannbar-on.com/{key}">
   <meta property="og:title" content="{inst['short_name']} Student Guide to Early Voting in {c_display}">
-  <meta property="og:description" content="Everything {inst['name']} students need to cast their ballot early in {c_display}: polling locations, voter ID rules, candidate guides, and same-day registration.">
+  <meta property="og:description" content="Everything {inst['name']} students need to cast their ballot early in {c_display}: dynamic nearest site detection, voter ID rules, and same-day registration.">
   <meta property="og:image" content="https://rannbar-on.com/{key}_qr.png">
 
   <!-- Tailwind CSS -->
@@ -278,6 +300,24 @@ for inst in institutions:
 </head>
 <body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 antialiased">
 
+  <!-- Auto-Location Redirect Banner (Hidden by default, shown if user is closer to another campus) -->
+  <div id="cross-campus-banner" class="hidden bg-gradient-to-r from-blue-700 via-indigo-700 to-purple-800 text-white px-4 py-3 text-center text-xs sm:text-sm font-semibold shadow-xl border-b border-indigo-500/40 relative z-50">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-2">
+        <span class="text-lg">📍</span>
+        <span id="cross-campus-text">Location detected: You are closer to another campus.</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <a id="cross-campus-link" href="#" class="px-3.5 py-1.5 rounded-lg bg-white text-slate-950 font-bold text-xs hover:bg-slate-100 transition shadow-sm">
+          Switch Guide Now →
+        </a>
+        <button onclick="cancelRedirect()" class="px-2.5 py-1.5 rounded-lg bg-black/20 hover:bg-black/40 text-white text-xs transition">
+          Stay on this page
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Top Announcement Bar -->
   <div class="bg-gradient-to-r from-blue-950 via-indigo-950 to-slate-950 px-4 py-2.5 text-center text-xs sm:text-sm font-medium text-slate-100 border-b border-slate-800 shadow-sm">
     <span class="inline-flex items-center gap-1.5">
@@ -302,14 +342,18 @@ for inst in institutions:
         </div>
       </a>
       <div class="flex items-center gap-2 sm:gap-2.5">
+        <button onclick="detectNearestSite()" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30 hover:bg-blue-500/30 transition">
+          <span>📍</span>
+          <span class="hidden sm:inline">Detect Nearest Site</span>
+        </button>
         <a href="#voter-guides" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
-          🗳️ Voter Guides
+          🗳️ Guides
         </a>
         <a href="#voter-id" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 hover:bg-amber-500/20 transition">
           ⚠️ Voter ID
         </a>
         <a href="#qr-code" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm">
-          📱 QR Code
+          📱 QR
         </a>
       </div>
     </div>
@@ -349,7 +393,7 @@ for inst in institutions:
         <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300">to Early Voting in {c_display}</span>
       </h1>
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
-        Everything {inst['name']} undergraduate and graduate students need to cast their ballot early. Vote on campus or nearby, compare candidate guides from all perspectives, and make sure your voice is heard!
+        Everything {inst['name']} undergraduate and graduate students need to cast their ballot early. Detect your nearest polling location, compare candidate guides from all perspectives, and make sure your voice is heard!
       </p>
 
       <!-- Key Stat Pills -->
@@ -361,8 +405,8 @@ for inst in institutions:
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div class="text-xs text-slate-400 font-medium">Primary Voting Site</div>
-          <div class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">{p_name}</div>
-          <div class="text-[11px] text-blue-400 mt-1 font-mono">{inst['city']}, NC</div>
+          <div id="stat-primary-site" class="text-sm sm:text-base font-bold text-white mt-0.5 truncate">{p_name}</div>
+          <div id="stat-primary-dist" class="text-[11px] text-blue-400 mt-1 font-mono">{inst['city']}, NC</div>
         </div>
         <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 shadow-sm">
           <div class="text-xs text-slate-400 font-medium">Missed Registration?</div>
@@ -388,14 +432,37 @@ for inst in institutions:
   <!-- Main Content Container -->
   <main class="max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12">
 
-    <!-- Section 1: Campus Polling Site -->
+    <!-- Section 1: Campus Polling Site with Geolocation Finder -->
     <section id="polling-site" class="scroll-mt-20">
+      
+      <!-- Interactive Geolocation Discovery Card -->
+      <div class="bg-gradient-to-r from-blue-950/40 via-indigo-950/30 to-slate-900 border border-blue-500/30 rounded-2xl p-4 sm:p-5 mb-6 shadow-md">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-lg">📍</span>
+              <h3 class="text-sm font-bold text-white">Find Your Nearest Polling Location Dynamically</h3>
+            </div>
+            <p class="text-xs text-slate-300 mt-1">
+              Allow location access to update this page with exact distances to all {c_display} early voting sites and locate your closest voting site.
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button onclick="detectNearestSite()" id="btn-detect-loc" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shadow-sm flex items-center gap-1.5">
+              <span>📍</span>
+              <span>Detect My Location</span>
+            </button>
+          </div>
+        </div>
+        <div id="geo-status-banner" class="mt-3 text-xs hidden"></div>
+      </div>
+
       <div class="flex items-center justify-between mb-4">
         <div>
           <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Campus / Nearest Early Voting Site</span>
-          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">{p_name}</h2>
+          <h2 id="main-site-title" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">{p_name}</h2>
         </div>
-        <span class="hidden sm:inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+        <span id="site-open-tag" class="hidden sm:inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
           Open to all {c_display} Voters
         </span>
       </div>
@@ -407,10 +474,10 @@ for inst in institutions:
             <div class="flex items-center gap-2 text-sm font-semibold text-slate-300 mb-2">
               <span>📍 Address & Getting There</span>
             </div>
-            <p class="text-base font-bold text-white leading-snug">
+            <p id="main-site-addr" class="text-base font-bold text-white leading-snug">
               {p_addr}
             </p>
-            <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+            <p id="main-site-desc" class="text-xs text-slate-400 mt-2 leading-relaxed">
               Official Early Voting location serving {inst['name']} students, faculty, staff, and all residents of {c_display}.
             </p>
 
@@ -421,7 +488,7 @@ for inst in institutions:
           </div>
 
           <div class="mt-6 pt-4">
-            <a href="{p_maps}" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
+            <a id="main-site-maps" href="{p_maps}" target="_blank" rel="noopener" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs transition shadow-sm">
               <span>Open in Google Maps</span>
               <span>↗</span>
             </a>
@@ -643,13 +710,16 @@ for inst in institutions:
 
     <!-- Section 4: All Early Voting Sites in County -->
     <section id="sites" class="scroll-mt-20">
-      <div class="mb-6">
-        <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Countywide Flexibility</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All {len(county_sites)} {c_display} Early Voting Sites</h2>
-        <p class="text-sm text-slate-400 mt-1">Any registered {c_display} voter can cast a ballot at any of these sites during early voting hours.</p>
+      <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <span class="text-xs font-mono font-semibold text-blue-400 uppercase tracking-wider">Countywide Flexibility</span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">All {len(county_sites)} {c_display} Early Voting Sites</h2>
+          <p class="text-sm text-slate-400 mt-1">Any registered {c_display} voter can cast a ballot at any of these sites during early voting hours.</p>
+        </div>
+        <div id="sites-sort-status" class="text-xs text-emerald-400 font-medium"></div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div id="all-sites-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {sites_grid_html}
       </div>
     </section>
@@ -762,6 +832,158 @@ for inst in institutions:
     </div>
   </footer>
 
+  <!-- Geolocation & Dynamic Polling Site Script -->
+  <script>
+    const currentCampusKey = "{key}";
+    const currentCampusName = "{inst['name']}";
+    const allCampuses = {campus_geo_json_str};
+    const countySites = {county_sites_json_str};
+    let redirectTimer = null;
+
+    function haversine(lat1, lon1, lat2, lon2) {{
+      const R = 3958.8; // miles
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return Math.round(R * c * 10) / 10;
+    }}
+
+    function cancelRedirect() {{
+      if (redirectTimer) {{
+        clearInterval(redirectTimer);
+        redirectTimer = null;
+      }}
+      document.getElementById('cross-campus-banner').classList.add('hidden');
+    }}
+
+    function detectNearestSite() {{
+      if (!navigator.geolocation) {{
+        alert("Geolocation is not supported by your browser.");
+        return;
+      }}
+
+      const statusEl = document.getElementById('geo-status-banner');
+      statusEl.className = 'mt-3 text-xs text-blue-400 font-medium flex items-center gap-2';
+      statusEl.innerHTML = '<span class="animate-spin">⏳</span> Detecting your location...';
+      statusEl.classList.remove('hidden');
+
+      navigator.geolocation.getCurrentPosition(
+        position => {{
+          const uLat = position.coords.latitude;
+          const uLon = position.coords.longitude;
+          sessionStorage.setItem('nc_user_lat', uLat);
+          sessionStorage.setItem('nc_user_lon', uLon);
+
+          applyLocation(uLat, uLon);
+        }},
+        error => {{
+          statusEl.className = 'mt-3 text-xs text-amber-400 font-medium';
+          statusEl.innerText = "Location permission was denied or unavailable. You can still browse manually!";
+        }},
+        {{ enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }}
+      );
+    }}
+
+    function applyLocation(uLat, uLon) {{
+      const statusEl = document.getElementById('geo-status-banner');
+
+      // 1. Calculate distances to all county early voting sites
+      if (countySites && countySites.length > 0) {{
+        countySites.forEach((s, idx) => {{
+          s.distance = haversine(uLat, uLon, s.lat, s.lon);
+          s.elemIndex = idx;
+        }});
+
+        // Sort sites by proximity
+        const sortedSites = [...countySites].sort((a, b) => a.distance - b.distance);
+        const nearestSite = sortedSites[0];
+
+        // Update hero primary site dynamically
+        const mainTitle = document.getElementById('main-site-title');
+        const mainAddr = document.getElementById('main-site-addr');
+        const mainMaps = document.getElementById('main-site-maps');
+        const statSite = document.getElementById('stat-primary-site');
+        const statDist = document.getElementById('stat-primary-dist');
+
+        if (mainTitle && nearestSite) {{
+          mainTitle.innerText = `${{nearestSite.name}} (${{nearestSite.distance}} mi away)`;
+          mainAddr.innerText = nearestSite.addr;
+          mainMaps.href = nearestSite.maps;
+          if (statSite) statSite.innerText = nearestSite.name;
+          if (statDist) statDist.innerText = `📍 ${{nearestSite.distance}} miles away`;
+        }}
+
+        // Update all cards in the county sites grid
+        sortedSites.forEach((s, rank) => {{
+          const card = document.getElementById(`site-card-${{s.elemIndex}}`);
+          if (card) {{
+            const tag = card.querySelector('.distance-tag');
+            if (tag) {{
+              tag.innerHTML = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${{rank === 0 ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-slate-800 text-slate-300'}}">📍 ${{s.distance}} mi away</span>`;
+            }}
+            if (rank === 0) {{
+              card.classList.remove('border-slate-800');
+              card.classList.add('border-2', 'border-emerald-500', 'ring-2', 'ring-emerald-500/20');
+            }}
+          }}
+        }});
+
+        statusEl.className = 'mt-3 text-xs text-emerald-400 font-medium flex items-center gap-2';
+        statusEl.innerHTML = `✓ Located! Your closest early voting site is <b>${{nearestSite.name}}</b> (<b>${{nearestSite.distance}} miles away</b>).`;
+      }}
+
+      // 2. Check if user is physically closer to a DIFFERENT campus in NC
+      const sortedCampuses = [...allCampuses].map(c => ({{
+        ...c,
+        dist: haversine(uLat, uLon, c.lat, c.lon)
+      }})).sort((a, b) => a.dist - b.dist);
+
+      const closestCampus = sortedCampuses[0];
+      if (closestCampus && closestCampus.key !== currentCampusKey && closestCampus.dist < 50) {{
+        // User is closer to a different campus!
+        const banner = document.getElementById('cross-campus-banner');
+        const bannerText = document.getElementById('cross-campus-text');
+        const bannerLink = document.getElementById('cross-campus-link');
+
+        let secondsLeft = 4;
+        bannerText.innerHTML = `📍 We noticed you are closest to <b>${{closestCampus.name}}</b> in ${{closestCampus.city}} (<b>${{closestCampus.dist}} mi away</b>). Redirecting in <span id="redir-sec">${{secondsLeft}}</span>s...`;
+        bannerLink.href = `/${{closestCampus.key}}?autoloc=1`;
+        bannerLink.innerText = `Go to ${{closestCampus.short_name}} Guide →`;
+        banner.classList.remove('hidden');
+
+        // Check if user arrived via auto-redirect query param
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('autoloc') !== '1') {{
+          redirectTimer = setInterval(() => {{
+            secondsLeft -= 1;
+            const secEl = document.getElementById('redir-sec');
+            if (secEl) secEl.innerText = secondsLeft;
+            if (secondsLeft <= 0) {{
+              clearInterval(redirectTimer);
+              window.location.href = `/${{closestCampus.key}}?autoloc=1`;
+            }}
+          }}, 1000);
+        }}
+      }}
+    }}
+
+    // Check if location was already detected or requested via URL
+    window.addEventListener('DOMContentLoaded', () => {{
+      const urlParams = new URLSearchParams(window.location.search);
+      const savedLat = sessionStorage.getItem('nc_user_lat');
+      const savedLon = sessionStorage.getItem('nc_user_lon');
+
+      if (urlParams.get('autoloc') === '1' && savedLat && savedLon) {{
+        applyLocation(parseFloat(savedLat), parseFloat(savedLon));
+      }} else if (savedLat && savedLon) {{
+        applyLocation(parseFloat(savedLat), parseFloat(savedLon));
+      }}
+    }});
+  </script>
+
 </body>
 </html>
 '''
@@ -777,15 +999,20 @@ for inst in institutions:
     with open(f"{LOCAL_DIR}/{key}.html", 'w', encoding='utf-8') as f:
         f.write(html_content)
 
-print(f"Generated {len(institutions)} individual campus pages with voter guides.")
+print(f"Generated {len(institutions)} individual campus pages with geolocation.")
 
-# 6. Master Directory page (campuses.html) with voter guide hub
-print("4. Updating Master Directory page (campuses.html)...")
+# 6. Master Directory page (campuses.html) with dynamic location sorting
+print("4. Updating Master Directory page (campuses.html) with geolocation...")
 
 cards_json = []
 for inst in institutions:
     cname = inst['county'].upper()
     c_display = cname.title() + " County"
+    # Find lat/lon
+    geo_item = next((g for g in campus_geo_list if g['key'] == inst['key']), None)
+    lat = geo_item['lat'] if geo_item else 35.7796
+    lon = geo_item['lon'] if geo_item else -78.6382
+
     cards_json.append({
         'key': inst['key'],
         'name': inst['name'],
@@ -793,6 +1020,8 @@ for inst in institutions:
         'type': inst['type'],
         'county': c_display,
         'city': inst['city'],
+        'lat': lat,
+        'lon': lon,
         'icon': inst['badge_icon'],
         'id_approved': inst['id_approved'],
         'id_card': inst['id_card_name'],
@@ -807,12 +1036,12 @@ campuses_html = f'''<!DOCTYPE html>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>North Carolina Colleges & Universities Student Voting Directory | Rann Bar-On</title>
-  <meta name="description" content="Complete directory of early voting guides for all 111 colleges, universities, and community colleges across North Carolina. Voter ID rules, candidate guides (Dem, Rep, Ind), polling sites, and QR codes.">
+  <meta name="description" content="Complete directory of early voting guides for all 111 colleges, universities, and community colleges across North Carolina. Dynamic geolocation, voter ID rules, candidate guides (Dem, Rep, Ind), polling sites, and QR codes.">
   
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://rannbar-on.com/campuses">
   <meta property="og:title" content="NC Colleges & Universities Student Early Voting Directory">
-  <meta property="og:description" content="Find your campus early voting guide, candidate guides (Democratic, Republican, Independent), approved voter ID rules, and scannable QR codes for all 111 NC colleges and universities.">
+  <meta property="og:description" content="Find your campus early voting guide, nearest polling site by GPS, candidate guides (Democratic, Republican, Independent), and scannable QR codes for all 111 NC higher education institutions.">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -870,9 +1099,10 @@ campuses_html = f'''<!DOCTYPE html>
         </div>
       </a>
       <div class="flex items-center gap-3">
-        <a href="#statewide-guides" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
-          🗳️ Voter Guides
-        </a>
+        <button onclick="locateAndSortCampuses()" class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white transition shadow-sm">
+          <span>📍</span>
+          <span>Find Nearest to Me</span>
+        </button>
         <a href="https://rannbar-on.com/" class="text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 transition">
           ← Main Website
         </a>
@@ -895,6 +1125,33 @@ campuses_html = f'''<!DOCTYPE html>
       <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-8 leading-relaxed">
         Select your campus below to view your local polling site, candidate guides from Democratic, Republican, and Independent sources, official voter ID rules, and download scannable QR codes.
       </p>
+
+      <!-- Geolocation Auto-Detection Card -->
+      <div class="max-w-xl mx-auto mb-8 p-4 rounded-2xl bg-slate-900 border border-blue-500/40 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3 text-left">
+        <div class="flex items-center gap-2.5">
+          <span class="text-2xl">📍</span>
+          <div>
+            <div class="font-bold text-white text-sm">Find Your Closest Campus Instantly</div>
+            <div class="text-xs text-slate-400">Detect your location to sort all 111 campuses by proximity.</div>
+          </div>
+        </div>
+        <button onclick="locateAndSortCampuses()" id="btn-geo-campuses" class="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition shrink-0 shadow-md flex items-center justify-center gap-1.5">
+          <span>📍</span>
+          <span>Locate Me</span>
+        </button>
+      </div>
+
+      <!-- Nearest Detected Campus Banner (Hidden by default) -->
+      <div id="nearest-campus-alert" class="hidden max-w-xl mx-auto mb-8 p-4 rounded-2xl bg-emerald-950/40 border-2 border-emerald-500/60 shadow-xl flex items-center justify-between gap-3 text-left">
+        <div>
+          <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-500 text-white">Nearest Campus Detected</span>
+          <h3 id="nearest-campus-name" class="font-bold text-white text-base mt-1"></h3>
+          <p id="nearest-campus-detail" class="text-xs text-emerald-300 mt-0.5"></p>
+        </div>
+        <a id="nearest-campus-btn" href="#" class="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shrink-0 transition shadow-sm">
+          Open Guide →
+        </a>
+      </div>
 
       <!-- Statewide Voter Guides Quick Row -->
       <div id="statewide-guides" class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto mb-10 text-left">
@@ -969,7 +1226,7 @@ campuses_html = f'''<!DOCTYPE html>
     </div>
 
     <div id="campuses-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-      <!-- Populated via JavaScript for instantaneous search -->
+      <!-- Populated via JavaScript for instantaneous search & sorting -->
     </div>
   </main>
 
@@ -986,10 +1243,70 @@ campuses_html = f'''<!DOCTYPE html>
     </div>
   </footer>
 
-  <!-- Instant Search & Filter Logic -->
+  <!-- Instant Search, Geolocation & Proximity Sorting Script -->
   <script>
-    const campusesData = {cards_json_str};
+    const rawCampuses = {cards_json_str};
+    let campusesData = [...rawCampuses];
     let currentFilter = 'all';
+
+    function haversine(lat1, lon1, lat2, lon2) {{
+      const R = 3958.8; // miles
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return Math.round(R * c * 10) / 10;
+    }}
+
+    function locateAndSortCampuses() {{
+      if (!navigator.geolocation) {{
+        alert("Geolocation is not supported by your browser.");
+        return;
+      }}
+
+      const btn = document.getElementById('btn-geo-campuses');
+      if (btn) btn.innerHTML = '<span class="animate-spin">⏳</span> Detecting...';
+
+      navigator.geolocation.getCurrentPosition(
+        position => {{
+          const uLat = position.coords.latitude;
+          const uLon = position.coords.longitude;
+          sessionStorage.setItem('nc_user_lat', uLat);
+          sessionStorage.setItem('nc_user_lon', uLon);
+
+          if (btn) btn.innerHTML = '✓ Proximity Active';
+
+          // Calculate distance for all campuses
+          campusesData = rawCampuses.map(c => ({{
+            ...c,
+            distance: haversine(uLat, uLon, c.lat, c.lon)
+          }})).sort((a, b) => a.distance - b.distance);
+
+          // Show nearest banner
+          const nearest = campusesData[0];
+          if (nearest) {{
+            const alertBox = document.getElementById('nearest-campus-alert');
+            const alertName = document.getElementById('nearest-campus-name');
+            const alertDetail = document.getElementById('nearest-campus-detail');
+            const alertBtn = document.getElementById('nearest-campus-btn');
+
+            alertName.innerText = `${{nearest.name}}`;
+            alertDetail.innerText = `Located in ${{nearest.city}}, NC • ${{nearest.distance}} miles from your current GPS location`;
+            alertBtn.href = `/${{nearest.key}}?autoloc=1`;
+            alertBox.classList.remove('hidden');
+          }}
+
+          filterCampuses();
+        }},
+        error => {{
+          if (btn) btn.innerHTML = '📍 Locate Me';
+          alert("Location permission was denied. You can still search by college or city name!");
+        }},
+        {{ enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }}
+      );
+    }}
 
     function renderCampuses(list) {{
       const grid = document.getElementById('campuses-grid');
@@ -1008,7 +1325,7 @@ campuses_html = f'''<!DOCTYPE html>
         return;
       }}
 
-      grid.innerHTML = list.map(c => {{
+      grid.innerHTML = list.map((c, index) => {{
         const idBadge = c.id_approved 
           ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✓ Approved Student ID</span>`
           : `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/10 text-amber-300 border border-amber-500/20">⚠️ Alternative Photo ID</span>`;
@@ -1017,12 +1334,19 @@ campuses_html = f'''<!DOCTYPE html>
           ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' 
           : (c.type.includes('Community') ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' : 'bg-purple-500/10 text-purple-400 border-purple-500/20');
 
+        const distBadge = c.distance !== undefined
+          ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold ${{index === 0 ? 'bg-emerald-500 text-white' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'}}">📍 ${{c.distance}} mi away</span>`
+          : '';
+
         return `
-        <div class="bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-2xl p-5 shadow-sm flex flex-col justify-between transition hover:-translate-y-0.5">
+        <div class="bg-slate-900 border ${{index === 0 && c.distance !== undefined ? 'border-2 border-emerald-500 ring-2 ring-emerald-500/20' : 'border-slate-800 hover:border-slate-700'}} rounded-2xl p-5 shadow-sm flex flex-col justify-between transition hover:-translate-y-0.5">
           <div>
             <div class="flex items-center justify-between gap-2 mb-2">
               <span class="text-lg">${{c.icon}}</span>
-              <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${{typeColor}}">${{c.type}}</span>
+              <div class="flex items-center gap-1.5">
+                ${{distBadge}}
+                <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded border ${{typeColor}}">${{c.type}}</span>
+              </div>
             </div>
             <h3 class="font-bold text-white text-base leading-snug">${{c.name}}</h3>
             <p class="text-xs text-slate-400 mt-1 flex items-center gap-1.5">
@@ -1036,7 +1360,7 @@ campuses_html = f'''<!DOCTYPE html>
           </div>
 
           <div class="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
-            <a href="/${{c.key}}" class="flex-grow py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs text-center transition shadow-sm">
+            <a href="/${{c.key}}?autoloc=1" class="flex-grow py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs text-center transition shadow-sm">
               View Guide →
             </a>
             <a href="/${{c.key}}_qr.png" download="${{c.short_name}}_Vote_QR.png" class="py-2 px-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition" title="Download QR PNG">
@@ -1085,8 +1409,21 @@ campuses_html = f'''<!DOCTYPE html>
       filterCampuses();
     }}
 
-    // Initial render
-    renderCampuses(campusesData);
+    // Check if location is already saved in session
+    window.addEventListener('DOMContentLoaded', () => {{
+      const savedLat = sessionStorage.getItem('nc_user_lat');
+      const savedLon = sessionStorage.getItem('nc_user_lon');
+      if (savedLat && savedLon) {{
+        campusesData = rawCampuses.map(c => ({{
+          ...c,
+          distance: haversine(parseFloat(savedLat), parseFloat(savedLon), c.lat, c.lon)
+        }})).sort((a, b) => a.distance - b.distance);
+
+        const btn = document.getElementById('btn-geo-campuses');
+        if (btn) btn.innerHTML = '✓ Proximity Active';
+      }}
+      renderCampuses(campusesData);
+    }});
   </script>
 
 </body>
@@ -1102,5 +1439,154 @@ with open(f"{MAIN_DIR}/campuses/index.html", 'w', encoding='utf-8') as f:
 with open(f"{LOCAL_DIR}/campuses.html", 'w', encoding='utf-8') as f:
     f.write(campuses_html)
 
-print("Master campuses.html updated successfully!")
+print("Master campuses.html updated with geolocation!")
+
+# 7. Create smart Geolocation Landing Page for /vote
+print("5. Generating smart Geolocation Landing Page for /vote...")
+vote_html = f'''<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>North Carolina Campus Early Voting Portal | Rann Bar-On</title>
+  <meta name="description" content="Find your nearest North Carolina college campus early voting site using automatic location detection, or browse all 111 NC campus guides.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (!window.tailwind) {{
+      document.write('<script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\\/script>');
+    }}
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    body {{
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #070b14;
+      color: #f8fafc;
+    }}
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between bg-slate-950 text-slate-100 antialiased p-4 sm:p-8">
+
+  <div class="max-w-xl mx-auto w-full my-auto text-center space-y-6">
+    <div class="w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/40 text-blue-400 text-3xl flex items-center justify-center mx-auto shadow-xl">
+      🗳️
+    </div>
+
+    <div>
+      <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-3">
+        North Carolina Student Voting Portal
+      </span>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+        Find Your Nearest Campus Early Voting Site
+      </h1>
+      <p class="text-sm text-slate-300 mt-2 leading-relaxed">
+        Allow location access to automatically detect your closest NC college, university, or community college early voting site.
+      </p>
+    </div>
+
+    <!-- Geolocation Trigger Button -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
+      <button onclick="detectAndRedirect()" id="btn-detect" class="w-full py-4 px-6 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-base shadow-lg transition flex items-center justify-center gap-2 group">
+        <span class="text-xl">📍</span>
+        <span>Use My Location & Go to Nearest Campus</span>
+        <span class="group-hover:translate-x-1 transition">→</span>
+      </button>
+
+      <div id="status-msg" class="text-xs text-slate-400 min-h-[20px]">
+        Redirecting to Duke Guide in <span id="timer-sec" class="font-bold text-white">5</span>s...
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-center gap-3 text-xs">
+        <a href="/dukevote" class="text-blue-400 hover:underline font-semibold">Go to Duke Guide Now →</a>
+        <span class="text-slate-600 hidden sm:inline">•</span>
+        <a href="/campuses" class="text-slate-300 hover:text-white underline">Browse All 111 NC Campuses</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center text-xs text-slate-500 py-4">
+    Non-partisan student voting portal • <a href="https://rannbar-on.com/" class="text-slate-400 hover:underline">rannbar-on.com</a>
+  </footer>
+
+  <script>
+    const allCampuses = {campus_geo_json_str};
+    let timeLeft = 5;
+    let timer = setInterval(() => {{
+      timeLeft -= 1;
+      const t = document.getElementById('timer-sec');
+      if (t) t.innerText = timeLeft;
+      if (timeLeft <= 0) {{
+        clearInterval(timer);
+        window.location.replace('/dukevote');
+      }}
+    }}, 1000);
+
+    function haversine(lat1, lon1, lat2, lon2) {{
+      const R = 3958.8; // miles
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return Math.round(R * c * 10) / 10;
+    }}
+
+    function detectAndRedirect() {{
+      clearInterval(timer);
+      const btn = document.getElementById('btn-detect');
+      const msg = document.getElementById('status-msg');
+
+      if (!navigator.geolocation) {{
+        alert("Geolocation is not supported by your browser. Redirecting to Duke guide...");
+        window.location.replace('/dukevote');
+        return;
+      }}
+
+      btn.innerHTML = '<span class="animate-spin text-xl">⏳</span><span>Detecting your location...</span>';
+      msg.innerText = "Please allow location access in your browser prompt...";
+
+      navigator.geolocation.getCurrentPosition(
+        pos => {{
+          const uLat = pos.coords.latitude;
+          const uLon = pos.coords.longitude;
+          sessionStorage.setItem('nc_user_lat', uLat);
+          sessionStorage.setItem('nc_user_lon', uLon);
+
+          // Find closest campus
+          const sorted = [...allCampuses].map(c => ({{
+            ...c,
+            dist: haversine(uLat, uLon, c.lat, c.lon)
+          }})).sort((a, b) => a.dist - b.dist);
+
+          const closest = sorted[0];
+          msg.innerHTML = `Found! You are closest to <b>${{closest.name}}</b> (${{closest.dist}} mi away). Redirecting...`;
+          setTimeout(() => {{
+            window.location.replace(`/${{closest.key}}?autoloc=1`);
+          }}, 500);
+        }},
+        err => {{
+          msg.innerText = "Location permission denied. Redirecting to default Duke guide...";
+          setTimeout(() => {{
+            window.location.replace('/dukevote');
+          }}, 800);
+        }},
+        {{ enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 }}
+      );
+    }}
+  </script>
+</body>
+</html>
+'''
+
+with open(f"{MAIN_DIR}/vote.html", 'w', encoding='utf-8') as f:
+    f.write(vote_html)
+os.makedirs(f"{MAIN_DIR}/vote", exist_ok=True)
+with open(f"{MAIN_DIR}/vote/index.html", 'w', encoding='utf-8') as f:
+    f.write(vote_html)
+
+with open(f"{LOCAL_DIR}/vote.html", 'w', encoding='utf-8') as f:
+    f.write(vote_html)
+
+print("Updated /vote with dynamic Geolocation redirection!")
 print("ALL DONE!")
