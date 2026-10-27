@@ -33,11 +33,51 @@ jobs:
 
       - name: Run Election Day Static Generator
         run: |
-          python3 generate_election_day_pages.py
+          set -o pipefail
+          python3 generate_election_day_pages.py 2>&1 | tee switchover.log
 
       - name: Commit and Push Changes to main
+        id: commit_step
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add -A
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Switch voting platform to Election Day voting info (Early voting concluded)" && git push origin main)
+          if git diff --quiet && git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Switch voting platform to Election Day voting info (Early voting concluded)"
+            git push origin main
+          fi
+
+      - name: Send Switchover Success Notification Email
+        if: success()
+        env:
+          SMTP_SERVER: smtp.gmail.com
+          SMTP_PORT: 587
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          python3 send_switchover_notification.py \
+            --status success \
+            --recipient "rann@rannbar-on.com" \
+            --cc "baronrann@gmail.com" \
+            --commit "$GITHUB_SHA" \
+            --run-id "$GITHUB_RUN_ID"
+
+      - name: Send Switchover Failure Alert Email
+        if: failure()
+        env:
+          SMTP_SERVER: smtp.gmail.com
+          SMTP_PORT: 587
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        run: |
+          if [ ! -s switchover.log ]; then
+            echo "Failure occurred prior to or after page generation (check GitHub Actions workflow logs for details)." > switchover.log
+          fi
+          python3 send_switchover_notification.py \
+            --status failure \
+            --recipient "rann@rannbar-on.com" \
+            --cc "baronrann@gmail.com" \
+            --error-log switchover.log \
+            --run-id "$GITHUB_RUN_ID"
