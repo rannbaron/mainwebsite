@@ -6,8 +6,8 @@ import re
 import qrcode
 import qrcode.image.svg
 
-MAIN_DIR = '/home/rann/Documents/mainwebsite'
-LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26'
+MAIN_DIR = '/home/rann/src/website/mainwebsite'
+LOCAL_DIR = '/home/rann/src/website/voting-info'
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
 
 with open(f'{CACHE_DIR}/county_boe_info.json') as f:

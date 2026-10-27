@@ -1,9 +1,9 @@
 import json
 
-with open('/home/rann/Documents/mainwebsite/.nc_voting_cache/all_institutions.json') as f:
+with open('/home/rann/src/website/mainwebsite/.nc_voting_cache/all_institutions.json') as f:
     institutions = json.load(f)
 
-with open('/home/rann/Documents/mainwebsite/.nc_voting_cache/county_early_voting_sites.json') as f:
+with open('/home/rann/src/website/mainwebsite/.nc_voting_cache/county_early_voting_sites.json') as f:
     sites_by_county = json.load(f)
 
 # Collect campus coordinates for all 111 institutions
@@ -32,5 +32,5 @@ for inst in institutions:
     })
 
 print(f"Compiled geolocation data for {len(campus_geo_list)} campuses.")
-with open('/home/rann/Documents/mainwebsite/.nc_voting_cache/campus_geo_data.json', 'w', encoding='utf-8') as f:
+with open('/home/rann/src/website/mainwebsite/.nc_voting_cache/campus_geo_data.json', 'w', encoding='utf-8') as f:
     json.dump(campus_geo_list, f, indent=2)
