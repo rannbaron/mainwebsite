@@ -15,7 +15,7 @@ from email.mime.multipart import MIMEMultipart
 from email.utils import formatdate, make_msgid, formataddr
 
 DEFAULT_PRIMARY_RECIPIENT = "rann@rannbar-on.com"
-DEFAULT_CC_RECIPIENT = "baronrann@gmail.com"
+DEFAULT_CC_RECIPIENT = None
 
 def send_notification(status, recipient, error_text="", commit_sha="", run_id="", cc_recipient=None):
     smtp_server = os.getenv("SMTP_SERVER", "smtp.gmail.com")
@@ -244,3 +244,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

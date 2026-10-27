@@ -60,7 +60,6 @@ jobs:
           python3 send_switchover_notification.py \
             --status success \
             --recipient "rann@rannbar-on.com" \
-            --cc "baronrann@gmail.com" \
             --commit "$GITHUB_SHA" \
             --run-id "$GITHUB_RUN_ID"
 
@@ -78,6 +77,5 @@ jobs:
           python3 send_switchover_notification.py \
             --status failure \
             --recipient "rann@rannbar-on.com" \
-            --cc "baronrann@gmail.com" \
             --error-log switchover.log \
             --run-id "$GITHUB_RUN_ID"
