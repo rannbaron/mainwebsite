@@ -15,7 +15,7 @@ import datetime
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, 'data')
-LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
+LOCAL_DIR = '/home/rann/src/website/voting-info' if os.path.exists('/home/rann/src/website/voting-info') else None
 
 GITHUB_REPO_URL = "https://github.com/rannbaron/mainwebsite"
 GITHUB_ISSUES_URL = "https://github.com/rannbaron/mainwebsite/issues"

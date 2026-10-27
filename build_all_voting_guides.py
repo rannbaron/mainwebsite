@@ -2,8 +2,8 @@
 import os
 import base64
 
-MAIN_DIR = '/home/rann/Documents/mainwebsite'
-LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26'
+MAIN_DIR = '/home/rann/src/website/mainwebsite'
+LOCAL_DIR = '/home/rann/src/website/voting-info'
 
 def get_b64(path):
     with open(path, 'rb') as f:

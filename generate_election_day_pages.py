@@ -16,7 +16,7 @@ import re
 import urllib.parse
 
 MAIN_DIR = os.environ.get('CI_PROJECT_DIR') or os.environ.get('GITHUB_WORKSPACE') or os.path.dirname(os.path.abspath(__file__))
-LOCAL_DIR = '/home/rann/Documents/math/teaching/105L/Fall26' if os.path.exists('/home/rann/Documents/math/teaching/105L/Fall26') else None
+LOCAL_DIR = '/home/rann/src/website/voting-info' if os.path.exists('/home/rann/src/website/voting-info') else None
 CACHE_DIR = f'{MAIN_DIR}/.nc_voting_cache'
 DATA_DIR = f'{MAIN_DIR}/data'
 os.makedirs(CACHE_DIR, exist_ok=True)
