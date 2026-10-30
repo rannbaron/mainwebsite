@@ -734,6 +734,14 @@ def send_summary_email(data, recipient=None, send_to_subscribers=False):
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Cannot authenticate to {smtp_server}:{smtp_port}.")
         return False
 
+    # Policy Guard: Stop sending election prediction emails after Sunday morning (Nov 1, 2026 12:00 PM EDT)
+    from zoneinfo import ZoneInfo
+    ny_now = datetime.now(ZoneInfo("America/New_York"))
+    cutoff = datetime(2026, 11, 1, 12, 0, 0, tzinfo=ZoneInfo("America/New_York"))
+    if ny_now > cutoff:
+        print(f"[{ny_now.strftime('%H:%M:%S')}] Notice: Early voting prediction email dispatch concluded after Sunday morning (Nov 1, 2026). No emails will be sent.")
+        return True
+
     delivered_count = 0
     failed_recipients = []
 
@@ -854,6 +862,14 @@ def main():
 
     if args.dry_run:
         print(format_plain_text(data))
+        return
+
+    # Policy Guard: Stop sending election prediction emails after Sunday morning (Nov 1, 2026 12:00 PM EDT)
+    from zoneinfo import ZoneInfo
+    ny_now = datetime.now(ZoneInfo("America/New_York"))
+    cutoff = datetime(2026, 11, 1, 12, 0, 0, tzinfo=ZoneInfo("America/New_York"))
+    if ny_now > cutoff and not args.force:
+        print(f"[{ny_now.strftime('%H:%M:%S')}] Notice: Early voting prediction email dispatch concluded after Sunday morning (Nov 1, 2026). Skipping email delivery.")
         return
 
     if args.subscribers:
