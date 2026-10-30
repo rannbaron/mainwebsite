@@ -31,6 +31,14 @@ log "STARTING NC EARLY VOTING MORNING PIPELINE"
 log "Working Directory: $SCRIPT_DIR"
 log "================================================================="
 
+# Policy Guard: Conclude morning pipeline & spreadsheet updates after Sunday morning, Nov 1, 2026 (12:00 PM EDT)
+CURRENT_DATE=$(date +'%Y-%m-%d %H:%M')
+if [[ "$CURRENT_DATE" > "2026-11-01 12:00" ]]; then
+    log "Notice: Early voting morning pipeline & spreadsheet updates concluded after Sunday morning, Nov 1, 2026. Exiting."
+    crontab -l 2>/dev/null | grep -v "run_morning_pipeline.sh" | crontab - || true
+    exit 0
+fi
+
 # Step 1: Git Pull / Sync
 log "[Step 1/5] Syncing git repository with origin/main..."
 if git pull --rebase origin main >> "$LOG_FILE" 2>&1; then
@@ -109,3 +117,9 @@ fi
 log "================================================================="
 log "NC EARLY VOTING MORNING PIPELINE FINISHED AT $(date)"
 log "================================================================="
+
+# Clean up crontab after the final Sunday morning run (Nov 1, 2026)
+if [[ "$CURRENT_DATE" > "2026-11-01 05:00" ]]; then
+    log "Sunday morning final early voting run complete. Cleaning up crontab..."
+    crontab -l 2>/dev/null | grep -v "run_morning_pipeline.sh" | crontab - || true
+fi
