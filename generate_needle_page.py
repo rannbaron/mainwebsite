@@ -4,7 +4,8 @@ NC Election Night Needle Generator (rannbar-on.com/needle)
 ---------------------------------------------------------
 Constructs the New York Times-style probabilistic Needle forecast dashboard
 for North Carolina General Assembly races (all 50 NC Senate and 120 NC House districts)
-at the precinct level, along with chamber control needles for total Dem seats.
+at the precinct level, along with marquee statewide races (US Senate, NC Supreme Court,
+NC Court of Appeals Seats 1-3), an interactive vector map, and chamber control needles.
 
 Outputs:
   - needle/needle_data.json
@@ -23,13 +24,85 @@ OUTPUT_DIR = os.path.join(BASE_DIR, 'needle')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def build_needle_dataset():
-    print("1. Loading legislative models & metadata...")
+    print("1. Loading legislative models & base geometries...")
     with open(os.path.join(BASE_DIR, 'nc_senate_data.json')) as f:
         senate_meta = json.load(f)
     with open(os.path.join(BASE_DIR, 'nc_house_data.json')) as f:
         house_meta = json.load(f)
+    with open(os.path.join(BASE_DIR, 'nc_map_base.json')) as f:
+        county_base = json.load(f)
 
-    print("2. Parsing precinct-level 2024 returns and baseline models...")
+    county_paths = {c['name'].upper(): {
+        'path': c['path'],
+        'bbox': c.get('bbox'),
+        'centroid': c.get('centroid')
+    } for c in county_base.get('counties', [])}
+
+    print("2. Parsing benchmark sheet county dataset...")
+    benchmark_gs = '/home/rann/src/nc-election-night-benchmark/create_nc_benchmark.gs'
+    if not os.path.exists(benchmark_gs):
+        benchmark_gs = '/home/rann/.config/Code/User/History/727a5dbc/GSEm.gs'
+    
+    with open(benchmark_gs) as f:
+        gs_text = f.read()
+
+    start = gs_text.find('function getFullCountyCandidateDataset_()')
+    end = gs_text.find('function applyOverUnderConditionalFormatting_', start)
+    code = gs_text[start:end]
+    bench_rows = re.findall(r'\[\s*\'([^\']+)\'\s*,\s*\'([^\']+)\'\s*,\s*([0-9\.]+)\s*,\s*([\-0-9\.]+)\s*,\s*([\-0-9\.]+)\s*,\s*([\-0-9\.]+)\s*,\s*([\-0-9\.]+)\s*,\s*([\-0-9\.]+)\s*\]', code)
+
+    def build_statewide_race(key, title, short_title, dem_cand, rep_cand, target_col_idx, baseline_m, sigma, rating):
+        counties = []
+        tot_proj_turnout = 0
+        for r in bench_rows:
+            c_name = r[0]
+            c_up = c_name.upper()
+            cluster = r[1]
+            turnout = int(float(r[2]))
+            tot_proj_turnout += turnout
+            target_m = round(float(r[target_col_idx]) * 100.0, 2)
+            cushion = int(round(turnout * (target_m / 100.0)))
+            geom = county_paths.get(c_up, {})
+            
+            counties.append({
+                'name': c_name,
+                'county': c_up,
+                'cluster': cluster,
+                'proj_turnout': turnout,
+                'bench_margin': target_m,
+                'target_cushion': cushion,
+                'path': geom.get('path', ''),
+                'bbox': geom.get('bbox', []),
+                'centroid': geom.get('centroid', [])
+            })
+        
+        z = baseline_m / sigma
+        p_dem = round(0.5 * (1.0 + math.erf(z / math.sqrt(2.0))) * 100.0, 1)
+        
+        return {
+            'id': key,
+            'title': title,
+            'short_title': short_title,
+            'dem_candidate': dem_cand,
+            'rep_candidate': rep_cand,
+            'pred_margin': baseline_m,
+            'proj_turnout': tot_proj_turnout,
+            'sigma': sigma,
+            'rating': rating,
+            'p_dem': p_dem,
+            'p_rep': round(100.0 - p_dem, 1),
+            'counties': counties
+        }
+
+    statewide_races = {
+        'US-SENATE': build_statewide_race('US-SENATE', '2026 US Senate: Roy Cooper (D) vs. Michael Whatley (R)', 'US Senate', 'Roy Cooper', 'Michael Whatley', 3, 2.5, 1.85, 'Lean D'),
+        'NC-SC': build_statewide_race('NC-SC', '2026 NC Supreme Court: Anita Earls (D - Incumbent) vs. Sarah Stevens (R)', 'NC Supreme Court', 'Anita Earls', 'Sarah Stevens', 4, 1.0, 1.95, 'Toss Up / Tilt D'),
+        'NC-COA-1': build_statewide_race('NC-COA-1', '2026 NC Court of Appeals Seat 1: John S. Arrowood (D - Incumbent) vs. Michael C. Byrne (R)', 'NC CoA Seat 1', 'John S. Arrowood', 'Michael C. Byrne', 5, 0.5, 2.05, 'Toss Up / Tilt D'),
+        'NC-COA-2': build_statewide_race('NC-COA-2', '2026 NC Court of Appeals Seat 2: Tobias (Toby) Hampson (D - Incumbent) vs. George Cooper Bell (R)', 'NC CoA Seat 2', 'Tobias (Toby) Hampson', 'George Cooper Bell', 5, 0.5, 2.05, 'Toss Up / Tilt D'),
+        'NC-COA-3': build_statewide_race('NC-COA-3', '2026 NC Court of Appeals Seat 3: Christine Marie Walczyk (D) vs. Craig Collins (R)', 'NC CoA Seat 3', 'Christine Marie Walczyk', 'Craig Collins', 5, 0.5, 2.05, 'Toss Up / Tilt D')
+    }
+
+    print("3. Parsing precinct-level 2024 returns and baseline models...")
     txt_path = '/home/rann/Documents/elections/voterlist/results_pct_20241105.txt'
     if not os.path.exists(txt_path):
         txt_path = '/home/rann/.gemini/antigravity/brain/4b3aec10-8dbc-428a-9aa3-166e86178a59/scratch/historical_results/results_pct_20241105.txt'
@@ -135,6 +208,9 @@ def build_needle_dataset():
                 "region": meta.get('region', ''),
                 "counties": meta.get('counties', []),
                 "sigma": 3.5 if chamber_name == "senate" else 3.8,
+                "path": meta.get('path', ''),
+                "bbox": meta.get('bbox', []),
+                "centroid": meta.get('centroid', []),
                 "precinct_count": len(precinct_list),
                 "precincts": precinct_list
             }
@@ -147,7 +223,7 @@ def build_needle_dataset():
     dem_house_exp = sum(d['p_dem'] / 100.0 for d in house_districts.values())
 
     output = {
-        "generated_at": "2026-10-31T17:00:00-04:00",
+        "generated_at": "2026-10-31T17:25:00-04:00",
         "chambers": {
             "senate": {
                 "total_seats": 50,
@@ -167,13 +243,14 @@ def build_needle_dataset():
                 "sigma_seats": 2.8,
                 "districts": house_districts
             }
-        }
+        },
+        "statewide": statewide_races
     }
 
     out_json = os.path.join(OUTPUT_DIR, 'needle_data.json')
     with open(out_json, 'w') as f:
         json.dump(output, f, separators=(',', ':'))
-    print(f"Generated {out_json} successfully.")
+    print(f"Generated {out_json} successfully (size: {os.path.getsize(out_json)/1024:.1f} KB).")
     return output
 
 if __name__ == '__main__':
