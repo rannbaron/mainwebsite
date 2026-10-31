@@ -92,9 +92,13 @@
           <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
           <span>Benchmark Model: <b>November 2026 Midterm Baseline</b></span>
         </div>
+        <button onclick="toggleIngestModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-emerald-300 transition flex items-center gap-1.5 border border-emerald-500/30">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span>Upload / Sync Feed</span>
+        </button>
         <button onclick="toggleSimulationModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5 shadow-md shadow-indigo-600/20">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
-          <span>Simulate Election Night</span>
+          <span>Simulate</span>
         </button>
       </div>
     </div>
@@ -653,6 +657,34 @@
               </div>
             </div>
 
+            
+            <!-- Probability Density Bell Curve SVG -->
+            <div class="w-full max-w-[380px] mt-3 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+              <div class="flex items-center justify-between text-[10px] text-slate-400 mb-1 font-semibold uppercase tracking-wider">
+                <span>Probability Distribution</span>
+                <span id="densityWinChanceText" class="text-blue-400">84.2% Area Under Curve</span>
+              </div>
+              <svg id="svgDensityCurve" viewBox="0 0 300 65" class="w-full h-14 overflow-visible">
+                <!-- Shaded Areas -->
+                <path id="densityRepArea" d="" fill="#EF4444" fill-opacity="0.35" />
+                <path id="densityDemArea" d="" fill="#3B82F6" fill-opacity="0.35" />
+                <!-- Density Curve Line -->
+                <path id="densityCurveLine" d="" fill="none" stroke="#FFFFFF" stroke-width="1.8" />
+                <!-- Center 0% (EVEN) Line -->
+                <line x1="150" y1="0" x2="150" y2="60" stroke="#94A3B8" stroke-width="1" stroke-dasharray="2,2" />
+                <!-- Point Estimate Line -->
+                <line id="densityMeanLine" x1="150" y1="0" x2="150" y2="60" stroke="#38BDF8" stroke-width="2" />
+                <!-- Fences -->
+                <line id="densityCiLowLine" x1="100" y1="20" x2="100" y2="60" stroke="#38BDF8" stroke-width="1" stroke-dasharray="1,1" />
+                <line id="densityCiHighLine" x1="200" y1="20" x2="200" y2="60" stroke="#38BDF8" stroke-width="1" stroke-dasharray="1,1" />
+              </svg>
+              <div class="flex items-center justify-between text-[9px] text-slate-500 font-mono mt-0.5">
+                <span>REP -40%</span>
+                <span class="text-slate-400 font-bold">EVEN (0%)</span>
+                <span>DEM +40%</span>
+              </div>
+            </div>
+
             <!-- Over / Under Benchmark Delta Pill -->
             <div class="mt-4 flex items-center gap-2">
               <span class="text-xs text-slate-400">Benchmark Over/Under:</span>
@@ -841,6 +873,49 @@
   </div>
 
   <!-- Footer -->
+  
+  <!-- LIVE NCSBE FEED / FILE INGESTION MODAL -->
+  <div id="ingestModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-xl w-full p-6 shadow-2xl space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+          Election Night Feed Ingestion
+        </h3>
+        <button onclick="toggleIngestModal()" class="text-slate-400 hover:text-white p-1 rounded-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400 leading-relaxed">
+        Upload an official North Carolina State Board of Elections (NCSBE) ENRS precinct returns file (<code class="text-slate-200">results_pct_*.txt</code> or <code class="text-slate-200">.csv</code>) or paste live tab-delimited return data. The client-side parser will calculate over/under deltas and update all needles instantly.
+      </p>
+
+      <!-- Dropzone / File Picker -->
+      <div class="border-2 border-dashed border-slate-700 hover:border-emerald-500 rounded-2xl p-6 text-center bg-slate-950/60 transition group cursor-pointer" onclick="document.getElementById('ncsbeFileInput').click()">
+        <input type="file" id="ncsbeFileInput" accept=".txt,.csv,.tsv" class="hidden" onchange="handleNCSBEFileUpload(event)">
+        <div class="flex flex-col items-center gap-2">
+          <div class="w-10 h-10 rounded-full bg-slate-800 group-hover:bg-emerald-500/20 text-slate-400 group-hover:text-emerald-400 flex items-center justify-center transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+          </div>
+          <div class="text-xs font-bold text-white group-hover:text-emerald-300">Click to Select NCSBE Results File</div>
+          <div class="text-[11px] text-slate-500">Supports results_pct_YYYYMMDD.txt (tab-delimited ENRS standard)</div>
+        </div>
+      </div>
+
+      <!-- Ingest Status / Feedback -->
+      <div id="ingestStatusMsg" class="hidden p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono">
+        <span class="text-emerald-400 font-bold">Status:</span> <span id="ingestStatusText" class="text-slate-300"></span>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end gap-2">
+        <button onclick="toggleIngestModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
   <footer class="border-t border-slate-800/80 bg-slate-950/80 py-8 mt-16 text-center text-xs text-slate-500">
     <div class="max-w-7xl mx-auto px-4 space-y-2">
       <p>North Carolina Legislative & Statewide Election Night Benchmark Forecast &bull; Modeled by Rann Bar-On</p>
@@ -1313,6 +1388,7 @@
       document.getElementById('metricUncertainty').textContent = `± ${proj.currentSigma.toFixed(2)}%`;
 
       renderBreakdownTable(r);
+      renderDensityCurve(proj.projectedMargin, proj.currentSigma);
     }
 
     // RENDER BREAKDOWN TABLE (PRECINCT OR COUNTY)
@@ -1672,6 +1748,191 @@
     }
 
     window.addEventListener('DOMContentLoaded', init);
+  
+    // Render Probability Density Curve
+    function renderDensityCurve(mu, sigma) {
+      const minM = -40.0;
+      const maxM = 40.0;
+      const span = maxM - minM;
+      const width = 300;
+      const height = 60;
+
+      function marginToX(m) {
+        return ((m - minM) / span) * width;
+      }
+
+      // Max density at mode mu
+      const maxDensity = 1.0 / (sigma * Math.sqrt(2.0 * Math.PI));
+      
+      const points = [];
+      const steps = 60;
+      for (let i = 0; i <= steps; i++) {
+        const m = minM + (i / steps) * span;
+        const z = (m - mu) / sigma;
+        const d = (1.0 / (sigma * Math.sqrt(2.0 * Math.PI))) * Math.exp(-0.5 * z * z);
+        const normH = (d / maxDensity) * (height - 8);
+        const x = marginToX(m);
+        const y = height - normH;
+        points.push({ x, y, m });
+      }
+
+      // Build path strings
+      let curvePath = `M ${points[0].x.toFixed(1)} ${points[0].y.toFixed(1)}`;
+      for (let i = 1; i < points.length; i++) {
+        curvePath += ` L ${points[i].x.toFixed(1)} ${points[i].y.toFixed(1)}`;
+      }
+      document.getElementById('densityCurveLine').setAttribute('d', curvePath);
+
+      // Rep Area (m <= 0, x <= 150)
+      const zeroX = marginToX(0.0);
+      const repPts = points.filter(p => p.m <= 0.0);
+      if (repPts.length > 0) {
+        let repPath = `M ${repPts[0].x.toFixed(1)} ${height}`;
+        repPts.forEach(p => { repPath += ` L ${p.x.toFixed(1)} ${p.y.toFixed(1)}`; });
+        repPath += ` L ${zeroX.toFixed(1)} ${height} Z`;
+        document.getElementById('densityRepArea').setAttribute('d', repPath);
+      }
+
+      // Dem Area (m >= 0, x >= 150)
+      const demPts = points.filter(p => p.m >= 0.0);
+      if (demPts.length > 0) {
+        let demPath = `M ${zeroX.toFixed(1)} ${height}`;
+        demPts.forEach(p => { demPath += ` L ${p.x.toFixed(1)} ${p.y.toFixed(1)}`; });
+        demPath += ` L ${demPts[demPts.length - 1].x.toFixed(1)} ${height} Z`;
+        document.getElementById('densityDemArea').setAttribute('d', demPath);
+      }
+
+      // Mean & CI Lines
+      const meanX = Math.max(0, Math.min(width, marginToX(mu)));
+      document.getElementById('densityMeanLine').setAttribute('x1', meanX.toFixed(1));
+      document.getElementById('densityMeanLine').setAttribute('x2', meanX.toFixed(1));
+
+      const ciLowX = Math.max(0, Math.min(width, marginToX(mu - 1.96 * sigma)));
+      const ciHighX = Math.max(0, Math.min(width, marginToX(mu + 1.96 * sigma)));
+      document.getElementById('densityCiLowLine').setAttribute('x1', ciLowX.toFixed(1));
+      document.getElementById('densityCiLowLine').setAttribute('x2', ciLowX.toFixed(1));
+      document.getElementById('densityCiHighLine').setAttribute('x1', ciHighX.toFixed(1));
+      document.getElementById('densityCiHighLine').setAttribute('x2', ciHighX.toFixed(1));
+
+      // Area chance text
+      const winProb = normalCdf(mu / sigma);
+      const probTxt = winProb >= 0.5 ? `${(winProb * 100).toFixed(1)}% Dem Probability Area` : `${((1 - winProb) * 100).toFixed(1)}% Rep Probability Area`;
+      const txtEl = document.getElementById('densityWinChanceText');
+      txtEl.textContent = probTxt;
+      txtEl.className = winProb >= 0.5 ? "text-blue-400" : "text-red-400";
+    }
+
+    // Toggle Ingestion Modal
+    function toggleIngestModal() {
+      const m = document.getElementById('ingestModal');
+      m.classList.toggle('hidden');
+    }
+
+    // Client-side NCSBE ENRS File Parser
+    function handleNCSBEFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const statusBox = document.getElementById('ingestStatusMsg');
+      const statusText = document.getElementById('ingestStatusText');
+      statusBox.classList.remove('hidden');
+      statusText.textContent = `Reading ${file.name} (${(file.size / 1024).toFixed(0)} KB)...`;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const content = e.target.result;
+          parseNCSBEResultsText(content);
+          statusText.textContent = `Successfully processed ${file.name}! All needles, maps, and chamber totals updated.`;
+          renderActiveRace();
+          renderChamberNeedles();
+          renderMap();
+          renderDistrictsGrid();
+        } catch (err) {
+          statusText.textContent = `Error parsing file: ${err.message}`;
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function parseNCSBEResultsText(tsvText) {
+      const lines = tsvText.split(/\r?\n/);
+      if (lines.length < 2) return;
+      const headers = lines[0].split('\t').map(h => h.trim().toLowerCase());
+
+      const cIdx = headers.indexOf('county');
+      const pIdx = headers.indexOf('precinct');
+      const contestIdx = headers.indexOf('contest name');
+      const partyIdx = headers.indexOf('choice party');
+      const votesIdx = headers.indexOf('total votes');
+
+      if (cIdx === -1 || contestIdx === -1) {
+        throw new Error("Missing required NCSBE headers (County, Contest Name).");
+      }
+
+      let matchedVotes = 0;
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i];
+        if (!line.trim()) continue;
+        const cols = line.split('\t');
+        const county = (cols[cIdx] || '').trim().toUpperCase();
+        const precinct = (cols[pIdx] || '').trim().toUpperCase();
+        const contest = (cols[contestIdx] || '').trim().toUpperCase();
+        const party = (cols[partyIdx] || '').trim().toUpperCase();
+        const votes = parseInt(cols[votesIdx] || '0') || 0;
+
+        // Match Senate
+        if (contest.includes('STATE SENATE')) {
+          const m = contest.match(/DISTRICT\s+(\d+)/);
+          if (m) {
+            const dKey = `SD-${parseInt(m[1]).toString().padStart(2, '0')}`;
+            const unitKey = `${county}-${precinct}`;
+            if (!liveReturns[dKey]) liveReturns[dKey] = {};
+            if (!liveReturns[dKey][unitKey]) liveReturns[dKey][unitKey] = { reported: true, demVotes: 0, repVotes: 0, totVotes: 0 };
+            if (party === 'DEM') liveReturns[dKey][unitKey].demVotes += votes;
+            else if (party === 'REP') liveReturns[dKey][unitKey].repVotes += votes;
+            liveReturns[dKey][unitKey].totVotes += votes;
+            matchedVotes++;
+          }
+        }
+        // Match House
+        else if (contest.includes('HOUSE OF REPRESENTATIVES') && !contest.includes('US HOUSE')) {
+          const m = contest.match(/DISTRICT\s+(\d+)/);
+          if (m) {
+            const dKey = `HD-${parseInt(m[1]).toString().padStart(3, '0')}`;
+            const unitKey = `${county}-${precinct}`;
+            if (!liveReturns[dKey]) liveReturns[dKey] = {};
+            if (!liveReturns[dKey][unitKey]) liveReturns[dKey][unitKey] = { reported: true, demVotes: 0, repVotes: 0, totVotes: 0 };
+            if (party === 'DEM') liveReturns[dKey][unitKey].demVotes += votes;
+            else if (party === 'REP') liveReturns[dKey][unitKey].repVotes += votes;
+            liveReturns[dKey][unitKey].totVotes += votes;
+            matchedVotes++;
+          }
+        }
+        // Match Statewide US Senate
+        else if (contest.includes('US SENATE')) {
+          const dKey = 'US-SENATE';
+          if (!liveReturns[dKey]) liveReturns[dKey] = {};
+          if (!liveReturns[dKey][county]) liveReturns[dKey][county] = { reported: true, demVotes: 0, repVotes: 0, totVotes: 0 };
+          if (party === 'DEM') liveReturns[dKey][county].demVotes += votes;
+          else if (party === 'REP') liveReturns[dKey][county].repVotes += votes;
+          liveReturns[dKey][county].totVotes += votes;
+          matchedVotes++;
+        }
+        // Match Supreme Court
+        else if (contest.includes('SUPREME COURT')) {
+          const dKey = 'NC-SC';
+          if (!liveReturns[dKey]) liveReturns[dKey] = {};
+          if (!liveReturns[dKey][county]) liveReturns[dKey][county] = { reported: true, demVotes: 0, repVotes: 0, totVotes: 0 };
+          if (party === 'DEM') liveReturns[dKey][county].demVotes += votes;
+          else if (party === 'REP') liveReturns[dKey][county].repVotes += votes;
+          liveReturns[dKey][county].totVotes += votes;
+          matchedVotes++;
+        }
+      }
+      return matchedVotes;
+    }
+
   </script>
 </body>
 </html>
