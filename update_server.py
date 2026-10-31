@@ -294,37 +294,32 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
     with open(base_json_path, 'w') as f:
         json.dump(data, f)
 
-    # 4. Inject into index.html
+    # 4. Inject into earlyvote/index.html, earlyvote.html, and beta/index.html
     compact_json = json.dumps(data, separators=(',', ':'))
-    if os.path.exists(output_html_path):
-        with open(output_html_path, 'r') as f:
-            html = f.read()
-        updated_html = re.sub(r'Cumulative Day \d+', f'Cumulative Day {ev_day}', html)
-        updated_html = re.sub(r'State Summary \(Day \d+\)', f'State Summary (Day {ev_day})', updated_html)
-        updated_html = re.sub(
-            r'window\.NC_MAP_DATA\s*=\s*\{[\s\S]*?\};\s*</script>',
-            f'window.NC_MAP_DATA = {compact_json};\n  </script>',
-            updated_html
-        )
-        with open(output_html_path, 'w') as f:
-            f.write(updated_html)
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Injected updated data into {output_html_path} ({len(updated_html):,} bytes)")
+    base_dir = os.path.dirname(output_html_path) or "."
+    target_pages = [
+        os.path.join(base_dir, "earlyvote", "index.html"),
+        os.path.join(base_dir, "earlyvote.html"),
+        os.path.join(base_dir, "beta", "index.html")
+    ]
+    # Do not inject into root index.html (which is now the projects portal)
+    if output_html_path and not output_html_path.endswith("/index.html") and not output_html_path.endswith("index.html") and output_html_path not in target_pages:
+        target_pages.append(output_html_path)
 
-        # Also inject into beta/index.html if it exists
-        beta_html_path = os.path.join(os.path.dirname(output_html_path) or ".", "beta", "index.html")
-        if os.path.exists(beta_html_path):
-            with open(beta_html_path, 'r') as f:
-                b_html = f.read()
-            updated_b_html = re.sub(r'Cumulative Day \d+', f'Cumulative Day {ev_day}', b_html)
-            updated_b_html = re.sub(r'State Summary \(Day \d+\)', f'State Summary (Day {ev_day})', updated_b_html)
-            updated_b_html = re.sub(
+    for p in target_pages:
+        if os.path.exists(p):
+            with open(p, 'r', encoding='utf-8') as f:
+                h = f.read()
+            h = re.sub(r'Cumulative Day \d+', f'Cumulative Day {ev_day}', h)
+            h = re.sub(r'State Summary \(Day \d+\)', f'State Summary (Day {ev_day})', h)
+            h = re.sub(
                 r'window\.NC_MAP_DATA\s*=\s*\{[\s\S]*?\};\s*</script>',
                 f'window.NC_MAP_DATA = {compact_json};\n  </script>',
-                updated_b_html
+                h
             )
-            with open(beta_html_path, 'w') as f:
-                f.write(updated_b_html)
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Injected updated data into {beta_html_path} ({len(updated_b_html):,} bytes)")
+            with open(p, 'w', encoding='utf-8') as f:
+                f.write(h)
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Injected updated data into {p} ({len(h):,} bytes)")
 
         # Copy to destination public_html if specified
         dest_path = dest_public_html or os.getenv("DEST_HTML_PATH", "")
