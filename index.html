@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="dark scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rann Bar-On, Ph.D. | Mathematics, Election Analytics & Civic Technology</title>
-  <meta name="description" content="Personal and project portal of Rann Bar-On, Ph.D., Senior Lecturer in Mathematics at Duke University. Features the North Carolina Election Needle, Early Voting Swing Explorer, and NC Student Voting Platform.">
+  <title>Rann Bar-On, Ph.D. | Politics, Duke Teaching & Software Projects</title>
+  <meta name="description" content="Personal and project portal of Rann Bar-On, Ph.D., Senior Lecturer in Mathematics at Duke University. Features projects in North Carolina Politics, Duke Teaching & Curriculum, and Open Source Software.">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     if (!window.tailwind) {
@@ -48,29 +48,16 @@
       background: #475569;
     }
 
-    .glass-panel {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(16px);
+    .project-card {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(14px);
       border: 1px solid rgba(30, 41, 59, 0.85);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .glass-panel:hover {
-      border-color: rgba(59, 130, 246, 0.45);
-    }
-
-    .gradient-border {
-      position: relative;
-    }
-    .gradient-border::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(to bottom right, rgba(59, 130, 246, 0.5), rgba(99, 102, 241, 0.2), transparent);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
+    .project-card:hover {
+      border-color: rgba(59, 130, 246, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.5), 0 0 20px -4px rgba(59, 130, 246, 0.15);
     }
   </style>
   <script data-goatcounter="https://rannbaron.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
@@ -78,7 +65,7 @@
 <body class="min-h-screen flex flex-col bg-[#070b14] text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
 
   <!-- TOP HEADER / NAV -->
-  <header class="border-b border-slate-800/80 bg-[#0b1120]/90 backdrop-blur sticky top-0 z-50 px-4 sm:px-6 lg:px-8 py-3.5 shadow-xl">
+  <header class="border-b border-slate-800/80 bg-[#0b1120]/95 backdrop-blur sticky top-0 z-50 px-4 sm:px-6 lg:px-8 py-3.5 shadow-xl">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
       <div class="flex items-center gap-3">
         <a href="/" class="flex items-center gap-2.5 group">
@@ -92,29 +79,28 @@
         </a>
       </div>
 
-      <nav class="flex items-center gap-2 sm:gap-3 text-xs font-semibold">
-        <a href="/needle" class="px-3 py-1.5 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 transition flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
-          <span>Election Needle</span>
+      <!-- Category Navigation Links -->
+      <nav class="flex items-center gap-1.5 sm:gap-2 text-xs font-semibold">
+        <a href="#politics" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5">
+          <span>🗳️ Politics</span>
         </a>
-        <a href="/earlyvote" class="px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 transition flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-          <span>Early Vote</span>
+        <a href="#duke-teaching" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5">
+          <span>📚 Duke Teaching</span>
         </a>
-        <a href="/campuses" class="hidden sm:inline-flex px-3 py-1.5 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 transition">
-          Campus Voting (111)
+        <a href="#other-projects" class="px-2.5 sm:px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/80 transition flex items-center gap-1.5">
+          <span>⚙️ Other Projects</span>
         </a>
-        <a href="mailto:rb6@duke.edu" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+        <a href="mailto:rb6@duke.edu" class="hidden md:inline-flex px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold transition ml-2">
           Contact
         </a>
       </nav>
     </div>
   </header>
 
-  <!-- MAIN HERO SECTION -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-14">
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16">
 
-    <!-- INTRO & BIOGRAPHY BANNER -->
+    <!-- INTRO & BIOGRAPHY HERO BANNER -->
     <section class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900/90 via-slate-900/60 to-slate-950 p-6 sm:p-10 border border-slate-800 shadow-2xl">
       <div class="absolute -right-20 -top-20 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
       <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -139,38 +125,39 @@
           </h1>
 
           <p class="text-base sm:text-lg text-slate-300 font-normal leading-relaxed">
-            Senior Lecturer in Mathematics at <span class="text-white font-medium">Duke University</span>, curriculum designer, and election data analyst based in <span class="text-white font-medium">Durham, North Carolina</span>. I build public probabilistic election forecasting models, demographic swing analytics, student voting guides, and computer-based tools for undergraduate mathematics education.
+            Senior Lecturer in Mathematics at <a href="https://math.duke.edu" target="_blank" rel="noopener noreferrer" class="text-white font-medium underline decoration-blue-500/50 hover:decoration-blue-400">Duke University</a>, curriculum designer, and election data analyst in Durham, North Carolina. Below you will find all of my work organized into three core areas: <b>Politics & Civic Tech</b>, <b>Duke Teaching & Mathematics</b>, and <b>Other Projects & Open Source</b>.
           </p>
 
-          <div class="flex flex-wrap items-center gap-4 pt-2 text-xs font-mono text-slate-400">
-            <div class="flex items-center gap-1.5">
-              <span class="text-blue-400">📍</span> Durham, NC
-            </div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-indigo-400">🎓</span> Ph.D. Duke University (2009)
-            </div>
-            <div class="flex items-center gap-1.5">
-              <span class="text-emerald-400">📊</span> Calculus & Election Analytics
-            </div>
+          <!-- Quick Jump Buttons -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <a href="#politics" class="px-4 py-2 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/30 font-bold text-xs transition flex items-center gap-1.5">
+              <span>🗳️ Jump to Politics</span> &darr;
+            </a>
+            <a href="#duke-teaching" class="px-4 py-2 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 font-bold text-xs transition flex items-center gap-1.5">
+              <span>📚 Jump to Duke Teaching</span> &darr;
+            </a>
+            <a href="#other-projects" class="px-4 py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 font-bold text-xs transition flex items-center gap-1.5">
+              <span>⚙️ Jump to Other Projects</span> &darr;
+            </a>
           </div>
         </div>
 
-        <!-- Metric Highlights Box -->
+        <!-- Telemetry Highlights Box -->
         <div class="grid grid-cols-2 gap-3 shrink-0 lg:w-72">
           <div class="bg-slate-950/80 border border-slate-800/80 p-4 rounded-2xl shadow-inner">
-            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Legislative Seats</div>
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">NC Legislative Seats</div>
             <div class="text-2xl font-black text-white font-mono mt-1">170</div>
             <div class="text-[11px] text-blue-400 mt-0.5">50 Senate &bull; 120 House</div>
           </div>
           <div class="bg-slate-950/80 border border-slate-800/80 p-4 rounded-2xl shadow-inner">
-            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">NC Campuses</div>
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Campus Guides</div>
             <div class="text-2xl font-black text-white font-mono mt-1">111</div>
-            <div class="text-[11px] text-indigo-400 mt-0.5">Full Voting Guides</div>
+            <div class="text-[11px] text-indigo-400 mt-0.5">All NC Colleges</div>
           </div>
           <div class="bg-slate-950/80 border border-slate-800/80 p-4 rounded-2xl shadow-inner">
-            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Counties Analyzed</div>
+            <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">NC Counties</div>
             <div class="text-2xl font-black text-white font-mono mt-1">100</div>
-            <div class="text-[11px] text-emerald-400 mt-0.5">All NC Counties</div>
+            <div class="text-[11px] text-emerald-400 mt-0.5">Daily Turnout Baselines</div>
           </div>
           <div class="bg-slate-950/80 border border-slate-800/80 p-4 rounded-2xl shadow-inner">
             <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Precinct Models</div>
@@ -181,411 +168,517 @@
       </div>
     </section>
 
-    <!-- SECTION: FEATURED MARQUEE CIVIC PLATFORMS -->
-    <section class="space-y-6">
+    <!-- INTERACTIVE CATEGORY FILTER BAR -->
+    <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 p-2 rounded-2xl border border-slate-800 text-xs">
+      <span class="text-slate-400 font-bold px-2 uppercase tracking-wider text-[11px]">Filter Category:</span>
+      <div class="flex flex-wrap items-center gap-1.5">
+        <button onclick="filterCategory('all')" class="cat-filter-btn px-3.5 py-1.5 rounded-xl font-bold bg-blue-600 text-white transition" data-cat="all">Show All</button>
+        <button onclick="filterCategory('politics')" class="cat-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-slate-400 hover:text-white transition" data-cat="politics">🗳️ Politics</button>
+        <button onclick="filterCategory('duke-teaching')" class="cat-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-slate-400 hover:text-white transition" data-cat="duke-teaching">📚 Duke Teaching</button>
+        <button onclick="filterCategory('other-projects')" class="cat-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-slate-400 hover:text-white transition" data-cat="other-projects">⚙️ Other Projects</button>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- CATEGORY 1: POLITICS -->
+    <!-- ========================================================================= -->
+    <section id="politics" class="category-section space-y-6 pt-2">
       <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <div>
-          <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
-            <span>Featured Live Platforms</span>
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-          </h2>
-          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">
-            Real-time interactive data applications for North Carolina elections, voting access, and legislative forecasting.
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🗳️</span>
+            <h2 class="text-2xl font-black text-white tracking-tight">Politics & Civic Technology</h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30">10 Projects</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Real-time probabilistic election forecasting models, demographic early voting swing analytics, campus voting access guides, and election night benchmarks.
           </p>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-        <!-- CARD 1: NC ELECTION NEEDLE -->
-        <div class="bg-slate-900/90 border border-slate-800 hover:border-blue-500/60 rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col justify-between transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl group-hover:bg-blue-600/20 transition"></div>
-          
-          <div class="space-y-4">
-            <div class="flex items-start justify-between">
-              <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                Live Forecast Model
-              </span>
-              <span class="text-xs font-mono text-slate-400">rannbar-on.com/needle</span>
+        <!-- Politics Card 1: NC Election Needle -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">Live Forecasting</span>
+              <span class="text-xs text-slate-500 font-mono">rannbar-on.com/needle</span>
             </div>
-
-            <h3 class="text-2xl font-black text-white group-hover:text-blue-400 transition flex items-center gap-2">
-              NC Election Needle
-              <svg class="w-5 h-5 text-blue-400 opacity-0 group-hover:opacity-100 transition transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <h3 class="text-lg font-black text-white hover:text-blue-400 transition">
+              <a href="/needle">NC Election Needle</a>
             </h3>
-
-            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Real-time NYT-style probability needle forecasting final margins at the precinct level for <b>NC Senate (50)</b>, <b>NC House (120)</b>, <b>all 14 US Congressional districts</b>, US Senate, Supreme Court, and Court of Appeals Seats 1–3.
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Real-time NYT-style race gauges and probabilistic seat projections for <b>NC Senate (50 seats)</b>, <b>NC House (120 seats)</b>, <b>all 14 US Congressional districts</b>, US Senate, and Court of Appeals Seats 1–3 with 3-mode voting method decomposition.
             </p>
-
-            <div class="space-y-2 pt-2 border-t border-slate-800/80 text-xs text-slate-400">
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                <span><b>Mode Decomposition:</b> Absentee Mail, Early, & Election Day</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                <span><b>Chamber Control:</b> Supermajority breaker probabilities</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-                <span><b>Interactive Map:</b> Vector choropleth with hover diagnostics</span>
-              </div>
-            </div>
           </div>
-
-          <div class="pt-6 mt-6 border-t border-slate-800 flex items-center justify-between">
-            <a href="/needle" class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-blue-600/30 transition">
-              <span>Launch Election Needle</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            </a>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Interactive Web App</span>
+            <a href="/needle" class="font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">Open Needle &rarr;</a>
           </div>
         </div>
 
-        <!-- CARD 2: EARLY VOTE EXPLORER -->
-        <div class="bg-slate-900/90 border border-slate-800 hover:border-emerald-500/60 rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col justify-between transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-600/10 rounded-full blur-2xl group-hover:bg-emerald-600/20 transition"></div>
-          
-          <div class="space-y-4">
-            <div class="flex items-start justify-between">
-              <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                Daily Ingestion
-              </span>
-              <span class="text-xs font-mono text-slate-400">rannbar-on.com/earlyvote</span>
+        <!-- Politics Card 2: Early Voting Explorer -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Turnout Platform</span>
+              <span class="text-xs text-slate-500 font-mono">rannbar-on.com/earlyvote</span>
             </div>
-
-            <h3 class="text-2xl font-black text-white group-hover:text-emerald-400 transition flex items-center gap-2">
-              Early Vote Explorer
-              <svg class="w-5 h-5 text-emerald-400 opacity-0 group-hover:opacity-100 transition transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <h3 class="text-lg font-black text-white hover:text-emerald-400 transition">
+              <a href="/earlyvote">Early Vote Explorer</a>
             </h3>
-
-            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Comprehensive statewide turnout and swing explorer analyzing North Carolina early voting returns against <b>2022 and 2018 baselines</b> across all 100 counties and 2,600+ precincts.
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Interactive 100-county early voting demographic tracker comparing 2026 daily ballots against 2022 and 2018 returns with county registration swing and cumulative turnout curves.
             </p>
-
-            <div class="space-y-2 pt-2 border-t border-slate-800/80 text-xs text-slate-400">
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span><b>Demographics:</b> Party registration & racial composition</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span><b>Turnout Modeling:</b> Cumulative curves & county forecasts</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span><b>Live S3 Pipeline:</b> Automated morning ingestion from NCSBE</span>
-              </div>
-            </div>
           </div>
-
-          <div class="pt-6 mt-6 border-t border-slate-800 flex items-center gap-2">
-            <a href="/earlyvote" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-emerald-600/30 transition">
-              <span>Open Early Vote Explorer</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            </a>
-            <a href="/beta" class="px-3 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition" title="Experimental Legislative Beta Mode">
-              Beta
-            </a>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <a href="/beta" class="text-slate-400 hover:text-slate-200 underline font-mono text-[11px]">View Beta Mode &rarr;</a>
+            <a href="/earlyvote" class="font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">Open Explorer &rarr;</a>
           </div>
         </div>
 
-        <!-- CARD 3: NC STUDENT VOTING PLATFORM -->
-        <div class="bg-slate-900/90 border border-slate-800 hover:border-indigo-500/60 rounded-3xl p-6 sm:p-7 shadow-2xl flex flex-col justify-between transition-all duration-300 group hover:-translate-y-1 relative overflow-hidden">
-          <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-600/10 rounded-full blur-2xl group-hover:bg-indigo-600/20 transition"></div>
-          
-          <div class="space-y-4">
-            <div class="flex items-start justify-between">
-              <span class="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
-                111 Campuses Active
-              </span>
-              <span class="text-xs font-mono text-slate-400"><a href="/campuses" class="hover:text-indigo-300">/campuses</a> &bull; <a href="/vote" class="hover:text-indigo-300">/vote</a></span>
+        <!-- Politics Card 3: 111 NC Campus Guides -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Civic Access</span>
+              <span class="text-xs text-slate-500 font-mono">rannbar-on.com/campuses</span>
             </div>
-
-            <h3 class="text-2xl font-black text-white group-hover:text-indigo-400 transition flex items-center gap-2">
-              Student Voting Guides
-              <svg class="w-5 h-5 text-indigo-400 opacity-0 group-hover:opacity-100 transition transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            <h3 class="text-lg font-black text-white hover:text-indigo-400 transition">
+              <a href="/campuses">111 NC Campus Voting Guides</a>
             </h3>
-
-            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Non-partisan civic voting portal custom-built for all 111 North Carolina colleges and universities, including Duke, UNC-CH, NC State, NCCU, ECU, App State, and Wake Forest.
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Comprehensive student voting portals covering all 111 North Carolina colleges, universities, and community colleges with polling hours, approved photo IDs, and campus maps.
             </p>
-
-            <div class="space-y-2 pt-2 border-t border-slate-800/80 text-xs text-slate-400">
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
-                <span><b>Polling Sites:</b> On-campus locations, schedules, & maps</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
-                <span><b>Voter ID Rules:</b> Official approved student photo ID lists</span>
-              </div>
-              <div class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
-                <span><b>Campus Tools:</b> QR codes, geolocation lookup, & telemetry</span>
-              </div>
-            </div>
           </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <a href="/vote" class="text-slate-400 hover:text-slate-200 underline font-mono text-[11px]">Direct Portal (/vote)</a>
+            <a href="/campuses" class="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">Browse 111 Campuses &rarr;</a>
+          </div>
+        </div>
 
-          <div class="pt-6 mt-6 border-t border-slate-800 flex items-center gap-2">
-            <a href="/campuses" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/30 transition">
-              <span>Explore 111 Campus Guides</span>
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            </a>
-            <a href="/stats" class="px-3 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs transition" title="Live Campus Visitor Analytics">
-              Stats
-            </a>
+        <!-- Politics Card 4: Duke Early Voting Guide -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">Duke Campus</span>
+              <span class="text-xs text-slate-500 font-mono">rannbar-on.com/dukevote</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-blue-400 transition">
+              <a href="/dukevote">Duke Student Voting Guide</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Dedicated guide for Duke University students, faculty, and staff, detailing the Karsh Alumni Center on-campus early voting site, Duke student ID validation, and Durham County ballot info.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Karsh Alumni Center</span>
+            <a href="/dukevote" class="font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">Open Duke Guide &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Politics Card 5: UNC Chapel Hill Voting Guide -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">UNC-CH Campus</span>
+              <span class="text-xs text-slate-500 font-mono">rannbar-on.com/uncvote</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-sky-400 transition">
+              <a href="/uncvote">UNC Chapel Hill Voting Guide</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Dedicated voting guide for UNC Chapel Hill students and staff, covering the Chapel of the Cross polling site, Orange County ballot details, and One Card voting rules.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Chapel of the Cross</span>
+            <a href="/uncvote" class="font-bold text-sky-400 hover:text-sky-300 flex items-center gap-1">Open UNC Guide &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Politics Card 6: NC State Early Voting Guide -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-red-500/20 text-red-300 border border-red-500/30">NC State Campus</span>
+              <span class="text-xs text-slate-500 font-mono">rannbar-on.com/ncsuvote</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-red-400 transition">
+              <a href="/ncsuvote">NC State Voting Guide</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Dedicated voting guide for NC State University, detailing the Talley Student Union on-campus voting site, Wake County ballot details, and Wolfpack One Card requirements.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Talley Student Union</span>
+            <a href="/ncsuvote" class="font-bold text-red-400 hover:text-red-300 flex items-center gap-1">Open NC State Guide &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Politics Card 7: NCCU Voting Guide -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">NCCU Campus</span>
+              <span class="text-xs text-slate-500 font-mono">rannbar-on.com/nccuvote</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-rose-400 transition">
+              <a href="/nccuvote">NCCU Student Voting Guide</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Dedicated voting guide for North Carolina Central University, detailing the Turner Law Building polling site, Durham County ballot measures, and Eagle Card voter ID rules.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Turner Law Building</span>
+            <a href="/nccuvote" class="font-bold text-rose-400 hover:text-rose-300 flex items-center gap-1">Open NCCU Guide &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Politics Card 8: Campus Telemetry & Analytics -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Telemetry</span>
+              <span class="text-xs text-slate-500 font-mono">rannbar-on.com/stats</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-indigo-400 transition">
+              <a href="/stats">Campus Voting Usage Tracker</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Live, privacy-respecting telemetry dashboard monitoring visitor volume and campus engagement across all 111 North Carolina student voting portals.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Real-time Telemetry</span>
+            <a href="/stats" class="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">View Telemetry &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Politics Card 9: NC Trivia Study Flashcards -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Study Tool</span>
+              <span class="text-xs text-slate-500 font-mono">rannbar-on.com/nctrivialflash</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-amber-400 transition">
+              <a href="/nctrivialflash">NC Political Geography Flashcards</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Interactive study web app for mastering North Carolina political geography: 100 counties, county seats, legislative districts, historical election trivia, and geographic boundaries.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">180 Questions</span>
+            <a href="/nctrivialflash" class="font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">Open Flashcards &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Politics Card 10: NC Election Night Benchmark Model -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">Model Core</span>
+              <span class="text-xs text-slate-500 font-mono">election-benchmark</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-blue-400 transition">
+              <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener noreferrer">NC Election Night Benchmark Engine</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Precinct-by-precinct and county-by-county analytical benchmark engine calibrating expected margins against certified historical multi-cycle general election returns to measure real-time swing.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">GitHub Repository</span>
+            <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">View Repository &rarr;</a>
           </div>
         </div>
 
       </div>
     </section>
 
-    <!-- SECTION: ALL PROJECTS DIRECTORY WITH CATEGORY FILTERS -->
-    <section class="space-y-6 pt-6">
-      
-      <!-- Directory Header & Filters -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+    <!-- ========================================================================= -->
+    <!-- CATEGORY 2: DUKE TEACHING -->
+    <!-- ========================================================================= -->
+    <section id="duke-teaching" class="category-section space-y-6 pt-6">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
         <div>
-          <h2 class="text-xl sm:text-2xl font-black text-white">All Projects & Software Repositories</h2>
-          <p class="text-xs sm:text-sm text-slate-400 mt-0.5">
-            Explore academic curriculum, grading automation, election models, and civic technology.
+          <div class="flex items-center gap-2">
+            <span class="text-xl">📚</span>
+            <h2 class="text-2xl font-black text-white tracking-tight">Duke Teaching & Mathematics</h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">6 Projects</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Undergraduate mathematics curriculum, laboratory calculus coursepacks, pedagogical software, and academic advising at Duke University.
           </p>
-        </div>
-
-        <!-- Filter Buttons -->
-        <div class="flex flex-wrap items-center gap-1.5 bg-slate-900 p-1 rounded-2xl border border-slate-800 text-xs">
-          <button onclick="filterCategory('all')" class="cat-btn px-3.5 py-1.5 rounded-xl font-bold bg-blue-600 text-white transition" data-cat="all">All</button>
-          <button onclick="filterCategory('elections')" class="cat-btn px-3.5 py-1.5 rounded-xl font-bold text-slate-400 hover:text-white transition" data-cat="elections">Elections & Civic Tech</button>
-          <button onclick="filterCategory('math')" class="cat-btn px-3.5 py-1.5 rounded-xl font-bold text-slate-400 hover:text-white transition" data-cat="math">Mathematics & Education</button>
-          <button onclick="filterCategory('tools')" class="cat-btn px-3.5 py-1.5 rounded-xl font-bold text-slate-400 hover:text-white transition" data-cat="tools">Open Source & Tools</button>
         </div>
       </div>
 
-      <!-- Project Cards Grid -->
-      <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-        <!-- Project 1: NC Election Needle -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="elections">
+        <!-- Duke Teaching Card 1: Math 105L -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">Live Model</span>
-              <span class="text-xs text-slate-500 font-mono">/needle</span>
-            </div>
-            <h3 class="text-lg font-black text-white hover:text-blue-400 transition">
-              <a href="/needle">NC Election Needle</a>
-            </h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Real-time NYT-style race gauges and probabilistic seat projections for General Assembly (50 Senate, 120 House), 14 US Congressional districts, and statewide races with historical precinct mode baselines.
-            </p>
-          </div>
-          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">Interactive Web App</span>
-            <a href="/needle" class="font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">Open Needle &rarr;</a>
-          </div>
-        </div>
-
-        <!-- Project 2: Early Voting Explorer -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="elections">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Turnout Platform</span>
-              <span class="text-xs text-slate-500 font-mono">/earlyvote</span>
-            </div>
-            <h3 class="text-lg font-black text-white hover:text-emerald-400 transition">
-              <a href="/earlyvote">Early Vote Explorer</a>
-            </h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Interactive 100-county early voting demographic tracker comparing 2026 daily ballots against 2022 and 2018 returns with county registration swing and turnout curves.
-            </p>
-          </div>
-          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">100 Counties &bull; 2,600+ Precincts</span>
-            <a href="/earlyvote" class="font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">Open Explorer &rarr;</a>
-          </div>
-        </div>
-
-        <!-- Project 3: Student Voting Platform -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="elections">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Civic Access</span>
-              <span class="text-xs text-slate-500 font-mono">/campuses</span>
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Curriculum</span>
+              <span class="text-xs text-slate-500 font-mono">Math 105L</span>
             </div>
             <h3 class="text-lg font-black text-white hover:text-indigo-400 transition">
-              <a href="/campuses">111 NC Campus Voting Guides</a>
+              <a href="https://math.duke.edu/~rann/project/105lmaterials/" target="_blank" rel="noopener noreferrer">Laboratory Calculus I (Math 105L)</a>
             </h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Comprehensive student voting portals covering all 111 North Carolina colleges, universities, and community colleges with polling hours, photo ID rules, and campus maps.
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Official Duke course materials, laboratory manuals, applied real-world modeling projects, worksheets, and problem sets developed and supervised for entry-level calculus students.
             </p>
           </div>
           <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">111 Campus Portals</span>
-            <a href="/campuses" class="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">Browse Campuses &rarr;</a>
+            <span class="text-slate-400 font-mono">Duke Math Server</span>
+            <a href="https://math.duke.edu/~rann/project/105lmaterials/" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">Open 105L Materials &rarr;</a>
           </div>
         </div>
 
-        <!-- Project 4: Gradescope Tools Suite -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="math">
+        <!-- Duke Teaching Card 2: Math 106L -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Teaching Suite</span>
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Curriculum</span>
+              <span class="text-xs text-slate-500 font-mono">Math 106L</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-indigo-400 transition">
+              <a href="https://math.duke.edu/~rann/project/106lmaterials/" target="_blank" rel="noopener noreferrer">Laboratory Calculus II (Math 106L)</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Advanced laboratory calculus curriculum covering differential equations, infinite series, integration techniques, computational modeling labs, and exam archives at Duke.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Duke Math Server</span>
+            <a href="https://math.duke.edu/~rann/project/106lmaterials/" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">Open 106L Materials &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Duke Teaching Card 3: Math 218 -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Linear Algebra</span>
+              <span class="text-xs text-slate-500 font-mono">Math 218</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-indigo-400 transition">
+              <a href="https://math.duke.edu/~rann/project/218materials/" target="_blank" rel="noopener noreferrer">Matrices & Vector Spaces (Math 218)</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Undergraduate linear algebra lecture curriculum, matrix decomposition laboratories, computational demonstrations, and problem sets for undergraduate STEM students at Duke.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Duke Math Server</span>
+            <a href="https://math.duke.edu/~rann/project/218materials/" target="_blank" rel="noopener noreferrer" class="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">Open 218 Materials &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Duke Teaching Card 4: Gradescope Tools -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Grading Suite</span>
               <span class="text-xs text-slate-500 font-mono">gradescopetools</span>
             </div>
-            <h3 class="text-lg font-black text-white">Gradescope Teaching & Grading Automation</h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              High-throughput Python automation suite for Duke University calculus courses: automated roster synchronization, TA grading distribution, student extension tracking, and LaTeX grading pipelines.
-            </p>
-          </div>
-          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">Python Framework</span>
-            <span class="text-amber-400 font-semibold">Active Production</span>
-          </div>
-        </div>
-
-        <!-- Project 5: Duke Laboratory Calculus Curriculum -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="math">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">Curriculum</span>
-              <span class="text-xs text-slate-500 font-mono">Math 105L / 106L</span>
-            </div>
-            <h3 class="text-lg font-black text-white">Duke Laboratory Calculus I & II</h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Coursepack manuals, applied real-world modeling laboratories, computer-assisted pedagogy, and comprehensive problem sets developed over a decade supervising entry-level calculus at Duke.
-            </p>
-          </div>
-          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">Duke Mathematics</span>
-            <span class="text-purple-400 font-semibold">Lab Coursepacks</span>
-          </div>
-        </div>
-
-        <!-- Project 6: NC Election Night Benchmark Model -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="elections">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">Benchmark Engine</span>
-              <span class="text-xs text-slate-500 font-mono">election-benchmark</span>
-            </div>
-            <h3 class="text-lg font-black text-white">NC Election Night Benchmark Model</h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Precinct-by-precinct and county-by-county analytical benchmark engine calibrating expected margins against certified historical multi-cycle general election returns to measure real-time swing.
-            </p>
-          </div>
-          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">Analytical Engine</span>
-            <span class="text-blue-400 font-semibold">Election Night Model</span>
-          </div>
-        </div>
-
-        <!-- Project 7: NC Trivia Study Flashcards -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="tools">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Study Tool</span>
-              <span class="text-xs text-slate-500 font-mono">/nctrivialflash</span>
-            </div>
-            <h3 class="text-lg font-black text-white">NC Political Geography Flashcards</h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Interactive web-based study app for mastering North Carolina political geography: 100 counties, county seats, legislative districts, historical trivia, and geographic bounds.
-            </p>
-          </div>
-          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">Web Application</span>
-            <span class="text-emerald-400 font-semibold">Active Flashcards</span>
-          </div>
-        </div>
-
-        <!-- Project 8: Campus Telemetry & Visitor Analytics -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="tools">
-          <div>
-            <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Analytics</span>
-              <span class="text-xs text-slate-500 font-mono">/stats</span>
-            </div>
-            <h3 class="text-lg font-black text-white">
-              <a href="/stats">Campus Voting Usage Tracker</a>
+            <h3 class="text-lg font-black text-white hover:text-amber-400 transition">
+              <a href="https://math.duke.edu/~rann/" target="_blank" rel="noopener noreferrer">Gradescope Teaching & Grading Automation</a>
             </h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Live, privacy-respecting telemetry dashboard monitoring visitor volume and campus engagement across all 111 North Carolina student voting portals.
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              High-throughput Python automation suite for Duke University calculus courses: automated roster synchronization, TA grading distribution, student extension tracking, and LaTeX rubric pipelines.
             </p>
           </div>
           <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">Real-time Telemetry</span>
-            <a href="/stats" class="font-bold text-indigo-400 hover:text-indigo-300 flex items-center gap-1">View Stats &rarr;</a>
+            <span class="text-slate-400 font-mono">Python Suite</span>
+            <a href="https://math.duke.edu/~rann/" target="_blank" rel="noopener noreferrer" class="font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">View Overview &rarr;</a>
           </div>
         </div>
 
-        <!-- Project 9: Durham County Election Data Archive -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="elections">
+        <!-- Duke Teaching Card 5: Faculty Portal -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30">Open Data</span>
-              <span class="text-xs text-slate-500 font-mono">durham_data</span>
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">Academic Profile</span>
+              <span class="text-xs text-slate-500 font-mono">cauchy.math.duke.edu</span>
             </div>
-            <h3 class="text-lg font-black text-white">Durham County Voting Archives & GIS</h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Comprehensive Durham County precinct election returns, voting statistics, precinct shapefiles, demographic targeting models, and historical turnout archives.
+            <h3 class="text-lg font-black text-white hover:text-blue-400 transition">
+              <a href="https://math.duke.edu/~rann/" target="_blank" rel="noopener noreferrer">Duke Mathematics Faculty Portal</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Senior Lecturer in Mathematics academic homepage featuring teaching philosophy, undergraduate laboratory course development, course archives, and advising resources.
             </p>
           </div>
           <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">Durham County, NC</span>
-            <span class="text-sky-400 font-semibold">GIS & Data Archive</span>
+            <span class="text-slate-400 font-mono">Duke Faculty Site</span>
+            <a href="https://math.duke.edu/~rann/" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">Visit Faculty Page &rarr;</a>
           </div>
         </div>
 
-        <!-- Project 10: Durham Public Schools Crawler -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="tools">
+        <!-- Duke Teaching Card 6: Academic Advising -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">Honors</span>
+              <span class="text-xs text-slate-500 font-mono">Duke AAC</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-purple-400 transition">
+              <a href="https://math.duke.edu/~rann/#contact" target="_blank" rel="noopener noreferrer">Duke Undergraduate Advising & Mentorship</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Recipient of Duke University's 2017 Advisor of the Year Award. Dedication to pre-major and major advising for undergraduate students in mathematics and STEM fields.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Advisor of the Year</span>
+            <a href="https://math.duke.edu/~rann/#contact" target="_blank" rel="noopener noreferrer" class="font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1">Advising Contact &rarr;</a>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================================= -->
+    <!-- CATEGORY 3: OTHER PROJECTS -->
+    <!-- ========================================================================= -->
+    <section id="other-projects" class="category-section space-y-6 pt-6">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">⚙️</span>
+            <h2 class="text-2xl font-black text-white tracking-tight">Other Projects & Open Source</h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/30">6 Projects</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Algorithms, topological data analysis libraries, web scrapers, data pipelines, and research repositories.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- Other Card 1: persist & persim -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">TDA Software</span>
+              <span class="text-xs text-slate-500 font-mono">github.com/rannbaron/persist</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-purple-400 transition">
+              <a href="https://github.com/rannbaron/persist" target="_blank" rel="noopener noreferrer">Persistent Homology & TDA (persist & persim)</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Computational topology algorithms for persistent homology, topological data analysis, persistence diagrams, and multi-scale geometric feature extraction.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <a href="https://github.com/rannbaron/persim" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-slate-200 underline font-mono text-[11px]">persim repo &rarr;</a>
+            <a href="https://github.com/rannbaron/persist" target="_blank" rel="noopener noreferrer" class="font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1">persist on GitHub &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Other Card 2: libhungarian -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">C/C++ Library</span>
+              <span class="text-xs text-slate-500 font-mono">github.com/rannbaron/libhungarian</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-emerald-400 transition">
+              <a href="https://github.com/rannbaron/libhungarian" target="_blank" rel="noopener noreferrer">libhungarian: Bipartite Matching</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              High-performance C/C++ implementation of the Kuhn-Munkres (Hungarian) algorithm for solving the optimal linear assignment and minimum weight bipartite matching problem.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">C/C++ Matching</span>
+            <a href="https://github.com/rannbaron/libhungarian" target="_blank" rel="noopener noreferrer" class="font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">View on GitHub &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Other Card 3: TUMTopoTimeSeries2016 -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">Research</span>
+              <span class="text-xs text-slate-500 font-mono">TUMTopoTimeSeries2016</span>
+            </div>
+            <h3 class="text-lg font-black text-white hover:text-blue-400 transition">
+              <a href="https://github.com/rannbaron/TUMTopoTimeSeries2016" target="_blank" rel="noopener noreferrer">Topological Time Series Analysis</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Research repository and computational tools developed for topological time series analysis, dynamical systems analysis, and geometric feature extraction.
+            </p>
+          </div>
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-mono">Research Repo</span>
+            <a href="https://github.com/rannbaron/TUMTopoTimeSeries2016" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">View on GitHub &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Other Card 4: DPS District Crawler -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
           <div>
             <div class="flex items-center justify-between mb-2">
               <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Scraper</span>
               <span class="text-xs text-slate-500 font-mono">dpscrawler</span>
             </div>
-            <h3 class="text-lg font-black text-white">Durham Public Schools District Crawler</h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Automated data scraper and collection pipeline monitoring Durham Public Schools (DPS) district assignments, policy updates, and public board meeting minutes.
+            <h3 class="text-lg font-black text-white hover:text-amber-400 transition">
+              <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener noreferrer">Durham Public Schools District Crawler</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Automated data scraper and collection pipeline monitoring Durham Public Schools (DPS) district assignments, school board meeting minutes, and local educational policy updates.
             </p>
           </div>
           <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">Python Pipeline</span>
-            <span class="text-amber-400 font-semibold">Civic Scraper</span>
+            <span class="text-slate-400 font-mono">Python Pipeline</span>
+            <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener noreferrer" class="font-bold text-amber-400 hover:text-amber-300 flex items-center gap-1">View Code &rarr;</a>
           </div>
         </div>
 
-        <!-- Project 11: Duke Academic Advising -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="math">
+        <!-- Other Card 5: Marketplace Listings Scraper -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">Recognition</span>
-              <span class="text-xs text-slate-500 font-mono">Duke AAC</span>
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Automation</span>
+              <span class="text-xs text-slate-500 font-mono">marketplacescraper</span>
             </div>
-            <h3 class="text-lg font-black text-white">Duke Academic Advising & Mentorship</h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Winner of Duke University's 2017 Advisor of the Year Award. Mentoring undergraduate students in mathematics, STEM trajectories, and pre-major academic planning.
+            <h3 class="text-lg font-black text-white hover:text-emerald-400 transition">
+              <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener noreferrer">Listings Monitor & Scraper</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Automated listings scraper with instant alert dispatching via Telegram and webhooks for monitoring classified listings and equipment inventory.
             </p>
           </div>
           <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">Duke University</span>
-            <span class="text-purple-400 font-semibold">Advisor of the Year</span>
+            <span class="text-slate-400 font-mono">Python Automation</span>
+            <a href="https://github.com/rannbaron/mainwebsite" target="_blank" rel="noopener noreferrer" class="font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1">View Code &rarr;</a>
           </div>
         </div>
 
-        <!-- Project 12: Course Materials Index & Digital Repository -->
-        <div class="project-card glass-panel rounded-2xl p-5 flex flex-col justify-between space-y-4" data-category="math">
+        <!-- Other Card 6: GoatCounter Telemetry -->
+        <div class="project-card rounded-2xl p-5 flex flex-col justify-between space-y-4">
           <div>
             <div class="flex items-center justify-between mb-2">
-              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30">Repository</span>
-              <span class="text-xs text-slate-500 font-mono">open-math</span>
+              <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">Telemetry</span>
+              <span class="text-xs text-slate-500 font-mono">rannbaron.goatcounter.com</span>
             </div>
-            <h3 class="text-lg font-black text-white">Math Course Materials Repository</h3>
-            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
-              Curated master digital repository of 15+ years of calculus coursepacks, laboratory manuals, quizzes, midterms, worksheets, and LaTeX solution sets.
+            <h3 class="text-lg font-black text-white hover:text-blue-400 transition">
+              <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener noreferrer">Privacy-Respecting Visitor Telemetry</a>
+            </h3>
+            <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+              Transparent, lightweight, privacy-respecting visitor telemetry system tracking usage trends across the platform without storing personal tracking cookies.
             </p>
           </div>
           <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-            <span class="text-slate-500 font-mono">LaTeX & PDF Archive</span>
-            <span class="text-rose-400 font-semibold">Open Curriculum</span>
+            <span class="text-slate-400 font-mono">GoatCounter</span>
+            <a href="https://rannbaron.goatcounter.com" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">Open Telemetry &rarr;</a>
           </div>
         </div>
 
@@ -612,8 +705,8 @@
         <a href="mailto:rb6@duke.edu" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold transition flex items-center gap-1.5">
           <span>✉️ Contact Rann (rb6@duke.edu)</span>
         </a>
-        <a href="https://math.duke.edu" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold transition border border-slate-700 flex items-center gap-1.5">
-          <span>Duke Mathematics Department &rarr;</span>
+        <a href="https://math.duke.edu/~rann/" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold transition border border-slate-700 flex items-center gap-1.5">
+          <span>Duke Mathematics Faculty Page &rarr;</span>
         </a>
       </div>
     </section>
@@ -625,18 +718,14 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
       <div>
         <p class="font-bold text-white">Rann Bar-On, Ph.D. &bull; <span class="font-normal text-slate-400">Durham, North Carolina</span></p>
-        <p class="text-[11px] text-slate-500 mt-0.5">Senior Lecturer in Mathematics, Duke University &bull; Academic & Civic Technology</p>
+        <p class="text-[11px] text-slate-500 mt-0.5">Senior Lecturer in Mathematics, Duke University &bull; Politics, Teaching & Software</p>
       </div>
       <div class="flex flex-wrap items-center gap-4 text-xs font-medium">
-        <a href="/needle" class="text-blue-400 hover:underline">Election Needle</a>
+        <a href="#politics" class="text-blue-400 hover:underline">Politics</a>
         <span class="text-slate-700">&bull;</span>
-        <a href="/earlyvote" class="text-emerald-400 hover:underline">Early Vote Explorer</a>
+        <a href="#duke-teaching" class="text-indigo-400 hover:underline">Duke Teaching</a>
         <span class="text-slate-700">&bull;</span>
-        <a href="/campuses" class="text-indigo-400 hover:underline">Campus Voting (111)</a>
-        <span class="text-slate-700">&bull;</span>
-        <a href="/vote" class="text-indigo-300 hover:underline">/vote</a>
-        <span class="text-slate-700">&bull;</span>
-        <a href="/stats" class="text-slate-300 hover:underline">Usage Analytics</a>
+        <a href="#other-projects" class="text-purple-400 hover:underline">Other Projects</a>
         <span class="text-slate-700">&bull;</span>
         <a href="mailto:rb6@duke.edu" class="text-slate-300 hover:underline">rb6@duke.edu</a>
       </div>
@@ -645,19 +734,19 @@
 
   <script>
     function filterCategory(cat) {
-      document.querySelectorAll('.cat-btn').forEach(btn => {
+      document.querySelectorAll('.cat-filter-btn').forEach(btn => {
         if (btn.dataset.cat === cat) {
-          btn.className = "cat-btn px-3.5 py-1.5 rounded-xl font-bold bg-blue-600 text-white transition";
+          btn.className = "cat-filter-btn px-3.5 py-1.5 rounded-xl font-bold bg-blue-600 text-white transition";
         } else {
-          btn.className = "cat-btn px-3.5 py-1.5 rounded-xl font-bold text-slate-400 hover:text-white transition";
+          btn.className = "cat-filter-btn px-3.5 py-1.5 rounded-xl font-bold text-slate-400 hover:text-white transition";
         }
       });
 
-      document.querySelectorAll('.project-card').forEach(card => {
-        if (cat === 'all' || card.dataset.category === cat) {
-          card.classList.remove('hidden');
+      document.querySelectorAll('.category-section').forEach(sec => {
+        if (cat === 'all' || sec.id === cat) {
+          sec.classList.remove('hidden');
         } else {
-          card.classList.add('hidden');
+          sec.classList.add('hidden');
         }
       });
     }
