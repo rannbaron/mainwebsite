@@ -4,8 +4,10 @@ NC Election Night Needle Generator (rannbar-on.com/needle)
 ---------------------------------------------------------
 Constructs the New York Times-style probabilistic Needle forecast dashboard
 for North Carolina General Assembly races (all 50 NC Senate and 120 NC House districts)
-at the precinct level, along with marquee statewide races (US Senate, NC Supreme Court,
-NC Court of Appeals Seats 1-3), an interactive vector map, and chamber control needles.
+at the precinct level with full 3-mode voting method decomposition (Absentee Mail,
+One-Stop Early Voting, Election Day In-Person), along with marquee statewide races
+(US Senate, NC Supreme Court, NC Court of Appeals Seats 1-3), interactive vector maps,
+and chamber control needles.
 
 Outputs:
   - needle/needle_data.json
@@ -17,7 +19,9 @@ import os
 import re
 import json
 import math
+import shutil
 import pandas as pd
+import numpy as np
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, 'needle')
@@ -51,19 +55,125 @@ def build_needle_dataset():
     code = gs_text[start:end]
     bench_rows = re.findall(r'\[\s*\'([^\']+)\'\s*,\s*\'([^\']+)\'\s*,\s*([0-9\.]+)\s*,\s*([\-0-9\.]+)\s*,\s*([\-0-9\.]+)\s*,\s*([\-0-9\.]+)\s*,\s*([\-0-9\.]+)\s*,\s*([\-0-9\.]+)\s*\]', code)
 
+    print("3. Parsing precinct-level 2024 returns with voting method breakdown (Mail, Early, E-Day)...")
+    txt_path = '/home/rann/Documents/elections/voterlist/results_pct_20241105.txt'
+    if not os.path.exists(txt_path):
+        txt_path = '/home/rann/.gemini/antigravity/brain/4b3aec10-8dbc-428a-9aa3-166e86178a59/scratch/historical_results/results_pct_20241105.txt'
+
+    df = pd.read_csv(txt_path, sep='\t',
+                     usecols=['County', 'Precinct', 'Contest Name', 'Choice Party', 
+                              'Election Day', 'Early Voting', 'Absentee by Mail', 'Total Votes'])
+
+    # Build universal precinct baseline with 3-mode decomposition from AG contest
+    ag_df = df[df['Contest Name'] == 'NC ATTORNEY GENERAL'].copy()
+    ag_pivot = ag_df.pivot_table(index=['County', 'Precinct'], columns='Choice Party',
+                                 values=['Election Day', 'Early Voting', 'Absentee by Mail', 'Total Votes'],
+                                 aggfunc='sum', fill_value=0)
+
+    prec_modes = {}
+    ag_map = {}
+    for (c, p) in ag_pivot.index:
+        c_str = str(c).upper().strip()
+        p_str = str(p).upper().strip()
+        row = ag_pivot.loc[(c, p)]
+
+        m_dem = int(row.get(('Absentee by Mail', 'DEM'), 0))
+        m_rep = int(row.get(('Absentee by Mail', 'REP'), 0))
+        e_dem = int(row.get(('Early Voting', 'DEM'), 0))
+        e_rep = int(row.get(('Early Voting', 'REP'), 0))
+        ed_dem = int(row.get(('Election Day', 'DEM'), 0))
+        ed_rep = int(row.get(('Election Day', 'REP'), 0))
+        t_dem = int(row.get(('Total Votes', 'DEM'), 0))
+        t_rep = int(row.get(('Total Votes', 'REP'), 0))
+
+        t_tot = t_dem + t_rep
+        m_tot = m_dem + m_rep
+        e_tot = e_dem + e_rep
+        ed_tot = ed_dem + ed_rep
+
+        m_all = (t_dem - t_rep) / t_tot * 100.0 if t_tot > 0 else 0.0
+        m_mail = (m_dem - m_rep) / m_tot * 100.0 if m_tot > 0 else m_all + 30.6
+        m_early = (e_dem - e_rep) / e_tot * 100.0 if e_tot > 0 else m_all + 0.5
+        m_eday = (ed_dem - ed_rep) / ed_tot * 100.0 if ed_tot > 0 else m_all - 9.6
+
+        ag_map[(c_str, p_str)] = {'dem': t_dem, 'rep': t_rep, 'tot': t_tot, 'margin': m_all}
+
+        prec_modes[(c_str, p_str)] = {
+            'share_mail': m_tot / t_tot if t_tot > 0 else 0.052,
+            'share_early': e_tot / t_tot if t_tot > 0 else 0.741,
+            'share_eday': ed_tot / t_tot if t_tot > 0 else 0.207,
+            'diff_mail': m_mail - m_all,
+            'diff_early': m_early - m_all,
+            'diff_eday': m_eday - m_all
+        }
+
+    # Build county-level mode breakdown from AG
+    county_piv = ag_df.pivot_table(index='County', columns='Choice Party',
+                                   values=['Election Day', 'Early Voting', 'Absentee by Mail', 'Total Votes'],
+                                   aggfunc='sum', fill_value=0)
+    county_modes = {}
+    for c in county_piv.index:
+        c_up = str(c).upper().strip()
+        row = county_piv.loc[c]
+        m_dem = int(row.get(('Absentee by Mail', 'DEM'), 0))
+        m_rep = int(row.get(('Absentee by Mail', 'REP'), 0))
+        e_dem = int(row.get(('Early Voting', 'DEM'), 0))
+        e_rep = int(row.get(('Early Voting', 'REP'), 0))
+        ed_dem = int(row.get(('Election Day', 'DEM'), 0))
+        ed_rep = int(row.get(('Election Day', 'REP'), 0))
+        t_dem = int(row.get(('Total Votes', 'DEM'), 0))
+        t_rep = int(row.get(('Total Votes', 'REP'), 0))
+
+        t_tot = t_dem + t_rep
+        m_tot = m_dem + m_rep
+        e_tot = e_dem + e_rep
+        ed_tot = ed_dem + ed_rep
+
+        m_all = (t_dem - t_rep) / t_tot * 100.0 if t_tot > 0 else 0.0
+        m_mail = (m_dem - m_rep) / m_tot * 100.0 if m_tot > 0 else m_all + 30.6
+        m_early = (e_dem - e_rep) / e_tot * 100.0 if e_tot > 0 else m_all + 0.5
+        m_eday = (ed_dem - ed_rep) / ed_tot * 100.0 if ed_tot > 0 else m_all - 9.6
+
+        county_modes[c_up] = {
+            'share_mail': m_tot / t_tot if t_tot > 0 else 0.052,
+            'share_early': e_tot / t_tot if t_tot > 0 else 0.741,
+            'share_eday': ed_tot / t_tot if t_tot > 0 else 0.207,
+            'diff_mail': m_mail - m_all,
+            'diff_early': m_early - m_all,
+            'diff_eday': m_eday - m_all
+        }
+
+    print("4. Building statewide marquee races with mode benchmarks...")
     def build_statewide_race(key, title, short_title, dem_cand, rep_cand, target_col_idx, baseline_m, sigma, rating):
         counties = []
         tot_proj_turnout = 0
         for r in bench_rows:
             c_name = r[0]
-            c_up = c_name.upper()
+            c_up = c_name.upper().strip()
             cluster = r[1]
             turnout = int(float(r[2]))
             tot_proj_turnout += turnout
             target_m = round(float(r[target_col_idx]) * 100.0, 2)
             cushion = int(round(turnout * (target_m / 100.0)))
             geom = county_paths.get(c_up, {})
-            
+
+            # Mode benchmark calculations for county
+            c_mode = county_modes.get(c_up, {
+                'share_mail': 0.052, 'share_early': 0.741, 'share_eday': 0.207,
+                'diff_mail': 30.6, 'diff_early': 0.5, 'diff_eday': -9.6
+            })
+            c_m_mail = max(-100.0, min(100.0, target_m + c_mode['diff_mail']))
+            c_m_early = max(-100.0, min(100.0, target_m + c_mode['diff_early']))
+            c_m_eday = max(-100.0, min(100.0, target_m + c_mode['diff_eday']))
+
+            c_proj_mail = int(round(turnout * c_mode['share_mail']))
+            c_proj_early = int(round(turnout * c_mode['share_early']))
+            c_proj_eday = max(0, turnout - c_proj_mail - c_proj_early)
+
+            c_cush_mail = int(round(c_proj_mail * (c_m_mail / 100.0)))
+            c_cush_early = int(round(c_proj_early * (c_m_early / 100.0)))
+            c_cush_eday = int(round(c_proj_eday * (c_m_eday / 100.0)))
+
             counties.append({
                 'name': c_name,
                 'county': c_up,
@@ -73,7 +183,24 @@ def build_needle_dataset():
                 'target_cushion': cushion,
                 'path': geom.get('path', ''),
                 'bbox': geom.get('bbox', []),
-                'centroid': geom.get('centroid', [])
+                'centroid': geom.get('centroid', []),
+                'modes': {
+                    'mail': {
+                        'proj': c_proj_mail,
+                        'bench_m': round(c_m_mail, 2),
+                        'cushion': c_cush_mail
+                    },
+                    'early': {
+                        'proj': c_proj_early,
+                        'bench_m': round(c_m_early, 2),
+                        'cushion': c_cush_early
+                    },
+                    'eday': {
+                        'proj': c_proj_eday,
+                        'bench_m': round(c_m_eday, 2),
+                        'cushion': c_cush_eday
+                    }
+                }
             })
         
         z = baseline_m / sigma
@@ -102,27 +229,7 @@ def build_needle_dataset():
         'NC-COA-3': build_statewide_race('NC-COA-3', '2026 NC Court of Appeals Seat 3: Christine Marie Walczyk (D) vs. Craig Collins (R)', 'NC CoA Seat 3', 'Christine Marie Walczyk', 'Craig Collins', 5, 0.5, 2.05, 'Toss Up / Tilt D')
     }
 
-    print("3. Parsing precinct-level 2024 returns and baseline models...")
-    txt_path = '/home/rann/Documents/elections/voterlist/results_pct_20241105.txt'
-    if not os.path.exists(txt_path):
-        txt_path = '/home/rann/.gemini/antigravity/brain/4b3aec10-8dbc-428a-9aa3-166e86178a59/scratch/historical_results/results_pct_20241105.txt'
-
-    df = pd.read_csv(txt_path, sep='\t',
-                     usecols=['County', 'Precinct', 'Contest Name', 'Choice Party', 'Total Votes'])
-
-    # Build universal precinct AG baseline
-    ag_df = df[df['Contest Name'] == 'NC ATTORNEY GENERAL'].copy()
-    ag_pivot = ag_df.pivot_table(index=['County', 'Precinct'], columns='Choice Party', values='Total Votes', aggfunc='sum', fill_value=0).reset_index()
-    ag_map = {}
-    for _, row in ag_pivot.iterrows():
-        c = str(row['County']).upper().strip()
-        p = str(row['Precinct']).upper().strip()
-        dem_v = int(row.get('DEM', 0))
-        rep_v = int(row.get('REP', 0))
-        tot = dem_v + rep_v
-        m = (dem_v - rep_v) / tot * 100.0 if tot > 0 else 0.0
-        ag_map[(c, p)] = {'dem': dem_v, 'rep': rep_v, 'tot': tot, 'margin': m}
-
+    print("5. Building legislative chambers with precinct-level mode benchmarks...")
     def process_chamber(chamber_name, contest_filter, meta_dict):
         sub_df = df[df['Contest Name'].str.contains(contest_filter, na=False) & ~df['Contest Name'].str.contains('US HOUSE', na=False)].copy()
         piv = sub_df.pivot_table(index=['Contest Name', 'County', 'Precinct'], columns='Choice Party', values='Total Votes', aggfunc='sum', fill_value=0).reset_index()
@@ -178,6 +285,24 @@ def build_needle_dataset():
                 cushion = int(round(prec_proj_turnout * (bench_m / 100.0)))
                 bench_dem = int(round(prec_proj_turnout * (100.0 + bench_m) / 200.0))
                 bench_rep = prec_proj_turnout - bench_dem
+
+                # Mode-specific decomposition
+                mode_info = prec_modes.get((c, p), {
+                    'share_mail': 0.052, 'share_early': 0.741, 'share_eday': 0.207,
+                    'diff_mail': 30.6, 'diff_early': 0.5, 'diff_eday': -9.6
+                })
+
+                bench_m_mail = max(-100.0, min(100.0, bench_m + mode_info['diff_mail']))
+                bench_m_early = max(-100.0, min(100.0, bench_m + mode_info['diff_early']))
+                bench_m_eday = max(-100.0, min(100.0, bench_m + mode_info['diff_eday']))
+
+                proj_mail = int(round(prec_proj_turnout * mode_info['share_mail']))
+                proj_early = int(round(prec_proj_turnout * mode_info['share_early']))
+                proj_eday = max(0, prec_proj_turnout - proj_mail - proj_early)
+
+                cushion_mail = int(round(proj_mail * (bench_m_mail / 100.0)))
+                cushion_early = int(round(proj_early * (bench_m_early / 100.0)))
+                cushion_eday = int(round(proj_eday * (bench_m_eday / 100.0)))
                 
                 precinct_list.append({
                     "id": f"{c}-{p}",
@@ -188,7 +313,24 @@ def build_needle_dataset():
                     "bench_margin": round(bench_m, 2),
                     "bench_dem": int(bench_dem),
                     "bench_rep": int(bench_rep),
-                    "target_cushion": int(cushion)
+                    "target_cushion": int(cushion),
+                    "modes": {
+                        "mail": {
+                            "proj": proj_mail,
+                            "bench_m": round(bench_m_mail, 2),
+                            "cushion": cushion_mail
+                        },
+                        "early": {
+                            "proj": proj_early,
+                            "bench_m": round(bench_m_early, 2),
+                            "cushion": cushion_early
+                        },
+                        "eday": {
+                            "proj": proj_eday,
+                            "bench_m": round(bench_m_eday, 2),
+                            "cushion": cushion_eday
+                        }
+                    }
                 })
                 
             districts[d_key] = {
@@ -223,7 +365,7 @@ def build_needle_dataset():
     dem_house_exp = sum(d['p_dem'] / 100.0 for d in house_districts.values())
 
     output = {
-        "generated_at": "2026-10-31T17:25:00-04:00",
+        "generated_at": "2026-10-31T17:45:00-04:00",
         "chambers": {
             "senate": {
                 "total_seats": 50,
@@ -253,5 +395,33 @@ def build_needle_dataset():
     print(f"Generated {out_json} successfully (size: {os.path.getsize(out_json)/1024:.1f} KB).")
     return output
 
+
+
+def update_needle_html_files():
+    print("6. Updating needle HTML dashboards...")
+    index_path = os.path.join(OUTPUT_DIR, 'index.html')
+    needle_root = os.path.join(BASE_DIR, 'needle.html')
+    data_path = os.path.join(OUTPUT_DIR, 'needle_data.json')
+    
+    with open(data_path) as f:
+        data_json = f.read()
+    with open(index_path) as f:
+        orig_html = f.read()
+
+    m1 = orig_html.find('window.NEEDLE_DATA =')
+    m2 = orig_html.find(';\n', m1)
+    prefix = orig_html[:m1]
+    
+    # Check if app JS is after m2
+    js_marker = orig_html.find('<!-- APPLICATION LOGIC SCRIPT -->')
+    suffix = orig_html[js_marker:] if js_marker != -1 else orig_html[m2:]
+
+    full_html = prefix + "window.NEEDLE_DATA = " + data_json + ";\n  </script>\n\n  " + suffix
+    with open(index_path, 'w') as f:
+        f.write(full_html)
+    shutil.copyfile(index_path, needle_root)
+    print(f"Successfully updated {index_path} and {needle_root} ({os.path.getsize(index_path)/1024:.1f} KB).")
+
 if __name__ == '__main__':
     build_needle_dataset()
+    update_needle_html_files()
