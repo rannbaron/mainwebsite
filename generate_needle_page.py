@@ -70,6 +70,15 @@ def build_needle_dataset():
                                  values=['Election Day', 'Early Voting', 'Absentee by Mail', 'Total Votes'],
                                  aggfunc='sum', fill_value=0)
 
+    # Load exact voter-level historical precinct mode ratios
+    prec_hist_modes_path = os.path.join(BASE_DIR, 'nc_precinct_historical_modes.json')
+    if os.path.exists(prec_hist_modes_path):
+        with open(prec_hist_modes_path) as f:
+            prec_hist_modes = json.load(f)
+        print("Loaded " + str(len(prec_hist_modes)) + " exact precinct historical mode profiles from " + prec_hist_modes_path)
+    else:
+        prec_hist_modes = {}
+
     prec_modes = {}
     ag_map = {}
     for (c, p) in ag_pivot.index:
@@ -98,10 +107,21 @@ def build_needle_dataset():
 
         ag_map[(c_str, p_str)] = {'dem': t_dem, 'rep': t_rep, 'tot': t_tot, 'margin': m_all}
 
+        # Exact precinct voter-level share from matched absentee file if available
+        hist_p = prec_hist_modes.get(f"{c_str}-{p_str}")
+        if hist_p:
+            share_mail = hist_p['share_mail']
+            share_early = hist_p['share_early']
+            share_eday = hist_p['share_eday']
+        else:
+            share_mail = m_tot / t_tot if t_tot > 0 else 0.052
+            share_early = e_tot / t_tot if t_tot > 0 else 0.741
+            share_eday = ed_tot / t_tot if t_tot > 0 else 0.207
+
         prec_modes[(c_str, p_str)] = {
-            'share_mail': m_tot / t_tot if t_tot > 0 else 0.052,
-            'share_early': e_tot / t_tot if t_tot > 0 else 0.741,
-            'share_eday': ed_tot / t_tot if t_tot > 0 else 0.207,
+            'share_mail': share_mail,
+            'share_early': share_early,
+            'share_eday': share_eday,
             'diff_mail': m_mail - m_all,
             'diff_early': m_early - m_all,
             'diff_eday': m_eday - m_all
