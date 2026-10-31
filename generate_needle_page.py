@@ -33,6 +33,8 @@ def build_needle_dataset():
         senate_meta = json.load(f)
     with open(os.path.join(BASE_DIR, 'nc_house_data.json')) as f:
         house_meta = json.load(f)
+    with open(os.path.join(BASE_DIR, 'nc_cd_data.json')) as f:
+        cd_meta = json.load(f)
     with open(os.path.join(BASE_DIR, 'nc_map_base.json')) as f:
         county_base = json.load(f)
 
@@ -251,7 +253,12 @@ def build_needle_dataset():
 
     print("5. Building legislative chambers with precinct-level mode benchmarks...")
     def process_chamber(chamber_name, contest_filter, meta_dict):
-        sub_df = df[df['Contest Name'].str.contains(contest_filter, na=False) & ~df['Contest Name'].str.contains('US HOUSE', na=False)].copy()
+        if chamber_name == "senate":
+            sub_df = df[df['Contest Name'].str.contains('STATE SENATE', na=False)].copy()
+        elif chamber_name == "house":
+            sub_df = df[df['Contest Name'].str.contains('HOUSE OF REPRESENTATIVES', na=False) & ~df['Contest Name'].str.contains('US HOUSE', na=False)].copy()
+        else: # congress
+            sub_df = df[df['Contest Name'].str.contains('US HOUSE OF REPRESENTATIVES', na=False)].copy()
         piv = sub_df.pivot_table(index=['Contest Name', 'County', 'Precinct'], columns='Choice Party', values='Total Votes', aggfunc='sum', fill_value=0).reset_index()
         
         districts = {}
@@ -259,7 +266,12 @@ def build_needle_dataset():
             m_num = re.search(r'DISTRICT\s+(\d+)', c_name)
             if not m_num: continue
             d_num = int(m_num.group(1))
-            d_key = f"SD-{d_num:02d}" if chamber_name == "senate" else f"HD-{d_num:03d}"
+            if chamber_name == "senate":
+                d_key = f"SD-{d_num:02d}"
+            elif chamber_name == "house":
+                d_key = f"HD-{d_num:03d}"
+            else:
+                d_key = f"NC-{d_num:02d}"
             
             meta = meta_dict.get(d_key, {})
             proj_turnout = meta.get('proj_turnout', 50000)
@@ -369,7 +381,7 @@ def build_needle_dataset():
                 "is_uncontested": is_uncontested,
                 "region": meta.get('region', ''),
                 "counties": meta.get('counties', []),
-                "sigma": 3.5 if chamber_name == "senate" else 3.8,
+                "sigma": 3.5 if chamber_name == "senate" else (3.8 if chamber_name == "house" else 2.8),
                 "path": meta.get('path', ''),
                 "bbox": meta.get('bbox', []),
                 "centroid": meta.get('centroid', []),
@@ -380,9 +392,11 @@ def build_needle_dataset():
 
     senate_districts = process_chamber("senate", "STATE SENATE", senate_meta)
     house_districts = process_chamber("house", "HOUSE OF REPRESENTATIVES", house_meta)
+    congress_districts = process_chamber("congress", "US HOUSE OF REPRESENTATIVES", cd_meta)
 
     dem_senate_exp = sum(d['p_dem'] / 100.0 for d in senate_districts.values())
     dem_house_exp = sum(d['p_dem'] / 100.0 for d in house_districts.values())
+    dem_congress_exp = sum(d['p_dem'] / 100.0 for d in congress_districts.values())
 
     output = {
         "generated_at": "2026-10-31T17:45:00-04:00",
@@ -404,6 +418,14 @@ def build_needle_dataset():
                 "baseline_exp_rep": round(120.0 - dem_house_exp, 1),
                 "sigma_seats": 2.8,
                 "districts": house_districts
+            },
+            "congress": {
+                "total_seats": 14,
+                "majority_threshold": 8,
+                "baseline_exp_dem": round(dem_congress_exp, 1),
+                "baseline_exp_rep": round(14.0 - dem_congress_exp, 1),
+                "sigma_seats": 0.8,
+                "districts": congress_districts
             }
         },
         "statewide": statewide_races
