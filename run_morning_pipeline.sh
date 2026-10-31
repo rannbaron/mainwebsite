@@ -35,7 +35,7 @@ log "================================================================="
 CURRENT_DATE=$(date +'%Y-%m-%d %H:%M')
 if [[ "$CURRENT_DATE" > "2026-11-01 12:00" ]]; then
     log "Notice: Early voting morning pipeline & spreadsheet updates concluded after Sunday morning, Nov 1, 2026. Exiting."
-    crontab -l 2>/dev/null | grep -v "run_morning_pipeline.sh" | crontab - || true
+    # Local crontab management disabled - updates are managed by GitHub Actions
     exit 0
 fi
 
@@ -121,5 +121,5 @@ log "================================================================="
 # Clean up crontab after the final Sunday morning run (Nov 1, 2026)
 if [[ "$CURRENT_DATE" > "2026-11-01 05:00" ]]; then
     log "Sunday morning final early voting run complete. Cleaning up crontab..."
-    crontab -l 2>/dev/null | grep -v "run_morning_pipeline.sh" | crontab - || true
+    # Local crontab management disabled - updates are managed by GitHub Actions
 fi

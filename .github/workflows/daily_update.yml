@@ -60,6 +60,10 @@ jobs:
         if: github.event.inputs.test_email_only != 'true'
         run: |
           python3 update_server.py 2>&1 | tee update.log
+          if [ -f "generate_needle_page.py" ]; then
+            echo "Running generate_needle_page.py to update needle forecasts..."
+            python3 generate_needle_page.py 2>&1 | tee -a update.log || true
+          fi
 
       - name: Send Daily Change Summary & Rating Shifts Email
         if: "!cancelled()"
@@ -91,7 +95,7 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_*.csv latest_daily_email.json latest_daily_email.html .email_dispatch_log.json
+          git add earlyvote/index.html earlyvote.html beta/index.html needle/index.html needle.html needle/needle_data.json nc_map_base.json .absentee_2026.meta.json nc_early_voting_*.csv latest_daily_email.json latest_daily_email.html .email_dispatch_log.json
           if git diff --staged --quiet; then
             echo "No changes detected to commit."
             echo "updated=false" >> "$GITHUB_OUTPUT"
