@@ -290,147 +290,355 @@
       </div>
 
       <!-- CONTAINER B: STATEWIDE MARQUEE RACES (US SENATE & SUPREME COURT) -->
-      <div id="heroStatewideSection" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- STATEWIDE & JUDICIAL RACES HERO SECTION -->
+      <div id="heroStatewideSection" class="hidden space-y-6">
 
-        <!-- US SENATE NEEDLE CARD -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
-          <div class="flex items-start justify-between">
-            <div>
-              <span class="text-xs font-bold text-slate-400 tracking-wider uppercase">Marquee Contest</span>
-              <h2 class="text-xl font-black text-white flex items-center gap-2">
-                2026 US Senate
-                <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-medium border border-blue-500/30">Roy Cooper (D) vs. Michael Whatley (R)</span>
-              </h2>
+        <!-- ROW 1: MARQUEE CONTESTS (US SENATE & NC SUPREME COURT) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+          <!-- US SENATE NEEDLE CARD -->
+          <div onclick="selectDistrict('US-SENATE')" class="bg-slate-900/90 border border-slate-800 hover:border-blue-500/50 rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between cursor-pointer transition group">
+            <div class="flex items-start justify-between">
+              <div>
+                <span class="text-xs font-bold text-slate-400 tracking-wider uppercase">Federal Marquee Contest</span>
+                <h2 class="text-xl font-black text-white group-hover:text-blue-400 transition flex items-center gap-2">
+                  2026 US Senate
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-medium border border-blue-500/30">Roy Cooper (D) vs. Michael Whatley (R)</span>
+                </h2>
+              </div>
+              <div class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                Lean Democratic
+              </div>
             </div>
-            <div class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
-              Lean Democratic
+
+            <div class="my-4 flex flex-col items-center justify-center relative">
+              <svg viewBox="0 0 300 175" class="w-full max-w-[340px]">
+                <defs>
+                  <linearGradient id="senateRaceGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#DC2626" />
+                    <stop offset="35%" stop-color="#EF4444" />
+                    <stop offset="48%" stop-color="#F59E0B" />
+                    <stop offset="60%" stop-color="#3B82F6" />
+                    <stop offset="100%" stop-color="#1D4ED8" />
+                  </linearGradient>
+                </defs>
+                <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="#1E293B" stroke-width="18" />
+                <path id="usSenateCiBand" d="" class="gauge-track" stroke="#38BDF8" stroke-width="22" stroke-opacity="0.35" />
+                <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="url(#senateRaceGrad)" stroke-width="12" />
+
+                <g transform="rotate(0, 150, 150)">
+                  <line x1="150" y1="20" x2="150" y2="40" stroke="#FFFFFF" stroke-width="2.5" />
+                  <text x="150" y="15" fill="#FFFFFF" font-size="8.5" font-weight="bold" text-anchor="middle">EVEN</text>
+                </g>
+
+                <g id="usSenateNeedleGroup" class="needle-pointer jittering" style="--rot: 22.5deg;">
+                  <polygon points="150,22 145,150 155,150" fill="#FFFFFF" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.6))" />
+                  <circle cx="150" cy="150" r="11" fill="#0F172A" stroke="#FFFFFF" stroke-width="3" />
+                  <circle cx="150" cy="150" r="4" fill="#38BDF8" />
+                </g>
+
+                <text x="32" y="170" fill="#EF4444" font-size="9" font-weight="bold" text-anchor="middle">REP +10%</text>
+                <text x="268" y="170" fill="#3B82F6" font-size="9" font-weight="bold" text-anchor="middle">DEM +10%</text>
+              </svg>
+
+              <div class="text-center -mt-2">
+                <div id="usSenateScore" class="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
+                  DEM +2.5%
+                </div>
+                <div id="usSenateCiText" class="text-xs font-semibold text-slate-400 mt-1">
+                  95% Range: <span class="text-slate-200">DEM -1.1% to DEM +6.1%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-800 text-xs">
+              <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+                <div class="text-slate-400 text-[11px] font-medium">Cooper Win Probability</div>
+                <div id="usSenateWinProb" class="text-lg font-bold text-blue-400 font-mono mt-0.5">91.2% Chance</div>
+                <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                  <div id="usSenateWinBar" class="bg-blue-400 h-full rounded-full" style="width: 91.2%"></div>
+                </div>
+              </div>
+              <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+                <div class="text-slate-400 text-[11px] font-medium">Target Net Cushion (Statewide)</div>
+                <div id="usSenateCushion" class="text-lg font-bold text-blue-400 font-mono mt-0.5">D +96,500 Votes</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Click to inspect 100 counties</div>
+              </div>
             </div>
           </div>
 
-          <div class="my-4 flex flex-col items-center justify-center relative">
-            <svg viewBox="0 0 300 175" class="w-full max-w-[340px]">
-              <defs>
-                <linearGradient id="senateRaceGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#DC2626" />
-                  <stop offset="35%" stop-color="#EF4444" />
-                  <stop offset="48%" stop-color="#F59E0B" />
-                  <stop offset="60%" stop-color="#3B82F6" />
-                  <stop offset="100%" stop-color="#1D4ED8" />
-                </linearGradient>
-              </defs>
-              <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="#1E293B" stroke-width="18" />
-              <path id="usSenateCiBand" d="" class="gauge-track" stroke="#38BDF8" stroke-width="22" stroke-opacity="0.35" />
-              <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="url(#senateRaceGrad)" stroke-width="12" />
-
-              <g transform="rotate(0, 150, 150)">
-                <line x1="150" y1="20" x2="150" y2="40" stroke="#FFFFFF" stroke-width="2.5" />
-                <text x="150" y="15" fill="#FFFFFF" font-size="8.5" font-weight="bold" text-anchor="middle">EVEN</text>
-              </g>
-
-              <g id="usSenateNeedleGroup" class="needle-pointer jittering" style="--rot: 22.5deg;">
-                <polygon points="150,22 145,150 155,150" fill="#FFFFFF" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.6))" />
-                <circle cx="150" cy="150" r="11" fill="#0F172A" stroke="#FFFFFF" stroke-width="3" />
-                <circle cx="150" cy="150" r="4" fill="#38BDF8" />
-              </g>
-
-              <text x="32" y="170" fill="#EF4444" font-size="9" font-weight="bold" text-anchor="middle">REP +10%</text>
-              <text x="268" y="170" fill="#3B82F6" font-size="9" font-weight="bold" text-anchor="middle">DEM +10%</text>
-            </svg>
-
-            <div class="text-center -mt-2">
-              <div class="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
-                DEM +2.5% <span class="text-sm font-normal text-slate-400">(51.2% / 48.8%)</span>
+          <!-- NC SUPREME COURT NEEDLE CARD -->
+          <div onclick="selectDistrict('NC-SC')" class="bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between cursor-pointer transition group">
+            <div class="flex items-start justify-between">
+              <div>
+                <span class="text-xs font-bold text-slate-400 tracking-wider uppercase">High Court Judicial Contest</span>
+                <h2 class="text-xl font-black text-white group-hover:text-amber-400 transition flex items-center gap-2">
+                  NC Supreme Court
+                  <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-medium border border-amber-500/30">Anita Earls (D) vs. Sarah Stevens (R)</span>
+                </h2>
               </div>
-              <div class="text-xs font-semibold text-slate-400 mt-1">
-                95% Probable Range: <span class="text-slate-200">DEM -1.1% to DEM +6.1%</span>
+              <div class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                Toss Up / Tilt D
+              </div>
+            </div>
+
+            <div class="my-4 flex flex-col items-center justify-center relative">
+              <svg viewBox="0 0 300 175" class="w-full max-w-[340px]">
+                <defs>
+                  <linearGradient id="scRaceGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#DC2626" />
+                    <stop offset="35%" stop-color="#EF4444" />
+                    <stop offset="48%" stop-color="#F59E0B" />
+                    <stop offset="60%" stop-color="#3B82F6" />
+                    <stop offset="100%" stop-color="#1D4ED8" />
+                  </linearGradient>
+                </defs>
+                <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="#1E293B" stroke-width="18" />
+                <path id="scCiBand" d="" class="gauge-track" stroke="#38BDF8" stroke-width="22" stroke-opacity="0.35" />
+                <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="url(#scRaceGrad)" stroke-width="12" />
+
+                <g transform="rotate(0, 150, 150)">
+                  <line x1="150" y1="20" x2="150" y2="40" stroke="#FFFFFF" stroke-width="2.5" />
+                  <text x="150" y="15" fill="#FFFFFF" font-size="8.5" font-weight="bold" text-anchor="middle">EVEN</text>
+                </g>
+
+                <g id="scNeedleGroup" class="needle-pointer jittering" style="--rot: 9.0deg;">
+                  <polygon points="150,22 145,150 155,150" fill="#FFFFFF" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.6))" />
+                  <circle cx="150" cy="150" r="11" fill="#0F172A" stroke="#FFFFFF" stroke-width="3" />
+                  <circle cx="150" cy="150" r="4" fill="#38BDF8" />
+                </g>
+
+                <text x="32" y="170" fill="#EF4444" font-size="9" font-weight="bold" text-anchor="middle">REP +10%</text>
+                <text x="268" y="170" fill="#3B82F6" font-size="9" font-weight="bold" text-anchor="middle">DEM +10%</text>
+              </svg>
+
+              <div class="text-center -mt-2">
+                <div id="ncScScore" class="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
+                  DEM +1.0%
+                </div>
+                <div id="ncScCiText" class="text-xs font-semibold text-slate-400 mt-1">
+                  95% Range: <span class="text-slate-200">REP -2.8% to DEM +4.8%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-800 text-xs">
+              <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+                <div class="text-slate-400 text-[11px] font-medium">Earls Win Probability</div>
+                <div id="ncScWinProb" class="text-lg font-bold text-amber-400 font-mono mt-0.5">69.6% Chance</div>
+                <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                  <div id="ncScWinBar" class="bg-amber-400 h-full rounded-full" style="width: 69.6%"></div>
+                </div>
+              </div>
+              <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
+                <div class="text-slate-400 text-[11px] font-medium">Target Net Cushion (Statewide)</div>
+                <div id="ncScCushion" class="text-lg font-bold text-blue-400 font-mono mt-0.5">D +38,600 Votes</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">Click to inspect 100 counties</div>
               </div>
             </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-800 text-xs">
-            <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-              <div class="text-slate-400 text-[11px] font-medium">Cooper Win Probability</div>
-              <div class="text-lg font-bold text-blue-400 font-mono mt-0.5">91.2% Chance</div>
-              <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
-                <div class="bg-blue-400 h-full rounded-full" style="width: 91.2%"></div>
-              </div>
-            </div>
-            <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-              <div class="text-slate-400 text-[11px] font-medium">Target Net Cushion (Statewide)</div>
-              <div class="text-lg font-bold text-blue-400 font-mono mt-0.5">D +96,500 Votes</div>
-              <div class="text-[10px] text-slate-400 mt-0.5">3,860,700 Expected Turnout</div>
-            </div>
-          </div>
         </div>
 
-        <!-- NC SUPREME COURT NEEDLE CARD -->
-        <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
-          <div class="flex items-start justify-between">
+        <!-- ROW 2: NC COURT OF APPEALS MARQUEE SEATS (SEATS 1, 2, 3) -->
+        <div class="bg-slate-900/60 border border-slate-800/90 rounded-2xl p-5 shadow-xl">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 mb-4 border-b border-slate-800 gap-2">
             <div>
-              <span class="text-xs font-bold text-slate-400 tracking-wider uppercase">Judicial Contest</span>
-              <h2 class="text-xl font-black text-white flex items-center gap-2">
-                NC Supreme Court Seat 1
-                <span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-medium border border-amber-500/30">Anita Earls (D) vs. Sarah Stevens (R)</span>
-              </h2>
+              <h3 class="text-base font-black text-white flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse"></span>
+                North Carolina Court of Appeals (Marquee Seats 1, 2 & 3)
+              </h3>
+              <p class="text-xs text-slate-400 mt-0.5">
+                Competitive statewide appellate judicial contests across North Carolina's 100 counties. Click any card to inspect precinct and county margins.
+              </p>
             </div>
-            <div class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
-              Toss Up / Tilt D
-            </div>
+            <span class="text-xs font-semibold px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 whitespace-nowrap">
+              3 Seats Contested
+            </span>
           </div>
 
-          <div class="my-4 flex flex-col items-center justify-center relative">
-            <svg viewBox="0 0 300 175" class="w-full max-w-[340px]">
-              <defs>
-                <linearGradient id="scRaceGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stop-color="#DC2626" />
-                  <stop offset="35%" stop-color="#EF4444" />
-                  <stop offset="48%" stop-color="#F59E0B" />
-                  <stop offset="60%" stop-color="#3B82F6" />
-                  <stop offset="100%" stop-color="#1D4ED8" />
-                </linearGradient>
-              </defs>
-              <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="#1E293B" stroke-width="18" />
-              <path id="scCiBand" d="" class="gauge-track" stroke="#38BDF8" stroke-width="22" stroke-opacity="0.35" />
-              <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="url(#scRaceGrad)" stroke-width="12" />
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-              <g transform="rotate(0, 150, 150)">
-                <line x1="150" y1="20" x2="150" y2="40" stroke="#FFFFFF" stroke-width="2.5" />
-                <text x="150" y="15" fill="#FFFFFF" font-size="8.5" font-weight="bold" text-anchor="middle">EVEN</text>
-              </g>
-
-              <g id="scNeedleGroup" class="needle-pointer jittering" style="--rot: 9.0deg;">
-                <polygon points="150,22 145,150 155,150" fill="#FFFFFF" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.6))" />
-                <circle cx="150" cy="150" r="11" fill="#0F172A" stroke="#FFFFFF" stroke-width="3" />
-                <circle cx="150" cy="150" r="4" fill="#38BDF8" />
-              </g>
-
-              <text x="32" y="170" fill="#EF4444" font-size="9" font-weight="bold" text-anchor="middle">REP +10%</text>
-              <text x="268" y="170" fill="#3B82F6" font-size="9" font-weight="bold" text-anchor="middle">DEM +10%</text>
-            </svg>
-
-            <div class="text-center -mt-2">
-              <div class="text-3xl sm:text-4xl font-black tracking-tight text-white font-mono">
-                DEM +1.0% <span class="text-sm font-normal text-slate-400">(50.5% / 49.5%)</span>
+            <!-- NC COURT OF APPEALS SEAT 1 CARD -->
+            <div onclick="selectDistrict('NC-COA-1')" class="bg-slate-950/80 border border-slate-800 hover:border-purple-500/60 rounded-xl p-4 shadow-lg flex flex-col justify-between cursor-pointer transition group">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Appellate Seat 1</span>
+                  <h4 class="text-base font-black text-white group-hover:text-purple-400 transition">John S. Arrowood (D)</h4>
+                  <div class="text-[11px] text-slate-400">vs. Michael C. Byrne (R) &bull; <span class="text-slate-300 font-semibold">Incumbent</span></div>
+                </div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  Tilt D
+                </span>
               </div>
-              <div class="text-xs font-semibold text-slate-400 mt-1">
-                95% Probable Range: <span class="text-slate-200">REP -2.8% to DEM +4.8%</span>
+
+              <div class="my-3 flex flex-col items-center justify-center relative">
+                <svg viewBox="0 0 300 175" class="w-full max-w-[260px]">
+                  <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="#1E293B" stroke-width="18" />
+                  <path id="coa1CiBand" d="" class="gauge-track" stroke="#38BDF8" stroke-width="22" stroke-opacity="0.35" />
+                  <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="url(#scRaceGrad)" stroke-width="12" />
+
+                  <g transform="rotate(0, 150, 150)">
+                    <line x1="150" y1="20" x2="150" y2="40" stroke="#FFFFFF" stroke-width="2.5" />
+                    <text x="150" y="15" fill="#FFFFFF" font-size="8.5" font-weight="bold" text-anchor="middle">EVEN</text>
+                  </g>
+
+                  <g id="coa1NeedleGroup" class="needle-pointer jittering" style="--rot: 4.5deg;">
+                    <polygon points="150,22 145,150 155,150" fill="#FFFFFF" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.6))" />
+                    <circle cx="150" cy="150" r="10" fill="#0F172A" stroke="#FFFFFF" stroke-width="3" />
+                    <circle cx="150" cy="150" r="3.5" fill="#C084FC" />
+                  </g>
+
+                  <text x="32" y="170" fill="#EF4444" font-size="8.5" font-weight="bold" text-anchor="middle">REP +10%</text>
+                  <text x="268" y="170" fill="#3B82F6" font-size="8.5" font-weight="bold" text-anchor="middle">DEM +10%</text>
+                </svg>
+
+                <div class="text-center -mt-2">
+                  <div id="coa1Score" class="text-2xl font-black tracking-tight text-white font-mono">
+                    DEM +0.5%
+                  </div>
+                  <div id="coa1CiText" class="text-[11px] font-semibold text-slate-400 mt-0.5">
+                    95% Range: <span class="text-slate-200">REP -3.5% to DEM +4.5%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-800 text-[11px]">
+                <div class="bg-slate-900 p-2 rounded-lg border border-slate-800">
+                  <div class="text-slate-400 text-[10px]">Arrowood Win Prob</div>
+                  <div id="coa1WinProb" class="text-sm font-bold text-amber-400 font-mono mt-0.5">59.8%</div>
+                  <div class="w-full bg-slate-800 h-1 rounded-full mt-1 overflow-hidden">
+                    <div id="coa1WinBar" class="bg-amber-400 h-full rounded-full" style="width: 59.8%"></div>
+                  </div>
+                </div>
+                <div class="bg-slate-900 p-2 rounded-lg border border-slate-800">
+                  <div class="text-slate-400 text-[10px]">Net Target Cushion</div>
+                  <div id="coa1Cushion" class="text-sm font-bold text-blue-400 font-mono mt-0.5">D +19,300</div>
+                  <div class="text-[9px] text-slate-500 mt-0.5">Click to inspect</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-800 text-xs">
-            <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-              <div class="text-slate-400 text-[11px] font-medium">Earls Win Probability</div>
-              <div class="text-lg font-bold text-amber-400 font-mono mt-0.5">69.6% Chance</div>
-              <div class="w-full bg-slate-800 h-1.5 rounded-full mt-1.5 overflow-hidden">
-                <div class="bg-amber-400 h-full rounded-full" style="width: 69.6%"></div>
+            <!-- NC COURT OF APPEALS SEAT 2 CARD -->
+            <div onclick="selectDistrict('NC-COA-2')" class="bg-slate-950/80 border border-slate-800 hover:border-purple-500/60 rounded-xl p-4 shadow-lg flex flex-col justify-between cursor-pointer transition group">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Appellate Seat 2</span>
+                  <h4 class="text-base font-black text-white group-hover:text-purple-400 transition">Tobias (Toby) Hampson (D)</h4>
+                  <div class="text-[11px] text-slate-400">vs. George Cooper Bell (R) &bull; <span class="text-slate-300 font-semibold">Incumbent</span></div>
+                </div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  Tilt D
+                </span>
+              </div>
+
+              <div class="my-3 flex flex-col items-center justify-center relative">
+                <svg viewBox="0 0 300 175" class="w-full max-w-[260px]">
+                  <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="#1E293B" stroke-width="18" />
+                  <path id="coa2CiBand" d="" class="gauge-track" stroke="#38BDF8" stroke-width="22" stroke-opacity="0.35" />
+                  <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="url(#scRaceGrad)" stroke-width="12" />
+
+                  <g transform="rotate(0, 150, 150)">
+                    <line x1="150" y1="20" x2="150" y2="40" stroke="#FFFFFF" stroke-width="2.5" />
+                    <text x="150" y="15" fill="#FFFFFF" font-size="8.5" font-weight="bold" text-anchor="middle">EVEN</text>
+                  </g>
+
+                  <g id="coa2NeedleGroup" class="needle-pointer jittering" style="--rot: 4.5deg;">
+                    <polygon points="150,22 145,150 155,150" fill="#FFFFFF" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.6))" />
+                    <circle cx="150" cy="150" r="10" fill="#0F172A" stroke="#FFFFFF" stroke-width="3" />
+                    <circle cx="150" cy="150" r="3.5" fill="#C084FC" />
+                  </g>
+
+                  <text x="32" y="170" fill="#EF4444" font-size="8.5" font-weight="bold" text-anchor="middle">REP +10%</text>
+                  <text x="268" y="170" fill="#3B82F6" font-size="8.5" font-weight="bold" text-anchor="middle">DEM +10%</text>
+                </svg>
+
+                <div class="text-center -mt-2">
+                  <div id="coa2Score" class="text-2xl font-black tracking-tight text-white font-mono">
+                    DEM +0.5%
+                  </div>
+                  <div id="coa2CiText" class="text-[11px] font-semibold text-slate-400 mt-0.5">
+                    95% Range: <span class="text-slate-200">REP -3.5% to DEM +4.5%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-800 text-[11px]">
+                <div class="bg-slate-900 p-2 rounded-lg border border-slate-800">
+                  <div class="text-slate-400 text-[10px]">Hampson Win Prob</div>
+                  <div id="coa2WinProb" class="text-sm font-bold text-amber-400 font-mono mt-0.5">59.8%</div>
+                  <div class="w-full bg-slate-800 h-1 rounded-full mt-1 overflow-hidden">
+                    <div id="coa2WinBar" class="bg-amber-400 h-full rounded-full" style="width: 59.8%"></div>
+                  </div>
+                </div>
+                <div class="bg-slate-900 p-2 rounded-lg border border-slate-800">
+                  <div class="text-slate-400 text-[10px]">Net Target Cushion</div>
+                  <div id="coa2Cushion" class="text-sm font-bold text-blue-400 font-mono mt-0.5">D +19,300</div>
+                  <div class="text-[9px] text-slate-500 mt-0.5">Click to inspect</div>
+                </div>
               </div>
             </div>
-            <div class="bg-slate-950/60 p-2.5 rounded-xl border border-slate-800/80">
-              <div class="text-slate-400 text-[11px] font-medium">Target Net Cushion (Statewide)</div>
-              <div class="text-lg font-bold text-blue-400 font-mono mt-0.5">D +38,600 Votes</div>
-              <div class="text-[10px] text-slate-400 mt-0.5">Seat 1 Associate Justice</div>
+
+            <!-- NC COURT OF APPEALS SEAT 3 CARD -->
+            <div onclick="selectDistrict('NC-COA-3')" class="bg-slate-950/80 border border-slate-800 hover:border-purple-500/60 rounded-xl p-4 shadow-lg flex flex-col justify-between cursor-pointer transition group">
+              <div class="flex items-start justify-between">
+                <div>
+                  <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Appellate Seat 3</span>
+                  <h4 class="text-base font-black text-white group-hover:text-purple-400 transition">Christine Marie Walczyk (D)</h4>
+                  <div class="text-[11px] text-slate-400">vs. Craig Collins (R) &bull; <span class="text-slate-300 font-semibold">Open Seat</span></div>
+                </div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                  Tilt D
+                </span>
+              </div>
+
+              <div class="my-3 flex flex-col items-center justify-center relative">
+                <svg viewBox="0 0 300 175" class="w-full max-w-[260px]">
+                  <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="#1E293B" stroke-width="18" />
+                  <path id="coa3CiBand" d="" class="gauge-track" stroke="#38BDF8" stroke-width="22" stroke-opacity="0.35" />
+                  <path d="M 30 150 A 120 120 0 0 1 270 150" class="gauge-track" stroke="url(#scRaceGrad)" stroke-width="12" />
+
+                  <g transform="rotate(0, 150, 150)">
+                    <line x1="150" y1="20" x2="150" y2="40" stroke="#FFFFFF" stroke-width="2.5" />
+                    <text x="150" y="15" fill="#FFFFFF" font-size="8.5" font-weight="bold" text-anchor="middle">EVEN</text>
+                  </g>
+
+                  <g id="coa3NeedleGroup" class="needle-pointer jittering" style="--rot: 4.5deg;">
+                    <polygon points="150,22 145,150 155,150" fill="#FFFFFF" filter="drop-shadow(0px 2px 4px rgba(0,0,0,0.6))" />
+                    <circle cx="150" cy="150" r="10" fill="#0F172A" stroke="#FFFFFF" stroke-width="3" />
+                    <circle cx="150" cy="150" r="3.5" fill="#C084FC" />
+                  </g>
+
+                  <text x="32" y="170" fill="#EF4444" font-size="8.5" font-weight="bold" text-anchor="middle">REP +10%</text>
+                  <text x="268" y="170" fill="#3B82F6" font-size="8.5" font-weight="bold" text-anchor="middle">DEM +10%</text>
+                </svg>
+
+                <div class="text-center -mt-2">
+                  <div id="coa3Score" class="text-2xl font-black tracking-tight text-white font-mono">
+                    DEM +0.5%
+                  </div>
+                  <div id="coa3CiText" class="text-[11px] font-semibold text-slate-400 mt-0.5">
+                    95% Range: <span class="text-slate-200">REP -3.5% to DEM +4.5%</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2 pt-3 border-t border-slate-800 text-[11px]">
+                <div class="bg-slate-900 p-2 rounded-lg border border-slate-800">
+                  <div class="text-slate-400 text-[10px]">Walczyk Win Prob</div>
+                  <div id="coa3WinProb" class="text-sm font-bold text-amber-400 font-mono mt-0.5">59.8%</div>
+                  <div class="w-full bg-slate-800 h-1 rounded-full mt-1 overflow-hidden">
+                    <div id="coa3WinBar" class="bg-amber-400 h-full rounded-full" style="width: 59.8%"></div>
+                  </div>
+                </div>
+                <div class="bg-slate-900 p-2 rounded-lg border border-slate-800">
+                  <div class="text-slate-400 text-[10px]">Net Target Cushion</div>
+                  <div id="coa3Cushion" class="text-sm font-bold text-blue-400 font-mono mt-0.5">D +19,300</div>
+                  <div class="text-[9px] text-slate-500 mt-0.5">Click to inspect</div>
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
 
@@ -520,13 +728,38 @@
           <div class="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-xs">
             <button id="raceCategorySenate" onclick="switchChamber('senate')" class="px-3.5 py-1.5 rounded-lg font-bold bg-blue-600 text-white transition">NC Senate</button>
             <button id="raceCategoryHouse" onclick="switchChamber('house')" class="px-3.5 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition">NC House</button>
-            <button id="raceCategoryStatewide" onclick="switchChamber('statewide')" class="px-3.5 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition">Statewide Races</button>
+            <button id="raceCategoryStatewide" onclick="switchChamber('statewide')" class="px-3.5 py-1.5 rounded-lg font-bold text-slate-400 hover:text-white transition">Statewide & Judicial (US Senate, Supreme Court, CoA 1-3)</button>
           </div>
 
           <!-- Specific Race Dropdown -->
           <select id="raceSpecificSelect" onchange="handleRaceDropdownChange(this.value)" class="bg-slate-950 border border-slate-800 text-xs rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500 text-white font-medium max-w-[280px]">
             <!-- Dynamically populated -->
           </select>
+        </div>
+
+        <!-- Statewide & Judicial Marquee Quick Switcher -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 text-xs pt-1 border-t border-slate-800/60 mt-2">
+          <span class="text-slate-400 font-bold uppercase text-[10px] tracking-wider whitespace-nowrap mr-1">Marquee Races:</span>
+          <button onclick="selectDistrict('US-SENATE')" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 hover:bg-slate-800 text-blue-300 border border-blue-500/30 whitespace-nowrap transition flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+            US Senate (Cooper)
+          </button>
+          <button onclick="selectDistrict('NC-SC')" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 hover:bg-slate-800 text-amber-300 border border-amber-500/30 whitespace-nowrap transition flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            Supreme Court (Earls)
+          </button>
+          <button onclick="selectDistrict('NC-COA-1')" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 hover:bg-slate-800 text-purple-300 border border-purple-500/30 whitespace-nowrap transition flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+            Court of Appeals 1 (Arrowood)
+          </button>
+          <button onclick="selectDistrict('NC-COA-2')" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 hover:bg-slate-800 text-purple-300 border border-purple-500/30 whitespace-nowrap transition flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+            Court of Appeals 2 (Hampson)
+          </button>
+          <button onclick="selectDistrict('NC-COA-3')" class="px-2.5 py-1 rounded-lg font-bold bg-slate-900 hover:bg-slate-800 text-purple-300 border border-purple-500/30 whitespace-nowrap transition flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+            Court of Appeals 3 (Walczyk)
+          </button>
         </div>
 
         <!-- Filter & Search Controls -->
