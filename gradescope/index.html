@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gradescope Interface Technical Manual | Dr. Rann Bar-On</title>
+  <meta name="description" content="Technical manual and architectural documentation for the Duke University Gradescope automation suite, course notification pipelines, and instructional governance guardrails.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    if (!window.tailwind) {
+      document.write('<script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"><\/script>');
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    
+    :root {
+      --bg: #070b14;
+      --card-bg: #0f172a;
+      --card-border: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      overflow-x: hidden;
+    }
+
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b1120;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+
+    .manual-card {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(30, 41, 59, 0.85);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+    th {
+      background: #1e293b;
+      color: #f8fafc;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      padding: 10px 14px;
+      border-bottom: 2px solid #334155;
+    }
+    td {
+      padding: 11px 14px;
+      border-bottom: 1px solid #1e293b;
+      font-size: 12.5px;
+      line-height: 1.5;
+    }
+    tr:nth-child(even) td {
+      background: rgba(15, 23, 42, 0.4);
+    }
+    tr:hover td {
+      background: rgba(30, 41, 59, 0.5);
+    }
+  </style>
+  <script data-goatcounter="https://rannbaron.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</head>
+<body class="min-h-screen flex flex-col bg-[#070b14] text-slate-100 antialiased selection:bg-blue-600 selection:text-white">
+
+  <!-- TOP HEADER / NAV -->
+  <header class="border-b border-slate-800/80 bg-[#0b1120]/95 backdrop-blur sticky top-0 z-50 px-4 sm:px-6 lg:px-8 py-3.5 shadow-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <a href="/" class="flex items-center gap-2.5 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition">
+            <span class="text-white font-black text-lg tracking-tight">R</span>
+          </div>
+          <div>
+            <span class="text-base font-black text-white tracking-tight block leading-tight group-hover:text-amber-400 transition">Rann Bar-On</span>
+            <span class="text-[11px] text-slate-400 font-medium">Gradescope Interface Manual</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Quick Nav Links -->
+      <nav class="flex items-center gap-2 sm:gap-3 text-xs font-semibold">
+        <a href="/#duke-teaching" class="px-3 py-1.5 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800 transition flex items-center gap-1.5">
+          <span>&larr; Back to Portal</span>
+        </a>
+        <a href="/notifications_overview.pdf" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-blue-600/30 hover:bg-blue-600/50 text-blue-300 border border-blue-500/40 font-bold transition flex items-center gap-1">
+          <span>📄 Notifications PDF</span> &rarr;
+        </a>
+        <a href="mailto:rann@rannbar-on.com" class="hidden md:inline-flex px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
+          Contact
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12">
+
+    <!-- BREADCRUMBS -->
+    <nav class="flex items-center gap-2 text-xs text-slate-400 font-mono">
+      <a href="/" class="hover:text-slate-200">Home</a>
+      <span>/</span>
+      <a href="/#duke-teaching" class="hover:text-slate-200">Duke Teaching & Mathematics</a>
+      <span>/</span>
+      <span class="text-amber-400 font-bold">Gradescope Interface Technical Manual</span>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <section class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-slate-900 via-slate-900/80 to-slate-950 p-6 sm:p-10 border border-slate-800 shadow-2xl">
+      <div class="absolute -right-20 -top-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-20 -bottom-20 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 space-y-4 max-w-4xl">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/10 text-amber-300 border border-amber-500/20">
+            Duke University Mathematics
+          </span>
+          <span class="px-3 py-1 rounded-full text-xs font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">
+            Math 105L & 106L Sequence
+          </span>
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
+            High-Throughput Autonomous Pipeline
+          </span>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+          Gradescope Interface <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-300 to-indigo-300">Technical Manual</span>
+        </h1>
+
+        <p class="text-base sm:text-lg text-slate-300 leading-relaxed">
+          Comprehensive architectural manual for the autonomous instructional grading, submission validation, and multi-channel notification infrastructure powering Duke University Laboratory Calculus.
+        </p>
+
+        <!-- Document Meta Quick Action Bar -->
+        <div class="flex flex-wrap items-center gap-3 pt-3">
+          <a href="/notifications_overview.pdf" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs sm:text-sm shadow-lg shadow-blue-500/25 transition flex items-center gap-2">
+            <span>📥 Download Notifications PDF</span>
+            <span class="text-[11px] bg-blue-700/60 px-2 py-0.5 rounded font-mono">4 Pages &bull; 333 KB</span>
+          </a>
+          <a href="#student-notifications" class="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition border border-slate-700 flex items-center gap-1.5">
+            <span>Student Alerts</span> &darr;
+          </a>
+          <a href="#ta-notifications" class="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition border border-slate-700 flex items-center gap-1.5">
+            <span>TA Cadence</span> &darr;
+          </a>
+          <a href="#instructor-notifications" class="px-4 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition border border-slate-700 flex items-center gap-1.5">
+            <span>Instructor Audits</span> &darr;
+          </a>
+          <a href="#governance-rules" class="px-4 py-2.5 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-semibold text-xs transition border border-amber-500/30 flex items-center gap-1.5">
+            <span>Governance Rules</span> &darr;
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE SUMMARY -->
+    <section class="manual-card rounded-3xl p-6 sm:p-8 space-y-6">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <span>⚙️ Infrastructure & API Architecture</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Modular Python tools located at <code class="font-mono text-amber-300">~/src/gradescopetools/</code> driving automated synchronization, verification, and email dispatch.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-mono text-amber-400 font-bold">gradescope_tasks.py</span>
+            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 text-[10px] font-mono">Core Client</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            REST API wrapper interfacing with Gradescope endpoints. Extracts session cookies and CSRF tokens, reads rubric outlines, submits batch extensions, and schedules assignment release dates.
+          </p>
+        </div>
+
+        <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-mono text-blue-400 font-bold">duke_mail_merger.py</span>
+            <span class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-300 text-[10px] font-mono">Graph REST</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Direct Microsoft Graph API OAuth2 mail engine. Uses cached Duke credentials (<code class="text-[11px]">~/.duke_token_cache.bin</code>) to send formatted HTML communications and PDF attachments from <code class="text-[11px]">rb6@duke.edu</code>.
+          </p>
+        </div>
+
+        <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-mono text-emerald-400 font-bold">student_status_reporter.py</span>
+            <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 text-[10px] font-mono">Analytics</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Roster-wide mastery tracker calculating total Passed vs. No-Pass assignments, evaluating semester-end extension eligibility, and surfacing critical warning alerts.
+          </p>
+        </div>
+
+        <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-mono text-purple-400 font-bold">quiz_retake_manager.py</span>
+            <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 text-[10px] font-mono">Retake Core</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Automates the Quiz Retake lifecycle: creates retake assignments, enforces the <b>Download Delay Rule</b> (1 wk + 1 hr), and creates duplicate <code class="text-[11px]">Quiz &lt;N&gt; late retake</code> items one year post-term.
+          </p>
+        </div>
+
+        <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-mono text-rose-400 font-bold">Hourly Scan Verification</span>
+            <span class="px-2 py-0.5 rounded bg-rose-500/10 text-rose-300 text-[10px] font-mono">PDF Auditing</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Runs every hour for active assignments. Parses JSON submission objects, tests page count against official PDF templates, and detects inverted pages, triggering instant 12-hour extensions and mobile scanner guidance.
+          </p>
+        </div>
+
+        <div class="bg-slate-950/60 border border-slate-800/80 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between text-xs">
+            <span class="font-mono text-sky-400 font-bold">update_grades.py</span>
+            <span class="px-2 py-0.5 rounded bg-sky-500/10 text-sky-300 text-[10px] font-mono">Gradebook Sync</span>
+          </div>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Parses raw Gradescope CSV exports into Canvas-compliant gradebook matrices, recalculates weighted components, and synchronizes finalized scores with official Duke registrar records.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 1: STUDENT NOTIFICATIONS -->
+    <section id="student-notifications" class="manual-card rounded-3xl p-6 sm:p-8 space-y-6">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">📬</span>
+            <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">1. Catalog of Student Notifications</h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/30">11 Distinct Workflows</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Automated student communications designed to maintain radical transparency, support mastery learning, and minimize procedural penalties.
+          </p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-slate-800">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:22%">Notification Type</th>
+              <th style="width:18%">Trigger / Cadence</th>
+              <th style="width:20%">Target Audience</th>
+              <th>Operational Logic & Autonomous Action</th>
+            </tr>
+          </thead>
+          <tbody class="text-slate-300">
+            <tr>
+              <td class="font-bold text-white">Due-Today Reminder</td>
+              <td>Due date at 8:00 AM</td>
+              <td>Unsubmitted enrolled students</td>
+              <td>Dispatches morning reminder of upcoming 11:59 PM deadline on Gradescope. Strictly limited to <span class="text-amber-400 font-semibold">current assignments</span>.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Scan Defect & Extension Notice</td>
+              <td>Hourly verification post-upload</td>
+              <td>Student recipient (Grader CC'd)</td>
+              <td>Fired when uploaded PDF has missing pages, inverted order, or camera photography flaws. Automatically grants a <span class="text-emerald-400 font-semibold">12-hour extension</span> and provides mobile scanning guidance.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Missing Deadline Alert</td>
+              <td>Morning after deadline (8:00 AM)</td>
+              <td>Unsubmitted students</td>
+              <td>Informs students that the current assignment deadline has closed without a recorded submission, providing immediate next steps for resubmissions.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Missed Quiz & Retake Notice</td>
+              <td>Following quiz score release</td>
+              <td>Students with NP or absent</td>
+              <td>Notifies student that the original quiz score is published and that the corresponding Quiz Retake is open with dates and submission criteria.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Retake Score Release</td>
+              <td>1 week + 1 hour post-retake open</td>
+              <td>Retake participants</td>
+              <td>Reports graded retake score, pass/no-pass outcome, and updated syllabus mastery progress. Guarded by the <b>Download Delay Rule</b>.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Tuesday Resubmission Reminder</td>
+              <td>Tuesdays at 9:00 AM</td>
+              <td>Students with eligible prior work</td>
+              <td>Consolidated weekly digest detailing eligible worksheets and lab reports that qualify for Tuesday resubmission deadlines.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Comprehensive Status Report</td>
+              <td>Mid-semester & term milestones</td>
+              <td>All enrolled students</td>
+              <td>Individualized transcript outlining worksheets passed vs. NP, quiz scores, retake statuses, lab marks, and overall trajectory.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">100% Perfect Score Praise</td>
+              <td>Immediate upon grade finalization</td>
+              <td>Qualifying students</td>
+              <td>Encouraging congratulatory recognition dispatched whenever a student achieves a perfect 100% score on a worksheet or lab report.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Official Reschedule Broadcast</td>
+              <td>Calendar modification event</td>
+              <td>All enrolled students</td>
+              <td>Official class announcement when an assignment deadline is universally adjusted (e.g. Worksheet 10-3 extended to Nov 9).</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Video Project Group Allocation</td>
+              <td>Project kickoff launch</td>
+              <td>Assigned student teams</td>
+              <td>Distributes team members, project prompt instructions, benchmark deadlines, and video upload specifications.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Solo Lab Report Warning</td>
+              <td>Upon submission of solo report</td>
+              <td>Solo submitter</td>
+              <td>Warns students that laboratory reports are collaborative group investigations and prompts linking lab partners on Gradescope.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Scanner Policy Box -->
+      <div class="rounded-2xl bg-blue-500/10 border border-blue-500/30 p-5 space-y-2">
+        <div class="flex items-center gap-2 text-sm font-bold text-blue-300">
+          <span>📱 Standard Mobile Scanner Instruction</span>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          When a submission exhibits illegible photography or missing pages, the automated pipeline provides the following standard recommendation:
+        </p>
+        <blockquote class="text-xs font-mono bg-slate-950/70 p-3 rounded-xl border border-slate-800 text-blue-200 leading-relaxed">
+          &ldquo;Please submit using a mobile document scanning application rather than loose camera photos or flatbed scans. We strongly recommend the official Gradescope mobile app (iOS/Android), or built-in utilities such as Apple Notes (iOS), Google Drive Scan (Android), Microsoft Lens, Adobe Scan, or Genius Scan. An automated 12-hour extension has been posted to your Gradescope account.&rdquo;
+        </blockquote>
+      </div>
+    </section>
+
+    <!-- SECTION 2: TA NOTIFICATIONS -->
+    <section id="ta-notifications" class="manual-card rounded-3xl p-6 sm:p-8 space-y-6">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🧑‍🏫</span>
+            <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">2. Teaching Assistant (TA) Notifications Catalog</h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/20 text-amber-300 border border-amber-500/30">4 Operational Workflows</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Autonomous coordination ensuring undergraduate and graduate TAs stay aligned on grading timelines, rubric standards, and shift coverage.
+          </p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-slate-800">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:24%">Notification Type</th>
+              <th style="width:20%">Cadence / Trigger</th>
+              <th style="width:22%">Audience</th>
+              <th>Operational Description & Content</th>
+            </tr>
+          </thead>
+          <tbody class="text-slate-300">
+            <tr>
+              <td class="font-bold text-white">Thursday Grading Reminder</td>
+              <td>Thursdays at 4:00 PM</td>
+              <td>All Math 105L/106L TAs (<code class="text-[11px]">rb6</code> CC'd)</td>
+              <td>Comprehensive kickoff: assignments closing Thursday night, assigned grading rubrics, grading deadlines (Sunday 11:59 PM), and grading rubrics.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Monday Grading Follow-up</td>
+              <td>Mondays at 9:00 AM</td>
+              <td>TAs with unfinalized queues</td>
+              <td>Identifies lingering unsubmitted rubrics, incomplete student evaluations, or unresolved student regrade requests.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Daily Lab & Shift Schedule</td>
+              <td>Daily at 7:30 AM</td>
+              <td>Active daily TAs & Instructor</td>
+              <td>Summary of active lab shifts, room assignments, problem session schedules, and cumulative years of TA experience for peer mentorship.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Prospective TA Recruitment</td>
+              <td>1 week post initial announcement</td>
+              <td>Past qualified TAs</td>
+              <td>Follow-up reminder to past high-performing TAs who have not yet submitted their When2meet or Qualtrics availability for the next term.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 3: INSTRUCTOR NOTIFICATIONS -->
+    <section id="instructor-notifications" class="manual-card rounded-3xl p-6 sm:p-8 space-y-6">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🛡️</span>
+            <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight">3. Instructor Notifications Catalog (Sent to Rann Bar-On)</h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-purple-500/20 text-purple-300 border border-purple-500/30">9 Audit Streams</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Real-time audit telemetry guaranteeing full human oversight over every automated deadline modification, extension grant, and student contact.
+          </p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-2xl border border-slate-800">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:24%">Notification Type</th>
+              <th style="width:20%">Cadence / Trigger</th>
+              <th style="width:20%">Destination</th>
+              <th>Content & Autonomous Audit Payload</th>
+            </tr>
+          </thead>
+          <tbody class="text-slate-300">
+            <tr>
+              <td class="font-bold text-white">Assignment Creation / Update Audit</td>
+              <td>Immediate upon API action</td>
+              <td><code class="text-[11px] text-amber-300">rb6@duke.edu</code></td>
+              <td>Dispatched whenever an assignment is created or updated on Gradescope (title, dates, windows, extensions, rubrics) with the explicit reason logged.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Daily Morning Student Digest</td>
+              <td>Daily 8:00 AM – 12:00 PM</td>
+              <td><code class="text-[11px] text-amber-300">rb6@duke.edu</code></td>
+              <td>Batched digest of all student messages dispatched over the prior 24 hours, parsed from <code class="text-[11px]">grades/.sent_student_notifications.json</code>.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Re-Retake Completion Immediate Alert</td>
+              <td>Immediate upon submission</td>
+              <td><code class="text-[11px] text-amber-300">rb6@duke.edu</code>, CC <code class="text-[11px]">rann@rannbar-on.com</code></td>
+              <td>Sent when a student requiring re-retakes finishes an individual assignment or fulfills all needed re-retakes, including score and trajectory.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Critical No-Pass Threshold Warning</td>
+              <td>Upon grade calculation</td>
+              <td><code class="text-[11px] text-amber-300">rb6@duke.edu</code></td>
+              <td>Fired whenever a student accumulates their <span class="text-amber-400 font-semibold">5th Worksheet NP</span>, <span class="text-amber-400 font-semibold">3rd Quiz NP</span>, or <span class="text-amber-400 font-semibold">2nd Lab NP</span>.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Excessive No-Pass Block Notification</td>
+              <td>On extension evaluation</td>
+              <td><code class="text-[11px] text-amber-300">rb6@duke.edu</code></td>
+              <td>Fired when a student exceeds <span class="text-rose-400 font-semibold">8 Worksheet NPs</span>, <span class="text-rose-400 font-semibold">4 Quiz NPs</span>, or <span class="text-rose-400 font-semibold">2 Lab NPs</span>. Extensions blocked until human authorization.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Semester-End Extension Audit Report</td>
+              <td>Scheduled evaluation</td>
+              <td><code class="text-[11px] text-amber-300">rb6@duke.edu</code></td>
+              <td>Full roster audit detailing students eligible for semester-end extensions (until Friday, Dec 4, 2026 at 11:59 PM). <b>Students are never emailed</b>; only Rann is notified.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Quiz Late Retake Setup Alert</td>
+              <td>Upon assignment creation</td>
+              <td><code class="text-[11px] text-amber-300">rb6@duke.edu</code></td>
+              <td>Confirms creation of <code class="text-[11px]">Quiz &lt;N&gt; late retake</code> available Dec 4–5, 2027 (1 year post-term) with old extensions cleared.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Status Report Sample Previews</td>
+              <td>Prior to class-wide broadcast</td>
+              <td><code class="text-[11px] text-amber-300">rb6@duke.edu</code></td>
+              <td>Dispatches representative sample student status emails to Rann for verification prior to full-class batch transmission.</td>
+            </tr>
+            <tr>
+              <td class="font-bold text-white">Election & Switchover Alerts</td>
+              <td>Daily EV morning / E-Day</td>
+              <td><code class="text-[11px] text-blue-300">rann@rannbar-on.com</code></td>
+              <td>Civic web platform telemetry: EV turnout shifts, automated transition to Election Day polling places, and API token refreshes.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 4: GOVERNANCE RULES -->
+    <section id="governance-rules" class="manual-card rounded-3xl p-6 sm:p-8 space-y-6">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2">
+            <span>⚖️ Strict Instructional Governance & Guardrails</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Mandatory policy guardrails hardcoded into all scripts, cron workflows, and AI pair-programming agents.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Rule 1 -->
+        <div class="rounded-2xl bg-red-950/40 border border-red-500/40 p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase tracking-wider text-red-300">Guardrail 1</span>
+            <span class="px-2 py-0.5 rounded bg-red-500/20 text-red-200 text-[10px] font-mono">STRICT PROHIBITION</span>
+          </div>
+          <h3 class="text-base font-bold text-white">Non-Current Assignments Absolute Rule</h3>
+          <p class="text-xs text-red-200/90 leading-relaxed">
+            <b>NEVER</b> send any notifications whatsoever regarding non-current assignments to any students in any section. Deadlines, extensions, submission window modifications, and student notifications <b>MUST ONLY</b> occur for <b>CURRENT</b> assignments unless explicitly instructed by Rann. All extensions on non-current assignments must remain removed.
+          </p>
+        </div>
+
+        <!-- Rule 2 -->
+        <div class="rounded-2xl bg-red-950/40 border border-red-500/40 p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase tracking-wider text-red-300">Guardrail 2</span>
+            <span class="px-2 py-0.5 rounded bg-red-500/20 text-red-200 text-[10px] font-mono">PERMANENT EXCLUSION</span>
+          </div>
+          <h3 class="text-base font-bold text-white">Permanently Dropped & Deregistered Students Policy</h3>
+          <p class="text-xs text-red-200/90 leading-relaxed">
+            Students who have formally dropped, withdrawn, or been deregistered from the course roster are permanently excluded from all automated course operations. They must <b>NEVER</b> receive any notifications, extensions, retakes, or academic progress reports under any circumstances across all instructional pipelines.
+          </p>
+        </div>
+
+        <!-- Rule 3 -->
+        <div class="rounded-2xl bg-slate-900 border border-slate-700 p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase tracking-wider text-amber-300">Guardrail 3</span>
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-200 text-[10px] font-mono">SEMESTER END</span>
+          </div>
+          <h3 class="text-base font-bold text-white">Semester-End Extensions Policy</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Extensions until undergraduate classes end (Friday, December 4, 2026 at 11:59 PM) are granted <b>ONLY</b> to students who have either <b>&gt;2 quiz NPs</b> or <b>&gt;4 worksheet NPs</b>. In all such cases, <b>NEVER email students</b>; only email Rann (<code class="text-[11px] text-amber-300">rb6@duke.edu</code>).
+          </p>
+        </div>
+
+        <!-- Rule 4 -->
+        <div class="rounded-2xl bg-slate-900 border border-slate-700 p-5 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase tracking-wider text-blue-300">Guardrail 4</span>
+            <span class="px-2 py-0.5 rounded bg-blue-500/20 text-blue-200 text-[10px] font-mono">1-YEAR POST TERM</span>
+          </div>
+          <h3 class="text-base font-bold text-white">Quiz Late Retake Architecture</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            For quizzes, <b>NEVER</b> extend deadlines on original quizzes. Instead, duplicate the original quiz as <code class="text-[11px]">Quiz &lt;N&gt; late retake</code>, set available Dec 4–5, 2027 (1 year post-term), and clear all prior extensions on the original quiz.
+          </p>
+        </div>
+
+        <!-- Rule 5 -->
+        <div class="rounded-2xl bg-slate-900 border border-slate-700 p-5 space-y-2 md:col-span-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase tracking-wider text-indigo-300">Guardrail 5</span>
+            <span class="px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-200 text-[10px] font-mono">1 WK + 1 HR DELAY</span>
+          </div>
+          <h3 class="text-base font-bold text-white">Quiz Retake Score Download Delay Rule</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Quiz retake scores are not downloaded to <code class="text-[11px]">rawscores/</code> or released to students until <b>one week and one hour</b> after the retake assignment first opens. This delay is guarded programmatically in <code class="text-[11px]">gradescope_tasks.py</code> by <code class="text-[11px]">is_quiz_retake_eligible_for_download()</code>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PDF EMBED / DOWNLOAD PANEL -->
+    <section class="manual-card rounded-3xl p-6 sm:p-8 space-y-6 text-center">
+      <div class="max-w-2xl mx-auto space-y-3">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 text-2xl mb-1">
+          📄
+        </div>
+        <h2 class="text-2xl font-black text-white">Official Publication Reference</h2>
+        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+          The complete publication-quality technical report is compiled in LaTeX and archived as a standalone PDF document.
+        </p>
+        <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+          <a href="/notifications_overview.pdf" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-xl shadow-blue-500/20 transition flex items-center gap-2">
+            <span>Open notifications_overview.pdf</span> &rarr;
+          </a>
+          <a href="https://math.duke.edu/~rann/project/105lmaterials/" target="_blank" rel="noopener noreferrer" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-sm transition border border-slate-700 flex items-center gap-2">
+            <span>Duke Math 105L Materials</span> &rarr;
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800/80 bg-[#0b1120] py-8 text-xs text-slate-400 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-bold text-white">Dr. Rann Bar-On &bull; <span class="font-normal text-slate-400">Senior Lecturer in Mathematics, Duke University</span></p>
+        <p class="text-[11px] text-slate-500 mt-0.5">Gradescope Automation Suite &bull; Math 105L & 106L Instructional Operations</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-4 text-xs font-medium">
+        <a href="/" class="text-slate-300 hover:underline">Home Portal</a>
+        <span class="text-slate-700">&bull;</span>
+        <a href="/notifications_overview.pdf" class="text-blue-400 hover:underline">Notifications PDF</a>
+        <span class="text-slate-700">&bull;</span>
+        <a href="/#duke-teaching" class="text-indigo-400 hover:underline">Duke Teaching</a>
+        <span class="text-slate-700">&bull;</span>
+        <a href="mailto:rann@rannbar-on.com" class="text-slate-300 hover:underline">rann@rannbar-on.com</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

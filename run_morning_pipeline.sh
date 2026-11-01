@@ -35,7 +35,7 @@ log "================================================================="
 CURRENT_DATE=$(date +'%Y-%m-%d %H:%M')
 if [[ "$CURRENT_DATE" > "2026-11-01 12:00" ]]; then
     log "Notice: Early voting morning pipeline & spreadsheet updates concluded after Sunday morning, Nov 1, 2026. Exiting."
-    crontab -l 2>/dev/null | grep -v "run_morning_pipeline.sh" | crontab - || true
+    # Local crontab management disabled - updates are managed by GitHub Actions
     exit 0
 fi
 
@@ -73,7 +73,7 @@ fi
 
 # Step 4: Git Commit & Push (main & beta)
 log "[Step 4/5] Checking for file changes and committing to git..."
-git add index.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_*.csv latest_daily_email.json latest_daily_email.html .email_dispatch_log.json >> "$LOG_FILE" 2>&1 || true
+git add index.html earlyvote/index.html earlyvote.html beta/index.html nc_map_base.json .absentee_2026.meta.json nc_early_voting_*.csv latest_daily_email.json latest_daily_email.html .email_dispatch_log.json >> "$LOG_FILE" 2>&1 || true
 
 if ! git diff --staged --quiet; then
     COMMIT_MSG="Automated morning update: $(date +'%Y-%m-%d %H:%M')"
@@ -121,5 +121,5 @@ log "================================================================="
 # Clean up crontab after the final Sunday morning run (Nov 1, 2026)
 if [[ "$CURRENT_DATE" > "2026-11-01 05:00" ]]; then
     log "Sunday morning final early voting run complete. Cleaning up crontab..."
-    crontab -l 2>/dev/null | grep -v "run_morning_pipeline.sh" | crontab - || true
+    # Local crontab management disabled - updates are managed by GitHub Actions
 fi
