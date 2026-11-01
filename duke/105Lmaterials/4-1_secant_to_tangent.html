@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secant & Tangent Line: Average vs Instantaneous Velocity</title>
+  <style>
+    :root {
+      --bg-color: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-color: #212529;
+      --accent-secant: #1e88e5;
+      --accent-tangent: #d81b60;
+      --accent-parabola: #2e7d32;
+      --border-color: #e0e0e0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+    }
+
+    /* Prominent Velocity Display Banner */
+    .velocity-banner {
+      background: #eef6ff;
+      border: 2px solid var(--accent-secant);
+      border-radius: 8px;
+      padding: 14px 20px;
+      text-align: center;
+      font-size: 1.15rem;
+      font-weight: bold;
+      color: #0d47a1;
+      margin-bottom: 16px;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+
+    .velocity-banner.tangent-mode {
+      background: #fce4ec;
+      border-color: var(--accent-tangent);
+      color: #880e4f;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      background: #fafafa;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .controls {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .slider-row label {
+      font-weight: 600;
+      min-width: 30px;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      appearance: none;
+      background: #ddd;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #1976d2;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    button {
+      padding: 8px 18px;
+      border: none;
+      border-radius: 6px;
+      background-color: #1976d2;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #1565c0;
+    }
+
+    .info-panel {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+      padding: 16px;
+      background: #f1f3f4;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+
+    .info-card {
+      background: white;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border-left: 4px solid #1976d2;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .status-secant {
+      background-color: var(--accent-secant);
+    }
+
+    .status-tangent {
+      background-color: var(--accent-tangent);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Position vs Time: Secant & Tangent Lines</h1>
+  <div class="subtitle">
+    Position function: <code>y = -4t(t - 1)</code> &nbsp;|&nbsp; Fixed point: <code>(0, 0)</code> &nbsp;|&nbsp; Moving point: <code>(h, f(h))</code>
+  </div>
+
+  <!-- Primary Velocity Banner -->
+  <div id="velocityBanner" class="velocity-banner">
+    Average velocity between t=0 seconds and t=0.5 seconds = 2 m/sec
+  </div>
+
+  <div class="canvas-container">
+    <canvas id="plotCanvas"></canvas>
+  </div>
+
+  <div class="controls">
+    <div class="slider-row">
+      <label for="hSlider">h:</label>
+      <input type="range" id="hSlider" min="0" max="1" step="0.001" value="0.5">
+      <span id="hValueDisplay" style="font-family: monospace; font-weight: bold; width: 50px;">0.500</span>
+    </div>
+
+    <div class="button-group">
+      <button id="playBtn">Play Animation</button>
+      <button id="resetBtn">Reset (h = 1)</button>
+    </div>
+  </div>
+
+  <div class="info-panel">
+    <div class="info-card" id="lineTypeCard">
+      <div><strong>Line Type:</strong></div>
+      <div id="lineTypeDisplay" style="margin-top: 4px;">-</div>
+    </div>
+    <div class="info-card">
+      <div><strong>Point P₁:</strong> (0, 0)</div>
+      <div id="p2Display"><strong>Point P₂:</strong> (0.50, 1.00)</div>
+    </div>
+    <div class="info-card">
+      <div id="slopeDisplay"><strong>Slope (m):</strong> 2.000</div>
+      <div id="eqDisplay"><strong>Equation:</strong> y = 2.00t</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('plotCanvas');
+  const ctx = canvas.getContext('2d');
+  const hSlider = document.getElementById('hSlider');
+  const hValueDisplay = document.getElementById('hValueDisplay');
+  const playBtn = document.getElementById('playBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const velocityBanner = document.getElementById('velocityBanner');
+
+  const lineTypeDisplay = document.getElementById('lineTypeDisplay');
+  const p2Display = document.getElementById('p2Display');
+  const slopeDisplay = document.getElementById('slopeDisplay');
+  const eqDisplay = document.getElementById('eqDisplay');
+
+  let isPlaying = false;
+  let animId = null;
+
+  // Domain & Range for plot coordinates
+  const tMin = -0.3, tMax = 1.3;
+  const yMin = -0.5, yMax = 1.3;
+
+  function f(t) {
+    return -4 * t * (t - 1);
+  }
+
+  function setupCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.resetTransform();
+    ctx.scale(dpr, dpr);
+    render();
+  }
+
+  window.addEventListener('resize', setupCanvas);
+
+  function toScreenX(t) {
+    const rect = canvas.getBoundingClientRect();
+    return ((t - tMin) / (tMax - tMin)) * rect.width;
+  }
+
+  function toScreenY(y) {
+    const rect = canvas.getBoundingClientRect();
+    return rect.height - ((y - yMin) / (yMax - yMin)) * rect.height;
+  }
+
+  function render() {
+    const rect = canvas.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const h = parseFloat(hSlider.value);
+
+    ctx.clearRect(0, 0, width, height);
+
+    // 1. Draw Grid
+    ctx.strokeStyle = '#e9ecef';
+    ctx.lineWidth = 1;
+    for (let t = -0.2; t <= 1.2; t += 0.2) {
+      ctx.beginPath();
+      ctx.moveTo(toScreenX(t), 0);
+      ctx.lineTo(toScreenX(t), height);
+      ctx.stroke();
+    }
+    for (let y = -0.4; y <= 1.2; y += 0.2) {
+      ctx.beginPath();
+      ctx.moveTo(0, toScreenY(y));
+      ctx.lineTo(width, toScreenY(y));
+      ctx.stroke();
+    }
+
+    // 2. Draw Axes
+    ctx.strokeStyle = '#adb5bd';
+    ctx.lineWidth = 1.5;
+
+    // T Axis (Horizontal)
+    ctx.beginPath();
+    ctx.moveTo(0, toScreenY(0));
+    ctx.lineTo(width, toScreenY(0));
+    ctx.stroke();
+
+    // Y Axis (Vertical)
+    ctx.beginPath();
+    ctx.moveTo(toScreenX(0), 0);
+    ctx.lineTo(toScreenX(0), height);
+    ctx.stroke();
+
+    // Axis Labels
+    ctx.fillStyle = '#6c757d';
+    ctx.font = '12px sans-serif';
+    ctx.fillText('t (sec)', width - 45, toScreenY(0) - 8);
+    ctx.fillText('y (m)', toScreenX(0) + 8, 15);
+
+    // Axis Ticks
+    [0.5, 1.0].forEach(val => {
+      ctx.fillText(val.toString(), toScreenX(val) - 8, toScreenY(0) + 18);
+      ctx.fillText(val.toString(), toScreenX(0) - 28, toScreenY(val) + 4);
+    });
+
+    // 3. Draw Parabola y = -4t(t-1)
+    ctx.beginPath();
+    ctx.strokeStyle = '#2e7d32';
+    ctx.lineWidth = 2.5;
+    const steps = 300;
+    for (let i = 0; i <= steps; i++) {
+      const t = tMin + (i / steps) * (tMax - tMin);
+      const y = f(t);
+      const st = toScreenX(t);
+      const sy = toScreenY(y);
+      if (i === 0) ctx.moveTo(st, sy);
+      else ctx.lineTo(st, sy);
+    }
+    ctx.stroke();
+
+    // 4. Line Calculations & Styling
+    const isTangent = (h === 0);
+    const m = isTangent ? 4 : (-4 * h * (h - 1)) / h; // Slope: m = 4(1 - h)
+    const lineColor = isTangent ? '#d81b60' : '#1e88e5'; // Crimson for Tangent, Blue for Secant
+
+    if (isTangent) {
+      // Tangent Line at t = 0
+      // Extension before t = 0 -> Dashed
+      ctx.beginPath();
+      ctx.setLineDash([6, 6]);
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = 2;
+      ctx.moveTo(toScreenX(tMin), toScreenY(m * tMin));
+      ctx.lineTo(toScreenX(0), toScreenY(0));
+      ctx.stroke();
+
+      // Main domain segment t in [0, 1] -> Solid
+      ctx.beginPath();
+      ctx.setLineDash([]);
+      ctx.lineWidth = 2.5;
+      ctx.moveTo(toScreenX(0), toScreenY(0));
+      ctx.lineTo(toScreenX(1), toScreenY(m * 1));
+      ctx.stroke();
+
+      // Extension beyond graph (t > 1) -> Dashed
+      ctx.beginPath();
+      ctx.setLineDash([6, 6]);
+      ctx.lineWidth = 2;
+      ctx.moveTo(toScreenX(1), toScreenY(m * 1));
+      ctx.lineTo(toScreenX(tMax), toScreenY(m * tMax));
+      ctx.stroke();
+    } else {
+      // Secant Line for h > 0
+      // 1) Line segment before t = 0 (above graph) -> Dashed
+      ctx.beginPath();
+      ctx.setLineDash([6, 6]);
+      ctx.strokeStyle = lineColor;
+      ctx.lineWidth = 2;
+      ctx.moveTo(toScreenX(tMin), toScreenY(m * tMin));
+      ctx.lineTo(toScreenX(0), toScreenY(0));
+      ctx.stroke();
+
+      // 2) Secant line segment BETWEEN (0,0) and (h, f(h)) -> Solid
+      ctx.beginPath();
+      ctx.setLineDash([]);
+      ctx.lineWidth = 2.5;
+      ctx.moveTo(toScreenX(0), toScreenY(0));
+      ctx.lineTo(toScreenX(h), toScreenY(f(h)));
+      ctx.stroke();
+
+      // 3) Line segment ABOVE / BEYOND (h, f(h)) for t > h -> Dashed
+      ctx.beginPath();
+      ctx.setLineDash([6, 6]);
+      ctx.lineWidth = 2;
+      ctx.moveTo(toScreenX(h), toScreenY(f(h)));
+      ctx.lineTo(toScreenX(tMax), toScreenY(m * tMax));
+      ctx.stroke();
+    }
+
+    // Reset dash pattern
+    ctx.setLineDash([]);
+
+    // 5. Draw Points
+    // Point P1 (0,0)
+    ctx.fillStyle = lineColor;
+    ctx.beginPath();
+    ctx.arc(toScreenX(0), toScreenY(0), 6, 0, 2 * Math.PI);
+    ctx.fill();
+
+    // Point P2 (h, f(h)) if h > 0
+    if (!isTangent) {
+      const fh = f(h);
+      ctx.fillStyle = '#ff9800';
+      ctx.beginPath();
+      ctx.arc(toScreenX(h), toScreenY(fh), 6, 0, 2 * Math.PI);
+      ctx.fill();
+
+      // Label P2
+      ctx.fillStyle = '#333';
+      ctx.font = '12px sans-serif';
+      ctx.fillText('(h, f(h))', toScreenX(h) + 10, toScreenY(fh) - 8);
+    }
+
+    // Label P1
+    ctx.fillStyle = '#333';
+    ctx.font = '12px sans-serif';
+    ctx.fillText('(0,0)', toScreenX(0) - 35, toScreenY(0) + 15);
+
+    // 6. Update Text Displays
+    hValueDisplay.textContent = h.toFixed(3);
+
+    // Format numbers cleanly for display
+    const hFormatted = parseFloat(h.toFixed(3));
+    const slopeFormatted = parseFloat(m.toFixed(3));
+
+    if (isTangent) {
+      // Velocity banner text for h = 0
+      velocityBanner.textContent = 'Instantaneous velocity = 4 m/sec';
+      velocityBanner.classList.add('tangent-mode');
+
+      lineTypeDisplay.innerHTML = `<span class="status-badge status-tangent">Tangent Line (h = 0)</span>`;
+      p2Display.innerHTML = `<strong>Point P₂:</strong> Coincides with (0,0)`;
+    } else {
+      // Velocity banner text for h > 0
+      velocityBanner.textContent = `Average velocity between t=0 seconds and t=${hFormatted} seconds = ${slopeFormatted} m/sec`;
+      velocityBanner.classList.remove('tangent-mode');
+
+      lineTypeDisplay.innerHTML = `<span class="status-badge status-secant">Secant Line (h > 0)</span>`;
+      p2Display.innerHTML = `<strong>Point P₂:</strong> (${hFormatted}, ${parseFloat(f(h).toFixed(3))})`;
+    }
+
+    slopeDisplay.innerHTML = `<strong>Slope (m):</strong> ${slopeFormatted} m/sec`;
+    eqDisplay.innerHTML = `<strong>Equation:</strong> y = ${slopeFormatted}t`;
+  }
+
+  // Animation Control Loop
+  function animate() {
+    if (!isPlaying) return;
+
+    let currentH = parseFloat(hSlider.value);
+    currentH -= 0.005;
+
+    if (currentH <= 0) {
+      currentH = 0;
+      isPlaying = false;
+      playBtn.textContent = 'Play Animation';
+    }
+
+    hSlider.value = currentH;
+    render();
+
+    if (isPlaying) {
+      animId = requestAnimationFrame(animate);
+    }
+  }
+
+  // Event Listeners
+  hSlider.addEventListener('input', () => {
+    if (isPlaying) {
+      isPlaying = false;
+      playBtn.textContent = 'Play Animation';
+      cancelAnimationFrame(animId);
+    }
+    render();
+  });
+
+  playBtn.addEventListener('click', () => {
+    if (isPlaying) {
+      isPlaying = false;
+      playBtn.textContent = 'Play Animation';
+      cancelAnimationFrame(animId);
+    } else {
+      if (parseFloat(hSlider.value) === 0) {
+        hSlider.value = 1;
+      }
+      isPlaying = true;
+      playBtn.textContent = 'Pause Animation';
+      animate();
+    }
+  });
+
+  resetBtn.addEventListener('click', () => {
+    if (isPlaying) {
+      isPlaying = false;
+      playBtn.textContent = 'Play Animation';
+      cancelAnimationFrame(animId);
+    }
+    hSlider.value = 1;
+    render();
+  });
+
+  // Initial setup
+  setTimeout(setupCanvas, 0);
+</script>
+
+</body>
+</html>

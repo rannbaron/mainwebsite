@@ -1,3 +1,24 @@
+"""
+North Carolina 2026 Early Vote & General Election Forecasting Model
+===================================================================
+Redesigned multi-factor voter transition, propensity, and dual-regime prediction engine.
+
+Key Improvements:
+1. Partisan Crossover Matrix:
+   - Dynamic Dem Loyalty vs Defection (D -> R) accounting for rural ancestral Dem ticket splitting.
+   - Dynamic Rep Loyalty vs Crossover (R -> D) accounting for suburban college-educated moderation.
+   - Calibrated Unaffiliated (UNA) Democratic vote share by county urbanization/education tier.
+2. Voter Propensity & Cannibalization Segmentation:
+   - High-Propensity Cannibalization Discount: Discounts the historical Republican Election Day surge
+     when Republicans bank high-propensity early votes.
+   - Low-Propensity Expansion Premium: Rewards net electorate growth when young (<30) and newly
+     registered Unaffiliated voters turn out in early voting.
+3. Dual-Regime Empirical Bounds & Empirical Bayes Shrinkage:
+   - Evaluates outcomes under 2018 (Dem momentum) and 2022 (Rep surge) macro environments.
+   - Applies volume-weighted Empirical Bayes shrinkage toward statewide macro trends.
+   - Provides day-decaying empirical uncertainty intervals and qualitative ratings.
+"""
+
 import os
 import json
 import math
@@ -9,7 +30,6 @@ def load_baselines(path=None):
     if path is None:
         path = DEFAULT_BASELINES_PATH
     if not os.path.exists(path):
-        # Fallback to local file in current working directory
         if os.path.exists("county_vote_baselines.json"):
             path = "county_vote_baselines.json"
         elif os.path.exists("remote_deployment/county_vote_baselines.json"):
@@ -42,18 +62,75 @@ def get_empirical_sigma(ev_day=None, default=2.578):
         pass
     return default
 
+# =============================================================================
+# COUNTY POLITICAL GEOGRAPHY CLASSIFICATION
+# =============================================================================
+URBAN_COUNTIES = {'WAKE', 'MECKLENBURG', 'DURHAM', 'ORANGE', 'BUNCOMBE', 'GUILFORD', 'FORSYTH'}
+
+SUBURBAN_GROWTH_COUNTIES = {
+    'CABARRUS', 'UNION', 'NEW HANOVER', 'CHATHAM', 'JOHNSTON', 'ALAMANCE',
+    'IREDELL', 'MOORE', 'HENDERSON', 'PITT', 'WATAUGA', 'BRUNSWICK',
+    'FRANKLIN', 'HARNETT', 'CATAWBA', 'ROWAN', 'GASTON', 'CLEVELAND',
+    'CUMBERLAND', 'NASH', 'WILSON', 'LEE'
+}
+
+ANCESTRAL_RURAL_DEM_COUNTIES = {
+    'ROBESON', 'SCOTLAND', 'COLUMBUS', 'BLADEN', 'RICHMOND', 'BERTIE',
+    'MARTIN', 'HERTFORD', 'NORTHAMPTON', 'WASHINGTON', 'EDGECOMBE',
+    'HALIFAX', 'VANCE', 'WARREN', 'ANSON', 'GATES', 'GREENE', 'LENOIR',
+    'TYRRELL', 'HYDE', 'CHOWAN', 'PASQUOTANK', 'PERQUIMANS', 'BEAUFORT'
+}
+
+def get_voter_transition_matrix(county_name: str) -> dict:
+    """
+    Returns demographic and political transition matrix parameters for a county:
+    - dem_loyalty: P(Dem vote | Reg Dem)
+    - dem_defection_to_rep: P(Rep vote | Reg Dem)
+    - rep_crossover_to_dem: P(Dem vote | Reg Rep)
+    - una_dem_share: P(Dem vote | Unaffiliated)
+    """
+    c = str(county_name).upper().strip()
+    if c in URBAN_COUNTIES:
+        return {
+            'dem_loyalty': 0.955,
+            'dem_defection_to_rep': 0.045,
+            'rep_crossover_to_dem': 0.125,
+            'una_dem_share': 0.640,
+            'tier': 'Urban Core / High Education',
+            'propensity_weight': 1.15
+        }
+    elif c in SUBURBAN_GROWTH_COUNTIES:
+        return {
+            'dem_loyalty': 0.930,
+            'dem_defection_to_rep': 0.070,
+            'rep_crossover_to_dem': 0.095,
+            'una_dem_share': 0.545,
+            'tier': 'Suburban Growth / Swing',
+            'propensity_weight': 1.05
+        }
+    elif c in ANCESTRAL_RURAL_DEM_COUNTIES:
+        return {
+            'dem_loyalty': 0.815,
+            'dem_defection_to_rep': 0.185,
+            'rep_crossover_to_dem': 0.040,
+            'una_dem_share': 0.385,
+            'tier': 'Rural Ancestral Democratic',
+            'propensity_weight': 0.90
+        }
+    else:  # Rural Traditional Republican
+        return {
+            'dem_loyalty': 0.885,
+            'dem_defection_to_rep': 0.115,
+            'rep_crossover_to_dem': 0.050,
+            'una_dem_share': 0.405,
+            'tier': 'Rural Traditional Republican',
+            'propensity_weight': 0.95
+        }
+
+
 def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=None, sigma_floor=None, ev_day=None):
     """
-    Computes win probability P(Dem), P(Rep), flip probability, 95% confidence intervals, and qualitative rating based on user thresholds:
-      >= 95%: Safe D (or Safe R)
-      85% - 95%: Very Likely D (or Very Likely R)
-      75% - 85%: Likely D (or Likely R)
-      60% - 75%: Lean D (or Lean R)
-      40% - 60%: Toss Up
-    Range [range_low, range_high] represents historical dual-regime bounds.
-    To prevent extreme overconfidence early in voting, an empirical day-decaying uncertainty floor
-    (sigma_floor: ~3.34% Day 1 -> 2.58% Day 4 -> 1.40% Day 10 -> 0.66% Day 17) is applied based on
-    actual 2018 and 2022 backtests.
+    Computes win probability P(Dem), P(Rep), flip probability, 95% confidence intervals, and qualitative rating.
     """
     if sigma_floor is None:
         sigma_floor = get_empirical_sigma(ev_day, default=2.578)
@@ -71,7 +148,6 @@ def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=No
     moe_margin = 2.0 * moe
     margin_w = 2.0 * moe_margin
 
-    # Metric 1: Margin Confidence / Precision (how confident the model is about the numerical final outcome in that county, such as D+5 or R+3)
     if margin_w < 8.0:
         margin_conf = 'very high confidence'
     elif margin_w < 15.0:
@@ -83,7 +159,6 @@ def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=No
     else:
         margin_conf = 'very low confidence'
 
-    # Metric 2: Call Confidence (how confident the model is about Democrats or Republicans winning that county)
     ratio = abs(mu - 50.0) / sigma if sigma > 0 else 999.0
     if ratio >= 2.0:
         call_conf = 'very high confidence'
@@ -139,27 +214,60 @@ def compute_win_probability_and_rating(mu, range_low, range_high, actual_2022=No
         'call_ratio': round(ratio, 2)
     }
 
-def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None):
+
+def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None, hist_2022=None):
     """
-    Computes vote prediction for a single county based on current early voting turnout,
-    historical 2022 UNA voting factor, 2022 EV-to-Final dropoff, and dual-regime empirical bounds.
+    Computes vote prediction for a single county incorporating:
+    1. Partisan Crossover Matrix (D loyalty, R crossover, UNA preference).
+    2. Propensity segmentation (cannibalization discount and low-propensity expansion).
+    3. Dual-regime bounds (2018 Dem momentum vs 2022 Rep E-Day surge).
+    4. Empirical Bayes shrinkage toward statewide macro distribution.
     """
     if baselines is None:
         baselines = load_baselines()
 
-    c_key = county_name.upper().strip()
+    c_key = str(county_name).upper().strip()
     if c_key not in baselines or tot <= 0:
         return None
 
     b = baselines[c_key]
-    pct_d = (dem / tot) * 100.0
-    pct_u = (una / tot) * 100.0
+    trans = get_voter_transition_matrix(c_key)
 
-    # 1. Raw early vote estimate + 2022 historical shift
-    est_ev_dem = pct_d + b['una_factor_2022'] * pct_u
-    raw_final_dem = est_ev_dem + b['shift_2022']
+    vd = float(dem)
+    vr = float(rep)
+    vu = float(una)
+    tot_f = float(tot)
 
-    # Select day-specific errors if ev_day is specified and available in b['by_day']
+    # 1. Early Vote Estimate via Partisan Crossover Matrix
+    ev_dem_v = (trans['dem_loyalty']) * vd + trans['rep_crossover_to_dem'] * vr + trans['una_dem_share'] * vu
+    ev_rep_v = (trans['dem_defection_to_rep']) * vd + (1.0 - trans['rep_crossover_to_dem']) * vr + (1.0 - trans['una_dem_share']) * vu
+    est_ev_dem = (ev_dem_v / (ev_dem_v + ev_rep_v)) * 100.0
+
+    # 2. Propensity & Cannibalization Segmentation
+    pct_u26 = (vu / tot_f) * 100.0
+    pct_r26 = (vr / tot_f) * 100.0
+
+    # Derive historical 2022 shares if available
+    pct_u22 = 30.0
+    pct_r22 = 31.5
+    if hist_2022 and isinstance(hist_2022, dict):
+        tot22 = float(hist_2022.get('tot', 0))
+        if tot22 > 0:
+            pct_u22 = (float(hist_2022.get('una', 0)) / tot22) * 100.0
+            pct_r22 = (float(hist_2022.get('rep', 0)) / tot22) * 100.0
+
+    delta_u = pct_u26 - pct_u22
+    delta_r = pct_r26 - pct_r22
+
+    # High-propensity Republican cannibalization discount
+    cannibalization = max(0.75, min(1.0, 1.0 - 0.25 * max(0.0, delta_r / 5.0)))
+    # Low-propensity Unaffiliated/young expansion premium
+    expansion = max(-1.5, min(2.5, (delta_u / 100.0) * (trans['una_dem_share'] - 0.50) * 15.0))
+
+    adj_shift = b['shift_2022'] * cannibalization + expansion
+    raw_final_dem = est_ev_dem + adj_shift
+
+    # Day-specific error terms
     err_18 = b['err_2018']
     err_22 = b['err_2022']
     sig_floor = None
@@ -172,22 +280,20 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None)
             spread = abs(err_18 - err_22)
             sig_floor = max(0.50, rmse, spread / 3.92)
 
-    # 2. Dual-Regime bounds (2018 Dem momentum vs 2022 Rep E-Day surge)
+    # 3. Dual-Regime Bounds
     regime_18_dem = raw_final_dem - err_18
     regime_22_dem = raw_final_dem - err_22
     range_low = min(regime_18_dem, regime_22_dem)
     range_high = max(regime_18_dem, regime_22_dem)
 
-    # 3. Empirical Bayes shrinkage point estimate toward statewide macro average (+0.17%)
+    # 4. Empirical Bayes Shrinkage
     v = b['votes_2022']
     s = 30000.0 / (30000.0 + v)
     shrunk_bias = (1.0 - s) * ((err_18 + err_22) / 2.0) + s * 0.17
     eb_final_dem = raw_final_dem - shrunk_bias
 
-    # Option 1: Clamp point estimate to dual-regime bounds [range_low, range_high]
+    # Clamp point estimate within dual-regime bounds
     eb_final_dem = max(range_low, min(range_high, eb_final_dem))
-
-    # Clamp to valid percentages
     eb_final_dem = max(0.0, min(100.0, eb_final_dem))
     range_low = max(0.0, min(100.0, range_low))
     range_high = max(0.0, min(100.0, range_high))
@@ -233,19 +339,26 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None)
         'margin_precision': prob_info['margin_precision'],
         'call_confidence': prob_info['call_confidence'],
         'call_ratio': prob_info['call_ratio'],
-        'turnout_volume_weight': round(v, 1)
+        'turnout_volume_weight': round(v, 1),
+        # New Model Analytical Diagnostics
+        'tier': trans['tier'],
+        'crossover_r_to_d': round(trans['rep_crossover_to_dem'] * 100.0, 1),
+        'defection_d_to_r': round(trans['dem_defection_to_rep'] * 100.0, 1),
+        'una_dem_share': round(trans['una_dem_share'] * 100.0, 1),
+        'propensity_cannibalization_factor': round(cannibalization, 3),
+        'propensity_expansion_premium': round(expansion, 2)
     }
+
 
 def predict_all(county_returns, baselines=None, ev_day=None):
     """
     Computes county-level predictions and a volume-weighted statewide rollup.
-    county_returns can be a dict: { 'COUNTY_NAME': {'dem': int, 'rep': int, 'una': int, 'tot': int} }
-    or a pandas DataFrame with columns ['County', 'Democrat (2026)', 'Republican (2026)', 'Unaffiliated (2026)', 'Total 2026'].
     """
     if baselines is None:
         baselines = load_baselines()
 
     county_dict = {}
+    hist_dict = {}
     if hasattr(county_returns, 'iterrows'):
         for _, row in county_returns.iterrows():
             cname = str(row.get('County', '')).upper().strip()
@@ -256,6 +369,12 @@ def predict_all(county_returns, baselines=None, ev_day=None):
                 'rep': int(row.get('Republican (2026)', 0)),
                 'una': int(row.get('Unaffiliated (2026)', 0)),
                 'tot': int(row.get('Total 2026', 0))
+            }
+            hist_dict[cname] = {
+                'dem': int(row.get('Democrat (2022)', 0)),
+                'rep': int(row.get('Republican (2022)', 0)),
+                'una': int(row.get('Unaffiliated (2022)', 0)),
+                'tot': int(row.get('Total 2022', 0))
             }
     else:
         for cname, vals in county_returns.items():
@@ -286,7 +405,8 @@ def predict_all(county_returns, baselines=None, ev_day=None):
     }
 
     for cname, vals in county_dict.items():
-        res = predict_county(cname, vals['dem'], vals['rep'], vals['una'], vals['tot'], baselines, ev_day=ev_day)
+        h22 = hist_dict.get(cname)
+        res = predict_county(cname, vals['dem'], vals['rep'], vals['una'], vals['tot'], baselines, ev_day=ev_day, hist_2022=h22)
         if res is not None:
             county_results[cname] = res
             v = res['turnout_volume_weight']
@@ -369,21 +489,22 @@ def predict_all(county_returns, baselines=None, ev_day=None):
     }
 
     return {
-        'counties': county_results,
-        'statewide': statewide
+        'statewide': statewide,
+        'counties': county_results
     }
+
 
 def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None):
     """
-    Computes 2026 forecast for a precinct within a county.
-    Uses county-level UNA calibration and historical shift,
-    with empirical Bayes shrinkage toward the county's predicted margin.
+    Computes 2026 forecast for a precinct within a county using the redesigned transition
+    and propensity matrix, with empirical Bayes shrinkage toward the county's predicted margin.
     """
     if baselines is None:
         baselines = load_baselines()
 
     c_key = str(county_id).upper().strip()
     b = baselines.get(c_key)
+    trans = get_voter_transition_matrix(c_key)
 
     tot26 = c26.get('tot', 0) if c26 else 0
     if not b or not c_fc or tot26 <= 0:
@@ -421,17 +542,33 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None):
             }
         return None
 
-    pct_d = (c26.get('dem', 0) / tot26) * 100.0
-    pct_u = (c26.get('una', 0) / tot26) * 100.0
-    est_ev_dem = pct_d + b['una_factor_2022'] * pct_u
-    raw_final_dem = est_ev_dem + b['shift_2022']
+    vd = float(c26.get('dem', 0))
+    vr = float(c26.get('rep', 0))
+    vu = float(c26.get('una', 0))
 
+    ev_dem_v = trans['dem_loyalty'] * vd + trans['rep_crossover_to_dem'] * vr + trans['una_dem_share'] * vu
+    ev_rep_v = trans['dem_defection_to_rep'] * vd + (1.0 - trans['rep_crossover_to_dem']) * vr + (1.0 - trans['una_dem_share']) * vu
+    est_ev_dem = (ev_dem_v / (ev_dem_v + ev_rep_v)) * 100.0 if (ev_dem_v + ev_rep_v) > 0 else 50.0
+
+    pct_u26 = (vu / tot26) * 100.0
+    pct_r26 = (vr / tot26) * 100.0
+
+    tot22 = c22.get('tot', 0) if c22 else 0
+    pct_u22 = (float(c22.get('una', 0)) / tot22 * 100.0) if tot22 > 0 else 30.0
+    pct_r22 = (float(c22.get('rep', 0)) / tot22 * 100.0) if tot22 > 0 else 31.5
+
+    delta_u = pct_u26 - pct_u22
+    delta_r = pct_r26 - pct_r22
+    cannibalization = max(0.75, min(1.0, 1.0 - 0.25 * max(0.0, delta_r / 5.0)))
+    expansion = max(-1.5, min(2.5, (delta_u / 100.0) * (trans['una_dem_share'] - 0.50) * 15.0))
+
+    adj_shift = b['shift_2022'] * cannibalization + expansion
+    raw_final_dem = est_ev_dem + adj_shift
+
+    # Empirical Bayes shrinkage toward the county's predicted margin
     s = 250.0 / (250.0 + tot26)
     county_dem = c_fc['pred_final_dem']
     eb_final_dem = (1.0 - s) * raw_final_dem + s * county_dem
-    eb_final_dem = round(max(0.0, min(100.0, eb_final_dem)), 2)
-    eb_final_rep = round(100.0 - eb_final_dem, 2)
-    pred_margin = round(eb_final_dem - eb_final_rep, 2)
 
     err_18 = b['err_2018']
     err_22 = b['err_2022']
@@ -450,16 +587,18 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None):
     range_low = min(r18, r22)
     range_high = max(r18, r22)
 
-    # Option 1: Clamp precinct point estimate to dual-regime bounds
     eb_final_dem = max(range_low, min(range_high, eb_final_dem))
+    eb_final_dem = round(max(0.0, min(100.0, eb_final_dem)), 2)
     eb_final_rep = round(100.0 - eb_final_dem, 2)
     pred_margin = round(eb_final_dem - eb_final_rep, 2)
 
-    tot22 = c22.get('tot', 0) if c22 else 0
     if tot22 > 0:
-        pct_d22 = (c22.get('dem', 0) / tot22) * 100.0
-        pct_u22 = (c22.get('una', 0) / tot22) * 100.0
-        raw_22_dem = pct_d22 + b['una_factor_2022'] * pct_u22 + b['shift_2022']
+        vd22 = float(c22.get('dem', 0))
+        vr22 = float(c22.get('rep', 0))
+        vu22 = float(c22.get('una', 0))
+        ev22_d = trans['dem_loyalty'] * vd22 + trans['rep_crossover_to_dem'] * vr22 + trans['una_dem_share'] * vu22
+        ev22_r = trans['dem_defection_to_rep'] * vd22 + (1.0 - trans['rep_crossover_to_dem']) * vr22 + (1.0 - trans['una_dem_share']) * vu22
+        raw_22_dem = (ev22_d / (ev22_d + ev22_r) * 100.0) + b['shift_2022'] if (ev22_d + ev22_r) > 0 else b['final_2022']
         s22 = 250.0 / (250.0 + tot22)
         act22_est = round((1.0 - s22) * raw_22_dem + s22 * b['final_2022'], 2)
         swing = round(eb_final_dem - act22_est, 2)
@@ -500,13 +639,3 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None):
         'call_confidence': p_prob_info['call_confidence'],
         'call_ratio': p_prob_info['call_ratio']
     }
-
-if __name__ == '__main__':
-    import pandas as pd
-    df = pd.read_csv('nc_early_voting_party_ev_day_3.csv')
-    res = predict_all(df)
-    print("Statewide Forecast:")
-    print(json.dumps(res['statewide'], indent=2))
-    print("\nSample County Forecast (Alamance):")
-    print(json.dumps(res['counties'].get('ALAMANCE'), indent=2))
-

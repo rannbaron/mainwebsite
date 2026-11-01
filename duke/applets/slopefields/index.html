@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Slope Field Explorer</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+    <div id="controls">
+        <div class="control-row">
+            <div class="control-group">
+                <button id="helpBtn" class="btn btn-help">Help</button>
+                <button id="themeToggle" class="btn btn-theme">🌙 Dark Mode</button>
+                <button id="shareBtn" class="btn" style="background-color: #20c997; color: white;">🔗 Share Link</button>
+            </div>
+
+            <div class="control-group">
+                <label>Layout:</label>
+                <select id="layoutSelect">
+                    <option value="1" selected>1 Plot</option>
+                    <option value="2">2 Plots (Side-by-Side)</option>
+                    <option value="4">4 Plots (Grid)</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Density: <span id="densityVal">20</span></label>
+                <input type="range" id="densitySlider" min="10" max="40" value="20">
+            </div>
+
+            <div class="control-group">
+                <label>Length: <span id="lengthVal">0.5</span></label>
+                <input type="range" id="lengthSlider" min="0.1" max="1.0" step="0.1" value="0.5">
+            </div>
+
+            <div class="control-group">
+                <label>X Limits: <input type="number" id="vpXMin" value="-10" style="width: 50px;"> to <input type="number" id="vpXMax" value="10" style="width: 50px;"></label>
+            </div>
+            
+            <div class="control-group">
+                <label>Y Limits: <input type="number" id="vpYMin" value="-10" style="width: 50px;" disabled> to <input type="number" id="vpYMax" value="10" style="width: 50px;" disabled></label>
+            </div>
+
+            <div class="control-group" style="display: flex; gap: 10px; align-items: center;">
+                <label><input type="checkbox" id="vpLockAspect" checked> Lock Aspect Ratio</label>
+                <button id="resetViewBtn" style="padding: 2px 8px; cursor: pointer; border-radius: 4px; border: 1px solid #ccc; background: #eee; color: #333;">Reset View</button>
+            </div>
+            <div class="checkbox-group">
+                <label style="color: #E63946;"><input type="checkbox" id="sol0" checked> Sol 1</label>
+                <label style="color: #2A9D8F;"><input type="checkbox" id="sol1" checked> Sol 2</label>
+                <label style="color: #E9C46A;"><input type="checkbox" id="sol2" checked> Sol 3</label>
+                <label style="color: #9B5DE5;"><input type="checkbox" id="sol3" checked> Sol 4</label>
+            </div>
+        </div>
+
+        <div class="eq-inputs">
+            <div class="eq-group" id="eqContainer0"><label>Eq 1:</label><input type="text" id="eqInput0" value="x/3y" spellcheck="false"></div>
+            <div class="eq-group" id="eqContainer1"><label>Eq 2:</label><input type="text" id="eqInput1" value="|x| - |y|" spellcheck="false"></div>
+            <div class="eq-group" id="eqContainer2"><label>Eq 3:</label><input type="text" id="eqInput2" value="ln(x-y)" spellcheck="false"></div>
+            <div class="eq-group" id="eqContainer3"><label>Eq 4:</label><input type="text" id="eqInput3" value="arctan(x) - y" spellcheck="false"></div>
+        </div>
+    </div>
+
+    <div id="grid-container" class="grid-1">
+        <div class="plot-wrapper" id="wrapper0"><div class="plot-label">Plot 1</div><canvas id="canvas0"></canvas></div>
+        <div class="plot-wrapper" id="wrapper1"><div class="plot-label">Plot 2</div><canvas id="canvas1"></canvas></div>
+        <div class="plot-wrapper" id="wrapper2"><div class="plot-label">Plot 3</div><canvas id="canvas2"></canvas></div>
+        <div class="plot-wrapper" id="wrapper3"><div class="plot-label">Plot 4</div><canvas id="canvas3"></canvas></div>
+    </div>
+
+    <div id="helpModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeHelpBtn">&times;</span>
+            <h2>How to Use the Slope Field Explorer</h2>
+            
+            <h3>Navigation & Viewport</h3>
+            <ul>
+                <li><strong>Pan:</strong> Click and drag anywhere on the blank graph background to move around.</li>
+                <li><strong>Zoom:</strong> Use your mouse scroll wheel (desktop) or pinch-to-zoom (mobile) to zoom in and out.</li>
+                <li><strong>Manual Limits:</strong> Type exact numbers into the X and Y limit boxes at the top to jump to a specific view. Click <strong>Reset View</strong> to return to the default auto-scaling.</li>
+            </ul>
+
+            <h3>Entering Equations</h3>
+            <ul>
+                <li>Type your differential equation into the <code>Eq</code> boxes at the top. The slope field will update immediately.</li>
+                <li><strong>Implicit Math is Supported!</strong> You do not need to type multiplication stars. Writing <code>xy</code>, <code>2x</code>, or <code>x(y+1)</code> will be automatically understood.</li>
+            </ul>
+
+            <h3>Interacting with Solutions</h3>
+            <ul>
+                <li><strong>Drag and Drop:</strong> Click and drag any of the colored dots on the graph to change the Initial Value condition.</li>
+                <li><strong>Manual Entry:</strong> <strong>Double-click</strong> (or double-tap) any colored dot to type exact coordinates.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="../shared-math.js"></script>
+    <script src="../shared.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

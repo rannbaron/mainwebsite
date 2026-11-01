@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags | Rann Bar-On</title>
+    <link>https://rannbar-on.com/duke/tags/</link>
+      <atom:link href="https://rannbar-on.com/duke/tags/index.xml" rel="self" type="application/rss+xml" />
+    <description>Tags</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© Rann Bar-On 2021</copyright><lastBuildDate>Sun, 01 Nov 2026 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://rannbar-on.com/duke/media/icon_hu_23525e6f3b67f967.png</url>
+      <title>Tags</title>
+      <link>https://rannbar-on.com/duke/tags/</link>
+    </image>
+    
+  </channel>
+</rss>
