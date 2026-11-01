@@ -440,6 +440,14 @@ for inst in institutions:
     }}
     .font-mono {{ font-family: 'JetBrains Mono', monospace; }}
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NVCTSYSMQ9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NVCTSYSMQ9');
+  </script>
   <script data-goatcounter="https://rannbaron.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -1169,6 +1177,14 @@ standrews_redirect_html = '''<!DOCTYPE html>
   <meta http-equiv="refresh" content="3; url=/campuses">
   <title>St. Andrews University Voting Information | Rann Bar-On</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NVCTSYSMQ9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NVCTSYSMQ9');
+  </script>
   <script data-goatcounter="https://rannbaron.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -1257,6 +1273,14 @@ campuses_template = '''<!DOCTYPE html>
     }
     .font-mono { font-family: 'JetBrains Mono', monospace; }
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NVCTSYSMQ9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NVCTSYSMQ9');
+  </script>
   <script data-goatcounter="https://rannbaron.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </head>
@@ -1658,6 +1682,14 @@ vote_html = f'''<!DOCTYPE html>
     }}
     .font-mono {{ font-family: 'JetBrains Mono', monospace; }}
   </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NVCTSYSMQ9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NVCTSYSMQ9');
+  </script>
   <script data-goatcounter="https://rannbaron.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 </head>
