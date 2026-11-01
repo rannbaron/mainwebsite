@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rann Bar-On</title>
+    <link>https://rannbar-on.com/duke/author/rann-bar-on/</link>
+      <atom:link href="https://rannbar-on.com/duke/author/rann-bar-on/index.xml" rel="self" type="application/rss+xml" />
+    <description>Rann Bar-On</description>
+    <generator>Wowchemy (https://wowchemy.com)</generator><language>en-us</language><copyright>© Rann Bar-On 2021</copyright>
+    <image>
+      <url>https://rannbar-on.com/duke/author/rann-bar-on/avatar_hu_1cd12e1d38b8cf20.jpg</url>
+      <title>Rann Bar-On</title>
+      <link>https://rannbar-on.com/duke/author/rann-bar-on/</link>
+    </image>
+    
+    <item>
+      <title>Rann Bar-On</title>
+      <link>https://rannbar-on.com/duke/author/rann-bar-on/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://rannbar-on.com/duke/author/rann-bar-on/</guid>
+      <description>&lt;p&gt;I specialize in early undergraduate mathematics education, having dedicated my career to it after finishing my Ph.D. in Math in 2009 under the supervision of John Harer. For the past decade, I have taught and supervised Math 105L and 106L, entry-level laboratory calculus courses at Duke. I have edited and created labs for these courses, introducing technological and pedagogical innovations adapted to each year’s students. I have served as a college (pre-major) advisor to dozens of undergraduate students and as major advisor to a few. In 2017, I won Duke’s Advisor of the Year Award, as chosen by the Academic Advising Center based on comments from my advisees. I live in Durham, North Carolina with my partner and young child. My pronouns are he/him/his.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,18 @@
+{
+  "name": "Rann Bar-On",
+  "short_name": "Rann Bar-On",
+  "lang": "en-us",
+  "theme_color": "rgb(255, 0, 60)",
+  "background_color": "rgb(255, 0, 60)",
+  "icons": [{
+    "src": "/duke/media/icon_hu_f188f95948e84368.png",
+    "sizes": "192x192",
+    "type": "image/png"
+    }, {
+    "src": "/duke/media/icon_hu_23525e6f3b67f967.png",
+    "sizes": "512x512",
+    "type": "image/png"
+     }],
+  "display": "standalone",
+  "start_url": "/?utm_source=web_app_manifest"
+}

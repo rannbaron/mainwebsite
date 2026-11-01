@@ -1,0 +1,95 @@
+\documentclass[11pt,twoside]{article}
+
+\oddsidemargin=0in
+\evensidemargin=0in
+\textwidth=6.5in
+\topmargin=0in
+\textheight=8.5in
+\parindent=0in
+\parskip=0in
+
+\usepackage{amsfonts}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{mathtools}
+%\usepackage{boxedminipage}
+\usepackage{colortbl}
+\usepackage{comment}
+\setlength{\textheight}{3.5in}
+\usepackage{epsfig}
+\usepackage{fancyhdr}
+\usepackage{layout}
+\pagestyle{empty}
+%\headheight = 14pt
+\usepackage{hyperref}
+\usepackage{multicol}
+\usepackage{soul}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepackage{tikz}
+\usetikzlibrary{external}
+\tikzexternalize[prefix=figures/]
+\usepackage[inline]{enumitem}
+\usepackage{filecontents}
+
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{arrows}
+\usetikzlibrary{patterns}
+
+% Circled numbers
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+    
+\DeclareRobustCommand{\inlinegraphic}[1]{%
+  \begingroup\normalfont
+  {\huge\includegraphics[height=\fontcharht\font`\B]{#1}}%
+  \endgroup
+}
+
+% Augmented matrices
+\makeatletter
+\renewcommand*\env@matrix[1][*\c@MaxMatrixCols c]{%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{#1}}
+\makeatother
+
+
+
+\newcommand{\p}{{\mathbb P}}
+\newcommand{\dydx}{\frac{dy}{dx}}
+\newcommand{\blank}[1]{\underline{\hspace{#1}}}
+\newcommand{\dsst}{\displaystyle}
+\newcommand{\dd}[2]{\displaystyle \frac{d{#1}}{d{#2}}}
+\newcommand{\makearrow}[2]{\overset{#1}{\underset{#2}{\xrightarrow{\hspace{2cm}}}}}    
+\pgfplotsset{compat=1.16}
+
+
+\newcommand{\bpm}{\begin{pmatrix}}
+\newcommand{\epm}{\end{pmatrix}}
+\newcommand{\mn}{\llap{-}}
+
+
+\begin{document}
+
+ 
+\paragraph*{Exercises from Strang} P. 314 2,4,11,15,16,18,29,31,34; P.436 1,5-11,15,19,20.
+
+\paragraph*{Additional Question} Consider the matrix $$A=\left(\begin{array}{rrrr}
+9 & -1 & -2 & 4 \\
+-4 & 2 & 1 & -2 \\
+8 & 0 & 0 & 4 \\
+-10 & 2 & 3 & -4
+\end{array}\right)$$
+
+\begin{enumerate}
+  \item Find the eigenvalues of $A$. (Hint: You need to find $\chi_A(t)=|tI-A|$, the characteristic polynomial of $A$. Remember that you can do both row and column operations before computing that determinant! If you're careful, one row and one column operation results in a matrix that is \emph{almost} upper triangular.)
+  \item Find eigenvectors corresponding to each of your eigenvalues.
+  \item What are the algebraic and geometric multiplicities of each of your eigenvalues?
+  \item Is $A$ diagonalizable? Explain your answer.
+\end{enumerate}
+
+
+\end{document}

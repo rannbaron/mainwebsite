@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>jupyter | Rann Bar-On</title>
+    <link>https://services.math.duke.edu/~rann/tags/jupyter/</link>
+      <atom:link href="https://services.math.duke.edu/~rann/tags/jupyter/index.xml" rel="self" type="application/rss+xml" />
+    <description>jupyter</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><copyright>© Rann Bar-On 2018</copyright><lastBuildDate>Thu, 30 Apr 2020 00:00:00 -0400</lastBuildDate>
+    <image>
+      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
+      <title>jupyter</title>
+      <link>https://services.math.duke.edu/~rann/tags/jupyter/</link>
+    </image>
+    
+    <item>
+      <title>218 Labs (Gitlab)</title>
+      <link>https://services.math.duke.edu/~rann/218labs/</link>
+      <pubDate>Thu, 30 Apr 2020 00:00:00 -0400</pubDate>
+      <guid>https://services.math.duke.edu/~rann/218labs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>218 Labs (Gitlab)</title>
+      <link>https://services.math.duke.edu/~rann/project/218labs/</link>
+      <pubDate>Thu, 30 Apr 2020 00:00:00 -0400</pubDate>
+      <guid>https://services.math.duke.edu/~rann/project/218labs/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

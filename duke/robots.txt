@@ -1,0 +1,25 @@
+User-agent: *
+
+
+Disallow: /duke/project/105lmaterials.fall22/
+
+Disallow: /duke/project/105lmaterials.fall24/
+
+Disallow: /duke/project/105lmaterials.fall25/
+
+Disallow: /duke/project/output/
+
+Disallow: /duke/project/105lmaterials.fall20/
+
+Disallow: /duke/project/105lmaterials.fall21/
+
+Disallow: /duke/project/106lmaterials.fall21/
+
+Disallow: /duke/project/106lmaterials.spring21/
+
+Disallow: /duke/project/105lmaterials/
+
+Disallow: /duke/105l106lpostcovid/
+
+Disallow: /duke/teachingphilosophy/
+
