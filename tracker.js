@@ -17,9 +17,31 @@
 
   // Analytics Configuration
   var config = {
-    goatCounterCode: 'rannbaron', // Dashboard at https://rannbaron.goatcounter.com
-    webhookUrl: ''                // Optional custom webhook (e.g. Google Sheets / Cloudflare Worker)
+    gaMeasurementId: 'G-NVCTSYSMQ9', // Google Analytics 4
+    goatCounterCode: 'rannbaron',   // Dashboard at https://rannbaron.goatcounter.com
+    webhookUrl: ''                  // Optional custom webhook (e.g. Google Sheets / Cloudflare Worker)
   };
+
+  // 1. Initialize Google Analytics 4 (gtag.js)
+  try {
+    if (config.gaMeasurementId && !document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
+      var gaScript = document.createElement('script');
+      gaScript.async = true;
+      gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + config.gaMeasurementId;
+      document.head.appendChild(gaScript);
+
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function() { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', config.gaMeasurementId, {
+        page_title: document.title,
+        page_path: window.location.pathname,
+        campus_name: campusName || 'Statewide',
+        campus_key: campusKey || 'portal',
+        county: county || ''
+      });
+    }
+  } catch(e) {}
 
   // 1. Initialize GoatCounter script asynchronously if not already in document
   try {
@@ -39,6 +61,26 @@
   function logEvent(name, details) {
     var eventPath = 'campus-' + (campusKey || 'portal') + '-' + name;
     var eventTitle = (campusName || campusKey || 'Statewide Portal') + ' - ' + name;
+
+    // Send to Google Analytics 4 if available
+    if (typeof window.gtag === 'function' && config.gaMeasurementId) {
+      var eventParams = {
+        event_category: 'civic_telemetry',
+        event_label: eventTitle,
+        campus: campusName || 'Statewide',
+        key: campusKey || 'portal',
+        county: county || '',
+        page_path: window.location.pathname
+      };
+      if (details) {
+        for (var k in details) {
+          if (details.hasOwnProperty(k)) {
+            eventParams[k] = details[k];
+          }
+        }
+      }
+      window.gtag('event', name, eventParams);
+    }
 
     // Send to GoatCounter if available
     if (window.goatcounter && typeof window.goatcounter.count === 'function') {
