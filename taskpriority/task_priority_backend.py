@@ -465,13 +465,23 @@ def get_current_user_from_session(session_token):
 def seed_default_tasks(admin_user_id):
     """Populates current live tasks as specified."""
     default_tasks = [
-        ("Panopto Video Auto-Editing Pipeline", "Download 60m classroom recordings, detect talking at board vs student desks, match MWF dual sessions, and test automated cut points", 9, "Gemini 4 Argon", 45),
-        ("Election Night Race Calling Model (95% CI)", "Multi-mode Bayesian posterior model calculating 95% victory confidence for NC statewide, Senate, and House races with instant urgent email dispatch", 10, "Gemini 4 Argon", 95),
-        ("Cauchy Printer Probing & Print Script", "Discovered Ricoh MP 9003 staple finisher in Rm 102; created cauchy-print CLI with simplex default, duplex flag, and top-left staple option", 8, "Gemini 4 Argon", 100),
-        ("Constitutional Amendments on Needle Dashboard", "Full calibration and rendering of NC Constitutional Amendments 1, 2, and 3 across county models, dials, and interactive category switchers", 8, "Gemini 4 Argon", 95),
-        ("Math 105L Lecture 9-2 Completed Sheet (Video-Derived)", "Clean two-page lecture notes derived exclusively from Panopto video recording matching 10-3 exemplar structure and diagrams", 8, "Gemini 4 Argon", 100),
-        ("Daily Model Usage & 24h Comparison Automation", "Automated tracking and morning reporting of Gemini 3.8 Flash Medium, Flash High, and Argon usage with 24-hour comparative evaluations", 6, "Gemini 3.8 Flash (High)", 85),
-        ("105L Canvas Gradebook & Retake Automation", "Canvas syncing, retake deadline calculations, semester-end extension policies, and Gradescope download gating", 5, "Gemini 3.8 Flash (Medium)", 80)
+        ("Election Night 95% Confidence Race Calling Engine", "Real-time Decision Desk automated calls with Twitter, Threads, and Instagram alerts.", 10, "Gemini 4 Argon", 100),
+        ("Machine Lid-Close & Suspend Inhibit Daemon", "Battery-aware inhibitor daemon preventing laptop sleep while on battery >= 20% (PID 773933 / task-8935).", 9, "Gemini 3.8 Flash (High)", 100),
+        ("Locate UPS Account Username & Email in Gmail", "Locate user's UPS account confirmation and registration records across Gmail archives and browser profiles.", 9, "Gemini 3.8 Flash (High)", 40),
+        ("Math 105L Day 11-1 Completed Sheet & Video Review Loop", "Draft 3-page completed lecture sheet with circular markers, proven 2/sqrt(13)<2, and 5-link prerequisite portals dispatched to rann@rannbar-on.com awaiting approval.", 9, "Gemini 3.8 Flash (High)", 90),
+        ("Panopto Video Auto-Editing & Executive Summary Pipeline", "Download classroom recording (Day 11-1 ID 8468225d...), detect board lecturing vs walking student consultation, and generate executive summaries.", 8, "Gemini 4 Argon", 50),
+        ("Constitutional Amendments Forecast Model & Dials", "Monte Carlo simulation kernel, 10-slide deck, and 5-page report dispatched to subscribers; interactive dials active on dashboard.", 8, "Gemini 4 Argon", 100),
+        ("Cauchy Math CUPS Printer Suite & CLI", "Probed Rm 102 Ricoh MP 9003 Copier; created cauchy_print.sh with simplex default, duplex flag, and top-left staple finisher option.", 8, "Gemini 4 Argon", 100),
+        ("Worksheet 10-1 & 10-2 Extension Summary Dispatch", "Scheduled daily cron (task-9347 at 20:00) dispatching 8:00 PM extension summary to rb6@duke.edu and checking for approval replies.", 7, "Gemini 3.8 Flash (Medium)", 70),
+        ("Isaiah Nwoko Re-enrollment & Dynamic Quiz Windows", "Daily midnight cron (task-9530) dynamically scheduling missed quiz windows 30 mins before MWF classes and TuTh office hours until completed.", 7, "Gemini 3.8 Flash (Medium)", 60),
+        ("Friday Office Hours Shift & Schedule Update", "One-week office hours adjustment moved from Thursday to Friday 2:00–3:30 PM; public calendar and faculty pages updated without sending email.", 7, "Gemini 3.8 Flash (Medium)", 100),
+        ("24-Hour Three-Model Comparative Evaluation Protocol", "Automated comparative tracking of Flash Medium, Flash High, and Argon across tasks in model_comparison_24h_log.json with synthesis report to rann@rannbar-on.com.", 6, "Gemini 3.8 Flash (High)", 85),
+        ("Panopto Completed Lecture Sheets Archive", "Updated 105Lsummaries.html with direct original PDF links and dual Gradescope portals (Sub 1 & Resub) for all 27 past assignments.", 6, "Gemini 3.8 Flash (High)", 100),
+        ("Daily Midnight Workspace Maintenance & Auto-Push", "Daily midnight cron (task-9319 at 00:00) cleaning workspace, reorganizing outputs, git pushing all source to GitHub, and emailing maintenance report.", 5, "Gemini 3.8 Flash (Medium)", 75),
+        ("Weekly Canvas Incapacitation & Attendance Audit", "Weekly automated cron (0 19 * * 0) processing Dean's incapacitation notices, updating roll call, and dispatching audit report via canvas_attendance_reporter.py.", 5, "Gemini 3.8 Flash (Medium)", 70),
+        ("State Navigate & NC Needle Benchmark Synchronization", "Multi-mode precinct calibration (Absentee Mail, One-Stop Early Voting, Election Day In-Person) calibrated across 2,658 NC precincts and legislative seats.", 5, "Gemini 3.8 Flash (High)", 100),
+        ("Daily Early Voting Scheduled Ingestion Shutdown", "Early voting concluded Nov 1, 2026; commented out 6x morning scheduled crons in .github/workflows/daily_update.yml on main and beta branches.", 4, "Gemini 3.8 Flash (Medium)", 100),
+        ("Control Dashboard Zero-Search Relocation", "Relocated execution control center to rannbar-on.com/dashboard with multi-crawler robots shielding, test suite verification, and legacy route redirection.", 4, "Gemini 3.8 Flash (High)", 100)
     ]
 
     with get_db_connection() as conn:
