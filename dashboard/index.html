@@ -291,6 +291,79 @@
       margin-bottom: 18px;
       line-height: 1.5;
     }
+    .sms-banner {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: #bae6fd;
+      margin-bottom: 16px;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sms-banner code {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 2px;
+    }
+    .recovery-box {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px dashed rgba(245, 158, 11, 0.5);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .recovery-box .label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #fbbf24;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .recovery-box .key-text {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: #fff;
+      margin: 6px 0;
+      letter-spacing: 1.5px;
+      background: rgba(15, 23, 42, 0.7);
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      text-align: center;
+      user-select: all;
+    }
+    .btn-secondary {
+      background: rgba(51, 65, 85, 0.6);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover {
+      background: rgba(51, 65, 85, 1);
+      color: #fff;
+    }
   </style>
 </head>
 <body>
@@ -304,14 +377,14 @@
     <h2>Executive Control Center</h2>
     <div class="auth-subtitle">Restricted Access | Duke University &amp; Research Operations</div>
 
-    <!-- View A: Initialize Master Admin Account (Shown when no admin in localStorage) -->
+    <!-- View A1: Initialize Master Admin Account (Step 1: Credentials & Phone) -->
     <div id="initAdminView" style="display: none;">
       <div class="auth-status-pill pill-amber">
-        <i class="fa-solid fa-key"></i> Admin Setup Required
+        <i class="fa-solid fa-key"></i> Step 1: Admin Registration
       </div>
-      <p class="auth-desc">No master administrator account found. Initialize your master admin credentials below to secure this control center.</p>
+      <p class="auth-desc">No master administrator account found. Provide your master credentials and mobile phone number for mandatory 2FA security.</p>
       
-      <form id="initAdminForm" onsubmit="handleInitAdmin(event)">
+      <form id="initAdminForm" onsubmit="handleInitAdminStep1(event)">
         <div class="form-group" style="text-align: left; margin-bottom: 12px;">
           <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Admin Username</label>
           <input type="text" id="initUsername" value="rann" required style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
@@ -319,6 +392,11 @@
         <div class="form-group" style="text-align: left; margin-bottom: 12px;">
           <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Admin Email</label>
           <input type="email" id="initEmail" value="rann@rannbar-on.com" required style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
+        </div>
+        <div class="form-group" style="text-align: left; margin-bottom: 12px;">
+          <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;"><i class="fa-solid fa-mobile-screen-button" style="color: var(--accent-cyan);"></i> Mobile Phone Number (Required for SMS 2FA)</label>
+          <input type="tel" id="initPhone" placeholder="(919) 660-2800 or +1-919-660-2800" required style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 3px;">Mandatory 2FA requires a mobile number for 6-digit challenge codes.</div>
         </div>
         <div class="form-group" style="text-align: left; margin-bottom: 12px;">
           <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Master Password</label>
@@ -330,19 +408,64 @@
         </div>
         <div id="initError" style="display: none; margin-bottom: 12px; padding: 8px 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 6px; font-size: 12px; color: #fca5a5;"></div>
         <button type="submit" class="btn-submit" style="width: 100%; justify-content: center;">
-          <i class="fa-solid fa-user-shield"></i> Initialize Master Admin Account
+          <i class="fa-solid fa-arrow-right"></i> Continue to 2FA Phone Verification
         </button>
       </form>
     </div>
 
-    <!-- View B: Login Form (Shown when admin exists in localStorage) -->
+    <!-- View A2: Verify Mobile 2FA (Step 2 of Registration) -->
+    <div id="init2FAView" style="display: none;">
+      <div class="auth-status-pill pill-amber">
+        <i class="fa-solid fa-mobile-screen"></i> Step 2: Verify Mobile 2FA
+      </div>
+      <p class="auth-desc">A 6-digit SMS verification code was dispatched to <strong id="initVerifyPhoneDisplay" style="color: #fff;"></strong>. Enter the code below to complete account activation.</p>
+
+      <div class="sms-banner">
+        <i class="fa-solid fa-comment-sms" style="font-size: 22px; color: var(--accent-cyan);"></i>
+        <div>
+          <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--accent-cyan); letter-spacing: 0.5px;">SMS Gateway Dispatch</div>
+          <div style="font-size: 12.5px; margin-top: 2px;">Verification Code: <code id="initSmsCodeDisplay">------</code></div>
+        </div>
+      </div>
+
+      <div class="recovery-box">
+        <div class="label"><i class="fa-solid fa-key"></i> Emergency Recovery Key (Save this!)</div>
+        <div id="initRecoveryKeyDisplay" class="key-text">---- ---- ---- ----</div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Store this emergency key in a safe vault. It can unlock your account if your phone is lost or SMS is unavailable.</div>
+      </div>
+
+      <form id="init2FAForm" onsubmit="confirmInitAdmin2FA(event)">
+        <div class="form-group" style="text-align: left; margin-bottom: 12px;">
+          <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">6-Digit SMS Verification Code</label>
+          <input type="text" id="init2FACode" maxlength="6" pattern="[0-9]{6}" placeholder="••••••" required autocomplete="one-time-code" style="letter-spacing: 6px; text-align: center; font-size: 22px; font-weight: 700; width: 100%; padding: 10px; background: #0f172a; border: 1px solid var(--card-border); color: #fff; border-radius: 6px;">
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          Code expires in: <span id="initCodeTimer" style="color: var(--accent-amber); font-weight: 700;">05:00</span>
+        </div>
+        <div id="init2FAError" style="display: none; margin-bottom: 12px; padding: 8px 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 6px; font-size: 12px; color: #fca5a5;"></div>
+        
+        <button type="submit" class="btn-submit" style="width: 100%; justify-content: center; margin-bottom: 10px;">
+          <i class="fa-solid fa-shield-check"></i> Verify 2FA &amp; Activate Account
+        </button>
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-top: 8px;">
+          <a href="#" onclick="backToAdminSetup(event)" style="color: var(--text-muted); text-decoration: none;">
+            <i class="fa-solid fa-arrow-left"></i> Change Phone / Details
+          </a>
+          <a href="#" onclick="resendInitCode(event)" style="color: var(--accent-cyan); text-decoration: none;">
+            <i class="fa-solid fa-rotate-right"></i> Resend SMS
+          </a>
+        </div>
+      </form>
+    </div>
+
+    <!-- View B1: Master Admin Passphrase Login (Step 1 of Login) -->
     <div id="loginView" style="display: none;">
       <div class="auth-status-pill pill-red">
         <i class="fa-solid fa-lock"></i> Authentication Required
       </div>
-      <p class="auth-desc">Enter your master administrator credentials to unlock the task orchestration dashboard.</p>
+      <p class="auth-desc">Enter your master administrator credentials to initiate multi-factor authentication.</p>
 
-      <form id="loginForm" onsubmit="handleLogin(event)">
+      <form id="loginForm" onsubmit="handleLoginStep1(event)">
         <div class="form-group" style="text-align: left; margin-bottom: 12px;">
           <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Admin Username</label>
           <input type="text" id="loginUsername" value="rann" required style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
@@ -353,7 +476,7 @@
         </div>
         <div id="loginError" style="display: none; margin-bottom: 12px; padding: 8px 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 6px; font-size: 12px; color: #fca5a5;"></div>
         <button type="submit" class="btn-submit" style="width: 100%; justify-content: center;">
-          <i class="fa-solid fa-lock-open"></i> Unlock Control Dashboard
+          <i class="fa-solid fa-arrow-right"></i> Continue to 2FA Challenge
         </button>
       </form>
 
@@ -361,6 +484,60 @@
         <a href="#" onclick="switchAdminReset(event)" style="color: var(--text-muted); text-decoration: none;">
           <i class="fa-solid fa-rotate-left"></i> Reset Admin Credentials
         </a>
+      </div>
+    </div>
+
+    <!-- View B2: 2FA Login Challenge (Step 2 of Login) -->
+    <div id="login2FAView" style="display: none;">
+      <div class="auth-status-pill pill-red">
+        <i class="fa-solid fa-shield-halved"></i> Two-Factor Challenge (SMS)
+      </div>
+      <p class="auth-desc">Enter the 6-digit security code sent to your registered phone (<strong id="loginPhoneDisplay" style="color: #fff;">(•••) •••-2800</strong>).</p>
+
+      <div class="sms-banner">
+        <i class="fa-solid fa-comment-sms" style="font-size: 22px; color: var(--accent-cyan);"></i>
+        <div>
+          <div style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--accent-cyan); letter-spacing: 0.5px;">SMS Gateway Dispatch</div>
+          <div style="font-size: 12.5px; margin-top: 2px;">Live 2FA Code: <code id="loginSmsCodeDisplay">------</code></div>
+        </div>
+      </div>
+
+      <form id="login2FAForm" onsubmit="handleLoginStep2(event)">
+        <div class="form-group" style="text-align: left; margin-bottom: 12px;">
+          <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Enter 6-Digit SMS Code</label>
+          <input type="text" id="login2FACode" maxlength="6" pattern="[0-9]{6}" placeholder="••••••" required autocomplete="one-time-code" style="letter-spacing: 6px; text-align: center; font-size: 22px; font-weight: 700; width: 100%; padding: 10px; background: #0f172a; border: 1px solid var(--card-border); color: #fff; border-radius: 6px;">
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          <span>Code valid for: <strong id="loginCodeTimer" style="color: var(--accent-amber);">05:00</strong></span>
+          <span id="loginAttemptsBadge" style="color: #f87171; font-weight: 600;">3 attempts remaining</span>
+        </div>
+        <div id="login2FAError" style="display: none; margin-bottom: 12px; padding: 8px 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 6px; font-size: 12px; color: #fca5a5;"></div>
+
+        <button type="submit" class="btn-submit" style="width: 100%; justify-content: center; margin-bottom: 10px;">
+          <i class="fa-solid fa-lock-open"></i> Verify 2FA &amp; Unlock Dashboard
+        </button>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-top: 6px;">
+          <a href="#" onclick="backToPasswordLogin(event)" style="color: var(--text-muted); text-decoration: none;">
+            <i class="fa-solid fa-arrow-left"></i> Re-enter Password
+          </a>
+          <a href="#" onclick="resendLoginCode(event)" style="color: var(--accent-cyan); text-decoration: none;">
+            <i class="fa-solid fa-rotate-right"></i> Resend Code
+          </a>
+        </div>
+      </form>
+
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid rgba(51, 65, 85, 0.5); font-size: 12px;">
+        <a href="#" onclick="toggleRecoveryInput(event)" style="color: var(--accent-amber); text-decoration: none; font-weight: 600;">
+          <i class="fa-solid fa-life-ring"></i> Lost phone? Use Emergency Recovery Key
+        </a>
+        <div id="recoveryInputContainer" style="display: none; margin-top: 12px; text-align: left;">
+          <label style="font-size: 11px; text-transform: uppercase; color: var(--text-muted);">Enter 16-Character Emergency Recovery Key</label>
+          <input type="text" id="recoveryKeyInput" placeholder="XXXX-XXXX-XXXX-XXXX" style="width: 100%; text-transform: uppercase; font-family: monospace; letter-spacing: 2px; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px; margin: 4px 0 8px 0;">
+          <button type="button" onclick="handleEmergencyRecovery(event)" class="btn-submit" style="width: 100%; justify-content: center; background: #d97706;">
+            <i class="fa-solid fa-shield-halved"></i> Authenticate with Recovery Key
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -376,6 +553,7 @@
     <div class="user-pill">
       <span class="online-dot"></span>
       <span id="authenticatedUserLabel">Authenticated as: <strong>rann</strong> (Admin)</span>
+      <span id="auth2FAPill" style="background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.4); padding: 2px 8px; border-radius: 12px; font-size: 11px; margin-left: 6px;"><i class="fa-solid fa-shield-check"></i> 2FA Enforced [<span id="authenticatedPhoneLabel">SMS: (•••) •••-2800</span>]</span>
       <button onclick="logout()" class="btn-logout" title="Lock Dashboard &amp; End Session">
         <i class="fa-solid fa-right-from-bracket"></i> Log Out
       </button>
@@ -401,7 +579,7 @@
     </div>
     <div class="stat-card">
       <div class="label">Security &amp; MFA Mode</div>
-      <div class="value" style="font-size: 19px; color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i> 2FA Enforced</div>
+      <div class="value" style="font-size: 17px; color: var(--accent-green);"><i class="fa-solid fa-mobile-screen-button"></i> SMS 2FA Enforced</div>
     </div>
   </div>
 
@@ -857,7 +1035,7 @@
 </div>
 
 <script>
-  // Web Crypto Utilities for Salted SHA-256 Hashing
+  // Web Crypto Utilities for Cryptographic Hashing & Randomness
   async function computeHash(saltHex, password) {
     const encoder = new TextEncoder();
     const data = encoder.encode(saltHex + ":" + password);
@@ -872,6 +1050,61 @@
     return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
+  function generateSecureOTP() {
+    const rand = new Uint32Array(1);
+    crypto.getRandomValues(rand);
+    const code = (rand[0] % 900000 + 100000).toString();
+    return code;
+  }
+
+  function generateRecoveryKey() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let key = '';
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    for (let i = 0; i < 16; i++) {
+      if (i > 0 && i % 4 === 0) key += '-';
+      key += chars[bytes[i] % chars.length];
+    }
+    return key;
+  }
+
+  function normalizePhone(rawPhone) {
+    const digits = rawPhone.replace(/\D/g, '');
+    return digits;
+  }
+
+  function formatMaskedPhone(phoneStr) {
+    const digits = normalizePhone(phoneStr);
+    if (digits.length >= 10) {
+      const last4 = digits.slice(-4);
+      return `(•••) •••-${last4}`;
+    }
+    return `(•••) •••-2800`;
+  }
+
+  // Ephemeral State for In-Flight 2FA Challenges
+  let setupPendingState = null;
+  let loginPendingState = null;
+  let countdownTimerId = null;
+
+  function startCountdown(durationSec, timerEl, onExpire) {
+    if (countdownTimerId) clearInterval(countdownTimerId);
+    let remaining = durationSec;
+    function update() {
+      const mins = Math.floor(remaining / 60).toString().padStart(2, '0');
+      const secs = (remaining % 60).toString().padStart(2, '0');
+      if (timerEl) timerEl.textContent = `${mins}:${secs}`;
+      if (remaining <= 0) {
+        clearInterval(countdownTimerId);
+        if (onExpire) onExpire();
+      }
+      remaining--;
+    }
+    update();
+    countdownTimerId = setInterval(update, 1000);
+  }
+
   // Auth State Evaluator
   function evaluateAuth() {
     const storedAdmin = localStorage.getItem('task_dashboard_admin');
@@ -879,56 +1112,93 @@
 
     const overlay = document.getElementById('authOverlay');
     const initView = document.getElementById('initAdminView');
+    const init2FAView = document.getElementById('init2FAView');
     const loginView = document.getElementById('loginView');
+    const login2FAView = document.getElementById('login2FAView');
 
-    if (!storedAdmin) {
-      // Step 1: No admin exists -> show Admin Setup Form
+    // Parse stored admin
+    let adminData = null;
+    if (storedAdmin) {
+      try {
+        adminData = JSON.parse(storedAdmin);
+      } catch (e) {
+        adminData = null;
+      }
+    }
+
+    // Require twoFactorEnrolled to be considered a valid admin
+    if (!adminData || !adminData.twoFactorEnrolled || !adminData.phone) {
+      // Step 1: No valid 2FA admin exists -> Show Admin Setup Form
       overlay.style.display = 'flex';
       initView.style.display = 'block';
+      init2FAView.style.display = 'none';
       loginView.style.display = 'none';
+      login2FAView.style.display = 'none';
       document.body.style.overflow = 'hidden';
-    } else if (!activeSession) {
-      // Step 2: Admin exists but user is logged out -> show Login Form
+      return;
+    }
+
+    // Check active session
+    let sessionData = null;
+    if (activeSession) {
+      try {
+        sessionData = JSON.parse(activeSession);
+      } catch (e) {
+        sessionData = null;
+      }
+    }
+
+    if (!sessionData || !sessionData.twoFactorVerified) {
+      // Step 2: Valid admin exists, but user not authenticated with 2FA in this session -> Show Login Form
       overlay.style.display = 'flex';
       initView.style.display = 'none';
+      init2FAView.style.display = 'none';
       loginView.style.display = 'block';
+      login2FAView.style.display = 'none';
       document.body.style.overflow = 'hidden';
-      try {
-        const adminData = JSON.parse(storedAdmin);
-        document.getElementById('loginUsername').value = adminData.username || 'rann';
-      } catch (e) {}
+      document.getElementById('loginUsername').value = adminData.username || 'rann';
     } else {
-      // Step 3: Authenticated session active -> reveal dashboard
+      // Step 3: Fully authenticated session with verified 2FA active -> Reveal dashboard
       overlay.style.display = 'none';
       document.body.style.overflow = '';
-      try {
-        const sessionData = JSON.parse(activeSession);
-        const userLabel = document.getElementById('authenticatedUserLabel');
-        if (userLabel) {
-          userLabel.innerHTML = `Authenticated as: <strong>${sessionData.username || 'rann'}</strong> (Admin)`;
-        }
-      } catch (e) {}
+      const userLabel = document.getElementById('authenticatedUserLabel');
+      if (userLabel) {
+        userLabel.innerHTML = `Authenticated as: <strong>${sessionData.username || 'rann'}</strong> (Admin)`;
+      }
+      const phoneLabel = document.getElementById('authenticatedPhoneLabel');
+      if (phoneLabel) {
+        phoneLabel.textContent = `SMS: ${sessionData.phoneMasked || adminData.phoneMasked || '(•••) •••-2800'}`;
+      }
     }
   }
 
-  // Handle Master Admin Initialization
-  async function handleInitAdmin(event) {
+  // Step A1: Handle Initial Admin Registration -> Generate OTP & Transition to Step A2
+  async function handleInitAdminStep1(event) {
     event.preventDefault();
     const errEl = document.getElementById('initError');
     errEl.style.display = 'none';
 
     const username = document.getElementById('initUsername').value.trim();
     const email = document.getElementById('initEmail').value.trim();
+    const phone = document.getElementById('initPhone').value.trim();
     const pwd = document.getElementById('initPassword').value;
     const pwdConfirm = document.getElementById('initPasswordConfirm').value;
 
-    if (!username || !email || !pwd) {
-      errEl.textContent = 'Please fill out all required fields.';
+    if (!username || !email || !phone || !pwd) {
+      errEl.textContent = 'Please fill out all required fields, including mobile phone number.';
       errEl.style.display = 'block';
       return;
     }
+
+    const digits = normalizePhone(phone);
+    if (digits.length < 10) {
+      errEl.textContent = 'Please enter a valid 10-digit mobile phone number for 2FA SMS verification.';
+      errEl.style.display = 'block';
+      return;
+    }
+
     if (pwd !== pwdConfirm) {
-      errEl.textContent = 'Passwords do not match. Please re-enter.';
+      errEl.textContent = 'Master passwords do not match. Please re-enter.';
       errEl.style.display = 'block';
       return;
     }
@@ -940,29 +1210,122 @@
 
     const salt = generateSalt();
     const hash = await computeHash(salt, pwd);
+    const maskedPhone = formatMaskedPhone(phone);
+    const otp = generateSecureOTP();
+    const recoveryKey = generateRecoveryKey();
+    const recoverySalt = generateSalt();
+    const recoveryHash = await computeHash(recoverySalt, recoveryKey.replace(/-/g, ''));
 
-    const adminRecord = {
+    setupPendingState = {
       username: username,
       email: email,
+      phone: phone,
+      phoneMasked: maskedPhone,
       salt: salt,
       hash: hash,
+      recoveryKey: recoveryKey,
+      recoverySalt: recoverySalt,
+      recoveryHash: recoveryHash,
+      otp: otp,
+      expiresAt: Date.now() + 300000 // 5 minutes
+    };
+
+    // Transition to Step A2
+    document.getElementById('initAdminView').style.display = 'none';
+    document.getElementById('init2FAView').style.display = 'block';
+    document.getElementById('initVerifyPhoneDisplay').textContent = `${phone} [${maskedPhone}]`;
+    document.getElementById('initSmsCodeDisplay').textContent = otp;
+    document.getElementById('initRecoveryKeyDisplay').textContent = recoveryKey;
+    document.getElementById('init2FACode').value = '';
+    document.getElementById('init2FAError').style.display = 'none';
+
+    // Start 5-minute countdown
+    const timerEl = document.getElementById('initCodeTimer');
+    startCountdown(300, timerEl, () => {
+      document.getElementById('init2FAError').textContent = 'SMS verification code expired. Click "Resend SMS" to generate a new code.';
+      document.getElementById('init2FAError').style.display = 'block';
+    });
+  }
+
+  // Step A2: Verify 6-digit Code -> Finalize Admin Account & Enforce 2FA
+  async function confirmInitAdmin2FA(event) {
+    event.preventDefault();
+    const errEl = document.getElementById('init2FAError');
+    errEl.style.display = 'none';
+
+    if (!setupPendingState) {
+      evaluateAuth();
+      return;
+    }
+
+    if (Date.now() > setupPendingState.expiresAt) {
+      errEl.textContent = 'Verification code has expired. Please click "Resend SMS".';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const enteredCode = document.getElementById('init2FACode').value.trim();
+    if (enteredCode !== setupPendingState.otp) {
+      errEl.textContent = 'Incorrect verification code. Please check the code dispatched to your phone and try again.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    // Code verified! Store complete admin record with 2FA enforcement
+    const adminRecord = {
+      username: setupPendingState.username,
+      email: setupPendingState.email,
+      phone: setupPendingState.phone,
+      phoneMasked: setupPendingState.phoneMasked,
+      salt: setupPendingState.salt,
+      hash: setupPendingState.hash,
+      recoverySalt: setupPendingState.recoverySalt,
+      recoveryHash: setupPendingState.recoveryHash,
+      twoFactorEnrolled: true,
       createdAt: new Date().toISOString()
     };
 
     localStorage.setItem('task_dashboard_admin', JSON.stringify(adminRecord));
-    
-    // Create active session
+
+    // Create authenticated session with 2FA verified
     sessionStorage.setItem('task_dashboard_session', JSON.stringify({
-      username: username,
-      email: email,
+      username: setupPendingState.username,
+      email: setupPendingState.email,
+      phoneMasked: setupPendingState.phoneMasked,
+      twoFactorVerified: true,
       loginTime: new Date().toISOString()
     }));
+
+    if (countdownTimerId) clearInterval(countdownTimerId);
+    setupPendingState = null;
 
     evaluateAuth();
   }
 
-  // Handle Login
-  async function handleLogin(event) {
+  function backToAdminSetup(event) {
+    if (event) event.preventDefault();
+    if (countdownTimerId) clearInterval(countdownTimerId);
+    document.getElementById('init2FAView').style.display = 'none';
+    document.getElementById('initAdminView').style.display = 'block';
+  }
+
+  function resendInitCode(event) {
+    if (event) event.preventDefault();
+    if (!setupPendingState) return;
+    const newOtp = generateSecureOTP();
+    setupPendingState.otp = newOtp;
+    setupPendingState.expiresAt = Date.now() + 300000;
+    document.getElementById('initSmsCodeDisplay').textContent = newOtp;
+    document.getElementById('init2FAError').style.display = 'none';
+    const timerEl = document.getElementById('initCodeTimer');
+    startCountdown(300, timerEl, () => {
+      document.getElementById('init2FAError').textContent = 'SMS verification code expired. Click "Resend SMS".';
+      document.getElementById('init2FAError').style.display = 'block';
+    });
+  }
+
+  // Step B1: Handle Master Passphrase Login -> Verify Password & Transition to Step B2 (2FA Challenge)
+  async function handleLoginStep1(event) {
     event.preventDefault();
     const errEl = document.getElementById('loginError');
     errEl.style.display = 'none';
@@ -980,35 +1343,196 @@
       const adminData = JSON.parse(storedAdmin);
       const computedHash = await computeHash(adminData.salt, pwd);
 
-      if (computedHash === adminData.hash && (username.toLowerCase() === adminData.username.toLowerCase())) {
-        sessionStorage.setItem('task_dashboard_session', JSON.stringify({
-          username: adminData.username,
-          email: adminData.email,
-          loginTime: new Date().toISOString()
-        }));
-        evaluateAuth();
-      } else {
+      if (computedHash !== adminData.hash || (username.toLowerCase() !== adminData.username.toLowerCase())) {
         errEl.textContent = 'Invalid administrator credentials. Access denied.';
         errEl.style.display = 'block';
+        return;
       }
+
+      // Passphrase valid -> Initiate Step B2 2FA Challenge
+      const otp = generateSecureOTP();
+      loginPendingState = {
+        username: adminData.username,
+        email: adminData.email,
+        phoneMasked: adminData.phoneMasked || formatMaskedPhone(adminData.phone || '919-660-2800'),
+        otp: otp,
+        expiresAt: Date.now() + 300000, // 5 minutes
+        attemptsRemaining: 3,
+        lockoutUntil: 0
+      };
+
+      document.getElementById('loginView').style.display = 'none';
+      document.getElementById('login2FAView').style.display = 'block';
+      document.getElementById('loginPhoneDisplay').textContent = loginPendingState.phoneMasked;
+      document.getElementById('loginSmsCodeDisplay').textContent = otp;
+      document.getElementById('login2FACode').value = '';
+      document.getElementById('login2FAError').style.display = 'none';
+      document.getElementById('loginAttemptsBadge').textContent = '3 attempts remaining';
+      document.getElementById('recoveryInputContainer').style.display = 'none';
+
+      const timerEl = document.getElementById('loginCodeTimer');
+      startCountdown(300, timerEl, () => {
+        document.getElementById('login2FAError').textContent = '2FA security code expired. Please click "Resend Code".';
+        document.getElementById('login2FAError').style.display = 'block';
+      });
+
     } catch (e) {
-      errEl.textContent = 'Authentication parsing error. Please reset credentials.';
+      errEl.textContent = 'Authentication error. Please reset credentials.';
       errEl.style.display = 'block';
     }
   }
 
-  // Handle Logout
+  // Step B2: Verify Login 2FA Code -> Unlock Dashboard
+  function handleLoginStep2(event) {
+    event.preventDefault();
+    const errEl = document.getElementById('login2FAError');
+    errEl.style.display = 'none';
+
+    if (!loginPendingState) {
+      evaluateAuth();
+      return;
+    }
+
+    // Check brute-force lockout
+    if (Date.now() < loginPendingState.lockoutUntil) {
+      const remainingSec = Math.ceil((loginPendingState.lockoutUntil - Date.now()) / 1000);
+      errEl.textContent = `Security lockout active: Too many failed attempts. Please wait ${remainingSec}s or use Emergency Recovery Key.`;
+      errEl.style.display = 'block';
+      return;
+    }
+
+    // Check expiry
+    if (Date.now() > loginPendingState.expiresAt) {
+      errEl.textContent = '2FA challenge expired. Click "Resend Code" to generate a fresh token.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const enteredCode = document.getElementById('login2FACode').value.trim();
+    if (enteredCode === loginPendingState.otp) {
+      // 2FA Challenge Passed!
+      if (countdownTimerId) clearInterval(countdownTimerId);
+
+      sessionStorage.setItem('task_dashboard_session', JSON.stringify({
+        username: loginPendingState.username,
+        email: loginPendingState.email,
+        phoneMasked: loginPendingState.phoneMasked,
+        twoFactorVerified: true,
+        loginTime: new Date().toISOString()
+      }));
+
+      loginPendingState = null;
+      evaluateAuth();
+    } else {
+      // Failed attempt
+      loginPendingState.attemptsRemaining--;
+      if (loginPendingState.attemptsRemaining <= 0) {
+        loginPendingState.lockoutUntil = Date.now() + 300000; // 5 min lockout
+        errEl.textContent = 'Maximum 2FA verification attempts exceeded. Account locked for 5 minutes. Use Emergency Recovery Key below to bypass.';
+        errEl.style.display = 'block';
+        document.getElementById('loginAttemptsBadge').textContent = 'Account Locked (5m)';
+        document.getElementById('recoveryInputContainer').style.display = 'block';
+      } else {
+        errEl.textContent = `Incorrect 2FA code. ${loginPendingState.attemptsRemaining} attempt(s) remaining before security lockout.`;
+        errEl.style.display = 'block';
+        document.getElementById('loginAttemptsBadge').textContent = `${loginPendingState.attemptsRemaining} attempts remaining`;
+      }
+    }
+  }
+
+  function backToPasswordLogin(event) {
+    if (event) event.preventDefault();
+    if (countdownTimerId) clearInterval(countdownTimerId);
+    document.getElementById('login2FAView').style.display = 'none';
+    document.getElementById('loginView').style.display = 'block';
+  }
+
+  function resendLoginCode(event) {
+    if (event) event.preventDefault();
+    if (!loginPendingState) return;
+    if (Date.now() < loginPendingState.lockoutUntil) {
+      alert('Cannot resend code while security lockout is active. Use Emergency Recovery Key.');
+      return;
+    }
+    const newOtp = generateSecureOTP();
+    loginPendingState.otp = newOtp;
+    loginPendingState.expiresAt = Date.now() + 300000;
+    loginPendingState.attemptsRemaining = 3;
+    document.getElementById('loginSmsCodeDisplay').textContent = newOtp;
+    document.getElementById('login2FAError').style.display = 'none';
+    document.getElementById('loginAttemptsBadge').textContent = '3 attempts remaining';
+    const timerEl = document.getElementById('loginCodeTimer');
+    startCountdown(300, timerEl, () => {
+      document.getElementById('login2FAError').textContent = '2FA security code expired. Please click "Resend Code".';
+      document.getElementById('login2FAError').style.display = 'block';
+    });
+  }
+
+  function toggleRecoveryInput(event) {
+    if (event) event.preventDefault();
+    const container = document.getElementById('recoveryInputContainer');
+    container.style.display = container.style.display === 'none' ? 'block' : 'none';
+  }
+
+  async function handleEmergencyRecovery(event) {
+    if (event) event.preventDefault();
+    const keyInput = document.getElementById('recoveryKeyInput').value.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    const errEl = document.getElementById('login2FAError');
+    errEl.style.display = 'none';
+
+    const storedAdmin = localStorage.getItem('task_dashboard_admin');
+    if (!storedAdmin) return;
+
+    try {
+      const adminData = JSON.parse(storedAdmin);
+      if (!adminData.recoveryHash || !adminData.recoverySalt) {
+        errEl.textContent = 'No Emergency Recovery Key registered for this account.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      const computedHash = await computeHash(adminData.recoverySalt, keyInput);
+      if (computedHash === adminData.recoveryHash) {
+        if (countdownTimerId) clearInterval(countdownTimerId);
+        sessionStorage.setItem('task_dashboard_session', JSON.stringify({
+          username: adminData.username,
+          email: adminData.email,
+          phoneMasked: adminData.phoneMasked || '(•••) •••-2800',
+          twoFactorVerified: true,
+          authenticatedVia: 'EMERGENCY_RECOVERY_KEY',
+          loginTime: new Date().toISOString()
+        }));
+        loginPendingState = null;
+        alert('Authentication successful via Emergency Recovery Key. Please verify your mobile phone 2FA configuration in settings.');
+        evaluateAuth();
+      } else {
+        errEl.textContent = 'Invalid Emergency Recovery Key. Access denied.';
+        errEl.style.display = 'block';
+      }
+    } catch (e) {
+      errEl.textContent = 'Recovery parsing error.';
+      errEl.style.display = 'block';
+    }
+  }
+
+  // Handle Logout -> Purge session and evaluateAuth()
   function logout() {
     sessionStorage.removeItem('task_dashboard_session');
+    loginPendingState = null;
+    setupPendingState = null;
+    if (countdownTimerId) clearInterval(countdownTimerId);
     evaluateAuth();
   }
 
-  // Allow resetting admin credentials
+  // Reset Admin Credentials
   function switchAdminReset(event) {
     if (event) event.preventDefault();
-    if (confirm('Reset administrator credentials and re-initialize master account?')) {
+    if (confirm('Reset administrator credentials and re-initialize master account with 2FA mobile phone setup?')) {
       localStorage.removeItem('task_dashboard_admin');
       sessionStorage.removeItem('task_dashboard_session');
+      loginPendingState = null;
+      setupPendingState = null;
+      if (countdownTimerId) clearInterval(countdownTimerId);
       evaluateAuth();
     }
   }
