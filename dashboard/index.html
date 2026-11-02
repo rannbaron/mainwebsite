@@ -6,7 +6,7 @@
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Prioritization & Execution Control Dashboard | Rann Bar-On</title>
+  <title>Task Prioritization &amp; Execution Control Dashboard | Rann Bar-On</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -71,7 +71,7 @@
     .user-pill .online-dot { width: 8px; height: 8px; background: var(--accent-green); border-radius: 50%; }
 
     /* Grid & Cards */
-    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .stat-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -197,7 +197,7 @@
   <header>
     <div class="brand">
       <i class="fa-solid fa-layer-group" style="color: var(--accent-cyan); font-size: 22px;"></i>
-      <h1>Task Prioritization & Execution Control</h1>
+      <h1>Task Prioritization &amp; Execution Control</h1>
       <span class="badge-private"><i class="fa-solid fa-lock"></i> Restricted Access</span>
     </div>
     <div class="user-pill">
@@ -209,18 +209,22 @@
   <div class="controls-grid">
     <div class="stat-card">
       <div class="label">Total Managed Tasks</div>
-      <div class="value">7</div>
+      <div class="value">17</div>
     </div>
     <div class="stat-card">
       <div class="label">Active P10 Critical Tasks</div>
       <div class="value" style="color: var(--accent-red);">1</div>
     </div>
     <div class="stat-card">
-      <div class="label">Primary Execution Engine</div>
-      <div class="value" style="font-size: 20px; color: var(--accent-cyan);">Gemini 3.8 Flash (High)</div>
+      <div class="label">Active Urgent / High (P8–P9)</div>
+      <div class="value" style="color: var(--accent-amber);">6</div>
     </div>
     <div class="stat-card">
-      <div class="label">Security & MFA Mode</div>
+      <div class="label">Primary Execution Engine</div>
+      <div class="value" style="font-size: 18px; color: var(--accent-cyan);">Gemini 4 Argon / Gemini 3.8 Flash (High)</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Security &amp; MFA Mode</div>
       <div class="value" style="font-size: 19px; color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i> 2FA Enforced</div>
     </div>
   </div>
@@ -229,18 +233,18 @@
     <table>
       <thead>
         <tr>
-          <th style="width: 60px;">ID</th>
-          <th style="width: 110px;">Priority (1-10)</th>
-          <th>Task Title & Scope</th>
+          <th style="width: 50px;">ID</th>
+          <th style="width: 120px;">Priority (1-10)</th>
+          <th>Task Title &amp; Scope</th>
           <th style="width: 220px;">Assigned Model Tier</th>
-          <th style="width: 170px;">Estimated Progress</th>
-          <th style="width: 100px;">Status</th>
+          <th style="width: 180px;">Estimated Progress</th>
+          <th style="width: 140px;">Status</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><strong>#1</strong></td>
-          <td><span class="priority-badge pri-10">P10 (Drop All)</span></td>
+          <td><span class="priority-badge pri-10">P10 (Immediate)</span></td>
           <td>
             <strong>Election Night 95% Confidence Race Calling Engine</strong>
             <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Real-time Decision Desk automated calls with Twitter, Threads, and Instagram alerts.</div>
@@ -258,15 +262,15 @@
             </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Ready</span></td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Ready / Standby</span></td>
         </tr>
 
         <tr>
           <td><strong>#2</strong></td>
           <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
           <td>
-            <strong>Machine Lid-Close & Suspend Inhibit (Active until 2:00 PM)</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Holding systemd-logind and GNOME session inhibitor PID 773933.</div>
+            <strong>Machine Lid-Close &amp; Suspend Inhibit Daemon</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Battery-aware inhibitor daemon preventing laptop sleep while on battery &gt;= 20% (PID 773933 / task-8935).</div>
           </td>
           <td>
             <select class="model-select">
@@ -279,40 +283,224 @@
             <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
               <span>Active</span>
             </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 75%; background: #38bdf8;"></div></div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 85%; background: #38bdf8;"></div></div>
           </td>
           <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-spinner fa-spin"></i> Running</span></td>
         </tr>
 
         <tr>
           <td><strong>#3</strong></td>
-          <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
+          <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
           <td>
-            <strong>Constitutional Amendments Forecast Model & Slide Decks</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Monte Carlo simulation kernel, 10-slide deck, and 5-page report dispatched to subscribers.</div>
+            <strong>Locate UPS Account Username &amp; Email in Gmail</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Locate user's UPS account confirmation and registration records across Gmail archives and browser profiles.</div>
           </td>
           <td>
             <select class="model-select">
-              <option selected>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 4 Argon</option>
+              <option selected>Gemini 3.8 Flash (High)</option>
               <option>Gemini 3.8 Flash (Medium)</option>
             </select>
           </td>
           <td>
             <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>100%</span>
+              <span>40%</span>
             </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 40%; background: #38bdf8;"></div></div>
           </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Done</span></td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-magnifying-glass"></i> Searching</span></td>
         </tr>
 
         <tr>
           <td><strong>#4</strong></td>
+          <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
+          <td>
+            <strong>Math 105L Day 11-1 Completed Sheet &amp; Video Review Loop</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Draft 3-page completed lecture sheet with circular markers, proven 2/&radic;13&lt;2, and 5-link prerequisite portals dispatched to rann@rannbar-on.com awaiting approval.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option selected>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>90%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 90%; background: #f59e0b;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Review Pending</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#5</strong></td>
+          <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
+          <td>
+            <strong>Panopto Video Auto-Editing &amp; Executive Summary Pipeline</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Download classroom recording (Day 11-1 ID 8468225d...), detect board lecturing vs walking student consultation, and generate executive summaries.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option selected>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>50%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 50%; background: #38bdf8;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#6</strong></td>
+          <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
+          <td>
+            <strong>Constitutional Amendments Forecast Model &amp; Dials</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Monte Carlo simulation kernel, 10-slide deck, and 5-page report dispatched to subscribers; interactive dials active on dashboard.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option selected>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Live</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#7</strong></td>
+          <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
+          <td>
+            <strong>Cauchy Math CUPS Printer Suite &amp; CLI</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Probed Rm 102 Ricoh MP 9003 Copier; created cauchy_print.sh with simplex default, duplex flag, and top-left staple finisher option.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option selected>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Done</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#8</strong></td>
           <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
           <td>
-            <strong>Semester-Wide Incapacitation & Attendance Audit</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Processed 25 Dean's incapacitation notices, updated roll call, and dispatched audit report.</div>
+            <strong>Worksheet 10-1 &amp; 10-2 Extension Summary Dispatch</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Scheduled daily cron (task-9347 at 20:00) dispatching 8:00 PM extension summary to rb6@duke.edu and checking for approval replies.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option selected>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Scheduled (8:00 PM)</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 70%; background: #d97706;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#9</strong></td>
+          <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
+          <td>
+            <strong>Isaiah Nwoko Re-enrollment &amp; Dynamic Quiz Windows</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Daily midnight cron (task-9530) dynamically scheduling missed quiz windows 30 mins before MWF classes and TuTh office hours until completed.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option selected>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Active</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 60%; background: #38bdf8;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#10</strong></td>
+          <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
+          <td>
+            <strong>Friday Office Hours Shift &amp; Schedule Update</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">One-week office hours adjustment moved from Thursday to Friday 2:00–3:30 PM; public calendar and faculty pages updated without sending email.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option selected>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Updated</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#11</strong></td>
+          <td><span class="priority-badge pri-5-7">P6 (Normal)</span></td>
+          <td>
+            <strong>24-Hour Three-Model Comparative Evaluation Protocol</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Automated comparative tracking of Flash Medium, Flash High, and Argon across tasks in model_comparison_24h_log.json with synthesis report to rann@rannbar-on.com.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option selected>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>85%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 85%; background: #38bdf8;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-chart-line"></i> Logging</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#12</strong></td>
+          <td><span class="priority-badge pri-5-7">P6 (Normal)</span></td>
+          <td>
+            <strong>Panopto Completed Lecture Sheets Archive</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Updated 105Lsummaries.html with direct original PDF links and dual Gradescope portals (Sub 1 &amp; Resub) for all 27 past assignments.</div>
           </td>
           <td>
             <select class="model-select">
@@ -327,15 +515,61 @@
             </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Done</span></td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Live</span></td>
         </tr>
 
         <tr>
-          <td><strong>#5</strong></td>
-          <td><span class="priority-badge pri-5-7">P6 (Normal)</span></td>
+          <td><strong>#13</strong></td>
+          <td><span class="priority-badge pri-5-7">P5 (Low)</span></td>
           <td>
-            <strong>Panopto Completed Lecture Sheets & Video Summaries (Reverse Order)</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Generating completed sheets working backwards through MWF and TTh recordings.</div>
+            <strong>Daily Midnight Workspace Maintenance &amp; Auto-Push</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Daily midnight cron (task-9319 at 00:00) cleaning workspace, reorganizing outputs, git pushing all source to GitHub, and emailing maintenance report.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option selected>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Scheduled (00:00)</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 75%; background: #d97706;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#14</strong></td>
+          <td><span class="priority-badge pri-5-7">P5 (Low)</span></td>
+          <td>
+            <strong>Weekly Canvas Incapacitation &amp; Attendance Audit</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Weekly automated cron (0 19 * * 0) processing Dean's incapacitation notices, updating roll call, and dispatching audit report via canvas_attendance_reporter.py.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option selected>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Scheduled (Sun 19:00)</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 70%; background: #d97706;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#15</strong></td>
+          <td><span class="priority-badge pri-5-7">P5 (Low)</span></td>
+          <td>
+            <strong>State Navigate &amp; NC Needle Benchmark Synchronization</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Multi-mode precinct calibration (Absentee Mail, One-Stop Early Voting, Election Day In-Person) calibrated across 2,658 NC precincts and legislative seats.</div>
           </td>
           <td>
             <select class="model-select">
@@ -346,42 +580,42 @@
           </td>
           <td>
             <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>45%</span>
+              <span>100%</span>
             </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 45%;"></div></div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
-          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Synced</span></td>
         </tr>
 
         <tr>
-          <td><strong>#6</strong></td>
-          <td><span class="priority-badge pri-5-7">P5 (Normal)</span></td>
-          <td>
-            <strong>Panopto Automated Video Trimming Pipeline</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">ML audio/visual classifier distinguishing lecture instruction from walking student consultation.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option selected>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>30%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 30%;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Queued</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#7</strong></td>
+          <td><strong>#16</strong></td>
           <td><span class="priority-badge pri-1-4">P4 (Standby)</span></td>
           <td>
-            <strong>State Navigate Benchmark Comparison Analysis</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Syncing legislative chamber baselines and margin differentials against proprietary tracker.</div>
+            <strong>Daily Early Voting Scheduled Ingestion Shutdown</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Early voting concluded Nov 1, 2026; commented out 6x morning scheduled crons in .github/workflows/daily_update.yml on main and beta branches.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option selected>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+          </td>
+          <td><span style="color: var(--text-muted); font-weight: 600;"><i class="fa-solid fa-circle-stop"></i> Concluded</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#17</strong></td>
+          <td><span class="priority-badge pri-1-4">P4 (Standby)</span></td>
+          <td>
+            <strong>Control Dashboard Zero-Search Relocation</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Relocated execution control center to rannbar-on.com/dashboard with multi-crawler robots shielding, test suite verification, and legacy route redirection.</div>
           </td>
           <td>
             <select class="model-select">
@@ -392,11 +626,11 @@
           </td>
           <td>
             <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>65%</span>
+              <span>100%</span>
             </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 65%;"></div></div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
-          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-rocket"></i> Deployed</span></td>
         </tr>
       </tbody>
     </table>
@@ -435,13 +669,13 @@
       </div>
     </div>
     <div class="form-group" style="margin-bottom: 16px;">
-      <label>Detailed Task Specifications & Scope</label>
+      <label>Detailed Task Specifications &amp; Scope</label>
       <textarea rows="3" placeholder="Describe objectives, verification criteria, and target recipients..."></textarea>
     </div>
     <button class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Submit Task for Execution</button>
 
     <div class="security-notice">
-      <i class="fa-solid fa-shield-halved"></i> <strong>Security & Approval Protocol:</strong> Tasks initiated by any non-admin account trigger an instant email dispatch to <code>rann@rannbar-on.com</code> and remain strictly locked in <code>pending_approval</code> status until personally authorized.
+      <i class="fa-solid fa-shield-halved"></i> <strong>Security &amp; Approval Protocol:</strong> Tasks initiated by any non-admin account trigger an instant email dispatch to <code>rann@rannbar-on.com</code> and remain strictly locked in <code>pending_approval</code> status until personally authorized.
     </div>
   </div>
 </div>
