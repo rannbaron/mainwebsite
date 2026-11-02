@@ -146,10 +146,145 @@
       color: #fff;
       padding: 6px 10px;
       border-radius: 6px;
-      font-size: 12.5px;
+      font-size: 12px;
       cursor: pointer;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    select.priority-select.pri-10 {
+      background: rgba(220, 38, 38, 0.25);
+      color: #fca5a5;
+      border-color: #ef4444;
+      font-weight: 700;
+    }
+    select.priority-select.pri-8-9 {
+      background: rgba(234, 88, 12, 0.25);
+      color: #fdba74;
+      border-color: #f97316;
+      font-weight: 700;
+    }
+    select.priority-select.pri-5-7 {
+      background: rgba(217, 119, 6, 0.25);
+      color: #fde047;
+      border-color: #eab308;
+      font-weight: 700;
+    }
+    select.priority-select.pri-1-4 {
+      background: rgba(37, 99, 235, 0.25);
+      color: #93c5fd;
+      border-color: #3b82f6;
+      font-weight: 700;
     }
     select:focus { outline: none; border-color: var(--accent-cyan); }
+
+    /* Filter & Search Toolbar */
+    .filter-toolbar {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: flex-end;
+    }
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1 1 150px;
+      min-width: 135px;
+    }
+    .filter-item.search-item {
+      flex: 2 1 240px;
+    }
+    .filter-item label {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .filter-item input, .filter-item select {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.2s;
+      width: 100%;
+    }
+    .filter-item input:focus, .filter-item select:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+    }
+    .filter-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-left: auto;
+    }
+    .btn-reset-filters {
+      background: transparent;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .btn-reset-filters:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border-color: var(--text-muted);
+    }
+    .task-counter-pill {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 6px 12px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+
+    /* Sortable Headers */
+    th.sortable-th {
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    th.sortable-th:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent-cyan);
+    }
+    .sort-icon {
+      margin-left: 6px;
+      font-size: 11px;
+      opacity: 0.35;
+    }
+    th.sort-active {
+      color: var(--accent-cyan);
+      background: rgba(56, 189, 248, 0.08);
+    }
+    th.sort-active .sort-icon {
+      opacity: 1;
+      color: var(--accent-cyan);
+    }
 
     /* Progress bar */
     .progress-bar-container {
@@ -576,15 +711,15 @@
   <div class="controls-grid">
     <div class="stat-card">
       <div class="label">Total Managed Tasks</div>
-      <div class="value">17</div>
+      <div class="value" id="statCardTotal">17</div>
     </div>
     <div class="stat-card">
       <div class="label">Active P10 Critical Tasks</div>
-      <div class="value" style="color: var(--accent-red);">1</div>
+      <div class="value" id="statCardP10" style="color: var(--accent-red);">1</div>
     </div>
     <div class="stat-card">
       <div class="label">Active Urgent / High (P8–P9)</div>
-      <div class="value" style="color: var(--accent-amber);">6</div>
+      <div class="value" id="statCardP89" style="color: var(--accent-amber);">6</div>
     </div>
     <div class="stat-card">
       <div class="label">Primary Execution Engine</div>
@@ -596,450 +731,130 @@
     </div>
   </div>
 
+  <!-- Search and Filter Toolbar -->
+  <div class="filter-toolbar">
+    <div class="filter-item search-item">
+      <label><i class="fa-solid fa-magnifying-glass"></i> Search Tasks</label>
+      <input type="text" id="taskSearchInput" placeholder="Search by name, ID, model, or description..." oninput="applyFiltersAndSort()">
+    </div>
+    <div class="filter-item">
+      <label><i class="fa-solid fa-layer-group"></i> Priority</label>
+      <select id="filterPriority" onchange="applyFiltersAndSort()">
+        <option value="all">All Priorities</option>
+        <option value="10">P10 Critical</option>
+        <option value="8-9">P8–P9 Urgent</option>
+        <option value="5-7">P5–P7 Standard</option>
+        <option value="1-4">P1–P4 Routine</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label><i class="fa-solid fa-chart-pie"></i> Completion</label>
+      <select id="filterCompletion" onchange="applyFiltersAndSort()">
+        <option value="all">All Completion</option>
+        <option value="100">100% Completed</option>
+        <option value="in_progress">In Progress (1–99%)</option>
+        <option value="incomplete">Incomplete (&lt;100%)</option>
+        <option value="0">Queued (0%)</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label><i class="fa-solid fa-traffic-light"></i> Status</label>
+      <select id="filterStatus" onchange="applyFiltersAndSort()">
+        <option value="all">All Statuses</option>
+        <option value="Ready">Ready / Standby</option>
+        <option value="Running">Running / Active</option>
+        <option value="Searching">Searching</option>
+        <option value="Review">Review Pending</option>
+        <option value="Scheduled">Scheduled</option>
+        <option value="Live">Live / Deployed / Done</option>
+        <option value="Concluded">Concluded</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <label><i class="fa-solid fa-brain"></i> Model Tier</label>
+      <select id="filterModel" onchange="applyFiltersAndSort()">
+        <option value="all">All Model Tiers</option>
+        <option value="Argon">Gemini 4 Argon</option>
+        <option value="Flash High">Gemini 3.8 Flash (High)</option>
+        <option value="Flash Medium">Gemini 3.8 Flash (Medium)</option>
+      </select>
+    </div>
+    <div class="filter-actions">
+      <button class="btn-reset-filters" onclick="resetFilters()"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+      <div class="task-counter-pill" id="taskCountBadge">Showing 17 of 17 tasks</div>
+    </div>
+  </div>
+
   <div class="table-container">
     <table>
       <thead>
         <tr>
-          <th style="width: 50px;">ID</th>
-          <th style="width: 120px;">Priority (1-10)</th>
-          <th>Task Title &amp; Scope</th>
-          <th style="width: 220px;">Assigned Model Tier</th>
-          <th style="width: 180px;">Estimated Progress</th>
-          <th style="width: 140px;">Status</th>
+          <th id="th-id" class="sortable-th" style="width: 60px;" onclick="setSortColumn('id')">
+            ID <i class="sort-icon fa-solid fa-sort"></i>
+          </th>
+          <th id="th-priority" class="sortable-th sort-active" style="width: 145px;" onclick="setSortColumn('priority')">
+            Priority <i class="sort-icon fa-solid fa-arrow-down"></i>
+          </th>
+          <th id="th-title" class="sortable-th" onclick="setSortColumn('title')">
+            Task Title &amp; Scope <i class="sort-icon fa-solid fa-sort"></i>
+          </th>
+          <th id="th-model" class="sortable-th" style="width: 220px;" onclick="setSortColumn('model')">
+            Assigned Model Tier <i class="sort-icon fa-solid fa-sort"></i>
+          </th>
+          <th id="th-progress" class="sortable-th" style="width: 180px;" onclick="setSortColumn('progress')">
+            Estimated Progress <i class="sort-icon fa-solid fa-sort"></i>
+          </th>
+          <th id="th-status" class="sortable-th" style="width: 140px;" onclick="setSortColumn('status')">
+            Status <i class="sort-icon fa-solid fa-sort"></i>
+          </th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td><strong>#1</strong></td>
-          <td><span class="priority-badge pri-10">P10 (Immediate)</span></td>
-          <td>
-            <strong>Election Night 95% Confidence Race Calling Engine</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Real-time Decision Desk automated calls with Twitter, Threads, and Instagram alerts.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option selected>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>100%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Ready / Standby</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#2</strong></td>
-          <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
-          <td>
-            <strong>Machine Lid-Close &amp; Suspend Inhibit Daemon</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Battery-aware inhibitor daemon preventing laptop sleep while on battery &gt;= 20% (PID 773933 / task-8935).</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option selected>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>Active</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 85%; background: #38bdf8;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-spinner fa-spin"></i> Running</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#3</strong></td>
-          <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
-          <td>
-            <strong>Locate UPS Account Username &amp; Email in Gmail</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Locate user's UPS account confirmation and registration records across Gmail archives and browser profiles.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option selected>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>40%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 40%; background: #38bdf8;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-magnifying-glass"></i> Searching</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#4</strong></td>
-          <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
-          <td>
-            <strong>Math 105L Day 11-1 Completed Sheet &amp; Video Review Loop</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Draft 3-page completed lecture sheet with circular markers, proven 2/&radic;13&lt;2, and 5-link prerequisite portals dispatched to rann@rannbar-on.com awaiting approval.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option selected>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>90%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 90%; background: #f59e0b;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Review Pending</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#5</strong></td>
-          <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
-          <td>
-            <strong>Panopto Video Auto-Editing &amp; Executive Summary Pipeline</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Download classroom recording (Day 11-1 ID 8468225d...), detect board lecturing vs walking student consultation, and generate executive summaries.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option selected>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>50%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 50%; background: #38bdf8;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#6</strong></td>
-          <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
-          <td>
-            <strong>Constitutional Amendments Forecast Model &amp; Dials</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Monte Carlo simulation kernel, 10-slide deck, and 5-page report dispatched to subscribers; interactive dials active on dashboard.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option selected>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>100%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Live</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#7</strong></td>
-          <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
-          <td>
-            <strong>Cauchy Math CUPS Printer Suite &amp; CLI</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Probed Rm 102 Ricoh MP 9003 Copier; created cauchy_print.sh with simplex default, duplex flag, and top-left staple finisher option.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option selected>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>100%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Done</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#8</strong></td>
-          <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
-          <td>
-            <strong>Worksheet 10-1 &amp; 10-2 Extension Summary Dispatch</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Scheduled daily cron (task-9347 at 20:00) dispatching 8:00 PM extension summary to rb6@duke.edu and checking for approval replies.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option selected>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>Scheduled (8:00 PM)</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 70%; background: #d97706;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#9</strong></td>
-          <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
-          <td>
-            <strong>Isaiah Nwoko Re-enrollment &amp; Dynamic Quiz Windows</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Daily midnight cron (task-9530) dynamically scheduling missed quiz windows 30 mins before MWF classes and TuTh office hours until completed.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option selected>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>Active</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 60%; background: #38bdf8;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#10</strong></td>
-          <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
-          <td>
-            <strong>Friday Office Hours Shift &amp; Schedule Update</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">One-week office hours adjustment moved from Thursday to Friday 2:00–3:30 PM; public calendar and faculty pages updated without sending email.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option selected>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>100%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Updated</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#11</strong></td>
-          <td><span class="priority-badge pri-5-7">P6 (Normal)</span></td>
-          <td>
-            <strong>24-Hour Three-Model Comparative Evaluation Protocol</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Automated comparative tracking of Flash Medium, Flash High, and Argon across tasks in model_comparison_24h_log.json with synthesis report to rann@rannbar-on.com.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option selected>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>85%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 85%; background: #38bdf8;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-chart-line"></i> Logging</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#12</strong></td>
-          <td><span class="priority-badge pri-5-7">P6 (Normal)</span></td>
-          <td>
-            <strong>Panopto Completed Lecture Sheets Archive</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Updated 105Lsummaries.html with direct original PDF links and dual Gradescope portals (Sub 1 &amp; Resub) for all 27 past assignments.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option selected>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>100%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Live</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#13</strong></td>
-          <td><span class="priority-badge pri-5-7">P5 (Low)</span></td>
-          <td>
-            <strong>Daily Midnight Workspace Maintenance &amp; Auto-Push</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Daily midnight cron (task-9319 at 00:00) cleaning workspace, reorganizing outputs, git pushing all source to GitHub, and emailing maintenance report.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option selected>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>Scheduled (00:00)</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 75%; background: #d97706;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#14</strong></td>
-          <td><span class="priority-badge pri-5-7">P5 (Low)</span></td>
-          <td>
-            <strong>Weekly Canvas Incapacitation &amp; Attendance Audit</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Weekly automated cron (0 19 * * 0) processing Dean's incapacitation notices, updating roll call, and dispatching audit report via canvas_attendance_reporter.py.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option selected>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>Scheduled (Sun 19:00)</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 70%; background: #d97706;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#15</strong></td>
-          <td><span class="priority-badge pri-5-7">P5 (Low)</span></td>
-          <td>
-            <strong>State Navigate &amp; NC Needle Benchmark Synchronization</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Multi-mode precinct calibration (Absentee Mail, One-Stop Early Voting, Election Day In-Person) calibrated across 2,658 NC precincts and legislative seats.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option selected>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>100%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Synced</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#16</strong></td>
-          <td><span class="priority-badge pri-1-4">P4 (Standby)</span></td>
-          <td>
-            <strong>Daily Early Voting Scheduled Ingestion Shutdown</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Early voting concluded Nov 1, 2026; commented out 6x morning scheduled crons in .github/workflows/daily_update.yml on main and beta branches.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option>Gemini 3.8 Flash (High)</option>
-              <option selected>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>100%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
-          </td>
-          <td><span style="color: var(--text-muted); font-weight: 600;"><i class="fa-solid fa-circle-stop"></i> Concluded</span></td>
-        </tr>
-
-        <tr>
-          <td><strong>#17</strong></td>
-          <td><span class="priority-badge pri-1-4">P4 (Standby)</span></td>
-          <td>
-            <strong>Control Dashboard Zero-Search Relocation</strong>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Relocated execution control center to rannbar-on.com/dashboard with multi-crawler robots shielding, test suite verification, and legacy route redirection.</div>
-          </td>
-          <td>
-            <select class="model-select">
-              <option>Gemini 4 Argon</option>
-              <option selected>Gemini 3.8 Flash (High)</option>
-              <option>Gemini 3.8 Flash (Medium)</option>
-            </select>
-          </td>
-          <td>
-            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
-              <span>100%</span>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
-          </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-rocket"></i> Deployed</span></td>
-        </tr>
+      <tbody id="tasksTableBody">
+        <!-- Rendered dynamically via JavaScript -->
       </tbody>
     </table>
   </div>
 
   <div class="form-card">
     <h2><i class="fa-solid fa-plus-circle" style="color: var(--accent-cyan);"></i> Initiate New Automated Task</h2>
-    <div class="form-grid">
+        <div class="form-grid">
       <div class="form-group">
         <label>Task Title</label>
-        <input type="text" placeholder="e.g. Ingest 2026 Midterm Turnout Data">
+        <input type="text" id="newTaskTitle" placeholder="e.g. Ingest 2026 Midterm Turnout Data">
       </div>
       <div class="form-group">
         <label>Priority (1-10)</label>
-        <select>
+        <select id="newTaskPriority">
           <option value="10">10 (Immediate / Drop All)</option>
           <option value="9">9 (Urgent Execution)</option>
           <option value="8">8 (High Priority)</option>
           <option value="7" selected>7 (Standard Elevated)</option>
+          <option value="6">6 (Normal Intermediate)</option>
           <option value="5">5 (Normal Routine)</option>
+          <option value="4">4 (Low / Standby)</option>
           <option value="3">3 (Low Priority)</option>
-          <option value="1">1 (Idle / Background Only)</option>
+          <option value="2">2 (Backlog)</option>
+          <option value="1">1 (Minimal)</option>
         </select>
       </div>
       <div class="form-group">
         <label>Preferred Model</label>
-        <select>
-          <option>Gemini 4 Argon</option>
-          <option selected>Gemini 3.8 Flash (High)</option>
+        <select id="newTaskModel">
+          <option selected>Gemini 4 Argon</option>
+          <option>Gemini 3.8 Flash (High)</option>
           <option>Gemini 3.8 Flash (Medium)</option>
         </select>
       </div>
       <div class="form-group">
         <label>Initial Est. %</label>
-        <input type="number" min="0" max="100" value="0">
+        <input type="number" id="newTaskProgress" min="0" max="100" value="0">
       </div>
     </div>
     <div class="form-group" style="margin-bottom: 16px;">
       <label>Detailed Task Specifications &amp; Scope</label>
-      <textarea rows="3" placeholder="Describe objectives, verification criteria, and target recipients..."></textarea>
+      <textarea id="newTaskScope" rows="3" placeholder="Describe objectives, verification criteria, and target recipients..."></textarea>
     </div>
-    <button class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Submit Task for Execution</button>
+    <button class="btn-submit" onclick="handleCreateTask()"><i class="fa-solid fa-paper-plane"></i> Submit Task for Execution</button>
 
     <div class="security-notice">
       <i class="fa-solid fa-shield-halved"></i> <strong>Security &amp; Approval Protocol:</strong> Tasks initiated by any non-admin account trigger an instant email dispatch to <code>rann@rannbar-on.com</code> and remain strictly locked in <code>pending_approval</code> status until personally authorized.
@@ -1131,6 +946,565 @@
   }
 
   // Auth State Evaluator
+  // ==========================================
+  // TASK MANAGEMENT, FILTERING & SORTING LOGIC
+  // ==========================================
+  const TASKS_STORAGE_KEY = 'task_dashboard_tasks_v1';
+
+  const DEFAULT_TASKS = [
+    {
+      id: 1,
+      priority: 10,
+      title: "Election Night 95% Confidence Race Calling Engine",
+      scope: "Real-time Decision Desk automated calls with Twitter, Threads, and Instagram alerts.",
+      model: "Gemini 4 Argon",
+      progress: "100%",
+      progressPercent: 100,
+      status: "Ready / Standby",
+      statusIcon: "fa-solid fa-check",
+      statusColor: "var(--accent-green)"
+    },
+    {
+      id: 2,
+      priority: 9,
+      title: "Machine Lid-Close & Suspend Inhibit Daemon",
+      scope: "Battery-aware inhibitor daemon preventing laptop sleep while on battery >= 20% (PID 773933 / task-8935).",
+      model: "Gemini 3.8 Flash (High)",
+      progress: "Active",
+      progressPercent: 85,
+      status: "Running",
+      statusIcon: "fa-solid fa-spinner fa-spin",
+      statusColor: "var(--accent-cyan)"
+    },
+    {
+      id: 3,
+      priority: 9,
+      title: "Locate UPS Account Username & Email in Gmail",
+      scope: "Locate user's UPS account confirmation and registration records across Gmail archives and browser profiles.",
+      model: "Gemini 3.8 Flash (High)",
+      progress: "40%",
+      progressPercent: 40,
+      status: "Searching",
+      statusIcon: "fa-solid fa-magnifying-glass",
+      statusColor: "var(--accent-amber)"
+    },
+    {
+      id: 4,
+      priority: 9,
+      title: "Math 105L Day 11-1 Completed Sheet & Video Review Loop",
+      scope: "Draft 3-page completed lecture sheet with circular markers, proven 2/√13<2, and 5-link prerequisite portals dispatched to rann@rannbar-on.com awaiting approval.",
+      model: "Gemini 3.8 Flash (High)",
+      progress: "90%",
+      progressPercent: 90,
+      status: "Review Pending",
+      statusIcon: "fa-solid fa-clock-rotate-left",
+      statusColor: "var(--accent-amber)"
+    },
+    {
+      id: 5,
+      priority: 8,
+      title: "Panopto Video Auto-Editing & Executive Summary Pipeline",
+      scope: "Automated OCR & audio transcription pipeline generating structured LaTeX executive summaries for lecture videos.",
+      model: "Gemini 4 Argon",
+      progress: "50%",
+      progressPercent: 50,
+      status: "Active",
+      statusIcon: "fa-solid fa-gear fa-spin",
+      statusColor: "var(--accent-cyan)"
+    },
+    {
+      id: 6,
+      priority: 8,
+      title: "Constitutional Amendments Forecast Model & Dials",
+      scope: "Live interactive SVG prediction dials for NC Constitutional Amendments (State Board of Elections & Judicial Vacancies).",
+      model: "Gemini 4 Argon",
+      progress: "100%",
+      progressPercent: 100,
+      status: "Live",
+      statusIcon: "fa-solid fa-chart-line",
+      statusColor: "var(--accent-green)"
+    },
+    {
+      id: 7,
+      priority: 8,
+      title: "Cauchy Math CUPS Printer Suite & CLI",
+      scope: "Multiplexed SSH raw CUPS printing suite (cauchy_print.sh) with duplex, punch, staple, and slip sheet support.",
+      model: "Gemini 4 Argon",
+      progress: "100%",
+      progressPercent: 100,
+      status: "Done",
+      statusIcon: "fa-solid fa-check",
+      statusColor: "var(--accent-green)"
+    },
+    {
+      id: 8,
+      priority: 7,
+      title: "Worksheet 10-1 & 10-2 Extension Summary Dispatch",
+      scope: "Automated cron scheduled for 8:00 PM to audit Gradescope NP status and dispatch summary to rb6@duke.edu.",
+      model: "Gemini 3.8 Flash (Medium)",
+      progress: "Scheduled (8:00 PM)",
+      progressPercent: 70,
+      status: "Scheduled",
+      statusIcon: "fa-solid fa-clock",
+      statusColor: "var(--accent-cyan)"
+    },
+    {
+      id: 9,
+      priority: 7,
+      title: "Isaiah Nwoko Re-enrollment & Dynamic Quiz Windows",
+      scope: "Nightly cron (00:00) maintaining 24-hour staggered quiz release and submission windows for re-enrolled student.",
+      model: "Gemini 3.8 Flash (Medium)",
+      progress: "Active",
+      progressPercent: 75,
+      status: "Active",
+      statusIcon: "fa-solid fa-arrows-rotate",
+      statusColor: "var(--accent-cyan)"
+    },
+    {
+      id: 10,
+      priority: 7,
+      title: "Friday Office Hours Shift & Schedule Update",
+      scope: "Public schedule updated across course sites reflecting new Friday office hours (1:45 PM – 3:45 PM).",
+      model: "Gemini 3.8 Flash (Medium)",
+      progress: "100%",
+      progressPercent: 100,
+      status: "Updated",
+      statusIcon: "fa-solid fa-calendar-check",
+      statusColor: "var(--accent-green)"
+    },
+    {
+      id: 11,
+      priority: 6,
+      title: "24-Hour Three-Model Comparative Evaluation Protocol",
+      scope: "Structured cross-model trial logging (Flash Medium vs Flash High vs Argon) with automated dispatch concluding Nov 2 at 12:00 PM.",
+      model: "Gemini 3.8 Flash (High)",
+      progress: "85%",
+      progressPercent: 85,
+      status: "Logging",
+      statusIcon: "fa-solid fa-microchip",
+      statusColor: "var(--accent-amber)"
+    },
+    {
+      id: 12,
+      priority: 6,
+      title: "Panopto Completed Lecture Sheets Archive",
+      scope: "Synchronized lecture PDFs with official Duke course directory index at rannbar-on.com/105Lsummaries.html.",
+      model: "Gemini 3.8 Flash (High)",
+      progress: "100%",
+      progressPercent: 100,
+      status: "Live",
+      statusIcon: "fa-solid fa-check",
+      statusColor: "var(--accent-green)"
+    },
+    {
+      id: 13,
+      priority: 5,
+      title: "Daily Midnight Workspace Maintenance & Auto-Push",
+      scope: "Automated git commit, push, and daily report email running nightly at 00:00 via systemd / task scheduler.",
+      model: "Gemini 3.8 Flash (Medium)",
+      progress: "Scheduled (00:00)",
+      progressPercent: 50,
+      status: "Scheduled",
+      statusIcon: "fa-solid fa-clock",
+      statusColor: "var(--accent-cyan)"
+    },
+    {
+      id: 14,
+      priority: 5,
+      title: "Weekly Canvas Incapacitation & Attendance Audit",
+      scope: "Scheduled Sunday 7:00 PM cron parsing Canvas gradebook for incapacitation excuses and attendance exemptions.",
+      model: "Gemini 3.8 Flash (Medium)",
+      progress: "Scheduled (Sun 19:00)",
+      progressPercent: 50,
+      status: "Scheduled",
+      statusIcon: "fa-solid fa-clock",
+      statusColor: "var(--accent-cyan)"
+    },
+    {
+      id: 15,
+      priority: 5,
+      title: "State Navigate & NC Needle Benchmark Synchronization",
+      scope: "Calibrated election model baseline margins with actual North Carolina absentee and in-person early voting totals.",
+      model: "Gemini 3.8 Flash (High)",
+      progress: "100%",
+      progressPercent: 100,
+      status: "Synced",
+      statusIcon: "fa-solid fa-cloud-arrow-up",
+      statusColor: "var(--accent-green)"
+    },
+    {
+      id: 16,
+      priority: 4,
+      title: "Daily Early Voting Scheduled Ingestion Shutdown",
+      scope: "Gracefully decommissioned scheduled early voting sync jobs following the conclusion of early voting on Nov 1.",
+      model: "Gemini 3.8 Flash (Medium)",
+      progress: "100%",
+      progressPercent: 100,
+      status: "Concluded",
+      statusIcon: "fa-solid fa-circle-stop",
+      statusColor: "var(--text-muted)"
+    },
+    {
+      id: 17,
+      priority: 4,
+      title: "Control Dashboard Zero-Search Relocation",
+      scope: "Relocated execution control center to rannbar-on.com/dashboard with multi-crawler robots shielding, test suite verification, and legacy route redirection.",
+      model: "Gemini 3.8 Flash (High)",
+      progress: "100%",
+      progressPercent: 100,
+      status: "Deployed",
+      statusIcon: "fa-solid fa-rocket",
+      statusColor: "var(--accent-green)"
+    }
+  ];
+
+  let tasksState = [];
+  let currentSortColumn = 'priority';
+  let currentSortDirection = 'desc';
+
+  function loadTasksState() {
+    try {
+      const saved = localStorage.getItem(TASKS_STORAGE_KEY);
+      if (saved) {
+        tasksState = JSON.parse(saved);
+      }
+    } catch(e) {}
+    if (!tasksState || !Array.isArray(tasksState) || tasksState.length === 0) {
+      tasksState = JSON.parse(JSON.stringify(DEFAULT_TASKS));
+      saveTasksState();
+    }
+  }
+
+  function saveTasksState() {
+    try {
+      localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasksState));
+    } catch(e) {}
+  }
+
+  function getPriorityClass(p) {
+    const pri = parseInt(p, 10);
+    if (pri === 10) return 'pri-10';
+    if (pri >= 8) return 'pri-8-9';
+    if (pri >= 5) return 'pri-5-7';
+    return 'pri-1-4';
+  }
+
+  function changeTaskPriority(taskId, newPriority) {
+    newPriority = parseInt(newPriority, 10);
+    const task = tasksState.find(t => t.id === taskId);
+    if (!task) return;
+    task.priority = newPriority;
+    saveTasksState();
+    updateStatCards();
+    renderTasksTable();
+  }
+
+  function changeTaskModel(taskId, newModel) {
+    const task = tasksState.find(t => t.id === taskId);
+    if (!task) return;
+    task.model = newModel;
+    saveTasksState();
+  }
+
+  function setSortColumn(col) {
+    if (currentSortColumn === col) {
+      currentSortDirection = (currentSortDirection === 'asc') ? 'desc' : 'asc';
+    } else {
+      currentSortColumn = col;
+      if (col === 'priority' || col === 'progress') {
+        currentSortDirection = 'desc';
+      } else {
+        currentSortDirection = 'asc';
+      }
+    }
+    updateSortHeaders();
+    renderTasksTable();
+  }
+
+  function updateSortHeaders() {
+    const cols = ['id', 'priority', 'title', 'model', 'progress', 'status'];
+    cols.forEach(c => {
+      const th = document.getElementById(`th-${c}`);
+      if (!th) return;
+      const icon = th.querySelector('.sort-icon');
+      if (c === currentSortColumn) {
+        th.classList.add('sort-active');
+        if (icon) icon.className = `sort-icon fa-solid fa-arrow-${currentSortDirection === 'asc' ? 'up' : 'down'}`;
+      } else {
+        th.classList.remove('sort-active');
+        if (icon) icon.className = 'sort-icon fa-solid fa-sort';
+      }
+    });
+  }
+
+  function getFilteredAndSortedTasks() {
+    const query = (document.getElementById('taskSearchInput')?.value || '').toLowerCase().trim();
+    const priorityFilter = document.getElementById('filterPriority')?.value || 'all';
+    const completionFilter = document.getElementById('filterCompletion')?.value || 'all';
+    const statusFilter = document.getElementById('filterStatus')?.value || 'all';
+    const modelFilter = document.getElementById('filterModel')?.value || 'all';
+
+    let list = tasksState.filter(task => {
+      // 1. Search Query
+      if (query) {
+        const titleMatch = (task.title || '').toLowerCase().includes(query);
+        const scopeMatch = (task.scope || '').toLowerCase().includes(query);
+        const idMatch = String(task.id).includes(query);
+        const modelMatch = (task.model || '').toLowerCase().includes(query);
+        const statusMatch = (task.status || '').toLowerCase().includes(query);
+        if (!titleMatch && !scopeMatch && !idMatch && !modelMatch && !statusMatch) {
+          return false;
+        }
+      }
+
+      // 2. Priority Filter
+      if (priorityFilter !== 'all') {
+        const p = parseInt(task.priority, 10);
+        if (priorityFilter === '10' && p !== 10) return false;
+        if (priorityFilter === '8-9' && (p < 8 || p > 9)) return false;
+        if (priorityFilter === '5-7' && (p < 5 || p > 7)) return false;
+        if (priorityFilter === '1-4' && p > 4) return false;
+      }
+
+      // 3. Completion Filter
+      if (completionFilter !== 'all') {
+        const prog = parseInt(task.progressPercent, 10) || 0;
+        if (completionFilter === '100' && prog !== 100) return false;
+        if (completionFilter === 'in_progress' && (prog <= 0 || prog >= 100)) return false;
+        if (completionFilter === 'incomplete' && prog >= 100) return false;
+        if (completionFilter === '0' && prog !== 0) return false;
+      }
+
+      // 4. Status Filter
+      if (statusFilter !== 'all') {
+        const st = (task.status || '').toLowerCase();
+        if (statusFilter === 'Ready' && !st.includes('ready') && !st.includes('standby')) return false;
+        if (statusFilter === 'Running' && !st.includes('running') && !st.includes('active')) return false;
+        if (statusFilter === 'Searching' && !st.includes('search')) return false;
+        if (statusFilter === 'Review' && !st.includes('review')) return false;
+        if (statusFilter === 'Scheduled' && !st.includes('scheduled')) return false;
+        if (statusFilter === 'Live' && !st.includes('live') && !st.includes('deployed') && !st.includes('done') && !st.includes('updated') && !st.includes('synced')) return false;
+        if (statusFilter === 'Concluded' && !st.includes('concluded')) return false;
+      }
+
+      // 5. Model Filter
+      if (modelFilter !== 'all') {
+        if (modelFilter === 'Argon' && !task.model.includes('Argon')) return false;
+        if (modelFilter === 'Flash High' && !task.model.includes('Flash (High)')) return false;
+        if (modelFilter === 'Flash Medium' && !task.model.includes('Flash (Medium)')) return false;
+      }
+
+      return true;
+    });
+
+    // Sort list
+    list.sort((a, b) => {
+      let valA, valB;
+      if (currentSortColumn === 'id') {
+        valA = a.id;
+        valB = b.id;
+      } else if (currentSortColumn === 'priority') {
+        valA = parseInt(a.priority, 10);
+        valB = parseInt(b.priority, 10);
+      } else if (currentSortColumn === 'title') {
+        valA = (a.title || '').toLowerCase();
+        valB = (b.title || '').toLowerCase();
+      } else if (currentSortColumn === 'model') {
+        valA = (a.model || '').toLowerCase();
+        valB = (b.model || '').toLowerCase();
+      } else if (currentSortColumn === 'progress') {
+        valA = parseInt(a.progressPercent, 10) || 0;
+        valB = parseInt(b.progressPercent, 10) || 0;
+      } else if (currentSortColumn === 'status') {
+        valA = (a.status || '').toLowerCase();
+        valB = (b.status || '').toLowerCase();
+      } else {
+        valA = a.id;
+        valB = b.id;
+      }
+
+      if (valA < valB) return currentSortDirection === 'asc' ? -1 : 1;
+      if (valA > valB) return currentSortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return list;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function renderTasksTable() {
+    const tbody = document.getElementById('tasksTableBody');
+    if (!tbody) return;
+
+    const filteredTasks = getFilteredAndSortedTasks();
+    const totalTasks = tasksState.length;
+    const countBadge = document.getElementById('taskCountBadge');
+    if (countBadge) {
+      countBadge.textContent = `Showing ${filteredTasks.length} of ${totalTasks} tasks`;
+    }
+
+    if (filteredTasks.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 36px 16px; color: var(--text-muted);">
+            <i class="fa-solid fa-filter-circle-xmark" style="font-size: 28px; margin-bottom: 10px; display: block; opacity: 0.6;"></i>
+            No tasks match the active filters or search criteria.
+            <div style="margin-top: 10px;">
+              <button class="btn-reset-filters" style="display: inline-flex; margin: 0 auto;" onclick="resetFilters()">
+                <i class="fa-solid fa-rotate-left"></i> Reset All Filters
+              </button>
+            </div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    let html = '';
+    filteredTasks.forEach(task => {
+      const priClass = getPriorityClass(task.priority);
+      const progressWidth = Math.min(Math.max(task.progressPercent || 0, 0), 100);
+      const progressColor = progressWidth === 100 ? '#22c55e' : (progressWidth >= 80 ? '#38bdf8' : (progressWidth >= 50 ? '#f59e0b' : '#38bdf8'));
+
+      html += `
+        <tr data-task-id="${task.id}">
+          <td><strong>#${task.id}</strong></td>
+          <td>
+            <select class="priority-select ${priClass}" onchange="changeTaskPriority(${task.id}, this.value)" title="Change task priority">
+              <option value="10" ${task.priority == 10 ? 'selected' : ''}>P10 (Immediate)</option>
+              <option value="9" ${task.priority == 9 ? 'selected' : ''}>P9 (Urgent)</option>
+              <option value="8" ${task.priority == 8 ? 'selected' : ''}>P8 (High)</option>
+              <option value="7" ${task.priority == 7 ? 'selected' : ''}>P7 (Normal)</option>
+              <option value="6" ${task.priority == 6 ? 'selected' : ''}>P6 (Normal)</option>
+              <option value="5" ${task.priority == 5 ? 'selected' : ''}>P5 (Low)</option>
+              <option value="4" ${task.priority == 4 ? 'selected' : ''}>P4 (Standby)</option>
+              <option value="3" ${task.priority == 3 ? 'selected' : ''}>P3 (Routine)</option>
+              <option value="2" ${task.priority == 2 ? 'selected' : ''}>P2 (Backlog)</option>
+              <option value="1" ${task.priority == 1 ? 'selected' : ''}>P1 (Minimal)</option>
+            </select>
+          </td>
+          <td>
+            <strong>${escapeHtml(task.title)}</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">${escapeHtml(task.scope)}</div>
+          </td>
+          <td>
+            <select class="model-select" onchange="changeTaskModel(${task.id}, this.value)">
+              <option ${task.model === 'Gemini 4 Argon' ? 'selected' : ''}>Gemini 4 Argon</option>
+              <option ${task.model === 'Gemini 3.8 Flash (High)' ? 'selected' : ''}>Gemini 3.8 Flash (High)</option>
+              <option ${task.model === 'Gemini 3.8 Flash (Medium)' ? 'selected' : ''}>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>${escapeHtml(task.progress)}</span>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" style="width: ${progressWidth}%; background: ${progressColor};"></div>
+            </div>
+          </td>
+          <td>
+            <span style="color: ${task.statusColor || 'var(--accent-cyan)'}; font-weight: 600;">
+              <i class="${task.statusIcon || 'fa-solid fa-circle'}"></i> ${escapeHtml(task.status)}
+            </span>
+          </td>
+        </tr>
+      `;
+    });
+
+    tbody.innerHTML = html;
+  }
+
+  function applyFiltersAndSort() {
+    renderTasksTable();
+  }
+
+  function resetFilters() {
+    const searchEl = document.getElementById('taskSearchInput');
+    if (searchEl) searchEl.value = '';
+    const priEl = document.getElementById('filterPriority');
+    if (priEl) priEl.value = 'all';
+    const compEl = document.getElementById('filterCompletion');
+    if (compEl) compEl.value = 'all';
+    const statEl = document.getElementById('filterStatus');
+    if (statEl) statEl.value = 'all';
+    const modEl = document.getElementById('filterModel');
+    if (modEl) modEl.value = 'all';
+
+    applyFiltersAndSort();
+  }
+
+  function updateStatCards() {
+    const totalCount = tasksState.length;
+    const p10Count = tasksState.filter(t => parseInt(t.priority, 10) === 10 && t.status !== 'Concluded').length;
+    const p89Count = tasksState.filter(t => {
+      const p = parseInt(t.priority, 10);
+      return (p === 8 || p === 9) && t.status !== 'Concluded';
+    }).length;
+
+    const totalEl = document.getElementById('statCardTotal');
+    if (totalEl) totalEl.textContent = totalCount;
+    const p10El = document.getElementById('statCardP10');
+    if (p10El) p10El.textContent = p10Count;
+    const p89El = document.getElementById('statCardP89');
+    if (p89El) p89El.textContent = p89Count;
+  }
+
+  function handleCreateTask() {
+    const titleInput = document.getElementById('newTaskTitle');
+    const priInput = document.getElementById('newTaskPriority');
+    const modelInput = document.getElementById('newTaskModel');
+    const progInput = document.getElementById('newTaskProgress');
+    const scopeInput = document.getElementById('newTaskScope');
+
+    const title = (titleInput?.value || '').trim();
+    if (!title) {
+      alert('Please enter a task title.');
+      if (titleInput) titleInput.focus();
+      return;
+    }
+
+    const priority = parseInt(priInput?.value || '7', 10);
+    const model = modelInput?.value || 'Gemini 4 Argon';
+    const progressVal = parseInt(progInput?.value || '0', 10);
+    const scope = (scopeInput?.value || '').trim() || 'Automated task queued via control dashboard.';
+
+    const newId = tasksState.length > 0 ? (Math.max(...tasksState.map(t => t.id)) + 1) : 1;
+
+    const newTask = {
+      id: newId,
+      priority: priority,
+      title: title,
+      scope: scope,
+      model: model,
+      progress: progressVal > 0 ? `${progressVal}%` : "Queued (0%)",
+      progressPercent: progressVal,
+      status: "Ready",
+      statusIcon: "fa-solid fa-circle-play",
+      statusColor: "var(--accent-cyan)"
+    };
+
+    tasksState.unshift(newTask);
+    saveTasksState();
+
+    if (titleInput) titleInput.value = '';
+    if (scopeInput) scopeInput.value = '';
+    if (progInput) progInput.value = '0';
+
+    updateStatCards();
+    renderTasksTable();
+
+    alert(`Task #${newId} "${title}" successfully queued with Priority P${priority}.`);
+  }
+
   function evaluateAuth() {
     // Purge any legacy unversioned storage
     try {
@@ -1202,6 +1576,10 @@
       if (phoneLabel) {
         phoneLabel.textContent = `SMS: ${sessionData.phoneMasked || adminData.phoneMasked || '(•••) •••-2800'}`;
       }
+      loadTasksState();
+      updateStatCards();
+      updateSortHeaders();
+      renderTasksTable();
     }
   }
 
