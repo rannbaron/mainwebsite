@@ -30,18 +30,20 @@ except ImportError:
     HAS_BCRYPT = False
 
 # Database path (stored outside public web root)
-DB_DIR = os.environ.get('TASK_PRIORITY_DB_DIR')
-if not DB_DIR:
-    try:
-        candidate = os.path.expanduser('~/.taskpriority')
-        os.makedirs(candidate, exist_ok=True)
-        DB_DIR = candidate
-    except Exception:
-        DB_DIR = '/tmp/.taskpriority'
+DB_PATH = os.environ.get('TASK_PRIORITY_DB_PATH')
+if not DB_PATH:
+    DB_DIR = os.environ.get('TASK_PRIORITY_DB_DIR')
+    if not DB_DIR:
+        try:
+            candidate = os.path.expanduser('~/.taskpriority')
+            os.makedirs(candidate, exist_ok=True)
+            DB_DIR = candidate
+        except Exception:
+            DB_DIR = '/tmp/.taskpriority'
+            os.makedirs(DB_DIR, exist_ok=True)
+    else:
         os.makedirs(DB_DIR, exist_ok=True)
-else:
-    os.makedirs(DB_DIR, exist_ok=True)
-DB_PATH = os.path.join(DB_DIR, 'task_priority.db')
+    DB_PATH = os.path.join(DB_DIR, 'task_priority.db')
 
 ADMIN_EMAIL = 'rann@rannbar-on.com'
 ADMIN_USERNAME = 'rann'
@@ -467,6 +469,50 @@ def get_current_user_from_session(session_token):
     return None
 
 # ==============================================================================
+# MODEL DEFAULTS & AGENT TIERING ENGINE
+# ==============================================================================
+def get_default_model_for_priority(priority):
+    """
+    Returns the default AI model tier based on priority:
+    - Priorities 8-10: Gemini 4 Argon
+    - Priorities 5-7:  Gemini 3.8 Flash (High)
+    - Priorities 1-4:  Gemini 3.8 Flash (Medium)
+    """
+    p = int(priority)
+    if p >= 8:
+        return "Gemini 4 Argon"
+    elif p >= 5:
+        return "Gemini 3.8 Flash (High)"
+    else:
+        return "Gemini 3.8 Flash (Medium)"
+
+def get_assigned_agent(priority, task_id=None, model=None):
+    """
+    Returns assigned agent identifier based on priority and model:
+    - Priorities 8-10: Default "Gemini 4 Argon", assigned dedicated agent ("argon-agent-<id>")
+    - Priorities 5-7:  Default "Gemini 3.8 Flash (High)", assigned dedicated agent ("flash-high-agent-<id>")
+    - Priorities 1-4:  Default "Gemini 3.8 Flash (Medium)", assigned to single shared agent ("shared-flash-medium-coordinator")
+    """
+    p = int(priority)
+    id_str = f"-{task_id}" if task_id is not None else ""
+
+    # Check model explicitly if provided
+    if model == "Gemini 4 Argon" or (p >= 8 and (not model or "Argon" in model)):
+        return f"argon-agent{id_str}"
+    elif model == "Gemini 3.8 Flash (High)" or (5 <= p <= 7 and (not model or "High" in model)):
+        return f"flash-high-agent{id_str}"
+    elif model == "Gemini 3.8 Flash (Medium)" or p < 5:
+        return "shared-flash-medium-coordinator"
+    else:
+        # Fallback to priority tiering
+        if p >= 8:
+            return f"argon-agent{id_str}"
+        elif p >= 5:
+            return f"flash-high-agent{id_str}"
+        else:
+            return "shared-flash-medium-coordinator"
+
+# ==============================================================================
 # TASK MANAGEMENT & PRIORITY ENGINE
 # ==============================================================================
 def seed_default_tasks(admin_user_id):
@@ -497,10 +543,14 @@ def seed_default_tasks(admin_user_id):
         count = cursor.fetchone()[0]
         if count == 0:
             for title, desc, prio, model, comp in default_tasks:
+                agent = get_assigned_agent(prio, None, model)
                 cursor.execute("""
-                    INSERT INTO tasks (title, description, priority, model, completion_percent, status, created_by_user_id, approved_by_admin)
-                    VALUES (?, ?, ?, ?, ?, 'active', ?, 1)
-                """, (title, desc, prio, model, comp, admin_user_id))
+                    INSERT INTO tasks (title, description, priority, model, assigned_agent, completion_percent, status, created_by_user_id, approved_by_admin)
+                    VALUES (?, ?, ?, ?, ?, ?, 'active', ?, 1)
+                """, (title, desc, prio, model, agent, comp, admin_user_id))
+                t_id = cursor.lastrowid
+                actual_agent = get_assigned_agent(prio, t_id, model)
+                cursor.execute("UPDATE tasks SET assigned_agent = ? WHERE id = ?", (actual_agent, t_id))
             conn.commit()
             print(f"[SEED] Successfully seeded {len(default_tasks)} active tasks.")
 
@@ -509,49 +559,100 @@ def get_all_tasks(user_id=None):
         cursor = conn.cursor()
         # Non-admin only sees approved tasks; admin sees all including pending
         cursor.execute("""
-            SELECT t.id, t.title, t.description, t.priority, t.model, t.completion_percent, 
+            SELECT t.id, t.title, t.description, t.priority, t.model, t.assigned_agent, t.completion_percent, 
                    t.status, t.approved_by_admin, t.created_at, t.updated_at, u.username as creator
             FROM tasks t
             JOIN users u ON t.created_by_user_id = u.id
             ORDER BY t.priority DESC, t.id ASC
         """)
-        tasks = [dict(row) for row in cursor.fetchall()]
+        tasks = []
+        for row in cursor.fetchall():
+            task_dict = dict(row)
+            if not task_dict.get('assigned_agent'):
+                task_dict['assigned_agent'] = get_assigned_agent(task_dict['priority'], task_dict['id'], task_dict['model'])
+            tasks.append(task_dict)
     return tasks
 
-def update_task_priority_and_model(task_id, new_priority, new_model, user):
-    """Allows user to update priority (1-10) and model tier."""
+def update_task_priority_and_model(task_id, new_priority, new_model=None, user=None):
+    """
+    Allows user to update priority (1-10) and model tier.
+    Automatically assigns agent and model defaults according to priority tier:
+    - Priorities 8-10: Default "Gemini 4 Argon", assigned dedicated agent ("argon-agent-<id>")
+    - Priorities 5-7:  Default "Gemini 3.8 Flash (High)", assigned dedicated agent ("flash-high-agent-<id>")
+    - Priorities 1-4:  Default "Gemini 3.8 Flash (Medium)", assigned shared agent ("shared-flash-medium-coordinator")
+    """
     if not (1 <= int(new_priority) <= 10):
         return {"success": False, "error": "Priority must be an integer between 1 and 10."}
-    if new_model not in AVAILABLE_MODELS:
+    
+    p = int(new_priority)
+    if new_model is None or new_model == "":
+        new_model = get_default_model_for_priority(p)
+    elif new_model not in AVAILABLE_MODELS:
         return {"success": False, "error": f"Invalid model. Choose from: {', '.join(AVAILABLE_MODELS)}"}
+
+    assigned_agent = get_assigned_agent(p, task_id, new_model)
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""
             UPDATE tasks
-            SET priority = ?, model = ?, updated_at = CURRENT_TIMESTAMP
+            SET priority = ?, model = ?, assigned_agent = ?, updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
-        """, (int(new_priority), new_model, task_id))
+        """, (p, new_model, assigned_agent, int(task_id)))
         conn.commit()
 
-    log_audit_event("TASK_UPDATED", user_id=user['id'], username=user['username'], 
-                    details={"task_id": task_id, "new_priority": new_priority, "new_model": new_model})
-    return {"success": True, "message": f"Task #{task_id} updated: Priority {new_priority}/10, Model {new_model}"}
+    username = user['username'] if (user and isinstance(user, dict) and 'username' in user) else (user if isinstance(user, str) else 'admin')
+    user_id = user.get('id') if (user and isinstance(user, dict)) else None
 
-def create_task(title, description, priority=10, model="Gemini 4 Argon", completion_percent=0, user=None, is_local_machine=False):
+    log_audit_event("TASK_UPDATED", user_id=user_id, username=username, 
+                    details={"task_id": task_id, "new_priority": p, "new_model": new_model, "assigned_agent": assigned_agent})
+    return {
+        "success": True, 
+        "message": f"Task #{task_id} updated: Priority {p}/10, Model {new_model}, Agent {assigned_agent}",
+        "priority": p,
+        "model": new_model,
+        "assigned_agent": assigned_agent
+    }
+
+def delete_task(task_id, user=None):
     """
-    Creates and enqueues an automated task.
-    Rule: All tasks submitted locally from this machine have immediate admin status P=10.
+    Removes a task from the database by ID.
+    Logs audit event TASK_DELETED.
+    """
+    task_id = int(task_id)
+    with get_db_connection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, title, priority, model, assigned_agent FROM tasks WHERE id = ?", (task_id,))
+        task = cursor.fetchone()
+        if not task:
+            return False
+        cursor.execute("DELETE FROM tasks WHERE id = ?", (task_id,))
+        conn.commit()
+        deleted = cursor.rowcount > 0
+
+    username = user['username'] if (user and isinstance(user, dict) and 'username' in user) else (user if isinstance(user, str) else 'admin')
+    user_id = user.get('id') if (user and isinstance(user, dict)) else None
+
+    if deleted:
+        log_audit_event("TASK_DELETED", user_id=user_id, username=username,
+                        details={"task_id": task_id, "title": task['title'], "priority": task['priority'], "model": task['model'], "assigned_agent": task['assigned_agent']})
+    return deleted
+
+def create_task(title, description="", priority=10, model=None, completion_percent=0, user=None, is_local_machine=False):
+    """
+    Creates and enqueues an automated task with priority-based model defaults and agent assignment:
+    - Priorities 8-10: Default "Gemini 4 Argon", assigned dedicated agent ("argon-agent-<id>")
+    - Priorities 5-7:  Default "Gemini 3.8 Flash (High)", assigned dedicated agent ("flash-high-agent-<id>")
+    - Priorities 1-4:  Default "Gemini 3.8 Flash (Medium)", assigned to shared agent ("shared-flash-medium-coordinator")
+    Rule: All tasks submitted locally from this machine have immediate admin status.
     Non-admin remote users require personal approval from Rann before activation.
     """
     title = title.strip()
-    description = description.strip()
+    description = description.strip() if description else ""
     completion_percent = int(completion_percent)
 
     if not title:
         return {"success": False, "error": "Task title cannot be empty."}
-    if model not in AVAILABLE_MODELS:
-        return {"success": False, "error": f"Invalid model selection. Choose from: {', '.join(AVAILABLE_MODELS)}"}
 
     # Fetch admin account if user is not provided (e.g. local CLI submission)
     if user is None or is_local_machine:
@@ -570,16 +671,27 @@ def create_task(title, description, priority=10, model="Gemini 4 Argon", complet
                 cursor.execute("SELECT id, username, full_name, email, role FROM users WHERE username = ? LIMIT 1", (ADMIN_USERNAME,))
                 user = dict(cursor.fetchone())
 
-    # Rule: All tasks submitted locally from this machine have immediate admin status P=10
+    # Priority resolution & Rule: All tasks submitted locally from this machine have immediate admin status P=10
     if is_local_machine:
         priority = 10
+    elif priority is None:
+        priority = 10
+    else:
+        priority = int(priority)
+    if not (1 <= priority <= 10):
+        return {"success": False, "error": "Priority must be between 1 and 10."}
+
+    # Model default enforcement
+    if not model:
+        model = get_default_model_for_priority(priority)
+    elif model not in AVAILABLE_MODELS:
+        return {"success": False, "error": f"Invalid model selection. Choose from: {', '.join(AVAILABLE_MODELS)}"}
+
+    if is_local_machine:
         is_admin = True
         approved = 1
         status = 'active'
     else:
-        priority = int(priority)
-        if not (1 <= priority <= 10):
-            return {"success": False, "error": "Priority must be between 1 and 10."}
         is_admin = (user.get('role') == 'admin' or user.get('username') == ADMIN_USERNAME)
         approved = 1 if is_admin else 0
         status = 'active' if is_admin else 'pending_approval'
@@ -587,14 +699,16 @@ def create_task(title, description, priority=10, model="Gemini 4 Argon", complet
     with get_db_connection() as conn:
         cursor = conn.cursor()
         cursor.execute("""
-            INSERT INTO tasks (title, description, priority, model, completion_percent, status, created_by_user_id, approved_by_admin)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """, (title, description, priority, model, completion_percent, status, user['id'], approved))
+            INSERT INTO tasks (title, description, priority, model, assigned_agent, completion_percent, status, created_by_user_id, approved_by_admin)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (title, description, priority, model, "", completion_percent, status, user['id'], approved))
         task_id = cursor.lastrowid
+        assigned_agent = get_assigned_agent(priority, task_id, model)
+        cursor.execute("UPDATE tasks SET assigned_agent = ? WHERE id = ?", (assigned_agent, task_id))
         conn.commit()
 
     log_audit_event("TASK_CREATED", user_id=user['id'], username=user['username'],
-                    details={"task_id": task_id, "title": title, "priority": priority, "model": model, "approved": approved, "is_local_machine": is_local_machine})
+                    details={"task_id": task_id, "title": title, "priority": priority, "model": model, "assigned_agent": assigned_agent, "approved": approved, "is_local_machine": is_local_machine})
 
     # If initiated by anyone other than Rann / not local admin, personal approval is strictly required
     if not is_admin:
@@ -605,6 +719,7 @@ def create_task(title, description, priority=10, model="Gemini 4 Argon", complet
             <tr><td><strong>Task Title:</strong></td><td>{title}</td></tr>
             <tr><td><strong>Proposed Priority:</strong></td><td><strong>{priority}/10</strong> ({'Drop everything else and do immediately' if priority == 10 else 'Standard/Low' if priority <= 3 else 'Elevated'})</td></tr>
             <tr><td><strong>Assigned Model:</strong></td><td>{model}</td></tr>
+            <tr><td><strong>Assigned Agent:</strong></td><td><code>{assigned_agent}</code></td></tr>
             <tr><td><strong>Initial Completion:</strong></td><td>{completion_percent}%</td></tr>
             <tr><td><strong>Description:</strong></td><td>{description}</td></tr>
         </table>
@@ -621,51 +736,37 @@ def create_task(title, description, priority=10, model="Gemini 4 Argon", complet
         "success": True,
         "task_id": task_id,
         "priority": priority,
+        "model": model,
+        "assigned_agent": assigned_agent,
         "approved": bool(approved),
         "status": status,
-        "message": "Task created with immediate admin status (P=10)." if is_local_machine else ("Task created and activated." if is_admin else "Task submitted. Awaiting personal approval from Rann before activation.")
+        "message": f"Task created with immediate admin status (P={priority})." if is_local_machine else ("Task created and activated." if is_admin else "Task submitted. Awaiting personal approval from Rann before activation.")
     }
 
-def submit_local_task(title, description="Local task submitted from host machine.", model="Gemini 4 Argon", completion_percent=0):
+def submit_local_task(title, description="Local task submitted from host machine.", priority=10, model=None, completion_percent=0):
     """
     Submits a task locally from this machine.
-    Enforces rule: All tasks submitted locally from this machine have immediate admin status P=10.
+    Enforces rule: All tasks submitted locally from this machine have immediate admin status.
+    Supports priority-based model defaults and dedicated agent tiering.
     """
+    # Handle flexible argument passing (if caller passes model in priority position)
+    if isinstance(priority, str) and (priority in AVAILABLE_MODELS or "Gemini" in priority or "Claude" in priority or "GPT" in priority):
+        model = priority
+        priority = 10
+    elif priority is None:
+        priority = 10
+    
+    if not model:
+        model = get_default_model_for_priority(priority)
+    
     return create_task(
         title=title,
         description=description,
-        priority=10,
+        priority=priority,
         model=model,
         completion_percent=completion_percent,
         is_local_machine=True
     )
-
-
-def get_assigned_agent(priority, task_id):
-    """
-    Returns assigned agent specification based on priority tier:
-    - Priorities 8-10: Dedicated Gemini 4 Argon agent
-    - Priorities 5-7: Dedicated Gemini 3.8 Flash (High) agent
-    - Priorities 1-4: Single shared Gemini 3.8 Flash (Medium) coordinator
-    """
-    pri = int(priority)
-    if pri >= 8:
-        return f"dedicated-argon-agent-{task_id}"
-    elif pri >= 5:
-        return f"dedicated-flash-high-agent-{task_id}"
-    else:
-        return "shared-flash-medium-coordinator"
-
-def delete_task(task_id):
-    """Removes a task from the database by ID."""
-    with get_db_connection() as conn:
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM tasks WHERE id = ?", (int(task_id),))
-        conn.commit()
-        deleted = cursor.rowcount > 0
-    if deleted:
-        log_audit_event("TASK_DELETED", details={"task_id": task_id})
-    return deleted
 
 def approve_task(task_id):
     with get_db_connection() as conn:
@@ -673,7 +774,7 @@ def approve_task(task_id):
         cursor.execute("""
             UPDATE tasks SET approved_by_admin = 1, status = 'active', updated_at = CURRENT_TIMESTAMP
             WHERE id = ?
-        """, (task_id,))
+        """, (int(task_id),))
         conn.commit()
         updated = cursor.rowcount > 0
     if updated:
@@ -711,14 +812,22 @@ if __name__ == '__main__':
         print(f"Task #{t_id} approval status: {ok}")
 
     elif '--delete-task' in sys.argv:
-        t_id = int(sys.argv[sys.argv.index('--delete-task') + 1])
+        target_idx = sys.argv.index('--delete-task') + 1
+        if target_idx >= len(sys.argv) or sys.argv[target_idx].startswith('--'):
+            print("Usage: --delete-task <task_id>")
+            sys.exit(1)
+        t_id = int(sys.argv[target_idx])
         ok = delete_task(t_id)
-        print(f"Task #{t_id} deleted successfully: {ok}")
+        if ok:
+            print(f"[SUCCESS] Task #{t_id} deleted successfully.")
+        else:
+            print(f"[ERROR] Task #{t_id} not found.")
+            sys.exit(1)
 
     elif '--submit-task' in sys.argv:
         title_idx = sys.argv.index('--submit-task') + 1
         if title_idx >= len(sys.argv) or sys.argv[title_idx].startswith('--'):
-            print("Usage: --submit-task \"<title>\" [--description \"<desc>\"] [--model \"<model>\"] [--completion <0-100>]")
+            print("Usage: --submit-task \"<title>\" [--description \"<desc>\"] [--priority <1-10>] [--model \"<model>\"] [--completion <0-100>]")
             sys.exit(1)
         task_title = sys.argv[title_idx]
 
@@ -728,7 +837,13 @@ if __name__ == '__main__':
             if d_idx < len(sys.argv):
                 task_desc = sys.argv[d_idx]
 
-        task_model = "Gemini 4 Argon"
+        task_prio = 10
+        if '--priority' in sys.argv:
+            p_idx = sys.argv.index('--priority') + 1
+            if p_idx < len(sys.argv):
+                task_prio = int(sys.argv[p_idx])
+
+        task_model = None
         if '--model' in sys.argv:
             m_idx = sys.argv.index('--model') + 1
             if m_idx < len(sys.argv):
@@ -740,20 +855,22 @@ if __name__ == '__main__':
             if c_idx < len(sys.argv):
                 task_comp = int(sys.argv[c_idx])
 
-        res = submit_local_task(title=task_title, description=task_desc, model=task_model, completion_percent=task_comp)
+        res = submit_local_task(title=task_title, description=task_desc, priority=task_prio, model=task_model, completion_percent=task_comp)
         if res.get('success'):
             print(f"[SUCCESS] Task #{res['task_id']} '{task_title}' created successfully!")
             print(f"          Priority: P={res['priority']} (Immediate Admin)")
             print(f"          Status: {res['status'].upper()} (Approved by Admin: {res['approved']})")
-            print(f"          Model: {task_model}")
+            print(f"          Model: {res.get('model')}")
+            print(f"          Assigned Agent: {res.get('assigned_agent')}")
         else:
             print(f"[ERROR] Task creation failed: {res.get('error')}")
             sys.exit(1)
 
     elif '--list-tasks' in sys.argv:
         tasks = get_all_tasks()
-        print(f"{'ID':<4} | {'Pri':<3} | {'Model':<24} | {'Comp%':<5} | {'Title'}")
-        print("-" * 75)
+        print(f"{'ID':<4} | {'Pri':<3} | {'Model':<25} | {'Agent':<33} | {'Comp%':<5} | {'Title'}")
+        print("-" * 115)
         for t in tasks:
-            print(f"{t['id']:<4} | {t['priority']:<3} | {t['model']:<24} | {t['completion_percent']:>4}% | {t['title']}")
+            agent_str = t.get('assigned_agent') or get_assigned_agent(t['priority'], t['id'], t['model'])
+            print(f"{t['id']:<4} | {t['priority']:<3} | {t['model']:<25} | {agent_str:<33} | {t['completion_percent']:>4}% | {t['title']}")
 
