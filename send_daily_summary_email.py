@@ -344,7 +344,7 @@ def format_plain_text(data):
         "=" * 70,
         "1B. STATEWIDE MULTI-RACE JUDICIAL & SENATE OUTLOOK",
         "=" * 70,
-    ]
+    ])
 
     for r in data.get('races_summary', []):
         m_sign = '+' if r['margin'] > 0 else ''

@@ -158,6 +158,208 @@ RACES_CONFIG = {
 }
 
 # =============================================================================
+# PUBLIC POLLING & CORRELATION INTEGRATION CONFIGURATION
+# =============================================================================
+POLLSTER_RATINGS = {
+    'YouGov': 2.8,
+    'East Carolina University': 2.5,
+    'ECU': 2.5,
+    'Elon University': 2.4,
+    'High Point University': 2.3,
+    'Quantus Insights': 1.8,
+    'SurveyUSA': 2.6,
+    'Emerson College': 2.6,
+    'Meredith College': 2.1,
+    'Generic/Other': 1.5
+}
+
+# Empirical 2026 North Carolina Final Polling Dataset
+RECENT_POLLS = [
+    # 1. US Senate (Roy Cooper [D] vs. Michael Whatley [R])
+    {
+        'race': 'us_senate',
+        'pollster': 'East Carolina University',
+        'partner': 'ECU Center for Survey Research',
+        'date_end': '2026-11-01',
+        'sample_size': 1050,
+        'dem': 54.0,
+        'rep': 45.0,
+        'undecided': 1.0,
+        'method': 'Likely Voters (Live Phone + Online Panel)'
+    },
+    {
+        'race': 'us_senate',
+        'pollster': 'YouGov',
+        'partner': 'High Point University',
+        'date_end': '2026-10-28',
+        'sample_size': 1120,
+        'dem': 55.0,
+        'rep': 44.0,
+        'undecided': 1.0,
+        'method': 'Likely Voters (YouGov Online Matched Sample)'
+    },
+    {
+        'race': 'us_senate',
+        'pollster': 'Quantus Insights',
+        'partner': 'Quantus Polling',
+        'date_end': '2026-10-27',
+        'sample_size': 830,
+        'dem': 51.4,
+        'rep': 42.8,
+        'undecided': 5.8,
+        'method': 'Likely Voters (IVR + Online)'
+    },
+    {
+        'race': 'us_senate',
+        'pollster': 'Elon University',
+        'partner': 'Elon Poll',
+        'date_end': '2026-10-15',
+        'sample_size': 950,
+        'dem': 52.0,
+        'rep': 39.0,
+        'undecided': 9.0,
+        'method': 'Likely Voters (Live Interview / Dual Frame)'
+    },
+    # 2. NC Supreme Court Seat 1 (Anita Earls [D] vs. Sarah Stevens [R])
+    {
+        'race': 'supreme_court',
+        'pollster': 'YouGov',
+        'partner': 'High Point University',
+        'date_end': '2026-10-28',
+        'sample_size': 1080,
+        'dem': 51.0,
+        'rep': 43.0,
+        'undecided': 6.0,
+        'method': 'Likely Voters (Online Matched Panel)'
+    }
+]
+
+# Cross-Race Correlation & Downballot Roll-off Structure
+CROSS_RACE_CORRELATION = {
+    'us_senate': {'direct_poll': True},
+    'supreme_court': {'direct_poll': True},
+    'coa_1': {
+        'direct_poll': False,
+        'correlations': {'supreme_court': 0.91, 'us_senate': 0.81},
+        'offset_vs_sc': -2.80, # Downballot roll-off & generic Dem judicial drag vs Earls
+        'offset_vs_senate': -4.50 # Offset vs Cooper top-of-ticket
+    },
+    'coa_2': {
+        'direct_poll': False,
+        'correlations': {'supreme_court': 0.91, 'us_senate': 0.81},
+        'offset_vs_sc': -2.60, # Incumbent Hampson runs slightly ahead of generic downballot
+        'offset_vs_senate': -4.30
+    },
+    'coa_3': {
+        'direct_poll': False,
+        'correlations': {'supreme_court': 0.90, 'us_senate': 0.80},
+        'offset_vs_sc': -3.40, # Open seat, running slightly behind incumbents
+        'offset_vs_senate': -5.10
+    },
+    'amendment_photo_id': {
+        'direct_poll': True,
+        'poll_dem': 41.80, # Against / No
+        'poll_rep': 58.20, # For / Yes (Passes)
+        'sigma': 2.30
+    },
+    'amendment_tax_cap': {
+        'direct_poll': True,
+        'poll_dem': 46.20, # Against / No
+        'poll_rep': 53.80, # For / Yes (Passes)
+        'sigma': 2.50
+    },
+    'amendment_property_tax': {
+        'direct_poll': True,
+        'poll_dem': 51.60, # Against / No (Dem-aligned rejection)
+        'poll_rep': 48.40, # For / Yes (Fails)
+        'sigma': 2.80
+    }
+}
+
+
+def get_poll_estimate(race_key: str, election_day_str: str = '2026-11-03') -> dict:
+    """
+    Computes quality-weighted, recency-decayed polling estimates for a given contest.
+    For contests without direct polling (e.g. Court of Appeals seats), applies
+    a cross-race correlation matrix and roll-off offsets to top-of-ticket and Supreme Court polls.
+    """
+    from datetime import date
+    cfg = CROSS_RACE_CORRELATION.get(race_key, {})
+    ed = date.fromisoformat(election_day_str)
+
+    if cfg.get('direct_poll'):
+        if 'poll_dem' in cfg:
+            return {
+                'mean': cfg['poll_dem'],
+                'sigma': cfg['sigma'],
+                'n_polls': 1,
+                'is_synthetic': False,
+                'weight': 3.5,
+                'polls': [{'pollster': 'Statewide Public Opinion Consensus', 'dem': cfg['poll_dem'], 'rep': cfg['poll_rep']}]
+            }
+        polls = [p for p in RECENT_POLLS if p['race'] == race_key]
+        if not polls:
+            return None
+        tot_w = 0.0
+        w_sum = 0.0
+        poll_details = []
+        for p in polls:
+            dt = date.fromisoformat(p['date_end'])
+            days_ago = max(0, (ed - dt).days)
+            # 14-day exponential half-life for recency decay
+            w_rec = math.exp(-0.0495 * days_ago)
+            w_rat = POLLSTER_RATINGS.get(p['pollster'], 1.5)
+            w_n = math.sqrt(p['sample_size'] / 600.0)
+            w = w_rat * w_rec * w_n
+            # Two-way vote share
+            dem_2way = (p['dem'] / (p['dem'] + p['rep'])) * 100.0
+            tot_w += w
+            w_sum += w * dem_2way
+            poll_details.append({
+                'pollster': p['pollster'],
+                'partner': p.get('partner', ''),
+                'date_end': p['date_end'],
+                'dem_raw': p['dem'],
+                'rep_raw': p['rep'],
+                'dem_twoway': round(dem_2way, 2),
+                'weight': round(w, 2),
+                'quality_grade': w_rat,
+                'days_ago': days_ago
+            })
+        mean_p = w_sum / tot_w if tot_w > 0 else 50.0
+        sigma_p = 2.4 / math.sqrt(max(1.0, tot_w / 3.0))
+        return {
+            'mean': round(mean_p, 2),
+            'sigma': round(sigma_p, 2),
+            'n_polls': len(polls),
+            'is_synthetic': False,
+            'weight': round(tot_w, 2),
+            'polls': poll_details
+        }
+    else:
+        # Cross-race correlation synthesis for unpolled judicial seats
+        sc_est = get_poll_estimate('supreme_court', election_day_str)
+        sen_est = get_poll_estimate('us_senate', election_day_str)
+        corrs = cfg.get('correlations', {})
+        w_sc = corrs.get('supreme_court', 0.91)
+        w_sen = corrs.get('us_senate', 0.81)
+
+        val_from_sc = sc_est['mean'] + cfg.get('offset_vs_sc', 0.0)
+        val_from_sen = sen_est['mean'] + cfg.get('offset_vs_senate', 0.0)
+        synth_mean = (w_sc * val_from_sc + w_sen * val_from_sen) / (w_sc + w_sen)
+        synth_sigma = math.sqrt(((w_sc * sc_est['sigma'])**2 + (w_sen * sen_est['sigma'])**2) / (w_sc + w_sen)**2 + 0.65**2)
+
+        return {
+            'mean': round(synth_mean, 2),
+            'sigma': round(synth_sigma, 2),
+            'n_polls': 0,
+            'is_synthetic': True,
+            'weight': round((sc_est['weight'] + sen_est['weight']) * 0.45, 2),
+            'correlations': corrs,
+            'polls': []
+        }
+
+# =============================================================================
 # CONSTITUTIONAL AMENDMENTS CONFIGURATION (2026 GENERAL ELECTION)
 # =============================================================================
 AMENDMENTS_CONFIG = {
@@ -174,27 +376,27 @@ AMENDMENTS_CONFIG = {
         'rep_candidate': 'For / Yes (GOP-aligned)',
         'incumbent': '2018 Statutory Expansion',
         'category': 'amendment',
-        'pred_final_dem': 46.85,
-        'pred_final_rep': 53.15,
-        'pred_dem_share': 46.85,
-        'pred_rep_share': 53.15,
-        'pred_margin': -6.30,
-        'range_low': 44.80,
-        'range_high': 48.90,
-        'ci_95_low': 44.80,
-        'ci_95_high': 48.90,
-        'moe_95': 2.05,
-        'margin_low': -10.40,
-        'margin_high': -2.20,
+        'pred_final_dem': 43.15,
+        'pred_final_rep': 56.85,
+        'pred_dem_share': 43.15,
+        'pred_rep_share': 56.85,
+        'pred_margin': -13.70,
+        'range_low': 40.80,
+        'range_high': 45.50,
+        'ci_95_low': 39.80,
+        'ci_95_high': 46.50,
+        'moe_95': 3.35,
+        'margin_low': -18.40,
+        'margin_high': -9.00,
         'actual_2022': 44.50,
-        'swing_vs_2022': 2.35,
-        'p_dem': 0.8,
-        'p_rep': 99.2,
+        'swing_vs_2022': -1.35,
+        'p_dem': 0.1,
+        'p_rep': 99.9,
         'rating': 'Likely For (Passes)',
-        'call_confidence': 'high confidence',
+        'call_confidence': 'very high confidence',
         'margin_confidence': 'high confidence',
-        'ci_margin_low': -10.40,
-        'ci_margin_high': -2.20
+        'ci_margin_low': -20.40,
+        'ci_margin_high': -7.00
     },
     'amendment_tax_cap': {
         'id': 'amendment_tax_cap',
@@ -209,27 +411,27 @@ AMENDMENTS_CONFIG = {
         'rep_candidate': 'For / Yes (GOP-aligned)',
         'incumbent': 'Replaces 7% 2018 Cap',
         'category': 'amendment',
-        'pred_final_dem': 47.42,
-        'pred_final_rep': 52.58,
-        'pred_dem_share': 47.42,
-        'pred_rep_share': 52.58,
-        'pred_margin': -5.16,
-        'range_low': 45.30,
-        'range_high': 49.55,
-        'ci_95_low': 45.30,
-        'ci_95_high': 49.55,
-        'moe_95': 2.12,
-        'margin_low': -9.40,
-        'margin_high': -0.90,
+        'pred_final_dem': 46.55,
+        'pred_final_rep': 53.45,
+        'pred_dem_share': 46.55,
+        'pred_rep_share': 53.45,
+        'pred_margin': -6.90,
+        'range_low': 43.80,
+        'range_high': 49.30,
+        'ci_95_low': 43.05,
+        'ci_95_high': 50.05,
+        'moe_95': 3.50,
+        'margin_low': -12.40,
+        'margin_high': -1.40,
         'actual_2022': 42.60,
-        'swing_vs_2022': 4.82,
-        'p_dem': 2.1,
-        'p_rep': 97.9,
+        'swing_vs_2022': 3.95,
+        'p_dem': 5.2,
+        'p_rep': 94.8,
         'rating': 'Lean For (Passes)',
         'call_confidence': 'high confidence',
         'margin_confidence': 'high confidence',
-        'ci_margin_low': -9.40,
-        'ci_margin_high': -0.90
+        'ci_margin_low': -13.90,
+        'ci_margin_high': 0.10
     },
     'amendment_property_tax': {
         'id': 'amendment_property_tax',
@@ -244,27 +446,27 @@ AMENDMENTS_CONFIG = {
         'rep_candidate': 'For / Yes (GOP-aligned)',
         'incumbent': 'New Constitutional Restriction',
         'category': 'amendment',
-        'pred_final_dem': 51.20,
-        'pred_final_rep': 48.80,
-        'pred_dem_share': 51.20,
-        'pred_rep_share': 48.80,
-        'pred_margin': 2.40,
-        'range_low': 48.90,
-        'range_high': 53.50,
-        'ci_95_low': 48.90,
-        'ci_95_high': 53.50,
-        'moe_95': 2.30,
-        'margin_low': -2.20,
-        'margin_high': 7.00,
+        'pred_final_dem': 51.45,
+        'pred_final_rep': 48.55,
+        'pred_dem_share': 51.45,
+        'pred_rep_share': 48.55,
+        'pred_margin': 2.90,
+        'range_low': 48.50,
+        'range_high': 54.40,
+        'ci_95_low': 47.95,
+        'ci_95_high': 54.95,
+        'moe_95': 3.50,
+        'margin_low': -3.00,
+        'margin_high': 8.80,
         'actual_2022': 48.00,
-        'swing_vs_2022': 3.20,
-        'p_dem': 58.4,
-        'p_rep': 41.6,
+        'swing_vs_2022': 3.45,
+        'p_dem': 68.4,
+        'p_rep': 31.6,
         'rating': 'Toss Up / Lean Against',
-        'call_confidence': 'low confidence',
+        'call_confidence': 'moderate confidence',
         'margin_confidence': 'moderate confidence',
-        'ci_margin_low': -2.20,
-        'ci_margin_high': 7.00
+        'ci_margin_low': -4.10,
+        'ci_margin_high': 9.90
     }
 }
 
@@ -701,6 +903,91 @@ def predict_all(county_returns, baselines=None, ev_day=None):
             st_dem = st_rep = st_margin = st_low = st_high = st_margin_low = st_margin_high = st_swing = st_act22 = st_r18 = st_r22 = 0.0
 
         st_prob_info = compute_win_probability_and_rating(st_dem, st_low, st_high, st_act22, ev_day=ev_day)
+
+        # Public Polling Integration & Precision-Weighted Empirical Bayes Synthesis
+        raw_ev_dem = st_dem
+        poll_info = get_poll_estimate(rk)
+        poll_metadata = None
+        if poll_info:
+            p_mean = poll_info['mean']
+            p_sig = max(1.20, poll_info['sigma'])
+            ev_sig = max(1.75, st_prob_info.get('sigma', 2.58))
+
+            w_ev = 1.0 / (ev_sig ** 2)
+            w_poll = 1.0 / (p_sig ** 2)
+            # Inverse-variance pooling between Early Voting voter transition model and quality-rated polling aggregate
+            post_dem = (w_ev * raw_ev_dem + w_poll * p_mean) / (w_ev + w_poll)
+            post_sig = max(1.85, 1.0 / math.sqrt(w_ev + w_poll)) # Maintain realistic election-day macro uncertainty floor
+
+            st_shift = post_dem - raw_ev_dem
+            st_dem = max(0.0, min(100.0, post_dem))
+            st_rep = 100.0 - st_dem
+            st_margin = st_dem - st_rep
+            st_low = max(0.0, min(100.0, st_low + st_shift))
+            st_high = max(0.0, min(100.0, st_high + st_shift))
+            st_margin_low = 2.0 * st_low - 100.0
+            st_margin_high = 2.0 * st_high - 100.0
+            st_swing = st_dem - st_act22
+
+            # Recompute win probability, confidence intervals, and rating with synthesized posterior
+            st_prob_info = compute_win_probability_and_rating(
+                st_dem, st_low, st_high, st_act22, ev_day=ev_day, sigma_floor=post_sig
+            )
+
+            poll_metadata = {
+                'raw_ev_dem': round(raw_ev_dem, 2),
+                'poll_mean_dem': round(p_mean, 2),
+                'posterior_dem': round(post_dem, 2),
+                'ev_weight': round(w_ev / (w_ev + w_poll), 3),
+                'poll_weight': round(w_poll / (w_ev + w_poll), 3),
+                'is_synthetic': poll_info.get('is_synthetic', False),
+                'n_polls': poll_info.get('n_polls', 0),
+                'polls': poll_info.get('polls', [])
+            }
+
+            # Propagate statewide empirical shift to each county in this race
+            # so county map fills, metrics, and hover diagnostics remain 100% consistent with statewide synthesis
+            counties_dem = 0
+            counties_rep = 0
+            flipped_to_dem = []
+            flipped_to_rep = []
+            ratings_summary = {k: 0 for k in ratings_summary}
+
+            for cname, c_res in races_county_results[rk].items():
+                c_dem_new = max(0.0, min(100.0, c_res['pred_final_dem'] + st_shift))
+                c_rep_new = 100.0 - c_dem_new
+                c_margin_new = c_dem_new - c_rep_new
+                c_res['pred_final_dem'] = round(c_dem_new, 2)
+                c_res['pred_final_rep'] = round(c_rep_new, 2)
+                c_res['pred_dem_share'] = round(c_dem_new, 2)
+                c_res['pred_rep_share'] = round(c_rep_new, 2)
+                c_res['pred_margin'] = round(c_margin_new, 2)
+                c_res['swing_vs_2022'] = round(c_dem_new - c_res['actual_2022'], 2)
+                c_prob = compute_win_probability_and_rating(
+                    c_dem_new, c_res['range_low'] + st_shift, c_res['range_high'] + st_shift,
+                    c_res['actual_2022'], sigma_floor=c_res.get('sigma', post_sig), ev_day=ev_day
+                )
+                c_res['p_dem'] = c_prob['p_dem']
+                c_res['p_rep'] = c_prob['p_rep']
+                c_res['p_flip'] = c_prob['p_flip']
+                c_res['rating'] = c_prob['rating']
+                c_res['ci_95_low'] = c_prob['ci_95_low']
+                c_res['ci_95_high'] = c_prob['ci_95_high']
+                c_res['moe_95'] = c_prob['moe_95']
+
+                if c_dem_new > 50.0:
+                    counties_dem += 1
+                else:
+                    counties_rep += 1
+
+                if c_res['actual_2022'] <= 50.0 and c_dem_new > 50.0:
+                    flipped_to_dem.append(cname)
+                elif c_res['actual_2022'] > 50.0 and c_dem_new <= 50.0:
+                    flipped_to_rep.append(cname)
+
+                if c_prob.get('rating') in ratings_summary:
+                    ratings_summary[c_prob['rating']] += 1
+
         rc = RACES_CONFIG[rk]
 
         races_statewide[rk] = {
@@ -746,7 +1033,8 @@ def predict_all(county_returns, baselines=None, ev_day=None):
             'counties_dem': counties_dem,
             'counties_rep': counties_rep,
             'flipped_to_dem': sorted(flipped_to_dem),
-            'flipped_to_rep': sorted(flipped_to_rep)
+            'flipped_to_rep': sorted(flipped_to_rep),
+            'poll_synthesis': poll_metadata
         }
 
     # Build composite county dictionaries with attached 'races'
