@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math 105L Class Summaries & Completed Lecture Sheets | Fall 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00539B;
+      --primary-dark: #003366;
+      --accent: #0582CA;
+      --bg: #0B0F19;
+      --surface: #131B2E;
+      --surface-border: #1E293B;
+      --text: #F1F5F9;
+      --text-muted: #94A3B8;
+      --badge-bg: #1E293B;
+      --badge-text: #38BDF8;
+      --card-hover: #1E2942;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2.5rem 1rem;
+    }
+    .container {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 1.5rem;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.3rem 0.75rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.12);
+      color: var(--badge-text);
+      margin-bottom: 0.75rem;
+      border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+    }
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 750px;
+    }
+    .info-card {
+      background: rgba(19, 27, 46, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+      color: #CBD5E1;
+    }
+    .info-card strong { color: #FFFFFF; }
+    .search-box {
+      width: 100%;
+      padding: 0.85rem 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 1.75rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .search-box:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(5, 130, 202, 0.2);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+    .lecture-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .lecture-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(56, 189, 248, 0.4);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+    .card-top {
+      margin-bottom: 1rem;
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #FFFFFF;
+      margin-bottom: 0.4rem;
+      line-height: 1.35;
+    }
+    .card-topic {
+      font-size: 0.92rem;
+      color: #94A3B8;
+      margin-bottom: 1rem;
+    }
+    .card-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      background: var(--primary);
+      color: #FFFFFF;
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 600;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      transition: background 0.15s ease;
+    }
+    .card-btn:hover {
+      background: var(--accent);
+    }
+    footer {
+      margin-top: 3.5rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--surface-border);
+      padding-top: 1.5rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge">Math 105L &bull; Fall 2026</span>
+      <h1>Completed Lecture Sheets & Class Summaries</h1>
+      <p class="subtitle">Derivations, definitions, and problem solutions reconstructed from Panopto classroom blackboard recordings.</p>
+    </header>
+
+    <div class="info-card">
+      <strong>Pedagogical Methodology:</strong> Unlike textbook solution manuals, these completed sheets reflect the exact mathematical discussions, questions, and blackboard work recorded during classroom lectures.
+    </div>
+
+    <input type="text" id="search" class="search-box" placeholder="Search by lecture number, topic, or date (e.g., 'Implicit', '9-1', 'Exponential')..." oninput="filterCards()">
+
+    <div class="grid" id="cardGrid">
+      <!-- Lecture 10-3 -->
+      <div class="lecture-card" data-text="lecture 10-3 10/30/26 logarithmic differentiation inverse function theorem">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/30/26</span> &bull; <span>Lecture 10-3</span>
+          </div>
+          <h2 class="card-title">Logarithmic Differentiation</h2>
+          <p class="card-topic">Differentiating complex products, powers ^x$, and inverse function theorem connections.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lecture_10-3_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+
+      <!-- Lecture 9-3 -->
+      <div class="lecture-card" data-text="lecture 9-3 10/23/26 implicit differentiation ii folium descartes orthogonal trajectories">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/23/26</span> &bull; <span>Lecture 9-3</span>
+          </div>
+          <h2 class="card-title">Implicit Differentiation II</h2>
+          <p class="card-topic">Explicit vs. implicit comparisons (+y=e^x$), Folium of Descartes, horizontal tangents, and normal lines.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lecture_9-3_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+
+      <!-- Lab Eight Part 3 -->
+      <div class="lecture-card" data-text="lab eight part 3 10/22/26 log plots report help power laws">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/22/26</span> &bull; <span>Lab 8 Part 3</span>
+          </div>
+          <h2 class="card-title">Log Plots & Report Synthesis</h2>
+          <p class="card-topic">Semilog vs. log-log regressions, extracting scaling exponents, and experimental model interpretation.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lab_8_Part_3_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+
+      <!-- Lecture 9-2 -->
+      <div class="lecture-card" data-text="lecture 9-2 10/21/26 implicit differentiation i vertical line test circle">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/21/26</span> &bull; <span>Lecture 9-2</span>
+          </div>
+          <h2 class="card-title">Implicit Differentiation I</h2>
+          <p class="card-topic">Chain rule foundations, failure of the Vertical Line Test, circle geometry ^2+y^2=4$, and tangent slopes.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lecture_9-2_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+
+      <!-- Lecture 9-1 -->
+      <!-- Lecture 8-3 -->
+      <!-- Lab Eight Part 1 -->
+      <div class="lecture-card" data-text="lab eight part 1 10/15/26 log plots semilog exponential growth us population modeling">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/15/26</span> &bull; <span>Lab 8 Part 1</span>
+          </div>
+          <h2 class="card-title">Semilog Plots & Exponential Modeling</h2>
+          <p class="card-topic">Linearizing exponentials  = P_0 a^t \implies \ln y = (\ln a)t + \ln P_0$, spreadsheet trendlines, and U.S. Historical Population (1790–1900) case study.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lab_8_Part_1_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+
+      <!-- Lecture 8-2 -->
+      <!-- Lab 7 -->
+      <div class="lecture-card" data-text="lab 7 10/08/26 inverse functions invertibility horizontal line test geogebra reflection monotonicity">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/08/26</span> &bull; <span>Lab 7</span>
+          </div>
+          <h2 class="card-title">Inverse Functions & Graphical Symmetry</h2>
+          <p class="card-topic">Functional inversion (f^{-1}(x))=x$, mapping diagrams, reflection across =x$, and calculus proof of invertibility for ^5+x$ via strict monotonicity.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lab_7_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+
+      <!-- Lecture 7-1 -->
+      <div class="lecture-card" data-text="lecture 7-1 10/05/26 compound interest discrete continuous compounding euler e growth law">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/05/26</span> &bull; <span>Lecture 7-1</span>
+          </div>
+          <h2 class="card-title">Compound Interest & The Number $</h2>
+          <p class="card-topic">Discrete compounding (1+r/n)^{nt}$, principal vs. interest rate scaling, pushing compounding frequency to infinity, and derivation of continuous growth  e^{rt}$.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lecture_7-1_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+
+      <div class="lecture-card" data-text="lecture 8-2 10/14/26 logarithms natural log inverse exponential functions doubling time">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/14/26</span> &bull; <span>Lecture 8-2</span>
+          </div>
+          <h2 class="card-title">Logarithms & Exponential Inverses</h2>
+          <p class="card-topic">Inverses of monotonic exponentials, $\ln x = c \iff e^c = x$, log properties, exact continuous compounding doubling times, and solving equations analytically.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lecture_8-2_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+
+      <div class="lecture-card" data-text="lecture 8-3 10/16/26 the chain rule composition leibniz notation quotient rule proof triple chain rule">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/16/26</span> &bull; <span>Lecture 8-3</span>
+          </div>
+          <h2 class="card-title">The Chain Rule</h2>
+          <p class="card-topic">Function composition rates, Leibniz notation $\frac{dy}{dx}=\frac{dy}{du}\frac{du}{dx}$, proving the Quotient Rule via the Chain Rule, and the Triple Chain Rule.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lecture_8-3_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+
+      <div class="lecture-card" data-text="lecture 9-1 10/19/26 differentiating exponential functions natural base e proportionality chain rule">
+        <div class="card-top">
+          <div class="card-meta">
+            <span>10/19/26</span> &bull; <span>Lecture 9-1</span>
+          </div>
+          <h2 class="card-title">Differentiating Exponential Functions</h2>
+          <p class="card-topic">Proof that $\frac{d}{dx} a^x \propto a^x$, discovery and limit definition of $, and the general rule $\frac{d}{dx} a^x = (\ln a)a^x$.</p>
+        </div>
+        <a class="card-btn" href="Math105L_Lecture_9-1_Completed_Sheet.pdf" target="_blank">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Open Completed Sheet (PDF)
+        </a>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 Rann Bar-On &bull; Department of Mathematics, Duke University &bull; <a href="https://rannbar-on.com">rannbar-on.com</a></p>
+    </footer>
+  </div>
+
+  <script>
+    function filterCards() {
+      const q = document.getElementById('search').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.lecture-card');
+      cards.forEach(c => {
+        const text = c.getAttribute('data-text') || '';
+        if (!q || text.includes(q)) {
+          c.style.display = 'flex';
+        } else {
+          c.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

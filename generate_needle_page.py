@@ -169,13 +169,20 @@ def build_needle_dataset():
     def build_statewide_race(key, title, short_title, dem_cand, rep_cand, target_col_idx, baseline_m, sigma, rating):
         counties = []
         tot_proj_turnout = 0
+
+        # Exact statewide calibration: shift county benchmarks so their volume-weighted sum exactly matches baseline_m
+        raw_tot_turnout = sum(float(r[2]) for r in bench_rows)
+        raw_tot_dem = sum(round(float(r[2]) * (100.0 + float(r[target_col_idx]) * 100.0) / 200.0) for r in bench_rows)
+        raw_statewide_m = (raw_tot_dem - (raw_tot_turnout - raw_tot_dem)) / raw_tot_turnout * 100.0 if raw_tot_turnout > 0 else 0.0
+        calib_shift = baseline_m - raw_statewide_m
+
         for r in bench_rows:
             c_name = r[0]
             c_up = c_name.upper().strip()
             cluster = r[1]
             turnout = int(float(r[2]))
             tot_proj_turnout += turnout
-            target_m = round(float(r[target_col_idx]) * 100.0, 2)
+            target_m = round(max(-100.0, min(100.0, float(r[target_col_idx]) * 100.0 + calib_shift)), 2)
             cushion = int(round(turnout * (target_m / 100.0)))
             geom = county_paths.get(c_up, {})
 
@@ -244,12 +251,119 @@ def build_needle_dataset():
         }
 
     statewide_races = {
-        'US-SENATE': build_statewide_race('US-SENATE', '2026 US Senate: Roy Cooper (D) vs. Michael Whatley (R)', 'US Senate', 'Roy Cooper', 'Michael Whatley', 3, 2.5, 1.85, 'Lean D'),
-        'NC-SC': build_statewide_race('NC-SC', '2026 NC Supreme Court: Anita Earls (D - Incumbent) vs. Sarah Stevens (R)', 'NC Supreme Court', 'Anita Earls', 'Sarah Stevens', 4, 1.0, 1.95, 'Toss Up / Tilt D'),
-        'NC-COA-1': build_statewide_race('NC-COA-1', '2026 NC Court of Appeals Seat 1: John S. Arrowood (D - Incumbent) vs. Michael C. Byrne (R)', 'NC CoA Seat 1', 'John S. Arrowood', 'Michael C. Byrne', 5, 0.5, 2.05, 'Toss Up / Tilt D'),
-        'NC-COA-2': build_statewide_race('NC-COA-2', '2026 NC Court of Appeals Seat 2: Tobias (Toby) Hampson (D - Incumbent) vs. George Cooper Bell (R)', 'NC CoA Seat 2', 'Tobias (Toby) Hampson', 'George Cooper Bell', 5, 0.5, 2.05, 'Toss Up / Tilt D'),
-        'NC-COA-3': build_statewide_race('NC-COA-3', '2026 NC Court of Appeals Seat 3: Christine Marie Walczyk (D) vs. Craig Collins (R)', 'NC CoA Seat 3', 'Christine Marie Walczyk', 'Craig Collins', 5, 0.5, 2.05, 'Toss Up / Tilt D')
+        'US-SENATE': build_statewide_race('US-SENATE', '2026 US Senate: Roy Cooper (D) vs. Michael Whatley (R)', 'US Senate', 'Roy Cooper', 'Michael Whatley', 3, 2.5, 3.65, 'Lean D'),
+        'NC-SC': build_statewide_race('NC-SC', '2026 NC Supreme Court: Anita Earls (D - Incumbent) vs. Sarah Stevens (R)', 'NC Supreme Court', 'Anita Earls', 'Sarah Stevens', 4, 1.0, 3.90, 'Toss Up / Tilt D'),
+        'NC-COA-1': build_statewide_race('NC-COA-1', '2026 NC Court of Appeals Seat 1: John S. Arrowood (D - Incumbent) vs. Michael C. Byrne (R)', 'NC CoA Seat 1', 'John S. Arrowood', 'Michael C. Byrne', 5, 0.5, 4.10, 'Toss Up / Tilt D'),
+        'NC-COA-2': build_statewide_race('NC-COA-2', '2026 NC Court of Appeals Seat 2: Tobias (Toby) Hampson (D - Incumbent) vs. George Cooper Bell (R)', 'NC CoA Seat 2', 'Tobias (Toby) Hampson', 'George Cooper Bell', 5, 0.5, 4.10, 'Toss Up / Tilt D'),
+        'NC-COA-3': build_statewide_race('NC-COA-3', '2026 NC Court of Appeals Seat 3: Christine Marie Walczyk (D) vs. Craig Collins (R)', 'NC CoA Seat 3', 'Christine Marie Walczyk', 'Craig Collins', 5, 0.5, 4.10, 'Toss Up / Tilt D')
     }
+
+    print("4b. Building constitutional amendments with county & mode decomposition...")
+    def build_amendment(key, title, short_title, ballot_q, baseline_m, sigma, rating, p_against, p_for, elast, shift):
+        counties = []
+        tot_proj_turnout = 0
+        for r in bench_rows:
+            c_name = r[0]
+            c_up = c_name.upper().strip()
+            cluster = r[1]
+            turnout = int(float(r[2]))
+            tot_proj_turnout += turnout
+            sc_m = float(r[4]) * 100.0
+            target_m = round(max(-100.0, min(100.0, sc_m * elast + shift)), 2)
+            cushion = int(round(turnout * (target_m / 100.0)))
+            geom = county_paths.get(c_up, {})
+
+            c_mode = county_modes.get(c_up, {
+                'share_mail': 0.052, 'share_early': 0.741, 'share_eday': 0.207,
+                'diff_mail': 30.6, 'diff_early': 0.5, 'diff_eday': -9.6
+            })
+            c_m_mail = max(-100.0, min(100.0, target_m + c_mode['diff_mail'] * 0.7))
+            c_m_early = max(-100.0, min(100.0, target_m + c_mode['diff_early'] * 0.7))
+            c_m_eday = max(-100.0, min(100.0, target_m + c_mode['diff_eday'] * 0.7))
+
+            c_proj_mail = int(round(turnout * c_mode['share_mail']))
+            c_proj_early = int(round(turnout * c_mode['share_early']))
+            c_proj_eday = max(0, turnout - c_proj_mail - c_proj_early)
+
+            c_cush_mail = int(round(c_proj_mail * (c_m_mail / 100.0)))
+            c_cush_early = int(round(c_proj_early * (c_m_early / 100.0)))
+            c_cush_eday = int(round(c_proj_eday * (c_m_eday / 100.0)))
+
+            counties.append({
+                'name': c_name,
+                'county': c_up,
+                'cluster': cluster,
+                'proj_turnout': turnout,
+                'bench_margin': target_m,
+                'target_cushion': cushion,
+                'path': geom.get('path', ''),
+                'bbox': geom.get('bbox', []),
+                'centroid': geom.get('centroid', []),
+                'modes': {
+                    'mail': {
+                        'proj': c_proj_mail,
+                        'bench_m': round(c_m_mail, 2),
+                        'cushion': c_cush_mail
+                    },
+                    'early': {
+                        'proj': c_proj_early,
+                        'bench_m': round(c_m_early, 2),
+                        'cushion': c_cush_early
+                    },
+                    'eday': {
+                        'proj': c_proj_eday,
+                        'bench_m': round(c_m_eday, 2),
+                        'cushion': c_cush_eday
+                    }
+                }
+            })
+
+        return {
+            'id': key,
+            'title': title,
+            'short_title': short_title,
+            'ballot_question': ballot_q,
+            'dem_candidate': 'Against (No)',
+            'rep_candidate': 'For (Yes)',
+            'dem_stance': 'Against (No)',
+            'rep_stance': 'For (Yes)',
+            'is_amendment': True,
+            'pred_margin': baseline_m,
+            'proj_turnout': tot_proj_turnout,
+            'sigma': sigma,
+            'rating': rating,
+            'p_dem': p_against,
+            'p_rep': p_for,
+            'counties': counties
+        }
+
+    amendments_data = {
+        'NC-CONST-AMEND-1': build_amendment(
+            'NC-CONST-AMEND-1',
+            'Constitutional Amendment 1: Require Photo ID for All Voters',
+            'Photo ID Amendment',
+            'Constitutional requirement for photo ID across all voting methods, including in-person and mail-in/absentee ballots.',
+            -13.7, 2.1, 'Likely For (Passes)', 0.1, 99.9, 0.85, -14.734
+        ),
+        'NC-CONST-AMEND-2': build_amendment(
+            'NC-CONST-AMEND-2',
+            'Constitutional Amendment 2: 3.5% Income Tax Cap Amendment',
+            '3.5% Income Tax Cap',
+            'Reduces the constitutional ceiling on maximum personal and corporate state income tax rate from 7.0% to 3.5%.',
+            -6.9, 2.2, 'Lean For (Passes)', 5.2, 94.8, 0.82, -7.898
+        ),
+        'NC-CONST-AMEND-3': build_amendment(
+            'NC-CONST-AMEND-3',
+            'Constitutional Amendment 3: Property Tax Levy Limit Amendment',
+            'Property Tax Levy Limit',
+            'Requires General Assembly to impose statutory restrictions and caps on local government property tax increases.',
+            2.9, 2.3, 'Toss Up / Lean Against', 68.4, 31.6, 0.80, 1.926
+        )
+    }
+
+    # Add amendments directly into statewide_races dictionary as well for universal lookup
+    for ak, av in amendments_data.items():
+        statewide_races[ak] = av
 
     print("5. Building legislative chambers with precinct-level mode benchmarks...")
     def process_chamber(chamber_name, contest_filter, meta_dict):
@@ -428,7 +542,8 @@ def build_needle_dataset():
                 "districts": congress_districts
             }
         },
-        "statewide": statewide_races
+        "statewide": statewide_races,
+        "amendments": amendments_data
     }
 
     out_json = os.path.join(OUTPUT_DIR, 'needle_data.json')

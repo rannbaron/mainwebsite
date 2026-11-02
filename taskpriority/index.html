@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Prioritization & Execution Control Dashboard | Rann Bar-On</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --duke-blue: #00539b;
+      --accent-cyan: #38bdf8;
+      --accent-green: #22c55e;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --priority-high: #dc2626;
+      --priority-med: #d97706;
+      --priority-low: #2563eb;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      padding: 24px 16px;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--card-border);
+      margin-bottom: 28px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand h1 { font-size: 22px; font-weight: 700; color: #fff; }
+    .brand .badge-private {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .user-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .user-pill .online-dot { width: 8px; height: 8px; background: var(--accent-green); border-radius: 50%; }
+
+    /* Grid & Cards */
+    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 16px 20px;
+    }
+    .stat-card .label { font-size: 12px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }
+    .stat-card .value { font-size: 26px; font-weight: 700; margin-top: 4px; }
+
+    /* Table */
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      overflow-x: auto;
+      margin-bottom: 32px;
+    }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
+    th {
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-muted);
+      font-weight: 600;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--card-border);
+      text-transform: uppercase;
+      font-size: 11.5px;
+      letter-spacing: 0.5px;
+    }
+    td { padding: 14px 16px; border-bottom: 1px solid rgba(51, 65, 85, 0.5); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+    .priority-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      text-align: center;
+    }
+    .pri-10 { background: #dc2626; color: #fff; }
+    .pri-8-9 { background: #ea580c; color: #fff; }
+    .pri-5-7 { background: #d97706; color: #fff; }
+    .pri-1-4 { background: #2563eb; color: #fff; }
+
+    select.model-select, select.priority-select {
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12.5px;
+      cursor: pointer;
+    }
+    select:focus { outline: none; border-color: var(--accent-cyan); }
+
+    /* Progress bar */
+    .progress-bar-container {
+      width: 100%;
+      min-width: 120px;
+      background: #0f172a;
+      height: 8px;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #38bdf8, #22c55e);
+      border-radius: 4px;
+    }
+
+    /* Initiate form */
+    .form-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+    }
+    .form-card h2 { font-size: 17px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13.5px;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      outline: none;
+      border-color: var(--accent-cyan);
+    }
+    .btn-submit {
+      background: var(--duke-blue);
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-submit:hover { background: #0066c0; }
+    .security-notice {
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 3px solid var(--accent-amber);
+      border-radius: 4px;
+      font-size: 12.5px;
+      color: #fbbf24;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <div class="brand">
+      <i class="fa-solid fa-layer-group" style="color: var(--accent-cyan); font-size: 22px;"></i>
+      <h1>Task Prioritization & Execution Control</h1>
+      <span class="badge-private"><i class="fa-solid fa-lock"></i> Restricted Access</span>
+    </div>
+    <div class="user-pill">
+      <span class="online-dot"></span>
+      <span>Authenticated as: <strong>rann</strong> (Admin)</span>
+    </div>
+  </header>
+
+  <div class="controls-grid">
+    <div class="stat-card">
+      <div class="label">Total Managed Tasks</div>
+      <div class="value">7</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Active P10 Critical Tasks</div>
+      <div class="value" style="color: var(--accent-red);">1</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Primary Execution Engine</div>
+      <div class="value" style="font-size: 20px; color: var(--accent-cyan);">Gemini 3.8 Flash (High)</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Security & MFA Mode</div>
+      <div class="value" style="font-size: 19px; color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i> 2FA Enforced</div>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 60px;">ID</th>
+          <th style="width: 110px;">Priority (1-10)</th>
+          <th>Task Title & Scope</th>
+          <th style="width: 220px;">Assigned Model Tier</th>
+          <th style="width: 170px;">Estimated Progress</th>
+          <th style="width: 100px;">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>#1</strong></td>
+          <td><span class="priority-badge pri-10">P10 (Drop All)</span></td>
+          <td>
+            <strong>Election Night 95% Confidence Race Calling Engine</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Real-time Decision Desk automated calls with Twitter, Threads, and Instagram alerts.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option selected>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Ready</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#2</strong></td>
+          <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
+          <td>
+            <strong>Machine Lid-Close & Suspend Inhibit (Active until 2:00 PM)</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Holding systemd-logind and GNOME session inhibitor PID 773933.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option selected>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Active</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 75%; background: #38bdf8;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-spinner fa-spin"></i> Running</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#3</strong></td>
+          <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
+          <td>
+            <strong>Constitutional Amendments Forecast Model & Slide Decks</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Monte Carlo simulation kernel, 10-slide deck, and 5-page report dispatched to subscribers.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option selected>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Done</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#4</strong></td>
+          <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
+          <td>
+            <strong>Semester-Wide Incapacitation & Attendance Audit</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Processed 25 Dean's incapacitation notices, updated roll call, and dispatched audit report.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option selected>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Done</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#5</strong></td>
+          <td><span class="priority-badge pri-5-7">P6 (Normal)</span></td>
+          <td>
+            <strong>Panopto Completed Lecture Sheets & Video Summaries (Reverse Order)</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Generating completed sheets working backwards through MWF and TTh recordings.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option selected>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>45%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 45%;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#6</strong></td>
+          <td><span class="priority-badge pri-5-7">P5 (Normal)</span></td>
+          <td>
+            <strong>Panopto Automated Video Trimming Pipeline</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">ML audio/visual classifier distinguishing lecture instruction from walking student consultation.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option selected>Gemini 4 Argon</option>
+              <option>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>30%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 30%;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Queued</span></td>
+        </tr>
+
+        <tr>
+          <td><strong>#7</strong></td>
+          <td><span class="priority-badge pri-1-4">P4 (Standby)</span></td>
+          <td>
+            <strong>State Navigate Benchmark Comparison Analysis</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Syncing legislative chamber baselines and margin differentials against proprietary tracker.</div>
+          </td>
+          <td>
+            <select class="model-select">
+              <option>Gemini 4 Argon</option>
+              <option selected>Gemini 3.8 Flash (High)</option>
+              <option>Gemini 3.8 Flash (Medium)</option>
+            </select>
+          </td>
+          <td>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>65%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 65%;"></div></div>
+          </td>
+          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="form-card">
+    <h2><i class="fa-solid fa-plus-circle" style="color: var(--accent-cyan);"></i> Initiate New Automated Task</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Task Title</label>
+        <input type="text" placeholder="e.g. Ingest 2026 Midterm Turnout Data">
+      </div>
+      <div class="form-group">
+        <label>Priority (1-10)</label>
+        <select>
+          <option value="10">10 (Immediate / Drop All)</option>
+          <option value="9">9 (Urgent Execution)</option>
+          <option value="8">8 (High Priority)</option>
+          <option value="7" selected>7 (Standard Elevated)</option>
+          <option value="5">5 (Normal Routine)</option>
+          <option value="3">3 (Low Priority)</option>
+          <option value="1">1 (Idle / Background Only)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Preferred Model</label>
+        <select>
+          <option>Gemini 4 Argon</option>
+          <option selected>Gemini 3.8 Flash (High)</option>
+          <option>Gemini 3.8 Flash (Medium)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Initial Est. %</label>
+        <input type="number" min="0" max="100" value="0">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom: 16px;">
+      <label>Detailed Task Specifications & Scope</label>
+      <textarea rows="3" placeholder="Describe objectives, verification criteria, and target recipients..."></textarea>
+    </div>
+    <button class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Submit Task for Execution</button>
+
+    <div class="security-notice">
+      <i class="fa-solid fa-shield-halved"></i> <strong>Security & Approval Protocol:</strong> Tasks initiated by any non-admin account trigger an instant email dispatch to <code>rann@rannbar-on.com</code> and remain strictly locked in <code>pending_approval</code> status until personally authorized.
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+

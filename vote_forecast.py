@@ -230,9 +230,9 @@ def compute_eday_adjusted_forecast(c_key, ev_dem_share, ev_tot_votes, b, trans, 
         cannibalization = max(0.75, min(1.0, 1.0 - 0.25 * max(0.0, delta_r / 5.0)))
         reservoir_factor = cannibalization
 
-    # Low-propensity Unaffiliated/young expansion premium
+    # Low-propensity Unaffiliated/young expansion premium (percentage points)
     una_pref = trans.get('una_dem_share', 0.50)
-    expansion = max(-1.5, min(2.5, (delta_u / 100.0) * (una_pref - 0.50) * 15.0))
+    expansion = max(-2.0, min(3.0, float(delta_u) * (una_pref - 0.50) * 1.5))
 
     # Race-specific shift offset (e.g. -1.45 pp for Supreme Court, -1.85 pp for CoA 1)
     race_shift = rc.get('shift_offset', 0.0) if rc else 0.0
@@ -1302,7 +1302,33 @@ def predict_legislative_seats(senate_data_path=None, house_data_path=None):
     ]:
         chamber_key = 'senate' if is_senate else 'house'
         chamber_name = 'NC Senate' if is_senate else 'NC House'
-        if not path or not os.path.exists(path):
+
+        dists = None
+        if path and os.path.exists(path):
+            try:
+                with open(path) as f:
+                    dists = json.load(f)
+            except Exception:
+                dists = None
+
+        if dists is None:
+            # Fallback to embedded district dataset in needle/index.html
+            needle_index = os.path.join(script_dir, "needle", "index.html")
+            if not os.path.exists(needle_index):
+                needle_index = "/home/rann/src/website/mainwebsite/needle/index.html"
+            if os.path.exists(needle_index):
+                try:
+                    with open(needle_index, 'r', encoding='utf-8') as f:
+                        html = f.read()
+                    m1 = html.find('window.NEEDLE_DATA =')
+                    m2 = html.find(';\n', m1)
+                    if m1 != -1 and m2 != -1:
+                        ndata = json.loads(html[m1 + len('window.NEEDLE_DATA ='):m2].strip())
+                        dists = ndata.get('chambers', {}).get(chamber_key, {}).get('districts', {})
+                except Exception:
+                    dists = None
+
+        if not dists:
             if is_senate:
                 results[chamber_key] = {
                     'chamber': chamber_name,
@@ -1334,8 +1360,6 @@ def predict_legislative_seats(senate_data_path=None, house_data_path=None):
             continue
 
         try:
-            with open(path) as f:
-                dists = json.load(f)
 
             sigma_sys = 2.5
             points = 101

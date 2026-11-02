@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="grad_yes" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#991b1b"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" fill="#020617"/>
+  <circle cx="100" cy="100" r="88" fill="url(#grad_yes)" stroke="#ef4444" stroke-width="4"/>
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.3"/>
+  <path d="M60 102 L88 130 L145 72" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+  <rect x="45" y="150" width="110" height="24" rx="12" fill="#b91c1c"/>
+  <text x="100" y="166" font-family="system-ui, sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1">FOR (YES)</text>
+</svg>
