@@ -6,7 +6,7 @@
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Prioritization & Execution Control Dashboard | Rann Bar-On</title>
+  <title>Task Prioritization &amp; Execution Control Dashboard | Rann Bar-On</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -34,7 +34,7 @@
       padding: 24px 16px;
     }
 
-    .container { max-width: 1280px; margin: 0 auto; }
+    .container { max-width: 1200px; margin: 0 auto; }
     header {
       display: flex;
       justify-content: space-between;
@@ -66,37 +66,39 @@
       color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
-    .user-pill .online-dot { width: 8px; height: 8px; background: var(--accent-green); border-radius: 50%; box-shadow: 0 0 8px #22c55e; }
+    .user-pill .online-dot { width: 8px; height: 8px; background: var(--accent-green); border-radius: 50%; }
+
     .btn-logout {
       background: rgba(239, 68, 68, 0.15);
       border: 1px solid rgba(239, 68, 68, 0.35);
-      color: #fca5a5;
-      padding: 3px 9px;
-      border-radius: 12px;
-      font-size: 11px;
+      color: #f87171;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      transition: all 0.2s ease;
+      margin-left: 10px;
     }
     .btn-logout:hover {
-      background: rgba(239, 68, 68, 0.3);
+      background: #ef4444;
       color: #fff;
     }
 
     /* Grid & Cards */
-    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
     .stat-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 10px;
       padding: 16px 20px;
     }
-    .stat-card .label { font-size: 11.5px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }
+    .stat-card .label { font-size: 12px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }
     .stat-card .value { font-size: 26px; font-weight: 700; margin-top: 4px; }
 
     /* Table */
@@ -107,7 +109,7 @@
       overflow-x: auto;
       margin-bottom: 32px;
     }
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13.5px; }
     th {
       background: rgba(15, 23, 42, 0.8);
       color: var(--text-muted);
@@ -115,10 +117,10 @@
       padding: 12px 16px;
       border-bottom: 1px solid var(--card-border);
       text-transform: uppercase;
-      font-size: 11px;
+      font-size: 11.5px;
       letter-spacing: 0.5px;
     }
-    td { padding: 13px 16px; border-bottom: 1px solid rgba(51, 65, 85, 0.5); vertical-align: middle; }
+    td { padding: 14px 16px; border-bottom: 1px solid rgba(51, 65, 85, 0.5); vertical-align: middle; }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255, 255, 255, 0.02); }
 
@@ -127,36 +129,21 @@
       padding: 3px 8px;
       border-radius: 6px;
       font-weight: 700;
-      font-size: 11.5px;
+      font-size: 12px;
       text-align: center;
-      white-space: nowrap;
     }
     .pri-10 { background: #dc2626; color: #fff; }
     .pri-8-9 { background: #ea580c; color: #fff; }
     .pri-5-7 { background: #d97706; color: #fff; }
     .pri-1-4 { background: #2563eb; color: #fff; }
 
-    .tag-badge {
-      font-size: 10px;
-      padding: 1.5px 6px;
-      border-radius: 4px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.3px;
-      margin-right: 6px;
-    }
-    .tag-elections { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
-    .tag-system { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
-    .tag-teaching { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
-    .tag-research { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
-
-    select.model-select {
+    select.model-select, select.priority-select {
       background: #0f172a;
       border: 1px solid var(--card-border);
       color: #fff;
-      padding: 5px 8px;
+      padding: 6px 10px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 12.5px;
       cursor: pointer;
     }
     select:focus { outline: none; border-color: var(--accent-cyan); }
@@ -164,12 +151,12 @@
     /* Progress bar */
     .progress-bar-container {
       width: 100%;
-      min-width: 110px;
+      min-width: 120px;
       background: #0f172a;
-      height: 7px;
+      height: 8px;
       border-radius: 4px;
       overflow: hidden;
-      margin-top: 5px;
+      margin-top: 6px;
     }
     .progress-bar-fill {
       height: 100%;
@@ -211,6 +198,7 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      transition: background 0.2s ease;
     }
     .btn-submit:hover { background: #0066c0; }
     .security-notice {
@@ -223,123 +211,158 @@
       color: #fbbf24;
     }
 
-    /* Auth Modal Overlay */
-    #authOverlay {
+    /* Interactive Authentication & Security Lock Overlay */
+    .auth-overlay {
       position: fixed;
       inset: 0;
-      z-index: 99999;
       background: rgba(15, 23, 42, 0.94);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 99999;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
-      transition: opacity 0.25s ease;
+      padding: 16px;
     }
-    .auth-card {
+    .auth-modal {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 32px 28px;
+      max-width: 440px;
       width: 100%;
-      max-width: 460px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.15);
+      animation: modalFadeIn 0.3s ease-out;
     }
-    .auth-header { text-align: center; margin-bottom: 24px; }
-    .auth-icon {
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .auth-badge-icon {
       width: 56px;
       height: 56px;
-      margin: 0 auto 16px;
-      border-radius: 14px;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 50%;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
       display: flex;
       align-items: center;
       justify-content: center;
+      margin: 0 auto 16px auto;
       font-size: 24px;
       color: var(--accent-cyan);
     }
-    .auth-header h2 { font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 6px; }
-    .auth-header p { font-size: 13px; color: var(--text-muted); line-height: 1.45; }
-    .auth-alert {
-      padding: 10px 14px;
-      border-radius: 8px;
-      font-size: 12px;
-      margin-bottom: 16px;
-      display: none;
+    .auth-modal h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
     }
-    .auth-alert.error { background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; }
-    .auth-alert.success { background: rgba(34, 197, 94, 0.15); border: 1px solid rgba(34, 197, 94, 0.3); color: #86efac; }
+    .auth-subtitle {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+    .auth-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+    .pill-amber {
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+    }
+    .pill-red {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+    .auth-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
   </style>
 </head>
 <body>
 
-<!-- Interactive Admin Authentication & Account Creation Modal -->
-<div id="authOverlay">
-  <div class="auth-card">
-    
-    <!-- View 1: Create Admin Account (Default when no account in local storage) -->
-    <div id="createAdminView">
-      <div class="auth-header">
-        <div class="auth-icon"><i class="fa-solid fa-user-shield"></i></div>
-        <h2>Initialize Master Admin Account</h2>
-        <p>No master administrative credentials detected. Please configure your administrator account to unlock this control dashboard.</p>
+<!-- Interactive Authentication & Security Lock Overlay -->
+<div id="authOverlay" class="auth-overlay">
+  <div class="auth-modal">
+    <div class="auth-badge-icon">
+      <i class="fa-solid fa-shield-halved"></i>
+    </div>
+    <h2>Executive Control Center</h2>
+    <div class="auth-subtitle">Restricted Access | Duke University &amp; Research Operations</div>
+
+    <!-- View A: Initialize Master Admin Account (Shown when no admin in localStorage) -->
+    <div id="initAdminView" style="display: none;">
+      <div class="auth-status-pill pill-amber">
+        <i class="fa-solid fa-key"></i> Admin Setup Required
       </div>
-
-      <div id="setupErrorMsg" class="auth-alert error"></div>
-
-      <form id="createAdminForm" onsubmit="handleCreateAdmin(event)" style="display: flex; flex-direction: column; gap: 14px;">
-        <div>
-          <label style="display:block; font-size: 11.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;">Admin Username</label>
-          <input type="text" id="setupUsername" value="rann" required style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 9px 12px; border-radius: 8px; font-size: 14px;">
+      <p class="auth-desc">No master administrator account found. Initialize your master admin credentials below to secure this control center.</p>
+      
+      <form id="initAdminForm" onsubmit="handleInitAdmin(event)">
+        <div class="form-group" style="text-align: left; margin-bottom: 12px;">
+          <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Admin Username</label>
+          <input type="text" id="initUsername" value="rann" required style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
         </div>
-        <div>
-          <label style="display:block; font-size: 11.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;">Administrator Email</label>
-          <input type="email" id="setupEmail" value="rann@rannbar-on.com" required style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 9px 12px; border-radius: 8px; font-size: 14px;">
+        <div class="form-group" style="text-align: left; margin-bottom: 12px;">
+          <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Admin Email</label>
+          <input type="email" id="initEmail" value="rann@rannbar-on.com" required style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
         </div>
-        <div>
-          <label style="display:block; font-size: 11.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;">Master Passphrase</label>
-          <input type="password" id="setupPassword" placeholder="Create master administrative passphrase" required style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 9px 12px; border-radius: 8px; font-size: 14px;">
+        <div class="form-group" style="text-align: left; margin-bottom: 12px;">
+          <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Master Password</label>
+          <input type="password" id="initPassword" placeholder="Create master password (min 8 chars)" required minlength="8" style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
         </div>
-        <div>
-          <label style="display:block; font-size: 11.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;">Confirm Passphrase</label>
-          <input type="password" id="setupConfirmPassword" placeholder="Re-enter master passphrase" required style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 9px 12px; border-radius: 8px; font-size: 14px;">
+        <div class="form-group" style="text-align: left; margin-bottom: 16px;">
+          <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Confirm Password</label>
+          <input type="password" id="initPasswordConfirm" placeholder="Confirm master password" required minlength="8" style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
         </div>
-        <button type="submit" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; border: none; padding: 11px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 6px; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-          <i class="fa-solid fa-key"></i> Create Admin Account & Authenticate
+        <div id="initError" style="display: none; margin-bottom: 12px; padding: 8px 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 6px; font-size: 12px; color: #fca5a5;"></div>
+        <button type="submit" class="btn-submit" style="width: 100%; justify-content: center;">
+          <i class="fa-solid fa-user-shield"></i> Initialize Master Admin Account
         </button>
       </form>
     </div>
 
-    <!-- View 2: Log In Existing Admin Account -->
-    <div id="loginAdminView" style="display: none;">
-      <div class="auth-header">
-        <div class="auth-icon" style="color: var(--accent-green); border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.1);"><i class="fa-solid fa-lock"></i></div>
-        <h2>Admin Authentication Required</h2>
-        <p>Restricted control dashboard. Enter your master administrator passphrase to unlock session.</p>
+    <!-- View B: Login Form (Shown when admin exists in localStorage) -->
+    <div id="loginView" style="display: none;">
+      <div class="auth-status-pill pill-red">
+        <i class="fa-solid fa-lock"></i> Authentication Required
       </div>
+      <p class="auth-desc">Enter your master administrator credentials to unlock the task orchestration dashboard.</p>
 
-      <div id="loginErrorMsg" class="auth-alert error"></div>
-
-      <form id="loginAdminForm" onsubmit="handleLoginAdmin(event)" style="display: flex; flex-direction: column; gap: 14px;">
-        <div style="background: #0f172a; border: 1px solid #334155; padding: 10px 14px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-          <span style="font-size: 12px; color: var(--text-muted);">Admin User</span>
-          <span id="displayAdminUsername" style="font-size: 13px; font-weight: 600; color: #fff;">rann</span>
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group" style="text-align: left; margin-bottom: 12px;">
+          <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Admin Username</label>
+          <input type="text" id="loginUsername" value="rann" required style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
         </div>
-        <div>
-          <label style="display:block; font-size: 11.5px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;">Master Passphrase</label>
-          <input type="password" id="loginPassword" placeholder="Enter administrative passphrase" required style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 10px 12px; border-radius: 8px; font-size: 14px;">
+        <div class="form-group" style="text-align: left; margin-bottom: 16px;">
+          <label style="font-size: 11.5px; color: var(--text-muted); text-transform: uppercase;">Master Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter master password..." required style="width: 100%; background: #0f172a; border: 1px solid var(--card-border); color: #fff; padding: 8px 12px; border-radius: 6px;">
         </div>
-        <button type="submit" style="background: linear-gradient(135deg, #0284c7, #2563eb); color: #fff; border: none; padding: 11px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px;">
-          <i class="fa-solid fa-unlock"></i> Authenticate & Unlock Dashboard
+        <div id="loginError" style="display: none; margin-bottom: 12px; padding: 8px 12px; background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; border-radius: 6px; font-size: 12px; color: #fca5a5;"></div>
+        <button type="submit" class="btn-submit" style="width: 100%; justify-content: center;">
+          <i class="fa-solid fa-lock-open"></i> Unlock Control Dashboard
         </button>
-        <div style="text-align: center; margin-top: 10px;">
-          <a href="#" onclick="showResetAdminModal(event)" style="font-size: 11.5px; color: var(--text-muted); text-decoration: none;">Reset / Re-create Admin Account &rarr;</a>
-        </div>
       </form>
-    </div>
 
+      <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(51, 65, 85, 0.5); font-size: 12px;">
+        <a href="#" onclick="switchAdminReset(event)" style="color: var(--text-muted); text-decoration: none;">
+          <i class="fa-solid fa-rotate-left"></i> Reset Admin Credentials
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -347,17 +370,18 @@
   <header>
     <div class="brand">
       <i class="fa-solid fa-layer-group" style="color: var(--accent-cyan); font-size: 22px;"></i>
-      <h1>Task Prioritization & Execution Control</h1>
+      <h1>Task Prioritization &amp; Execution Control</h1>
       <span class="badge-private"><i class="fa-solid fa-lock"></i> Restricted Access</span>
     </div>
-    <div class="user-pill" id="userPill">
+    <div class="user-pill">
       <span class="online-dot"></span>
-      <span>Authenticated: <strong id="headerUsername">rann</strong> (Admin)</span>
-      <button onclick="logOutAdmin()" class="btn-logout" title="Log Out Session"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+      <span id="authenticatedUserLabel">Authenticated as: <strong>rann</strong> (Admin)</span>
+      <button onclick="logout()" class="btn-logout" title="Lock Dashboard &amp; End Session">
+        <i class="fa-solid fa-right-from-bracket"></i> Log Out
+      </button>
     </div>
   </header>
 
-  <!-- Stat Cards -->
   <div class="controls-grid">
     <div class="stat-card">
       <div class="label">Total Managed Tasks</div>
@@ -373,35 +397,33 @@
     </div>
     <div class="stat-card">
       <div class="label">Primary Execution Engine</div>
-      <div class="value" style="font-size: 19px; color: var(--accent-cyan);">Gemini 4 Argon / Flash High</div>
+      <div class="value" style="font-size: 18px; color: var(--accent-cyan);">Gemini 4 Argon / Gemini 3.8 Flash (High)</div>
     </div>
     <div class="stat-card">
-      <div class="label">Security & MFA Mode</div>
-      <div class="value" style="font-size: 17px; color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i> 2FA Enforced</div>
+      <div class="label">Security &amp; MFA Mode</div>
+      <div class="value" style="font-size: 19px; color: var(--accent-green);"><i class="fa-solid fa-shield-halved"></i> 2FA Enforced</div>
     </div>
   </div>
 
-  <!-- Table Container (All 17 Active, Scheduled, and In-Flight Tasks) -->
   <div class="table-container">
     <table>
       <thead>
         <tr>
           <th style="width: 50px;">ID</th>
-          <th style="width: 120px;">Priority</th>
-          <th>Task Title, Category & Operational Scope</th>
-          <th style="width: 210px;">Assigned Model Tier</th>
-          <th style="width: 150px;">Progress</th>
-          <th style="width: 130px;">Status</th>
+          <th style="width: 120px;">Priority (1-10)</th>
+          <th>Task Title &amp; Scope</th>
+          <th style="width: 220px;">Assigned Model Tier</th>
+          <th style="width: 180px;">Estimated Progress</th>
+          <th style="width: 140px;">Status</th>
         </tr>
       </thead>
       <tbody>
-        <!-- Task 1 -->
         <tr>
           <td><strong>#1</strong></td>
-          <td><span class="priority-badge pri-10">P10 (Drop All)</span></td>
+          <td><span class="priority-badge pri-10">P10 (Immediate)</span></td>
           <td>
-            <div><span class="tag-badge tag-elections">Elections</span><strong>Election Night 95% Confidence Race Calling Engine</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Real-time Decision Desk automated calls with Twitter, Threads, and Instagram alerts.</div>
+            <strong>Election Night 95% Confidence Race Calling Engine</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Real-time Decision Desk automated calls with Twitter, Threads, and Instagram alerts.</div>
           </td>
           <td>
             <select class="model-select">
@@ -411,19 +433,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">100%</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Ready</span></td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Ready / Standby</span></td>
         </tr>
 
-        <!-- Task 2 -->
         <tr>
           <td><strong>#2</strong></td>
           <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
           <td>
-            <div><span class="tag-badge tag-system">System</span><strong>Machine Lid-Close & Suspend Inhibit Daemon</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Battery-aware systemd-logind and GNOME session inhibitor daemon (PID 773933 / task-8935) active while battery &ge; 20%.</div>
+            <strong>Machine Lid-Close &amp; Suspend Inhibit Daemon</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Battery-aware inhibitor daemon preventing laptop sleep while on battery &gt;= 20% (PID 773933 / task-8935).</div>
           </td>
           <td>
             <select class="model-select">
@@ -433,19 +456,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">Active</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Active</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 85%; background: #38bdf8;"></div></div>
           </td>
           <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-spinner fa-spin"></i> Running</span></td>
         </tr>
 
-        <!-- Task 3 -->
         <tr>
           <td><strong>#3</strong></td>
           <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
           <td>
-            <div><span class="tag-badge tag-system">Accounts</span><strong>Locate UPS Account Username & Email in Gmail</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Locate user's UPS account confirmation and registration records across Gmail archives and browser profiles.</div>
+            <strong>Locate UPS Account Username &amp; Email in Gmail</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Locate user's UPS account confirmation and registration records across Gmail archives and browser profiles.</div>
           </td>
           <td>
             <select class="model-select">
@@ -455,19 +479,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">45%</div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 45%; background: #f59e0b;"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>40%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 40%; background: #38bdf8;"></div></div>
           </td>
           <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-magnifying-glass"></i> Searching</span></td>
         </tr>
 
-        <!-- Task 4 -->
         <tr>
           <td><strong>#4</strong></td>
           <td><span class="priority-badge pri-8-9">P9 (Urgent)</span></td>
           <td>
-            <div><span class="tag-badge tag-teaching">Math 105L</span><strong>Math 105L Day 11-1 Completed Sheet & Video Review Loop</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Draft 3-page completed lecture sheet with circular markers, proven 2/&radic;13&lt;2, and 5-link prerequisite portals dispatched to rann@rannbar-on.com awaiting approval.</div>
+            <strong>Math 105L Day 11-1 Completed Sheet &amp; Video Review Loop</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Draft 3-page completed lecture sheet with circular markers, proven 2/&radic;13&lt;2, and 5-link prerequisite portals dispatched to rann@rannbar-on.com awaiting approval.</div>
           </td>
           <td>
             <select class="model-select">
@@ -477,19 +502,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">90%</div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 90%; background: #38bdf8;"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>90%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 90%; background: #f59e0b;"></div></div>
           </td>
-          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-envelope"></i> Review Pending</span></td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Review Pending</span></td>
         </tr>
 
-        <!-- Task 5 -->
         <tr>
           <td><strong>#5</strong></td>
           <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
           <td>
-            <div><span class="tag-badge tag-teaching">Panopto</span><strong>Panopto Video Auto-Editing & Executive Summary Pipeline</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Download classroom recording (Day 11-1 ID 8468225d...), detect board lecturing vs walking student consultation, and generate executive summaries.</div>
+            <strong>Panopto Video Auto-Editing &amp; Executive Summary Pipeline</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Download classroom recording (Day 11-1 ID 8468225d...), detect board lecturing vs walking student consultation, and generate executive summaries.</div>
           </td>
           <td>
             <select class="model-select">
@@ -499,19 +525,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">50%</div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 50%; background: #f59e0b;"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>50%</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 50%; background: #38bdf8;"></div></div>
           </td>
-          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
+          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
         </tr>
 
-        <!-- Task 6 -->
         <tr>
           <td><strong>#6</strong></td>
           <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
           <td>
-            <div><span class="tag-badge tag-elections">Elections</span><strong>Constitutional Amendments Forecast Model & Dials</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Monte Carlo simulation kernel, 10-slide deck, and 5-page report dispatched to subscribers; interactive dials active on dashboard.</div>
+            <strong>Constitutional Amendments Forecast Model &amp; Dials</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Monte Carlo simulation kernel, 10-slide deck, and 5-page report dispatched to subscribers; interactive dials active on dashboard.</div>
           </td>
           <td>
             <select class="model-select">
@@ -521,19 +548,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">100%</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Live</span></td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Live</span></td>
         </tr>
 
-        <!-- Task 7 -->
         <tr>
           <td><strong>#7</strong></td>
           <td><span class="priority-badge pri-8-9">P8 (High)</span></td>
           <td>
-            <div><span class="tag-badge tag-system">Hardware</span><strong>Cauchy Math CUPS Printer Suite & CLI</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Probed Rm 102 Ricoh MP 9003 Copier; created cauchy_print.sh with simplex default, duplex flag, and top-left staple finisher option.</div>
+            <strong>Cauchy Math CUPS Printer Suite &amp; CLI</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Probed Rm 102 Ricoh MP 9003 Copier; created cauchy_print.sh with simplex default, duplex flag, and top-left staple finisher option.</div>
           </td>
           <td>
             <select class="model-select">
@@ -543,19 +571,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">100%</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
           <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Done</span></td>
         </tr>
 
-        <!-- Task 8 -->
         <tr>
           <td><strong>#8</strong></td>
           <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
           <td>
-            <div><span class="tag-badge tag-teaching">Gradescope</span><strong>Worksheet 10-1 & 10-2 Extension Summary Dispatch</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Scheduled daily cron (task-9347 at 20:00) dispatching 8:00 PM extension summary to rb6@duke.edu and checking for approval replies.</div>
+            <strong>Worksheet 10-1 &amp; 10-2 Extension Summary Dispatch</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Scheduled daily cron (task-9347 at 20:00) dispatching 8:00 PM extension summary to rb6@duke.edu and checking for approval replies.</div>
           </td>
           <td>
             <select class="model-select">
@@ -565,19 +594,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">Scheduled (8:00 PM)</div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 70%; background: #38bdf8;"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Scheduled (8:00 PM)</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 70%; background: #d97706;"></div></div>
           </td>
-          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
         </tr>
 
-        <!-- Task 9 -->
         <tr>
           <td><strong>#9</strong></td>
           <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
           <td>
-            <div><span class="tag-badge tag-teaching">Roster</span><strong>Isaiah Nwoko Re-enrollment & Dynamic Quiz Windows</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Daily midnight cron (task-9530) dynamically scheduling missed quiz windows 30 mins before MWF classes and TuTh office hours until completed.</div>
+            <strong>Isaiah Nwoko Re-enrollment &amp; Dynamic Quiz Windows</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Daily midnight cron (task-9530) dynamically scheduling missed quiz windows 30 mins before MWF classes and TuTh office hours until completed.</div>
           </td>
           <td>
             <select class="model-select">
@@ -587,19 +617,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">Active</div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 80%; background: #22c55e;"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Active</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 60%; background: #38bdf8;"></div></div>
           </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-calendar-check"></i> Active</span></td>
+          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-rotate"></i> Active</span></td>
         </tr>
 
-        <!-- Task 10 -->
         <tr>
           <td><strong>#10</strong></td>
           <td><span class="priority-badge pri-5-7">P7 (Normal)</span></td>
           <td>
-            <div><span class="tag-badge tag-teaching">Operations</span><strong>Friday Office Hours Shift & Schedule Update</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">One-week office hours adjustment moved from Thursday to Friday 2:00–3:30 PM; public calendar and faculty pages updated without sending email.</div>
+            <strong>Friday Office Hours Shift &amp; Schedule Update</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">One-week office hours adjustment moved from Thursday to Friday 2:00–3:30 PM; public calendar and faculty pages updated without sending email.</div>
           </td>
           <td>
             <select class="model-select">
@@ -609,19 +640,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">100%</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
           <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Updated</span></td>
         </tr>
 
-        <!-- Task 11 -->
         <tr>
           <td><strong>#11</strong></td>
           <td><span class="priority-badge pri-5-7">P6 (Normal)</span></td>
           <td>
-            <div><span class="tag-badge tag-research">AI Models</span><strong>24-Hour Three-Model Comparative Evaluation Protocol</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Automated comparative tracking of Flash Medium, Flash High, and Argon across tasks in model_comparison_24h_log.json with synthesis report to rann@rannbar-on.com.</div>
+            <strong>24-Hour Three-Model Comparative Evaluation Protocol</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Automated comparative tracking of Flash Medium, Flash High, and Argon across tasks in model_comparison_24h_log.json with synthesis report to rann@rannbar-on.com.</div>
           </td>
           <td>
             <select class="model-select">
@@ -631,19 +663,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">85%</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>85%</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 85%; background: #38bdf8;"></div></div>
           </td>
           <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-chart-line"></i> Logging</span></td>
         </tr>
 
-        <!-- Task 12 -->
         <tr>
           <td><strong>#12</strong></td>
           <td><span class="priority-badge pri-5-7">P6 (Normal)</span></td>
           <td>
-            <div><span class="tag-badge tag-teaching">Archive</span><strong>Panopto Completed Lecture Sheets Archive (All 27 Past Assignments)</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Updated 105Lsummaries.html with direct original PDF links and dual Gradescope portals (Sub 1 & Resub) for all 27 past assignments.</div>
+            <strong>Panopto Completed Lecture Sheets Archive</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Updated 105Lsummaries.html with direct original PDF links and dual Gradescope portals (Sub 1 &amp; Resub) for all 27 past assignments.</div>
           </td>
           <td>
             <select class="model-select">
@@ -653,19 +686,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">100%</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Live</span></td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Live</span></td>
         </tr>
 
-        <!-- Task 13 -->
         <tr>
           <td><strong>#13</strong></td>
-          <td><span class="priority-badge pri-5-7">P5 (Normal)</span></td>
+          <td><span class="priority-badge pri-5-7">P5 (Low)</span></td>
           <td>
-            <div><span class="tag-badge tag-system">Maintenance</span><strong>Daily Midnight Workspace Maintenance & Auto-Push</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Daily midnight cron (task-9319 at 00:00) cleaning workspace, reorganizing outputs, git pushing all source to GitHub, and emailing maintenance report.</div>
+            <strong>Daily Midnight Workspace Maintenance &amp; Auto-Push</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Daily midnight cron (task-9319 at 00:00) cleaning workspace, reorganizing outputs, git pushing all source to GitHub, and emailing maintenance report.</div>
           </td>
           <td>
             <select class="model-select">
@@ -675,19 +709,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">Scheduled (00:00)</div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 60%; background: #38bdf8;"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Scheduled (00:00)</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 75%; background: #d97706;"></div></div>
           </td>
-          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
         </tr>
 
-        <!-- Task 14 -->
         <tr>
           <td><strong>#14</strong></td>
-          <td><span class="priority-badge pri-5-7">P5 (Normal)</span></td>
+          <td><span class="priority-badge pri-5-7">P5 (Low)</span></td>
           <td>
-            <div><span class="tag-badge tag-teaching">Canvas</span><strong>Weekly Canvas Incapacitation & Attendance Audit</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Weekly automated cron (0 19 * * 0) processing Dean's incapacitation notices, updating roll call, and dispatching audit report via canvas_attendance_reporter.py.</div>
+            <strong>Weekly Canvas Incapacitation &amp; Attendance Audit</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Weekly automated cron (0 19 * * 0) processing Dean's incapacitation notices, updating roll call, and dispatching audit report via canvas_attendance_reporter.py.</div>
           </td>
           <td>
             <select class="model-select">
@@ -697,19 +732,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">Scheduled (Sun 19:00)</div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 55%; background: #38bdf8;"></div></div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>Scheduled (Sun 19:00)</span>
+            </div>
+            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 70%; background: #d97706;"></div></div>
           </td>
-          <td><span style="color: var(--accent-cyan); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
+          <td><span style="color: var(--accent-amber); font-weight: 600;"><i class="fa-solid fa-clock"></i> Scheduled</span></td>
         </tr>
 
-        <!-- Task 15 -->
         <tr>
           <td><strong>#15</strong></td>
-          <td><span class="priority-badge pri-5-7">P5 (Normal)</span></td>
+          <td><span class="priority-badge pri-5-7">P5 (Low)</span></td>
           <td>
-            <div><span class="tag-badge tag-elections">Elections</span><strong>State Navigate & NC Needle Benchmark Synchronization</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Multi-mode precinct calibration (Absentee Mail, One-Stop Early Voting, Election Day In-Person) calibrated across 2,658 NC precincts and legislative seats.</div>
+            <strong>State Navigate &amp; NC Needle Benchmark Synchronization</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Multi-mode precinct calibration (Absentee Mail, One-Stop Early Voting, Election Day In-Person) calibrated across 2,658 NC precincts and legislative seats.</div>
           </td>
           <td>
             <select class="model-select">
@@ -719,19 +755,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">100%</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
           <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-check"></i> Synced</span></td>
         </tr>
 
-        <!-- Task 16 -->
         <tr>
           <td><strong>#16</strong></td>
           <td><span class="priority-badge pri-1-4">P4 (Standby)</span></td>
           <td>
-            <div><span class="tag-badge tag-system">CI/CD</span><strong>Daily Early Voting Scheduled Ingestion Shutdown</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Early voting concluded Nov 1, 2026; commented out 6x morning scheduled crons in .github/workflows/daily_update.yml on main and beta branches.</div>
+            <strong>Daily Early Voting Scheduled Ingestion Shutdown</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Early voting concluded Nov 1, 2026; commented out 6x morning scheduled crons in .github/workflows/daily_update.yml on main and beta branches.</div>
           </td>
           <td>
             <select class="model-select">
@@ -741,19 +778,20 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">100%</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
-          <td><span style="color: var(--text-muted); font-weight: 600;"><i class="fa-solid fa-ban"></i> Concluded</span></td>
+          <td><span style="color: var(--text-muted); font-weight: 600;"><i class="fa-solid fa-circle-stop"></i> Concluded</span></td>
         </tr>
 
-        <!-- Task 17 -->
         <tr>
           <td><strong>#17</strong></td>
           <td><span class="priority-badge pri-1-4">P4 (Standby)</span></td>
           <td>
-            <div><span class="tag-badge tag-system">Security</span><strong>Control Dashboard Zero-Search Relocation</strong></div>
-            <div style="font-size: 12px; color: var(--text-muted); margin-top: 3px;">Relocated execution control center to rannbar-on.com/dashboard with multi-crawler robots shielding, test suite verification, and legacy route redirection.</div>
+            <strong>Control Dashboard Zero-Search Relocation</strong>
+            <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Relocated execution control center to rannbar-on.com/dashboard with multi-crawler robots shielding, test suite verification, and legacy route redirection.</div>
           </td>
           <td>
             <select class="model-select">
@@ -763,16 +801,17 @@
             </select>
           </td>
           <td>
-            <div style="font-size: 11px; font-weight: 600;">100%</div>
+            <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
+              <span>100%</span>
+            </div>
             <div class="progress-bar-container"><div class="progress-bar-fill" style="width: 100%;"></div></div>
           </td>
-          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-shield-halved"></i> Deployed</span></td>
+          <td><span style="color: var(--accent-green); font-weight: 600;"><i class="fa-solid fa-rocket"></i> Deployed</span></td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Form Card -->
   <div class="form-card">
     <h2><i class="fa-solid fa-plus-circle" style="color: var(--accent-cyan);"></i> Initiate New Automated Task</h2>
     <div class="form-grid">
@@ -795,8 +834,8 @@
       <div class="form-group">
         <label>Preferred Model</label>
         <select>
-          <option selected>Gemini 4 Argon</option>
-          <option>Gemini 3.8 Flash (High)</option>
+          <option>Gemini 4 Argon</option>
+          <option selected>Gemini 3.8 Flash (High)</option>
           <option>Gemini 3.8 Flash (Medium)</option>
         </select>
       </div>
@@ -806,178 +845,175 @@
       </div>
     </div>
     <div class="form-group" style="margin-bottom: 16px;">
-      <label>Detailed Task Specifications & Scope</label>
+      <label>Detailed Task Specifications &amp; Scope</label>
       <textarea rows="3" placeholder="Describe objectives, verification criteria, and target recipients..."></textarea>
     </div>
     <button class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Submit Task for Execution</button>
 
     <div class="security-notice">
-      <i class="fa-solid fa-shield-halved"></i> <strong>Security & Approval Protocol:</strong> Tasks initiated by any non-admin account trigger an instant email dispatch to <code>rann@rannbar-on.com</code> and remain strictly locked in <code>pending_approval</code> status until personally authorized.
+      <i class="fa-solid fa-shield-halved"></i> <strong>Security &amp; Approval Protocol:</strong> Tasks initiated by any non-admin account trigger an instant email dispatch to <code>rann@rannbar-on.com</code> and remain strictly locked in <code>pending_approval</code> status until personally authorized.
     </div>
   </div>
 </div>
 
 <script>
-  // Cryptographic Helper: SHA-256
-  async function computeHash(str) {
-    const enc = new TextEncoder();
-    const data = enc.encode(str);
-    const hashBuf = await window.crypto.subtle.digest('SHA-256', data);
-    const hashArr = Array.from(new Uint8Array(hashBuf));
-    return hashArr.map(b => b.toString(16).padStart(2, '0')).join('');
+  // Web Crypto Utilities for Salted SHA-256 Hashing
+  async function computeHash(saltHex, password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(saltHex + ":" + password);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  function getStoredAdmin() {
-    try {
-      const data = localStorage.getItem('dashboard_admin_account');
-      return data ? JSON.parse(data) : null;
-    } catch (e) {
-      return null;
-    }
+  function generateSalt() {
+    const bytes = new Uint8Array(16);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  function getActiveSession() {
-    try {
-      const sess = sessionStorage.getItem('dashboard_auth_session');
-      return sess ? JSON.parse(sess) : null;
-    } catch (e) {
-      return null;
-    }
-  }
+  // Auth State Evaluator
+  function evaluateAuth() {
+    const storedAdmin = localStorage.getItem('task_dashboard_admin');
+    const activeSession = sessionStorage.getItem('task_dashboard_session');
 
-  function initAuthState() {
-    const admin = getStoredAdmin();
-    const session = getActiveSession();
-
-    if (session && session.authenticated && admin && session.username === admin.username) {
-      // User is already authenticated in this browser session
-      unlockDashboardUI(admin.username);
-    } else {
-      // User is logged out
-      lockDashboardUI();
-    }
-  }
-
-  function lockDashboardUI() {
     const overlay = document.getElementById('authOverlay');
-    const admin = getStoredAdmin();
-    const createView = document.getElementById('createAdminView');
-    const loginView = document.getElementById('loginAdminView');
+    const initView = document.getElementById('initAdminView');
+    const loginView = document.getElementById('loginView');
 
-    overlay.style.display = 'flex';
-    overlay.style.opacity = '1';
-
-    if (!admin) {
-      // No admin account created yet -> Show Account Creation form
-      createView.style.display = 'block';
+    if (!storedAdmin) {
+      // Step 1: No admin exists -> show Admin Setup Form
+      overlay.style.display = 'flex';
+      initView.style.display = 'block';
       loginView.style.display = 'none';
-    } else {
-      // Admin account exists -> Show Log In form
-      createView.style.display = 'none';
+      document.body.style.overflow = 'hidden';
+    } else if (!activeSession) {
+      // Step 2: Admin exists but user is logged out -> show Login Form
+      overlay.style.display = 'flex';
+      initView.style.display = 'none';
       loginView.style.display = 'block';
-      document.getElementById('displayAdminUsername').textContent = admin.username;
-      const pwdInput = document.getElementById('loginPassword');
-      if (pwdInput) { pwdInput.value = ''; pwdInput.focus(); }
-    }
-  }
-
-  function unlockDashboardUI(username) {
-    const overlay = document.getElementById('authOverlay');
-    document.getElementById('headerUsername').textContent = username || 'Admin';
-    overlay.style.opacity = '0';
-    setTimeout(() => {
+      document.body.style.overflow = 'hidden';
+      try {
+        const adminData = JSON.parse(storedAdmin);
+        document.getElementById('loginUsername').value = adminData.username || 'rann';
+      } catch (e) {}
+    } else {
+      // Step 3: Authenticated session active -> reveal dashboard
       overlay.style.display = 'none';
-    }, 250);
+      document.body.style.overflow = '';
+      try {
+        const sessionData = JSON.parse(activeSession);
+        const userLabel = document.getElementById('authenticatedUserLabel');
+        if (userLabel) {
+          userLabel.innerHTML = `Authenticated as: <strong>${sessionData.username || 'rann'}</strong> (Admin)`;
+        }
+      } catch (e) {}
+    }
   }
 
-  async function handleCreateAdmin(e) {
-    e.preventDefault();
-    const errBox = document.getElementById('setupErrorMsg');
-    errBox.style.display = 'none';
+  // Handle Master Admin Initialization
+  async function handleInitAdmin(event) {
+    event.preventDefault();
+    const errEl = document.getElementById('initError');
+    errEl.style.display = 'none';
 
-    const username = document.getElementById('setupUsername').value.trim();
-    const email = document.getElementById('setupEmail').value.trim();
-    const p1 = document.getElementById('setupPassword').value;
-    const p2 = document.getElementById('setupConfirmPassword').value;
+    const username = document.getElementById('initUsername').value.trim();
+    const email = document.getElementById('initEmail').value.trim();
+    const pwd = document.getElementById('initPassword').value;
+    const pwdConfirm = document.getElementById('initPasswordConfirm').value;
 
-    if (!username || !email || !p1) {
-      showError(errBox, 'All fields are required.');
+    if (!username || !email || !pwd) {
+      errEl.textContent = 'Please fill out all required fields.';
+      errEl.style.display = 'block';
       return;
     }
-    if (p1 !== p2) {
-      showError(errBox, 'Passphrases do not match. Please re-enter.');
+    if (pwd !== pwdConfirm) {
+      errEl.textContent = 'Passwords do not match. Please re-enter.';
+      errEl.style.display = 'block';
       return;
     }
-    if (p1.length < 8) {
-      showError(errBox, 'Master passphrase must be at least 8 characters.');
+    if (pwd.length < 8) {
+      errEl.textContent = 'Master password must be at least 8 characters.';
+      errEl.style.display = 'block';
       return;
     }
 
-    // Generate cryptographic salt and hash
-    const saltBytes = new Uint8Array(16);
-    window.crypto.getRandomValues(saltBytes);
-    const salt = Array.from(saltBytes).map(b => b.toString(16).padStart(2, '0')).join('');
-    const hash = await computeHash(salt + p1);
+    const salt = generateSalt();
+    const hash = await computeHash(salt, pwd);
 
     const adminRecord = {
       username: username,
       email: email,
       salt: salt,
       hash: hash,
-      created_at: new Date().toISOString()
+      createdAt: new Date().toISOString()
     };
 
-    localStorage.setItem('dashboard_admin_account', JSON.stringify(adminRecord));
-    sessionStorage.setItem('dashboard_auth_session', JSON.stringify({ username: username, authenticated: true }));
+    localStorage.setItem('task_dashboard_admin', JSON.stringify(adminRecord));
+    
+    // Create active session
+    sessionStorage.setItem('task_dashboard_session', JSON.stringify({
+      username: username,
+      email: email,
+      loginTime: new Date().toISOString()
+    }));
 
-    unlockDashboardUI(username);
+    evaluateAuth();
   }
 
-  async function handleLoginAdmin(e) {
-    e.preventDefault();
-    const errBox = document.getElementById('loginErrorMsg');
-    errBox.style.display = 'none';
+  // Handle Login
+  async function handleLogin(event) {
+    event.preventDefault();
+    const errEl = document.getElementById('loginError');
+    errEl.style.display = 'none';
 
-    const admin = getStoredAdmin();
-    if (!admin) {
-      lockDashboardUI();
+    const username = document.getElementById('loginUsername').value.trim();
+    const pwd = document.getElementById('loginPassword').value;
+
+    const storedAdmin = localStorage.getItem('task_dashboard_admin');
+    if (!storedAdmin) {
+      evaluateAuth();
       return;
     }
 
-    const p = document.getElementById('loginPassword').value;
-    const calculatedHash = await computeHash(admin.salt + p);
+    try {
+      const adminData = JSON.parse(storedAdmin);
+      const computedHash = await computeHash(adminData.salt, pwd);
 
-    if (calculatedHash === admin.hash) {
-      sessionStorage.setItem('dashboard_auth_session', JSON.stringify({ username: admin.username, authenticated: true }));
-      unlockDashboardUI(admin.username);
-    } else {
-      showError(errBox, 'Incorrect master passphrase. Please try again.');
-      const pwdInput = document.getElementById('loginPassword');
-      if (pwdInput) { pwdInput.select(); }
+      if (computedHash === adminData.hash && (username.toLowerCase() === adminData.username.toLowerCase())) {
+        sessionStorage.setItem('task_dashboard_session', JSON.stringify({
+          username: adminData.username,
+          email: adminData.email,
+          loginTime: new Date().toISOString()
+        }));
+        evaluateAuth();
+      } else {
+        errEl.textContent = 'Invalid administrator credentials. Access denied.';
+        errEl.style.display = 'block';
+      }
+    } catch (e) {
+      errEl.textContent = 'Authentication parsing error. Please reset credentials.';
+      errEl.style.display = 'block';
     }
   }
 
-  function logOutAdmin() {
-    sessionStorage.removeItem('dashboard_auth_session');
-    lockDashboardUI();
+  // Handle Logout
+  function logout() {
+    sessionStorage.removeItem('task_dashboard_session');
+    evaluateAuth();
   }
 
-  function showResetAdminModal(e) {
-    if (e) e.preventDefault();
-    if (confirm('Are you sure you want to re-create the master admin account on this device?')) {
-      localStorage.removeItem('dashboard_admin_account');
-      sessionStorage.removeItem('dashboard_auth_session');
-      lockDashboardUI();
+  // Allow resetting admin credentials
+  function switchAdminReset(event) {
+    if (event) event.preventDefault();
+    if (confirm('Reset administrator credentials and re-initialize master account?')) {
+      localStorage.removeItem('task_dashboard_admin');
+      sessionStorage.removeItem('task_dashboard_session');
+      evaluateAuth();
     }
   }
 
-  function showError(el, msg) {
-    el.textContent = msg;
-    el.style.display = 'block';
-  }
-
-  // Initialize on page load
-  window.addEventListener('DOMContentLoaded', initAuthState);
+  window.addEventListener('DOMContentLoaded', evaluateAuth);
 </script>
 
 </body>
