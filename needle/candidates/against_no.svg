@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="grad_no" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  <rect width="200" height="200" fill="#020617"/>
+  <circle cx="100" cy="100" r="88" fill="url(#grad_no)" stroke="#3b82f6" stroke-width="4"/>
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.3"/>
+  <path d="M68 68 L132 132 M132 68 L68 132" stroke="#ffffff" stroke-width="12" stroke-linecap="round" opacity="0.95"/>
+  <rect x="35" y="150" width="130" height="24" rx="12" fill="#1d4ed8"/>
+  <text x="100" y="166" font-family="system-ui, sans-serif" font-size="12" font-weight="900" fill="#ffffff" text-anchor="middle" letter-spacing="1">AGAINST (NO)</text>
+</svg>

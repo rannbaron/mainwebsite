@@ -701,6 +701,78 @@
               </table>
             </div>
           </div>
+
+          <!-- NC General Assembly: Chamber Balance of Power & 95% Confidence Intervals -->
+          <div id="fcLegislativeBlock" class="bg-gradient-to-r from-emerald-950/70 via-slate-900 to-teal-950/70 border border-emerald-700/60 rounded-xl p-3.5 space-y-2.5 text-xs font-mono shadow-lg">
+            <div class="flex items-center justify-between border-b border-emerald-800/60 pb-1.5 font-sans">
+              <span class="flex items-center gap-1.5 text-[11px] uppercase font-bold text-emerald-300 tracking-wider">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                NC General Assembly &bull; Chamber Control &amp; 95% CIs
+              </span>
+              <span class="text-[9px] font-mono bg-emerald-900/60 text-emerald-200 border border-emerald-600/60 px-2 py-0.5 rounded-full font-bold">
+                Poisson Binomial &bull; 10k MC
+              </span>
+            </div>
+
+            <!-- Dual Chamber Grid -->
+            <div class="grid grid-cols-2 gap-2.5 text-center font-sans">
+              <!-- NC House Card -->
+              <div class="bg-slate-950/80 border border-emerald-600/50 rounded-lg p-2.5 flex flex-col justify-between shadow-inner">
+                <div>
+                  <div class="text-[11px] uppercase font-bold text-emerald-300 flex items-center justify-center gap-1">
+                    <span>NC State House</span>
+                    <span class="text-[9px] text-slate-400 font-normal">(120 Seats)</span>
+                  </div>
+                  <div id="fcHouseSeatsVal" class="text-base lg:text-lg font-black font-mono text-white mt-1">
+                    54.2 <span class="text-xs font-normal text-blue-400">Dem</span> <span class="text-xs text-slate-500 font-normal">/</span> 65.8 <span class="text-xs font-normal text-red-400">Rep</span>
+                  </div>
+                </div>
+                
+                <!-- 95% CI Box -->
+                <div class="my-2 bg-slate-900 border border-amber-500/50 rounded-md p-1.5 shadow-sm">
+                  <div class="text-[9px] uppercase font-bold text-amber-300 tracking-wide">95% Confidence Interval</div>
+                  <div id="fcHouseCiVal" class="text-xs lg:text-sm font-black font-mono text-amber-200 my-0.5">[48 – 61] Dem Seats</div>
+                  <div class="text-[8px] text-slate-400 font-mono">Rep: [59 – 72] Seats</div>
+                </div>
+
+                <div id="fcHouseSuperVal" class="text-[9px] font-mono text-emerald-300 font-bold bg-emerald-950/80 border border-emerald-700/70 rounded px-1.5 py-1">
+                  96.2% Break Supermajority (&ge;49D)
+                </div>
+              </div>
+
+              <!-- NC Senate Card -->
+              <div class="bg-slate-950/80 border border-emerald-600/50 rounded-lg p-2.5 flex flex-col justify-between shadow-inner">
+                <div>
+                  <div class="text-[11px] uppercase font-bold text-emerald-300 flex items-center justify-center gap-1">
+                    <span>NC State Senate</span>
+                    <span class="text-[9px] text-slate-400 font-normal">(50 Seats)</span>
+                  </div>
+                  <div id="fcSenateSeatsVal" class="text-base lg:text-lg font-black font-mono text-white mt-1">
+                    21.1 <span class="text-xs font-normal text-blue-400">Dem</span> <span class="text-xs text-slate-500 font-normal">/</span> 28.9 <span class="text-xs font-normal text-red-400">Rep</span>
+                  </div>
+                </div>
+                
+                <!-- 95% CI Box -->
+                <div class="my-2 bg-slate-900 border border-amber-500/50 rounded-md p-1.5 shadow-sm">
+                  <div class="text-[9px] uppercase font-bold text-amber-300 tracking-wide">95% Confidence Interval</div>
+                  <div id="fcSenateCiVal" class="text-xs lg:text-sm font-black font-mono text-amber-200 my-0.5">[19 – 24] Dem Seats</div>
+                  <div class="text-[8px] text-slate-400 font-mono">Rep: [26 – 31] Seats</div>
+                </div>
+
+                <div id="fcSenateSuperVal" class="text-[9px] font-mono text-emerald-300 font-bold bg-emerald-950/80 border border-emerald-700/70 rounded px-1.5 py-1">
+                  65.7% Break Supermajority (&ge;20D)
+                </div>
+              </div>
+            </div>
+            
+            <div class="text-[9px] font-sans text-slate-400 leading-tight pt-1.5 border-t border-emerald-900/60 flex items-center justify-between">
+              <span>*Convolved via Poisson binomial distribution with systemic swing (&sigma;<sub>sys</sub> = 2.5 pp).</span>
+              <a href="/needle" class="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-0.5">
+                <span>Live Needle Dials</span>
+                <span>&rarr;</span>
+              </a>
+            </div>
+          </div>
         </div>
 
         <!-- Instruction / Status Callout -->
@@ -2410,6 +2482,38 @@
       });
 
       tbody.innerHTML = html;
+
+      // Update Legislative Chamber Balance & 95% CIs
+      const leg = stFc.legislative || {};
+      const house = leg.house || {};
+      const senate = leg.senate || {};
+
+      const houseCiEl = document.getElementById("fcHouseCiVal");
+      const senateCiEl = document.getElementById("fcSenateCiVal");
+      const houseSeatsEl = document.getElementById("fcHouseSeatsVal");
+      const senateSeatsEl = document.getElementById("fcSenateSeatsVal");
+      const houseSuperEl = document.getElementById("fcHouseSuperVal");
+      const senateSuperEl = document.getElementById("fcSenateSuperVal");
+
+      if (houseCiEl && house.ci_low !== undefined) {
+        houseCiEl.textContent = `[${house.ci_low} – ${house.ci_high}] Dem Seats`;
+      }
+      if (houseSeatsEl && house.expected_seats_dem !== undefined) {
+        houseSeatsEl.innerHTML = `${house.expected_seats_dem.toFixed(1)} <span class="text-xs font-normal text-blue-400">Dem</span> <span class="text-xs text-slate-500 font-normal">/</span> ${house.expected_seats_rep.toFixed(1)} <span class="text-xs font-normal text-red-400">Rep</span>`;
+      }
+      if (houseSuperEl && house.prob_break_supermajority !== undefined) {
+        houseSuperEl.textContent = `${house.prob_break_supermajority.toFixed(1)}% Break Supermajority (≥49D)`;
+      }
+
+      if (senateCiEl && senate.ci_low !== undefined) {
+        senateCiEl.textContent = `[${senate.ci_low} – ${senate.ci_high}] Dem Seats`;
+      }
+      if (senateSeatsEl && senate.expected_seats_dem !== undefined) {
+        senateSeatsEl.innerHTML = `${senate.expected_seats_dem.toFixed(1)} <span class="text-xs font-normal text-blue-400">Dem</span> <span class="text-xs text-slate-500 font-normal">/</span> ${senate.expected_seats_rep.toFixed(1)} <span class="text-xs font-normal text-red-400">Rep</span>`;
+      }
+      if (senateSuperEl && senate.prob_break_supermajority !== undefined) {
+        senateSuperEl.textContent = `${senate.prob_break_supermajority.toFixed(1)}% Break Supermajority (≥20D)`;
+      }
     }
 
     function updateInspectorDisplay(subtitle, title, m) {

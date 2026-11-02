@@ -1,0 +1,95 @@
+\documentclass[10.5pt]{article}
+\usepackage[letterpaper, margin=0.6in, top=0.5in, bottom=0.5in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+
+% Define colors matching instructor board annotations
+\definecolor{chalkblue}{RGB}{0, 105, 185}
+\definecolor{chalkred}{RGB}{205, 35, 35}
+\definecolor{chalkpink}{RGB}{230, 90, 120}
+\definecolor{chalkcyan}{RGB}{15, 160, 190}
+\definecolor{chalkgreen}{RGB}{20, 130, 50}
+\definecolor{boxbg}{RGB}{252, 252, 254}
+\definecolor{boxframe}{RGB}{150, 160, 180}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+% ==============================================================================
+% PAGE 1
+% ==============================================================================
+\noindent \textbf{\large Math 105L} \hfill \textbf{\large Lab 4 Part 2}\\[1pt]
+{\textbf{\Large Human Growth: Rates of Change, Acceleration, \& Concavity}}\\[-5pt]
+\rule{\textwidth}{1.2pt}
+
+\vspace{0.03in}
+
+\textbf{\large 1. Background: Zoomed Data on Ages 8--14 Years (95.5 to 160.5 Months)}
+
+In this lab session, we examine the relationship between the graph of stature (height $H(t)$ in cm) and the graph of rate of growth ($H'(t)$ in cm/year):
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item \textbf{Height function $H(t)$:} Represents the median stature of children at age $t$ (in months).
+  \item \textbf{Growth rate $H'(t)$:} Computed as $\frac{\Delta H}{\Delta t} = \frac{H(t+\Delta t) - H(t)}{1/12 \text{ yr}}$, giving growth speed in cm/year.
+  \item \textbf{Growth Acceleration $H''(t)$:} The rate of change of the growth rate, measured in $\text{cm}/\text{year}^2$.
+\end{itemize}
+
+\vspace{0.03in}
+
+\begin{tcolorbox}[colback=boxbg, colframe=boxframe, boxrule=0.8pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\textbf{\large The Core Mathematical Connections: Shape of $H(t)$ vs. Behavior of $H'(t)$}
+\begin{itemize}[leftmargin=1.2em, topsep=2pt, itemsep=4pt]
+  \item \textbf{Growth Spurt Peaks (Maximum of $H'(t)$):}
+  \begin{itemize}[label=--]
+    \item When the rate curve reaches a local maximum, the child is growing at their fastest possible rate.
+    \item On the height graph $H(t)$, this corresponds to the point of \textbf{maximum steepness}.
+    \item This point is an \textbf{inflection point} of the height curve where concavity switches from up to down.
+  \end{itemize}
+  \item \textbf{Growth Rate Valleys (Minimum of $H'(t)$):}
+  \begin{itemize}[label=--]
+    \item When the rate curve reaches a local minimum, the growth has slowed to its minimum rate before the adolescent growth spurt begins.
+    \item On the height graph $H(t)$, this corresponds to the point of \textbf{least steepness}.
+    \item This point is also an \textbf{inflection point} where concavity switches from down to up.
+  \end{itemize}
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{0.04in}
+
+\textbf{\large 2. Male vs. Female Growth Comparison}
+
+From the classroom data projection:
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=3pt]
+  \item \textbf{Female Adolescent Growth Spurt Peak:}
+    Occurs at approximately \textbf{140 months} ($\approx 11.7$ years). At this age, the female height curve is steepest, after which growth decelerates and the curve bends downward (concave down) toward adult stature.
+  \item \textbf{Male Adolescent Growth Spurt Peak:}
+    Occurs later, at approximately \textbf{160+ months} ($\approx 13.3+$ years). Male peak growth rate is higher and occurs roughly 1.5--2 years later than the female peak.
+  \item \textbf{Pre-Spurt Minima (Troughs):}
+    Occur at $\approx 115$ months for females and $\approx 125$ months for males.
+\end{itemize}
+
+\vspace{0.04in}
+
+\textbf{\large 3. Acceleration and Concavity Formalization}
+
+\begin{tcolorbox}[colback=chalkblue!6, colframe=chalkblue, boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=3pt]
+  \item \textbf{Acceleration $> 0$ ($H''(t) > 0$):} The growth rate $H'(t)$ is increasing. The height graph is \textbf{concave up} (bending upward).
+  \item \textbf{Acceleration $< 0$ ($H''(t) < 0$):} The growth rate $H'(t)$ is decreasing. The height graph is \textbf{concave down} (bending downward).
+  \item \textbf{Inflection Point of $H(t)$:} Occurs wherever acceleration passes through zero ($H''(t) = 0$ with a sign change), corresponding exactly to the peaks and troughs of the rate curve!
+\end{itemize}
+\end{tcolorbox}
+
+\end{document}
+

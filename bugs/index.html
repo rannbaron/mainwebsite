@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bug Tracker & Issue Reporting | Math 105L & Course Systems</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #001A57;
+      --primary-light: #0A3282;
+      --accent: #2563EB;
+      --accent-light: #EFF6FF;
+      --success: #16A34A;
+      --success-light: #F0FDF4;
+      --warning: #D97706;
+      --warning-light: #FFFBEB;
+      --danger: #DC2626;
+      --danger-light: #FEF2F2;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      padding: 0;
+      margin: 0;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #FFFFFF;
+      padding: 48px 24px 40px;
+      text-align: center;
+      border-bottom: 4px solid var(--accent);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background-color: rgba(255, 255, 255, 0.18);
+      color: #FFFFFF;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: #CBD5E1;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    main {
+      max-width: 920px;
+      margin: -24px auto 60px;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow);
+    }
+
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin: 20px 0 8px;
+    }
+
+    p {
+      margin-bottom: 14px;
+      color: #334155;
+      font-size: 15px;
+    }
+
+    ul, ol {
+      padding-left: 24px;
+      margin-bottom: 16px;
+      color: #334155;
+      font-size: 15px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .callout {
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 18px 0;
+      font-size: 14.5px;
+    }
+
+    .callout-blue {
+      background-color: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      color: #1E3A8A;
+    }
+
+    .callout-green {
+      background-color: var(--success-light);
+      border-left: 4px solid var(--success);
+      color: #14532D;
+    }
+
+    .callout-amber {
+      background-color: var(--warning-light);
+      border-left: 4px solid var(--warning);
+      color: #78350F;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin: 20px 0;
+    }
+
+    @media (max-width: 700px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .card {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 26px;
+      }
+    }
+
+    .criteria-card {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+    }
+
+    .criteria-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+
+    .criteria-card p {
+      font-size: 13.5px;
+      margin-bottom: 0;
+      color: #475569;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      background: var(--accent);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 13px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+
+    /* Bug submission form */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    input[type="text"], input[type="email"], select, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 14.5px;
+      background: #FFFFFF;
+      color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      font-size: 14.5px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+    }
+
+    .btn-secondary {
+      background: #E2E8F0;
+      color: #1E293B;
+      margin-left: 12px;
+    }
+
+    .btn-secondary:hover {
+      background: #CBD5E1;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-fixed {
+      background: #DCFCE7;
+      color: #15803D;
+    }
+
+    .status-investigating {
+      background: #FEF3C7;
+      color: #B45309;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    th {
+      background: #F1F5F9;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="badge">Math 105L & 106L Courseware</span>
+    <h1>Course Systems Bug Tracker</h1>
+    <p class="subtitle">Direct reporting and automated resolution pipeline for grading tools, submission portals, notification bots, and course materials.</p>
+  </header>
+
+  <main>
+
+    <!-- SECTION 1: HOW TO SUBMIT A GOOD BUG -->
+    <div class="card">
+      <h2><span>📋</span> What Makes a Great Bug Report?</h2>
+      <p>Our grading and automated course pipelines process hundreds of student submissions, lab reports, and quiz scores weekly. When something doesn't look right, submitting a detailed, reproducible bug report ensures the engineering team can diagnose and push a fix immediately.</p>
+      
+      <div class="grid-2">
+        <div class="criteria-card">
+          <h4>1. Specific Assignment & Identifier</h4>
+          <p>Always state the exact assignment name (e.g. <i>Worksheet 10-1</i>, <i>Class Quiz 4 retake</i>) and your student NetID or Duke email.</p>
+        </div>
+        <div class="criteria-card">
+          <h4>2. Expected vs. Actual Behavior</h4>
+          <p>Explain clearly what you intended to happen vs. what our system did (e.g. <i>"I scanned via Gradescope Mobile App, but received an automated email saying paper scan detected."</i>).</p>
+        </div>
+        <div class="criteria-card">
+          <h4>3. Environment & Tools Used</h4>
+          <p>Mention the device and software (e.g. <i>"Gradescope App on iOS 18"</i>, <i>"Apple Notes export"</i>, <i>"Chrome on macOS"</i>, <i>"Canvas gradebook sync"</i>).</p>
+        </div>
+        <div class="criteria-card">
+          <h4>4. Error Messages & Screenshots</h4>
+          <p>Include verbatim error messages, unexpected automated email text, or upload links/screenshots whenever possible.</p>
+        </div>
+      </div>
+
+      <div class="callout callout-blue">
+        <b>💡 Tip:</b> The faster our team can reproduce the behavior from your description, the faster a hotfix can be deployed to production!
+      </div>
+    </div>
+
+    <!-- SECTION 2: STEP-BY-STEP SUBMISSION INSTRUCTIONS -->
+    <div class="card">
+      <h2><span>🚀</span> Steps to Submit a Bug</h2>
+      
+      <div style="margin-bottom: 20px;">
+        <p><span class="step-number">1</span> <b>Review the Live Status Tracker below</b> to check if your issue is already being investigated or has recently been resolved.</p>
+        <p><span class="step-number">2</span> <b>Fill out the Quick Report Form below</b> or send an email directly to <a href="mailto:rb6@duke.edu?subject=[BUG%20REPORT]%20Course%20Systems"><b>rb6@duke.edu</b></a> with the subject line <code>[BUG REPORT] &lt;Short Description&gt;</code>.</p>
+        <p><span class="step-number">3</span> <b>Check your Duke email for confirmation:</b> Our automated test runner and triage bot will log the issue, push a fix or deadline extension if needed, and confirm resolution directly with you.</p>
+      </div>
+
+      <!-- Quick Report Form -->
+      <form id="bugForm" onsubmit="handleBugSubmit(event)">
+        <div class="form-group">
+          <label for="studentEmail">Your Duke Email Address *</label>
+          <input type="email" id="studentEmail" placeholder="first.last@duke.edu" required>
+        </div>
+
+        <div class="form-group">
+          <label for="category">Affected System / Assignment *</label>
+          <select id="category" required>
+            <option value="">-- Select a Category --</option>
+            <option value="Gradescope Scan / Page Detection">Gradescope Scan / Page Detection</option>
+            <option value="Automated Email Notification">Automated Email Notification (e.g. Repeated Emails, Incorrect Deadline)</option>
+            <option value="Score Sync / Gradebook Discrepancy">Score Sync / Gradebook Discrepancy</option>
+            <option value="Quiz Retake / Submission Window">Quiz Retake / Submission Window</option>
+            <option value="Course Website / Material Link">Course Website / Material Link</option>
+            <option value="Other Course System">Other Course System</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="bugSummary">Brief Summary of the Issue *</label>
+          <input type="text" id="bugSummary" placeholder="e.g. Received incorrect scan warning on Worksheet 10-1 after using Gradescope app" required>
+        </div>
+
+        <div class="form-group">
+          <label for="bugDetails">Detailed Description & Steps to Reproduce *</label>
+          <textarea id="bugDetails" placeholder="1. I scanned my worksheet using the official Gradescope mobile app.&#10;2. I submitted it on Monday morning before the deadline.&#10;3. At 12:03 PM, I received an automated email requesting that I resubmit using a mobile scanning app." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="environment">Device / App / Browser (Optional)</label>
+          <input type="text" id="environment" placeholder="e.g. iPhone 15 Pro, iOS 18, Gradescope Mobile App v3.2">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Dispatch Bug Report via Email</button>
+        <button type="button" class="btn btn-secondary" onclick="copyBugReport()">Copy Formatted Text</button>
+      </form>
+    </div>
+
+    <!-- SECTION 3: RECENTLY INVESTIGATED & RESOLVED BUGS -->
+    <div class="card">
+      <h2><span>⚡</span> Recently Resolved Issues</h2>
+      <p>We actively monitor student feedback and deploy automated regression fixes. Below are recently addressed bug reports:</p>
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Bug ID</th>
+            <th>Summary / Component</th>
+            <th>Reported By</th>
+            <th>Resolution Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>#BUG-105-01</b></td>
+            <td><b>False-Positive Scan Detection on Mobile App PDFs:</b> Submissions generated by dedicated mobile document scanning apps (Gradescope App, Genius Scan, Adobe Scan) were incorrectly classified as raw photos due to lack of vector font streams.</td>
+            <td>Sawyer B., Ella P., Reese D., Camila C.</td>
+            <td><span class="status-badge status-fixed">RESOLVED</span><br><small>Updated PDF metadata parser to whitelist recognized mobile scanning engines & contrast filters.</small></td>
+          </tr>
+          <tr>
+            <td><b>#BUG-105-02</b></td>
+            <td><b>Hourly Duplicate Dispatch on 100% Superb Work Notifications:</b> Scheduled task sent duplicate congratulatory emails to students due to MS Graph Sent Items pagination truncation ($top=10).</td>
+            <td>Miles M.</td>
+            <td><span class="status-badge status-fixed">RESOLVED</span><br><small>Replaced generic top-level SentItems query with student-specific search filter and persistent JSON tracking lock.</small></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Rann Bar-On &bull; Math 105L & 106L Instructional Operations &bull; Duke University</p>
+    <p style="margin-top: 6px;"><a href="https://rannbar-on.com">Main Website</a> &bull; <a href="https://rannbar-on.com/taskpriority">Task Priority Dashboard</a> &bull; <a href="https://github.com/rannbaron/105L-106L/issues">GitHub Issues</a></p>
+  </footer>
+
+  <script>
+    function handleBugSubmit(e) {
+      e.preventDefault();
+      const email = document.getElementById('studentEmail').value;
+      const cat = document.getElementById('category').value;
+      const sum = document.getElementById('bugSummary').value;
+      const det = document.getElementById('bugDetails').value;
+      const env = document.getElementById('environment').value;
+
+      const subject = encodeURIComponent(`[BUG REPORT] ${sum}`);
+      const body = encodeURIComponent(
+        `STUDENT BUG REPORT\n` +
+        `-----------------------------------------\n` +
+        `Reporter: ${email}\n` +
+        `Category: ${cat}\n` +
+        `Environment: ${env || 'Not specified'}\n\n` +
+        `SUMMARY:\n${sum}\n\n` +
+        `DETAILS & REPRODUCTION STEPS:\n${det}\n\n` +
+        `Dispatched via rannbar-on.com/bugs`
+      );
+
+      window.location.href = `mailto:rb6@duke.edu?subject=${subject}&body=${body}`;
+    }
+
+    function copyBugReport() {
+      const email = document.getElementById('studentEmail').value;
+      const cat = document.getElementById('category').value;
+      const sum = document.getElementById('bugSummary').value;
+      const det = document.getElementById('bugDetails').value;
+      const env = document.getElementById('environment').value;
+
+      const formatted = 
+        `STUDENT BUG REPORT\n` +
+        `-----------------------------------------\n` +
+        `Reporter: ${email}\n` +
+        `Category: ${cat}\n` +
+        `Environment: ${env || 'Not specified'}\n\n` +
+        `SUMMARY:\n${sum}\n\n` +
+        `DETAILS & REPRODUCTION STEPS:\n${det}\n`;
+
+      navigator.clipboard.writeText(formatted).then(() => {
+        alert("Bug report copied to clipboard! You can paste it into an email to rb6@duke.edu.");
+      }).catch(err => {
+        alert("Please allow clipboard access or copy manually.");
+      });
+    }
+  </script>
+
+</body>
+</html>
+

@@ -1,0 +1,96 @@
+\documentclass[10.5pt]{article}
+\usepackage[letterpaper, margin=0.6in, top=0.5in, bottom=0.5in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+
+% Define colors matching instructor board annotations
+\definecolor{chalkblue}{RGB}{0, 105, 185}
+\definecolor{chalkred}{RGB}{205, 35, 35}
+\definecolor{chalkpink}{RGB}{230, 90, 120}
+\definecolor{chalkcyan}{RGB}{15, 160, 190}
+\definecolor{chalkgreen}{RGB}{20, 130, 50}
+\definecolor{boxbg}{RGB}{252, 252, 254}
+\definecolor{boxframe}{RGB}{150, 160, 180}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+% ==============================================================================
+% PAGE 1
+% ==============================================================================
+\noindent \textbf{\large Math 105L} \hfill \textbf{\large Lab 3 Part 1}\\[1pt]
+{\textbf{\Large Exploring Limits: Spreadsheets, Indeterminate Forms, \& Holes}}\\[-5pt]
+\rule{\textwidth}{1.2pt}
+
+\vspace{0.03in}
+
+\textbf{\large 1. Numerical Limits via Spreadsheets}
+
+In this laboratory, students explore the behavior of functions near points of interest by constructing numerical tables that approach a target value $x = c$ from both directions:
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item \textbf{Approaching from the Right ($x > c$):} Step sizes $x = c + 0.1, c + 0.01, c + 0.001, c + 0.0001$.
+  \item \textbf{Approaching from the Left ($x < c$):} Step sizes $x = c - 0.1, c - 0.01, c - 0.001, c - 0.0001$.
+  \item \textbf{Convergence Criterion:} If values from both sides converge to the identical number $L$, we deduce numerically that $\mathbf{\lim_{x\to c} f(x) = L}$.
+\end{itemize}
+
+\vspace{0.03in}
+
+\begin{tcolorbox}[colback=boxbg, colframe=boxframe, boxrule=0.8pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\textbf{\large Indeterminate Forms: The Meaning of $\frac{0}{0}$}
+When direct evaluation yields $\frac{0}{0}$, this does \textbf{not} mean the limit is undefined or impossible! Rather:
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item $\frac{0}{0}$ is an \textbf{indeterminate form}, signaling that both numerator and denominator share a common factor $(x - c)$ that vanishes at $x = c$.
+  \item Algebraic factoring allows cancellation of the common factor for all $x \ne c$, revealing the true limiting behavior.
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{0.04in}
+
+\textbf{\large 2. Classroom Demonstration on Blackboard: $f(x) = \frac{2x^2 - x - 1}{x - 1}$ as $x \to 1$}
+
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=3pt]
+  \item \textbf{Step 1: Attempt Direct Substitution:}
+  \[
+    f(1) = \frac{2(1)^2 - (1) - 1}{1 - 1} = \frac{2 - 2}{0} = \mathbf{\frac{0}{0}} \quad \text{(Indeterminate!)}
+  \]
+  \item \textbf{Step 2: Factor the Numerator:}
+  Find two binomials whose product is $2x^2 - x - 1$:
+  \[
+    2x^2 - x - 1 = \mathbf{(2x + 1)(x - 1)}
+  \]
+  \item \textbf{Step 3: Cancel Common Non-Zero Factors ($x \ne 1$):}
+  \[
+    f(x) = \frac{(2x + 1)(x - 1)}{x - 1} = \mathbf{2x + 1} \quad \text{for all } x \ne 1
+  \]
+  \item \textbf{Step 4: Compute the Limit:}
+  \[
+    \lim_{x\to 1} f(x) = \lim_{x\to 1} (2x + 1) = 2(1) + 1 = \mathbf{3} \qquad \checkmark
+  \]
+\end{itemize}
+
+\vspace{0.04in}
+
+\textbf{\large 3. Geometric Interpretation of Removable Discontinuities}
+
+\begin{tcolorbox}[colback=chalkblue!6, colframe=chalkblue, boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item \textbf{Graph Comparison:} The graph of $f(x) = \frac{2x^2 - x - 1}{x - 1}$ is identical in every respect to the continuous straight line $y = 2x + 1$, with slope $m = 2$ and $y$-intercept $(0,1)$.
+  \item \textbf{The Removable Hole:} At the single point $x = 1$, the function has an \textbf{open circle (hole)} at $(1, 3)$.
+  \item \textbf{Limit vs. Value:} The value $f(1)$ does not exist (undefined), yet the limit $\lim_{x\to 1} f(x)$ exists and equals $3$.
+\end{itemize}
+\end{tcolorbox}
+
+\end{document}
+

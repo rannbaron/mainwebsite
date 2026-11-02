@@ -36,7 +36,9 @@ DATA_PATH = os.path.join(NEEDLE_DIR, 'needle_data.json')
 CALLED_RACES_PATH = os.path.join(NEEDLE_DIR, 'called_races.json')
 CANDIDATES_DIR = os.path.join(NEEDLE_DIR, 'candidates')
 
-CONFIDENCE_THRESHOLD = 0.95  # 95% Bayesian posterior confidence threshold
+CONFIDENCE_THRESHOLD = 0.995  # 99.5% Bayesian posterior confidence (3-sigma AP/Decision Desk standard)
+MIN_REPORTED_PCT_FOR_CALL = 0.70  # Minimum 70% reported turnout required for calling contested races
+ARITHMETIC_LOCKOUT_MAX_REMAINING_SHARE = 0.85  # Max plausible partisan break of uncounted votes
 NOTIFICATION_RECIPIENTS = ['rann@rannbar-on.com', 'rb6@duke.edu']
 
 # Fallback normal CDF (Abramowitz & Stegun approximation)
@@ -67,10 +69,23 @@ def get_candidate_photo_url(name, party):
     return f"https://rannbar-on.com/needle/candidates/{slug}.svg"
 
 def load_needle_dataset():
-    if not os.path.exists(DATA_PATH):
-        raise FileNotFoundError(f"Needle dataset not found at {DATA_PATH}")
-    with open(DATA_PATH, 'r', encoding='utf-8') as f:
-        return json.load(f)
+    if os.path.exists(DATA_PATH):
+        try:
+            with open(DATA_PATH, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Warning: Failed reading {DATA_PATH}: {e}")
+    # Zero-crash fallback to parse window.NEEDLE_DATA from needle/index.html
+    index_path = os.path.join(NEEDLE_DIR, 'index.html')
+    if os.path.exists(index_path):
+        with open(index_path, 'r', encoding='utf-8') as f:
+            html = f.read()
+        m1 = html.find('window.NEEDLE_DATA =')
+        if m1 != -1:
+            m2 = html.find(';\n', m1)
+            if m2 != -1:
+                return json.loads(html[m1 + len('window.NEEDLE_DATA ='):m2].strip())
+    raise FileNotFoundError(f"Needle dataset could not be loaded from {DATA_PATH} or {index_path}")
 
 def load_called_races():
     if os.path.exists(CALLED_RACES_PATH):
@@ -82,9 +97,12 @@ def load_called_races():
     return {}
 
 def save_called_races(called_dict):
-    os.makedirs(NEEDLE_DIR, exist_ok=True)
-    with open(CALLED_RACES_PATH, 'w', encoding='utf-8') as f:
-        json.dump(called_dict, f, indent=2)
+    try:
+        os.makedirs(NEEDLE_DIR, exist_ok=True)
+        with open(CALLED_RACES_PATH, 'w', encoding='utf-8') as f:
+            json.dump(called_dict, f, indent=2)
+    except Exception as e:
+        print(f"Warning: Failed saving {CALLED_RACES_PATH}: {e}")
 
     # Also sync into needle_data.json under 'called_races'
     try:
@@ -120,9 +138,11 @@ def project_race(race_obj, live_returns_dict):
         'early': {'dem': 0, 'rep': 0, 'tot': 0, 'benchExp': 0},
         'eday': {'dem': 0, 'rep': 0, 'tot': 0, 'benchExp': 0}
     }
+    cluster_stats = {}
 
     for u in units:
         u_id = u.get('id') or u.get('county')
+        u_clust = u.get('cluster', 'Standard')
         ret = r_returns.get(u_id)
         if ret and ret.get('reported') and ret.get('totVotes', 0) > 0:
             counted_dem += ret.get('demVotes', 0)
@@ -138,7 +158,18 @@ def project_race(race_obj, live_returns_dict):
                     mode_stats[m_key]['rep'] += m_ret.get('rep', 0)
                     mode_stats[m_key]['tot'] += m_ret.get('tot', 0)
                     if m_bench:
-                        mode_stats[m_key]['benchExp'] += m_ret.get('tot', 0) * (m_bench.get('bench_m', 0) / 100.0)
+                        b_exp = m_ret.get('tot', 0) * (m_bench.get('bench_m', 0) / 100.0)
+                        mode_stats[m_key]['benchExp'] += b_exp
+                    else:
+                        b_exp = 0.0
+
+                    ck = (u_clust, m_key)
+                    if ck not in cluster_stats:
+                        cluster_stats[ck] = {'dem': 0, 'rep': 0, 'tot': 0, 'benchExp': 0}
+                    cluster_stats[ck]['dem'] += m_ret.get('dem', 0)
+                    cluster_stats[ck]['rep'] += m_ret.get('rep', 0)
+                    cluster_stats[ck]['tot'] += m_ret.get('tot', 0)
+                    cluster_stats[ck]['benchExp'] += b_exp
 
     total_expected = race_obj.get('proj_turnout', 50000)
     frac_counted = min(1.0, counted_tot / total_expected) if total_expected > 0 else 0.0
@@ -162,11 +193,19 @@ def project_race(race_obj, live_returns_dict):
     shrinkage = math.pow(frac_counted, 0.7)
     modeled_general_swing = overall_swing * shrinkage
 
+    cluster_swings = {}
+    for (c_name, m_key), cst in cluster_stats.items():
+        if cst['tot'] > 0:
+            obs_m = (cst['dem'] - cst['rep']) / cst['tot'] * 100.0
+            exp_m = (cst['benchExp'] / cst['tot']) * 100.0
+            cluster_swings[(c_name, m_key)] = (obs_m - exp_m, cst['tot'])
+
     remaining_dem = 0
     remaining_rep = 0
 
     for u in units:
         u_id = u.get('id') or u.get('county')
+        u_clust = u.get('cluster', 'Standard')
         ret = r_returns.get(u_id)
         has_modes = bool(u.get('modes'))
 
@@ -176,7 +215,15 @@ def project_race(race_obj, live_returns_dict):
                 m_bench = u.get('modes', {}).get(m_key)
 
                 if (not m_ret or m_ret.get('tot', 0) == 0) and m_bench and m_bench.get('proj', 0) > 0:
-                    spec_swing = mode_swings[m_key] * shrinkage if m_key in mode_swings else modeled_general_swing
+                    c_info = cluster_swings.get((u_clust, m_key))
+                    if c_info and c_info[1] > 0:
+                        c_obs_sw, c_tot_v = c_info
+                        alpha = c_tot_v / (c_tot_v + 15000.0)
+                        eff_mode_swing = alpha * c_obs_sw + (1.0 - alpha) * mode_swings.get(m_key, overall_swing)
+                    else:
+                        eff_mode_swing = mode_swings.get(m_key, overall_swing)
+
+                    spec_swing = eff_mode_swing * shrinkage
                     adj_m = max(-100.0, min(100.0, m_bench.get('bench_m', 0.0) + spec_swing))
                     p_dem = round(m_bench.get('proj', 0) * (100.0 + adj_m) / 200.0)
                     p_rep = max(0, m_bench.get('proj', 0) - p_dem)
@@ -196,7 +243,8 @@ def project_race(race_obj, live_returns_dict):
     projected_margin = (projected_dem - projected_rep) / projected_tot * 100.0
 
     base_sigma = race_obj.get('sigma', 2.0)
-    current_sigma = max(0.25, base_sigma * math.sqrt(max(0.01, 1.0 - frac_counted)))
+    remaining_frac = max(0.005, 1.0 - frac_counted)
+    current_sigma = max(0.20, base_sigma * (0.75 * math.pow(remaining_frac, 0.8) + 0.25 * math.sqrt(remaining_frac)))
 
     z = projected_margin / current_sigma
     win_prob_dem = normal_cdf(z)
@@ -459,18 +507,31 @@ def evaluate_all_races(live_returns=None, simulate_stage=None, dry_run=False):
         if proj['counted_tot'] == 0 and not simulate_stage and not race_obj.get('is_uncontested'):
             return
 
+        is_uncontested = race_obj.get('is_uncontested', False)
+
         p_dem = proj['win_prob_dem']
         p_rep = proj['win_prob_rep']
+
+        # Arithmetic lockout & minimum reporting guardrails (AP / Decision Desk standard)
+        rem_votes = max(0, proj['projected_tot'] - proj['counted_tot'])
+        lead_dem = proj['counted_dem'] - proj['counted_rep']
+        lead_rep = proj['counted_rep'] - proj['counted_dem']
+
+        lockout_dem = (rem_votes == 0) or (lead_dem > rem_votes * (2.0 * ARITHMETIC_LOCKOUT_MAX_REMAINING_SHARE - 1.0))
+        lockout_rep = (rem_votes == 0) or (lead_rep > rem_votes * (2.0 * ARITHMETIC_LOCKOUT_MAX_REMAINING_SHARE - 1.0))
+
+        frac = proj['frac_counted']
+        eligible_to_call = is_uncontested or (frac >= MIN_REPORTED_PCT_FOR_CALL) or (frac >= 0.50 and (lockout_dem or lockout_rep))
 
         called_party = None
         winner_name = None
         win_prob = 0.0
 
-        if p_dem >= CONFIDENCE_THRESHOLD:
+        if p_dem >= CONFIDENCE_THRESHOLD and (eligible_to_call or lockout_dem):
             called_party = 'Democrat'
             winner_name = race_obj.get('dem_candidate', 'Democratic Candidate')
             win_prob = p_dem
-        elif p_rep >= CONFIDENCE_THRESHOLD:
+        elif p_rep >= CONFIDENCE_THRESHOLD and (eligible_to_call or lockout_rep):
             called_party = 'Republican'
             winner_name = race_obj.get('rep_candidate', 'Republican Candidate')
             win_prob = p_rep
@@ -513,6 +574,13 @@ def evaluate_all_races(live_returns=None, simulate_stage=None, dry_run=False):
             if not dry_run:
                 # 1. Send urgent email to Rann
                 send_race_call_email(call_record)
+
+                # 2. Dispatch to Social Media ('NC Political Predictions' on Twitter, Threads, Instagram)
+                try:
+                    import social_media_dispatcher
+                    social_media_dispatcher.dispatch_race_call_socials(call_record)
+                except Exception as e_soc:
+                    print(f"[Race Caller] Warning dispatching to social media: {e_soc}")
 
     # 1. Statewide Races
     for r_id, r_obj in data.get('statewide', {}).items():
@@ -685,3 +753,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

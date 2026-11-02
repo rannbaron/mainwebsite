@@ -1,0 +1,108 @@
+\documentclass[10.5pt]{article}
+\usepackage[letterpaper, margin=0.6in, top=0.5in, bottom=0.5in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+
+% Define colors matching instructor board annotations
+\definecolor{chalkblue}{RGB}{0, 105, 185}
+\definecolor{chalkred}{RGB}{205, 35, 35}
+\definecolor{chalkpink}{RGB}{230, 90, 120}
+\definecolor{chalkcyan}{RGB}{15, 160, 190}
+\definecolor{chalkgreen}{RGB}{20, 130, 50}
+\definecolor{boxbg}{RGB}{252, 252, 254}
+\definecolor{boxframe}{RGB}{150, 160, 180}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+% ==============================================================================
+% PAGE 1
+% ==============================================================================
+\noindent \textbf{\large Math 105L} \hfill \textbf{\large Lab 5 Part 1}\\[1pt]
+{\textbf{\Large Alternative Derivative Definition \& Discovery of the Power Rule}}\\[-5pt]
+\rule{\textwidth}{1.2pt}
+
+\vspace{0.03in}
+
+\textbf{\large 1. The Alternative Limit Definition of the Derivative}
+
+Recall the standard definition of the derivative at a point $x$:
+\[
+  f'(x) = \lim_{h\to 0} \frac{f(x+h) - f(x)}{h}
+\]
+By performing the substitution $\mathbf{z = x + h}$:
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item Replacing $x+h$ gives $f(z)$.
+  \item Since $z = x+h$, solving for $h$ yields $\mathbf{h = z - x}$.
+  \item As $h \to 0$, $x+h \to x$, which means $\mathbf{z \to x}$.
+\end{itemize}
+
+Substituting these three pieces yields the \textbf{alternative limit definition of the derivative}:
+\begin{tcolorbox}[colback=boxbg, colframe=boxframe, boxrule=0.8pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\[
+  \mathbf{f'(x) = \lim_{z\to x} \frac{f(z) - f(x)}{z - x}}
+\]
+\end{tcolorbox}
+
+\vspace{0.03in}
+
+\textbf{\large 2. Demonstration: Verifying $f(x) = x^2 \implies f'(x) = 2x$}
+
+Using the alternative limit definition on $f(x) = x^2$:
+\[
+  f'(x) = \lim_{z\to x} \frac{z^2 - x^2}{z - x} = \lim_{z\to x} \frac{(z-x)(z+x)}{z-x} = \lim_{z\to x} (z+x) = x + x = \mathbf{2x} \qquad \checkmark
+\]
+
+\vspace{0.04in}
+
+\textbf{\large 3. Factorization Patterns of $z^n - x^n$}
+
+To differentiate general monomials $f(x) = x^n$, we factor $z^n - x^n$ by extracting $(z - x)$:
+\begin{tcolorbox}[colback=chalkblue!6, colframe=chalkblue, boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\begin{align*}
+  z^2 - x^2 &= (z-x)\mathbf{(z + x)} \\
+  z^3 - x^3 &= (z-x)\mathbf{(z^2 + zx + x^2)} \\
+  z^4 - x^4 &= (z-x)\mathbf{(z^3 + z^2x + zx^2 + x^3)} \\
+  z^5 - x^5 &= (z-x)\mathbf{(z^4 + z^3x + z^2x^2 + zx^3 + x^4)} \\
+  \vdots & \\
+  z^n - x^n &= (z-x)\mathbf{\big(z^{n-1} + z^{n-2}x + z^{n-3}x^2 + \cdots + zx^{n-2} + x^{n-1}\big)}
+\end{align*}
+\end{tcolorbox}
+
+\vspace{0.04in}
+
+\textbf{\large 4. Rigorous Proof of the Power Rule for Positive Integers $n$}
+
+Applying the alternative limit definition to $f(x) = x^n$:
+\begin{align*}
+  f'(x) &= \lim_{z\to x} \frac{z^n - x^n}{z - x} \\
+        &= \lim_{z\to x} \frac{(z-x)\big(z^{n-1} + z^{n-2}x + \cdots + zx^{n-2} + x^{n-1}\big)}{z-x} \\
+        &= \lim_{z\to x} \big(z^{n-1} + z^{n-2}x + \cdots + zx^{n-2} + x^{n-1}\big)
+\end{align*}
+\textbf{Counting the terms:}
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=3pt]
+  \item The polynomial factor contains exactly $\mathbf{n}$ terms.
+  \item As $z \to x$, each individual term becomes:
+  \[
+    z^{n-1} \to x^{n-1}, \quad z^{n-2}x \to x^{n-2}x = x^{n-1}, \quad \dots, \quad x^{n-1} \to x^{n-1}
+  \]
+  \item Summing these $n$ identical terms together yields:
+  \[
+    \mathbf{f'(x) = \underbrace{x^{n-1} + x^{n-1} + \dots + x^{n-1}}_{n \text{ terms}} = n x^{n-1}} \qquad \blacksquare
+  \]
+\end{itemize}
+
+\end{document}
+
