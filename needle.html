@@ -97,6 +97,11 @@
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
           <span>Upload / Sync Feed</span>
         </button>
+        <button onclick="toggleRaceCallsDrawer()" id="navRaceCallsBtn" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-amber-300 transition flex items-center gap-1.5 border border-amber-500/30">
+          <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+          <span>Called Races</span>
+          <span id="navRaceCallsCount" class="ml-1 px-1.5 py-0.2 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold">0</span>
+        </button>
         <button onclick="toggleSimulationModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition flex items-center gap-1.5 shadow-md shadow-indigo-600/20">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/></svg>
           <span>Simulate</span>
@@ -104,6 +109,91 @@
       </div>
     </div>
   </header>
+
+  <!-- RACE CALL FLOATING POPUP NOTIFICATION MODAL -->
+  <div id="raceCallToast" class="fixed top-20 right-4 sm:right-8 z-50 max-w-md w-full pointer-events-auto transition-all duration-500 transform translate-y-[-150%] opacity-0 hidden">
+    <div id="raceCallToastCard" class="relative rounded-2xl bg-slate-900/95 backdrop-blur-xl border-2 p-5 shadow-2xl transition-all duration-300">
+      
+      <!-- Card Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div class="flex items-center gap-2">
+          <span id="raceCallPulsingDot" class="w-2.5 h-2.5 rounded-full animate-ping"></span>
+          <span class="text-xs font-black tracking-widest uppercase text-white flex items-center gap-1.5">
+            🚨 RACE CALL <span id="raceCallQueueBadge" class="text-[10px] px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono font-normal"></span>
+          </span>
+        </div>
+        <div class="flex items-center gap-1">
+          <span id="raceCallTime" class="text-[11px] font-mono text-slate-400"></span>
+          <button onclick="dismissRaceCallToast()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Winner Presentation with Glowing Party Border -->
+      <div class="flex items-center gap-4 py-4">
+        <!-- Picture of Race Winner Surrounded by Glowing Party Color -->
+        <div class="relative flex-shrink-0">
+          <div id="raceCallPhotoWrapper" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden border-4 flex items-center justify-center bg-slate-950 transition-all duration-300">
+            <img id="raceCallPhoto" src="" alt="Winner" class="w-full h-full object-cover" />
+          </div>
+          <div id="raceCallPartySeal" class="absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white shadow-md">
+          </div>
+        </div>
+
+        <!-- Details -->
+        <div class="flex-1 min-w-0">
+          <div id="raceCallContestName" class="text-xs font-bold text-slate-400 uppercase tracking-wider truncate"></div>
+          <h2 id="raceCallWinnerName" class="text-xl sm:text-2xl font-black text-white leading-tight mt-0.5 truncate"></h2>
+          <div class="flex items-center gap-2 mt-2">
+            <span id="raceCallPartyPill" class="text-xs font-bold px-2.5 py-0.5 rounded-full border"></span>
+            <span id="raceCallConfidenceBadge" class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"></span>
+          </div>
+          <div id="raceCallMarginText" class="text-xs font-mono text-slate-300 mt-2"></div>
+        </div>
+      </div>
+
+      <!-- Navigation & Action Buttons -->
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5" id="raceCallNavButtons" style="display: none;">
+          <button onclick="prevRaceCall()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition">◀</button>
+          <button onclick="nextRaceCall()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold transition">▶</button>
+          <button onclick="toggleRaceCallsDrawer()" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition">All Calls</button>
+        </div>
+        <button id="raceCallViewRaceBtn" onclick="viewCalledRaceFromToast()" class="px-3 py-1.5 rounded-lg text-xs font-bold text-white transition flex items-center gap-1 shadow-lg">
+          <span>View on Needle</span>
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </div>
+
+      <!-- Auto-dismiss Progress Bar -->
+      <div class="absolute bottom-0 left-0 right-0 h-1 bg-slate-800 overflow-hidden rounded-b-2xl">
+        <div id="raceCallProgressBar" class="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-100 ease-linear w-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALLED RACES SLIDE-OVER DRAWER -->
+  <div id="calledRacesDrawer" class="fixed inset-0 z-50 overflow-hidden hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true">
+    <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm transition-opacity" onclick="toggleRaceCallsDrawer()"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-slate-900 border-l border-slate-800 shadow-2xl flex flex-col">
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+            <h2 class="text-base font-black text-white uppercase tracking-wider">Called Races Ledger</h2>
+            <span id="drawerCalledCount" class="text-xs px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 font-mono">0 calls</span>
+          </div>
+          <button onclick="toggleRaceCallsDrawer()" class="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <div id="drawerCalledList" class="flex-1 overflow-y-auto p-4 space-y-3">
+          <!-- Dynamically populated cards -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
@@ -1266,6 +1356,209 @@
     let pollIntervalId = null;
     let lastFeedTimestamp = null;
 
+    // RACE CALL DECISION DESK CONTROLLER
+    let calledRaces = {}; // raceId -> callRecord
+    let raceCallQueue = [];
+    let currentQueueIndex = 0;
+    let raceCallTimer = null;
+    let raceCallProgressTimer = null;
+    let activeCallRecord = null;
+
+    function toSlug(name) {
+      if (!name) return '';
+      return String(name).toLowerCase().replace(/[^a-z0-9\s]/g, '').trim().replace(/\s+/g, '_');
+    }
+
+    function getCandidatePhotoUrl(candName, party) {
+      if (!candName) return 'candidates/default.svg';
+      const slug = toSlug(candName);
+      const knownJpgs = ['roy_cooper', 'michael_whatley', 'sarah_stevens', 'anita_earls', 'john_arrowood', 'christine_walczyk', 'craig_collins'];
+      const ext = knownJpgs.includes(slug) ? 'jpg' : 'svg';
+      const base = (window.location.pathname.includes('/needle') && !window.location.pathname.endsWith('needle.html')) ? 'candidates/' : '/needle/candidates/';
+      return `${base}${slug}.${ext}`;
+    }
+
+    function showRaceCallToast(callRecord) {
+      if (!callRecord) return;
+      activeCallRecord = callRecord;
+      const toast = document.getElementById('raceCallToast');
+      const card = document.getElementById('raceCallToastCard');
+      const photoWrapper = document.getElementById('raceCallPhotoWrapper');
+      const photo = document.getElementById('raceCallPhoto');
+      const partySeal = document.getElementById('raceCallPartySeal');
+      const contestName = document.getElementById('raceCallContestName');
+      const winnerName = document.getElementById('raceCallWinnerName');
+      const partyPill = document.getElementById('raceCallPartyPill');
+      const confBadge = document.getElementById('raceCallConfidenceBadge');
+      const marginText = document.getElementById('raceCallMarginText');
+      const timeText = document.getElementById('raceCallTime');
+      const queueBadge = document.getElementById('raceCallQueueBadge');
+      const dot = document.getElementById('raceCallPulsingDot');
+      const viewBtn = document.getElementById('raceCallViewRaceBtn');
+
+      const isDem = (callRecord.party === 'Democrat');
+
+      // Party Glow and Borders (Republican: Red, Democrat: Blue)
+      if (isDem) {
+        card.style.borderColor = '#2563eb';
+        card.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(37, 99, 235, 0.65)';
+        photoWrapper.style.borderColor = '#2563eb';
+        photoWrapper.style.boxShadow = '0 0 25px rgba(37, 99, 235, 0.75), inset 0 0 10px rgba(37, 99, 235, 0.4)';
+        partySeal.className = 'absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white shadow-md bg-blue-600';
+        partySeal.textContent = 'DEM';
+        partyPill.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-blue-950/80 text-blue-300 border border-blue-600';
+        dot.className = 'w-2.5 h-2.5 rounded-full animate-ping bg-blue-500';
+        viewBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-white transition flex items-center gap-1 shadow-lg bg-blue-600 hover:bg-blue-500';
+      } else {
+        card.style.borderColor = '#dc2626';
+        card.style.boxShadow = '0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 35px rgba(220, 38, 38, 0.65)';
+        photoWrapper.style.borderColor = '#dc2626';
+        photoWrapper.style.boxShadow = '0 0 25px rgba(220, 38, 38, 0.75), inset 0 0 10px rgba(220, 38, 38, 0.4)';
+        partySeal.className = 'absolute -bottom-1 -right-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white shadow-md bg-red-600';
+        partySeal.textContent = 'GOP';
+        partyPill.className = 'text-xs font-bold px-2.5 py-0.5 rounded-full bg-red-950/80 text-red-300 border border-red-600';
+        dot.className = 'w-2.5 h-2.5 rounded-full animate-ping bg-red-500';
+        viewBtn.className = 'px-3 py-1.5 rounded-lg text-xs font-bold text-white transition flex items-center gap-1 shadow-lg bg-red-600 hover:bg-red-500';
+      }
+
+      contestName.textContent = callRecord.race_name;
+      winnerName.textContent = callRecord.winner;
+      partyPill.textContent = callRecord.party;
+      confBadge.textContent = `✓ ${callRecord.confidence_str || '≥95.0% Confidence'}`;
+      marginText.innerHTML = `Projected: <b class="${isDem ? 'text-blue-400' : 'text-red-400'}">${callRecord.proj_margin_str}</b> &bull; Counted: <b>${callRecord.reported_pct_str || 'N/A'}</b>`;
+      timeText.textContent = callRecord.called_at;
+
+      const slug = toSlug(callRecord.winner);
+      photo.src = callRecord.photo_url || getCandidatePhotoUrl(callRecord.winner, callRecord.party);
+      photo.onerror = function() {
+        this.onerror = null;
+        this.src = (window.location.pathname.includes('/needle') && !window.location.pathname.endsWith('needle.html')) ? `candidates/${slug}.svg` : `/needle/candidates/${slug}.svg`;
+      };
+
+      if (raceCallQueue.length > 1) {
+        queueBadge.textContent = `${currentQueueIndex + 1} of ${raceCallQueue.length}`;
+        document.getElementById('raceCallNavButtons').style.display = 'flex';
+      } else {
+        queueBadge.textContent = '';
+        document.getElementById('raceCallNavButtons').style.display = 'none';
+      }
+
+      toast.classList.remove('hidden');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+      }, 10);
+
+      startProgressBar(12000);
+    }
+
+    function startProgressBar(durationMs) {
+      if (raceCallTimer) clearTimeout(raceCallTimer);
+      if (raceCallProgressTimer) clearInterval(raceCallProgressTimer);
+
+      const bar = document.getElementById('raceCallProgressBar');
+      const start = Date.now();
+      bar.style.width = '100%';
+
+      raceCallProgressTimer = setInterval(() => {
+        const elapsed = Date.now() - start;
+        const remaining = Math.max(0, 1.0 - (elapsed / durationMs));
+        bar.style.width = `${remaining * 100}%`;
+        if (remaining <= 0) clearInterval(raceCallProgressTimer);
+      }, 50);
+
+      raceCallTimer = setTimeout(() => {
+        if (currentQueueIndex + 1 < raceCallQueue.length) {
+          nextRaceCall();
+        } else {
+          dismissRaceCallToast();
+        }
+      }, durationMs);
+    }
+
+    function dismissRaceCallToast() {
+      if (raceCallTimer) clearTimeout(raceCallTimer);
+      if (raceCallProgressTimer) clearInterval(raceCallProgressTimer);
+      const toast = document.getElementById('raceCallToast');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+      toast.classList.add('translate-y-[-150%]', 'opacity-0');
+      setTimeout(() => { toast.classList.add('hidden'); }, 500);
+    }
+
+    function nextRaceCall() {
+      if (raceCallQueue.length === 0) return;
+      currentQueueIndex = (currentQueueIndex + 1) % raceCallQueue.length;
+      showRaceCallToast(raceCallQueue[currentQueueIndex]);
+    }
+
+    function prevRaceCall() {
+      if (raceCallQueue.length === 0) return;
+      currentQueueIndex = (currentQueueIndex - 1 + raceCallQueue.length) % raceCallQueue.length;
+      showRaceCallToast(raceCallQueue[currentQueueIndex]);
+    }
+
+    function viewCalledRaceFromToast() {
+      if (activeCallRecord && activeCallRecord.race_id) {
+        selectDistrict(activeCallRecord.race_id);
+        dismissRaceCallToast();
+      }
+    }
+
+    function toggleRaceCallsDrawer() {
+      const drawer = document.getElementById('calledRacesDrawer');
+      drawer.classList.toggle('hidden');
+      renderCalledRacesDrawer();
+    }
+
+    function renderCalledRacesDrawer() {
+      const listEl = document.getElementById('drawerCalledList');
+      const countEl = document.getElementById('drawerCalledCount');
+      const navCountEl = document.getElementById('navRaceCallsCount');
+
+      const calls = Object.values(calledRaces).sort((a,b) => new Date(b.called_at_iso || 0) - new Date(a.called_at_iso || 0));
+
+      if (countEl) countEl.textContent = `${calls.length} calls`;
+      if (navCountEl) navCountEl.textContent = calls.length;
+
+      if (calls.length === 0) {
+        listEl.innerHTML = `
+          <div class="text-center py-16 text-slate-500">
+            <svg class="w-12 h-12 mx-auto mb-3 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <p class="text-sm font-semibold">No races called yet</p>
+            <p class="text-xs text-slate-600 mt-1">Races are called when the Bayesian model reaches 95% confidence.</p>
+          </div>`;
+        return;
+      }
+
+      listEl.innerHTML = calls.map(c => {
+        const isDem = (c.party === 'Democrat');
+        const borderColor = isDem ? '#2563eb' : '#dc2626';
+        const glow = isDem ? '0 0 15px rgba(37, 99, 235, 0.5)' : '0 0 15px rgba(220, 38, 38, 0.5)';
+        const partyBadge = isDem ? 'bg-blue-950 text-blue-300 border-blue-600' : 'bg-red-950 text-red-300 border-red-600';
+        const slug = toSlug(c.winner);
+        const photo = c.photo_url || getCandidatePhotoUrl(c.winner, c.party);
+
+        return `
+          <div onclick="selectDistrict('${c.race_id}'); toggleRaceCallsDrawer();" class="p-3.5 rounded-xl bg-slate-950/80 hover:bg-slate-800/80 border border-slate-800 hover:border-slate-700 transition cursor-pointer flex items-center gap-3.5 group">
+            <div class="w-14 h-14 rounded-full overflow-hidden border-2 flex-shrink-0 bg-slate-900" style="border-color: ${borderColor}; box-shadow: ${glow};">
+              <img src="${photo}" alt="${c.winner}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='/needle/candidates/${slug}.svg';" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between">
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">${c.race_name}</span>
+                <span class="text-[10px] font-mono text-slate-500">${c.called_at}</span>
+              </div>
+              <div class="text-sm font-black text-white group-hover:text-blue-400 transition truncate">${c.winner}</div>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="text-[10px] font-bold px-2 py-0.2 rounded-full border ${partyBadge}">${c.party}</span>
+                <span class="text-[11px] font-mono font-bold ${isDem ? 'text-blue-400' : 'text-red-400'}">${c.proj_margin_str}</span>
+                <span class="text-[10px] font-semibold text-emerald-400">✓ ${c.confidence_str}</span>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
     function setTableMode(mode) {
       currentTableMode = mode;
       ['All', 'Early', 'Mail', 'Eday'].forEach(m => {
@@ -1983,6 +2276,65 @@
       renderStatewideNeedles();
       renderMap();
       renderDistrictsGrid();
+
+      // DECISION DESK: Check for 95% Confidence Race Calls
+      const newlyCalled = [];
+      if (stage === '0' || stage === 0) {
+        calledRaces = {};
+        raceCallQueue = [];
+        dismissRaceCallToast();
+      } else {
+        Object.keys(allRaces).forEach(rId => {
+          const r = allRaces[rId];
+          const proj = calculateRaceProjection(r);
+          if (proj.countedTot === 0 && !r.is_uncontested) return;
+
+          let winner = null;
+          let party = null;
+          let winProb = 0;
+
+          if (proj.winProbDem >= 0.95) {
+            winner = r.dem_candidate || 'Democratic Candidate';
+            party = 'Democrat';
+            winProb = proj.winProbDem;
+          } else if (proj.winProbDem <= 0.05) {
+            winner = r.rep_candidate || 'Republican Candidate';
+            party = 'Republican';
+            winProb = 1.0 - proj.winProbDem;
+          }
+
+          if (party && !calledRaces[rId]) {
+            const callRec = {
+              race_id: rId,
+              race_name: r.short_title || r.name || r.title,
+              chamber_label: r.chamber ? `NC ${r.chamber.toUpperCase()}` : 'STATEWIDE MARQUEE',
+              winner: winner,
+              party: party,
+              win_prob: winProb,
+              win_prob_pct: (winProb * 100).toFixed(1),
+              confidence_str: `${(winProb * 100).toFixed(1)}% Confidence`,
+              projected_margin: proj.projectedMargin,
+              proj_margin_str: formatMargin(proj.projectedMargin),
+              ci_str: `[${proj.ciLow.toFixed(1)}%, ${proj.ciHigh.toFixed(1)}%]`,
+              reported_pct_str: `${(proj.fracCounted * 100).toFixed(1)}%`,
+              units_str: `${proj.countedUnits}/${proj.totalUnits} Units`,
+              photo_url: getCandidatePhotoUrl(winner, party),
+              called_at: new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + ' EST',
+              called_at_iso: new Date().toISOString()
+            };
+            calledRaces[rId] = callRec;
+            newlyCalled.push(callRec);
+          }
+        });
+
+        if (newlyCalled.length > 0) {
+          raceCallQueue = newlyCalled;
+          currentQueueIndex = 0;
+          showRaceCallToast(raceCallQueue[0]);
+        }
+      }
+
+      renderCalledRacesDrawer();
     }
 
     function togglePrecinctReportingAll(reportAll) {
@@ -2650,6 +3002,23 @@
               renderChamberNeedles();
               renderMap();
               renderDistrictsGrid();
+            }
+            if (data.called_races) {
+              let hasNew = false;
+              const newFromFeed = [];
+              Object.keys(data.called_races).forEach(rId => {
+                if (!calledRaces[rId]) {
+                  calledRaces[rId] = data.called_races[rId];
+                  newFromFeed.push(data.called_races[rId]);
+                  hasNew = true;
+                }
+              });
+              if (hasNew) {
+                raceCallQueue = newFromFeed;
+                currentQueueIndex = 0;
+                showRaceCallToast(raceCallQueue[0]);
+                renderCalledRacesDrawer();
+              }
             }
           }
         } catch (e) {
