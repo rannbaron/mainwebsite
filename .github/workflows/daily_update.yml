@@ -1,19 +1,20 @@
 name: Daily Early Voting Update
 
+# Scheduled daily runs disabled per user instruction (Early Voting concluded)
 on:
-  schedule:
-    # 5:28 AM EDT = 09:28 UTC (shortly after NCSBE updates at ~09:20 UTC)
-    - cron: '28 9 * * *'
-    # 6:08 AM EDT = 10:08 UTC (primary morning run, offset to avoid runner queue delays)
-    - cron: '8 10 * * *'
-    # 6:38 AM EDT = 10:38 UTC (secondary morning run)
-    - cron: '38 10 * * *'
-    # 7:08 AM EDT = 11:08 UTC (first fallback run)
-    - cron: '8 11 * * *'
-    # 7:38 AM EDT = 11:38 UTC (second fallback run)
-    - cron: '38 11 * * *'
-    # 8:08 AM EDT = 12:08 UTC (third fallback run)
-    - cron: '8 12 * * *'
+  # schedule:
+  #   # 5:28 AM EDT = 09:28 UTC (shortly after NCSBE updates at ~09:20 UTC)
+  #   - cron: '28 9 * * *'
+  #   # 6:08 AM EDT = 10:08 UTC (primary morning run, offset to avoid runner queue delays)
+  #   - cron: '8 10 * * *'
+  #   # 6:38 AM EDT = 10:38 UTC (secondary morning run)
+  #   - cron: '38 10 * * *'
+  #   # 7:08 AM EDT = 11:08 UTC (first fallback run)
+  #   - cron: '8 11 * * *'
+  #   # 7:38 AM EDT = 11:38 UTC (second fallback run)
+  #   - cron: '38 11 * * *'
+  #   # 8:08 AM EDT = 12:08 UTC (third fallback run)
+  #   - cron: '8 12 * * *'
   workflow_dispatch:
     inputs:
       test_email_only:
