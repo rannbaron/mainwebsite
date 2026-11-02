@@ -1,0 +1,170 @@
+\documentclass[10.5pt]{article}
+\usepackage[letterpaper, margin=0.6in, top=0.5in, bottom=0.5in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+
+% Define colors matching instructor board annotations
+\definecolor{chalkblue}{RGB}{0, 105, 185}
+\definecolor{chalkred}{RGB}{205, 35, 35}
+\definecolor{chalkpink}{RGB}{230, 90, 120}
+\definecolor{chalkcyan}{RGB}{15, 160, 190}
+\definecolor{chalkgreen}{RGB}{20, 130, 50}
+\definecolor{boxbg}{RGB}{252, 252, 254}
+\definecolor{boxframe}{RGB}{150, 160, 180}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+% ==============================================================================
+% PAGE 1
+% ==============================================================================
+\noindent \textbf{\large Math 105L} \hfill \textbf{\large Lab 8 Part 1}\\[1pt]
+{\textbf{\Large Semilog Plots \& Modeling Exponential Growth}}\\[-5pt]
+\rule{\textwidth}{1.2pt}
+
+\vspace{0.03in}
+
+\textbf{\large Exploring Semilog Transformations: $y = 3 \cdot 2^t$}
+
+In the spreadsheet demonstration, we begin with the exponential function $y(t) = 3 \cdot 2^t$ and analyze the transformation obtained by taking the natural logarithm of the output, $\ln y$:
+
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{|c|c|c|l|}
+\hline
+\textbf{$t$} & \textbf{$y = 3 \cdot 2^t$} & \textbf{$\ln y$} & \textbf{Spreadsheet Notes / Verification} \\ \hline
+$0$ & $3$ & $1.0986$ & $\ln(3) \approx 1.09861$ \\ \hline
+$1$ & $6$ & $1.7918$ & $\ln(6) \approx 1.79176$ ($\Delta = +0.693$) \\ \hline
+$2$ & $12$ & $2.4849$ & $\ln(12) \approx 2.48491$ ($\Delta = +0.693$) \\ \hline
+$3$ & $24$ & $3.1781$ & $\ln(24) \approx 3.17805$ ($\Delta = +0.693$) \\ \hline
+$4$ & $48$ & $3.8712$ & $\ln(48) \approx 3.87120$ ($\Delta = +0.693$) \\ \hline
+$5$ & $96$ & $4.5643$ & $\ln(96) \approx 4.56435$ ($\Delta = +0.693$) \\ \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.02in}
+
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item \textbf{Cartesian Graph ($y$ vs. $t$):} Rapid upward curve displaying classic exponential growth.
+  \item \textbf{Semilog Graph ($\ln y$ vs. $t$):} A \textbf{perfect straight line} with constant slope $m \approx 0.693$ and vertical intercept $b \approx 1.0986$.
+\end{itemize}
+
+\vspace{0.03in}
+
+\textbf{\large Board Derivation: Converting Exponential Growth to a Linear Form}
+
+Why does taking the natural logarithm of an exponential function linearize the relationship?
+\begin{align*}
+  y &= 3 \cdot 2^t \\
+  \ln y &= \ln\big(3 \cdot 2^t\big) \\
+        &= \ln 3 + \ln\big(2^t\big) \quad \text{using } \ln(AB) = \ln A + \ln B \\
+        &= \ln 3 + t \cdot \ln 2 \quad \text{using } \ln(A^p) = p \ln A \\
+        &= \mathbf{(\ln 2) \cdot t + \ln 3}
+\end{align*}
+
+Letting $Y = \ln y$, this has the standard slope-intercept form $Y = m t + b$:
+\[
+  \text{Slope } m = \ln 2 \approx 0.69315, \qquad \text{Intercept } b = \ln 3 \approx 1.09861
+\]
+
+\vspace{0.03in}
+
+\textbf{\large Back-Transformation: Reconstructing the Exponential from a Trendline}
+
+\begin{tcolorbox}[colback=boxbg, colframe=boxframe, boxrule=0.8pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\textbf{The Reverse Procedure (Recovering Model Parameters):}\\[2pt]
+Suppose a linear regression on semilog axes gives the equation $\ln y = 0.693 t + 1.1$. How do we recover the original exponential model $y(t) = P_0 a^t$ (or $P_0 e^{rt}$)?
+\begin{align*}
+  \ln y &= 0.693 t + 1.1 \\
+  e^{\ln y} &= e^{0.693 t + 1.1} \\
+  y &= e^{1.1} \cdot e^{0.693 t} \quad \text{using } e^{A+B} = e^A \cdot e^B \\
+  y &\approx 3.004 \cdot \big(e^{0.693}\big)^t \\
+  y &\approx \mathbf{3.004 \cdot (1.9997)^t \approx 3 \cdot 2^t}
+\end{align*}
+\end{tcolorbox}
+
+\newpage
+
+% ==============================================================================
+% PAGE 2
+% ==============================================================================
+\noindent \textbf{\large Math 105L} \hfill \textbf{\large Lab 8 Part 1 (Page 2)}\\[1pt]
+{\textbf{\Large Real-World Case Study: U.S. Historical Population (1790--1900)}}\\[-5pt]
+\rule{\textwidth}{1.2pt}
+
+\vspace{0.03in}
+
+\textbf{\large U.S. Census Data \& Semilog Regression}
+
+We model U.S. historical population growth from the initial census in $1790$ ($t = 0$) through $1900$ ($t = 110$ years):
+
+\begin{center}
+\renewcommand{\arraystretch}{1.22}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\textbf{Year} & \textbf{Years Since 1790 ($t$)} & \textbf{Population (millions)} & \textbf{$\ln(\text{pop})$} & \textbf{Exponential Model: $P(t)$} \\ \hline
+$1790$ & $0$ & $3.9$ & $1.3610$ & $4.19$ \\ \hline
+$1800$ & $10$ & $5.3$ & $1.6677$ & $5.52$ \\ \hline
+$1810$ & $20$ & $7.2$ & $1.9741$ & $7.26$ \\ \hline
+$1820$ & $30$ & $9.6$ & $2.2618$ & $9.56$ \\ \hline
+$1830$ & $40$ & $12.9$ & $2.5572$ & $12.59$ \\ \hline
+$1840$ & $50$ & $17.1$ & $2.8391$ & $16.57$ \\ \hline
+$1850$ & $60$ & $23.2$ & $3.1442$ & $21.82$ \\ \hline
+$1860$ & $70$ & $31.4$ & $3.4468$ & $28.72$ \\ \hline
+$1870$ & $80$ & $39.8$ & $3.6839$ & $37.81$ \\ \hline
+$1880$ & $90$ & $50.2$ & $3.9160$ & $49.78$ \\ \hline
+$1890$ & $100$ & $62.9$ & $4.1415$ & $65.54$ \\ \hline
+$1900$ & $110$ & $76.0$ & $4.3307$ & $86.29$ \\ \hline
+\end{tabular}
+\end{center}
+
+\vspace{0.03in}
+
+\textbf{\large Extracting the Continuous Exponential Model}
+
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item \textbf{Spreadsheet Trendline on $\ln(\text{pop})$ vs. $t$:}
+  \[
+    \ln(\text{pop}) = 0.0275 \cdot t + 1.43
+  \]
+  \item \textbf{Back-Transformation via Exponentiation:}
+  \[
+    \text{pop}(t) = e^{0.0275 t + 1.43} = e^{1.43} \cdot e^{0.0275 t} \approx \mathbf{4.19 \cdot e^{0.0275 t}}
+  \]
+  \item \textbf{Spreadsheet Formula Implemented:}
+  In cell \texttt{E2}: \quad \texttt{=4.19*exp(0.0275*B2)}
+  \item \textbf{Interpretation of Model Parameters:}
+  \begin{itemize}[label=--]
+    \item \textbf{Base Population ($t=0$, 1790):} $P_0 = e^{1.43} \approx 4.19$ million people (very close to actual $3.9$M).
+    \item \textbf{Continuous Growth Rate:} $r = 0.0275 = 2.75\%$ per year throughout the 19th century.
+    \item \textbf{Doubling Time:}
+    \[
+      t_{\text{double}} = \frac{\ln 2}{r} = \frac{0.69315}{0.0275} \approx \mathbf{25.2 \text{ years}}
+    \]
+  \end{itemize}
+\end{itemize}
+
+\begin{tcolorbox}[colback=chalkblue!6, colframe=chalkblue, boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=5pt, bottom=5pt]
+\textbf{\large Summary: The Semilog Workflow for Exponential Data}
+\begin{enumerate}[leftmargin=1.4em, topsep=1pt, itemsep=1pt]
+  \item Transform raw $(t, y)$ pairs into $(t, \ln y)$.
+  \item Plot $\ln y$ vs. $t$. A linear pattern confirms that exponential modeling is valid.
+  \item Fit a linear trendline: $\ln y = m t + b$.
+  \item Recover the natural parameters: initial value $P_0 = e^b$, continuous growth rate $r = m$.
+\end{enumerate}
+\end{tcolorbox}
+
+\end{document}
+

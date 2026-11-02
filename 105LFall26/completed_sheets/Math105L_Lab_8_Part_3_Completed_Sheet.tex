@@ -1,0 +1,102 @@
+\documentclass[10.5pt]{article}
+\usepackage[letterpaper, margin=0.6in, top=0.5in, bottom=0.5in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{hyperref}
+
+\definecolor{chalkblue}{RGB}{0, 105, 185}
+\definecolor{chalkred}{RGB}{205, 35, 35}
+\definecolor{boxbg}{RGB}{252, 252, 254}
+\definecolor{boxframe}{RGB}{150, 160, 180}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+% ==============================================================================
+% PAGE 1
+% ==============================================================================
+\noindent \textbf{\large Math 105L} \hfill \textbf{\large Lab 8 Part 3}\\[1pt]
+{\textbf{\Large Logarithm Plots: NC COVID Hospitalization Report Guide}}\\[-5pt]
+\rule{\textwidth}{1.2pt}
+
+\vspace{0.03in}
+
+\textbf{\large 1. Executive Overview \& Project Objective}
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item \textbf{Data Set:} 7-day running average of daily COVID-19 hospitalizations in North Carolina starting April 14, 2020 ($t = 0$).
+  \item \textbf{Goal:} Model non-linear, multi-phase epidemiological growth and containment using \textbf{piecewise semi-log regression}.
+  \item \textbf{Core Transformation:} An exponential curve $y = A e^{kt}$ becomes a linear function when plotted on a logarithmic scale:
+  \[
+    \ln(y) = \ln(A e^{kt}) = \ln(A) + kt = m t + b, \quad \text{where } m = k \text{ and } b = \ln(A).
+  \]
+\end{itemize}
+
+\vspace{0.02in}
+
+\textbf{\large 2. Mathematical Preliminaries: Piecewise Linear Functions}
+\begin{tcolorbox}[colback=boxbg, colframe=boxframe, boxrule=0.8pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+A function is \textbf{piecewise linear} if its domain can be partitioned into intervals such that the function is strictly linear on each piece:
+\[
+  f(x) = \begin{cases} x + 4 & \text{when } 0 < x < 4 \\ 2x + 1 & \text{when } 4 \le x < 8 \end{cases} \quad \text{\textbf{(Piecewise Linear)}}
+\]
+\[
+  g(x) = \begin{cases} x + 4 & \text{when } 0 < x < 4 \\ x^2 & \text{when } 4 \le x < 8 \end{cases} \quad \text{\textbf{(Not Piecewise Linear)}}
+\]
+\textbf{Key Insight for Semi-Log Modeling:} A curve $y(t)$ whose logarithm $\ln(y(t))$ is piecewise linear corresponds to a \textbf{piecewise exponential model} in real terms, where each regime has a constant relative growth/decay rate $k$.
+\end{tcolorbox}
+
+\vspace{0.02in}
+
+\textbf{\large 3. Google Sheets Setup \& Data Structure}
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item \textbf{Column A (Date):} Calendar date starting 4/14/2020.
+  \item \textbf{Column B (Days since 4/14/2020, $t$):} Indexed time $t = 0, 1, 2, \dots$
+  \item \textbf{Column C (Hospitalizations, $y$):} Raw 7-day moving average (e.g., $t=0 \implies 375.86$, $t=1 \implies 382.29$).
+  \item \textbf{Column D ($\ln(\text{hosp})$):} Natural log of Column C via formula \texttt{=LN(C2)}.
+\end{itemize}
+
+\vspace{0.02in}
+
+\textbf{\large 4. Piecewise Log Regressions (NC COVID-19 Data)}
+\begin{tcolorbox}[colback=blue!3!white, colframe=chalkblue, boxrule=0.8pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\textbf{Phase 1: Initial Spring Wave (4/14/2020 -- 5/5/2020, $t \in [0, 21]$)}
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item Google Sheets Trendline Fit: \quad $\ln(y) = 0.0157\, t + 5.93$
+  \item \textbf{Recovery of Exponential Model:}
+  \[
+    y(t) = e^{\ln(y)} = e^{0.0157\, t + 5.93} = e^{5.93} \cdot e^{0.0157\, t} \approx 376.15 \cdot e^{0.0157\, t}
+  \]
+  \item \textbf{Epidemiological Interpretation:}
+  \begin{itemize}[label=$\circ$, leftmargin=1.2em]
+    \item Base initial hospitalization count at $t=0$: $A \approx 376$ patients.
+    \item Daily continuous growth rate: $k = 0.0157$ ($+1.57\%$ daily growth).
+    \item Doubling time: $T_{\text{double}} = \frac{\ln(2)}{k} = \frac{0.6931}{0.0157} \approx 44.1$ days.
+  \end{itemize}
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{0.02in}
+
+\textbf{\large 5. Key Report Guidelines \& Common Traps}
+\begin{enumerate}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item \textbf{Do Not Fit One Global Line:} A single global exponential fit fails because disease dynamics changed due to public health interventions, resulting in distinct growth, plateau, and surge intervals.
+  \item \textbf{Clear Boundary Identification:} Identify inflection dates where the slope of $\ln(y)$ visibly shifts, partition the data table into those ranges, and compute separate linear fits for each partition.
+  \item \textbf{Convert Equations Back:} Always convert the spreadsheet linear equations ($\ln(y) = mt + b$) back into physical exponential functions ($y = A e^{kt}$ or $y = A b^t$) in your report write-up.
+\end{enumerate}
+
+\vfill
+\noindent \textbf{\small Math 105L} \hfill \textbf{\small Lab 8 Part 3 Summary}
+
+\end{document}

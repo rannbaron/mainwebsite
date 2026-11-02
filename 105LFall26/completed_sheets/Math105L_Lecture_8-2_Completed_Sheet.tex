@@ -1,0 +1,158 @@
+\documentclass[10.5pt]{article}
+\usepackage[letterpaper, margin=0.6in, top=0.5in, bottom=0.5in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+
+% Define colors matching instructor board annotations
+\definecolor{chalkblue}{RGB}{0, 105, 185}
+\definecolor{chalkred}{RGB}{205, 35, 35}
+\definecolor{chalkpink}{RGB}{230, 90, 120}
+\definecolor{chalkcyan}{RGB}{15, 160, 190}
+\definecolor{chalkgreen}{RGB}{20, 130, 50}
+\definecolor{boxbg}{RGB}{252, 252, 254}
+\definecolor{boxframe}{RGB}{150, 160, 180}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+% ==============================================================================
+% PAGE 1
+% ==============================================================================
+\noindent \textbf{\large Math 105L} \hfill \textbf{\large Lecture 8-2}\\[1pt]
+{\textbf{\Large Logarithms \& Inverses of Exponential Functions}}\\[-5pt]
+\rule{\textwidth}{1.2pt}
+
+\vspace{0.03in}
+
+\textbf{\large Review: Exponential Functions \& Inverse Functions}
+
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item An exponential function is any function of the form $f(x) = P_0 a^x = P_0 e^{rt}$:
+  \begin{itemize}[label=--]
+    \item If $P_0 a^t = P_0 e^{rt}$, then $a = \mathbf{e^r}$ \quad (Recall: $a^t = (e^r)^t = e^{rt}$).
+    \item $P_0$ is the \textbf{initial value} (the $y$-intercept $(0, P_0)$ of the graph).
+    \item If $a > 1$ (or $r > 0$), the function is strictly \textbf{increasing}.
+    \item If $0 < a < 1$ (or $r < 0$), the function is strictly \textbf{decreasing}.
+  \end{itemize}
+  \item \textbf{Continuous Compounding:} A bank account with principal $\$A$ at continuous interest rate $r$ yields balance $A e^{rt}$ after $t$ years.
+  \item \textbf{Invertibility Criterion:} A function is invertible if and only if it passes the \textbf{Horizontal Line Test (HLT)}. If $y = f(x)$ is invertible, then $f^{-1}(y) = x$.
+\end{itemize}
+
+\vspace{0.03in}
+
+\textbf{\large Preliminaries: Inverting Exponentials}
+
+\textbf{Question: Is every exponential function invertible? How do you know?}
+\begin{itemize}[leftmargin=1.2em, label=$\bullet$, topsep=0pt, itemsep=1pt]
+  \item \textbf{Board Answer:} \textit{Yes! Because exponential functions are always strictly monotonic (always increasing or always decreasing everywhere), every horizontal line intersects the graph at most once. Therefore, they always pass the HLT!}
+\end{itemize}
+
+\vspace{0.02in}
+
+\textbf{Recasting Doubling Time as an Inverse Function:}
+To find the doubling time of an account paying $5\%$ compounded continuously:
+\[
+  2A = A e^{0.05t} \implies 2 = e^{0.05t}
+\]
+If $P(t) = A e^{0.05t}$, solving for $t$ is equivalent to computing the inverse value: $\mathbf{t = P^{-1}(2A)}$.
+
+\vspace{0.03in}
+
+\begin{tcolorbox}[colback=chalkblue!6, colframe=chalkblue, boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\textbf{\large Definition: The Natural Logarithm}
+\vspace{1pt}
+
+If $f(x) = e^x$, we define its inverse function $f^{-1}(x)$ as the \textbf{natural logarithm}, denoted $\ln x$ (or $\log_e x$):
+\[
+  \mathbf{\ln x = c \iff e^c = x}
+\]
+Likewise, for base $10$, the common logarithm is defined by $\mathbf{\log x = c \iff 10^c = x}$.
+\end{tcolorbox}
+
+\vspace{0.02in}
+
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=2pt]
+  \item \textbf{Domain and Range of $\ln x$:}
+  \[
+    \text{Domain: } \mathbf{(0, \infty)} \quad \text{(strictly positive)}, \qquad \text{Range: } \mathbf{(-\infty, \infty)} \quad \text{(all real numbers)}
+  \]
+  \item \textbf{Why does it make no sense to evaluate $\ln(0)$ or $\ln(x)$ for negative $x$?}
+  Because $e^c > 0$ for all real numbers $c$. An exponential output is never zero and never negative!
+\end{itemize}
+
+\newpage
+
+% ==============================================================================
+% PAGE 2
+% ==============================================================================
+\noindent \textbf{\large Math 105L} \hfill \textbf{\large Lecture 8-2 (Page 2)}\\[1pt]
+{\textbf{\Large Properties of Logarithms \& Solving Exponential Equations}}\\[-5pt]
+\rule{\textwidth}{1.2pt}
+
+\vspace{0.03in}
+
+\begin{tcolorbox}[colback=boxbg, colframe=boxframe, boxrule=0.8pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\textbf{Core Algebraic Properties of Logarithms (Deducible from Exponent Laws):}\\[2pt]
+\begin{center}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{ll}
+$\ln(AB) = \ln A + \ln B$ & $\log(AB) = \log A + \log B$ \\
+$\ln\left(\frac{A}{B}\right) = \ln A - \ln B$ & $\log\left(\frac{A}{B}\right) = \log A - \log B$ \\
+$\ln(A^p) = p \ln A$ & $\log(A^p) = p \log A$ \\
+$\ln(e^x) = x \quad \text{and} \quad e^{\ln x} = x$ & $\log(10^x) = x \quad \text{and} \quad 10^{\log x} = x$
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\vspace{0.03in}
+
+\textbf{\large Applications: Growth Rates, Doubling Times, and Half-Lives}
+
+\textbf{Problem 1: Exact Doubling Time at $5\%$ Continuous Compounding}
+\begin{align*}
+  2A &= A e^{0.05t} \\
+  2 &= e^{0.05t} \\
+  \ln(2) &= \ln\big(e^{0.05t}\big) \\
+  \ln 2 &= 0.05t \\
+  t &= \frac{\ln 2}{0.05} = \frac{0.693147\dots}{0.05} \approx \mathbf{13.86 \text{ years}}
+\end{align*}
+
+\vspace{0.02in}
+
+\textbf{Problem 2: General Inversion of $P(x) = A e^{rx}$}
+\[
+  y = A e^{rx} \implies \frac{y}{A} = e^{rx} \implies \ln\left(\frac{y}{A}\right) = rx \implies x = \frac{1}{r}\ln\left(\frac{y}{A}\right) = \mathbf{\frac{1}{r}(\ln y - \ln A)}
+\]
+Thus: $\mathbf{P^{-1}(x) = \frac{1}{r}(\ln x - \ln A)}$.
+
+\vspace{0.04in}
+
+\textbf{\large Solving Exponential Equations Analytically}
+
+\textbf{Question: Solve $7^x = 2$ for $x$ exactly:}
+\begin{align*}
+  7^x &= 2 \\
+  \ln(7^x) &= \ln 2 \\
+  x \cdot \ln 7 &= \ln 2 \quad \text{using } \ln(A^p) = p \ln A \\
+  \mathbf{x} &= \mathbf{\frac{\ln 2}{\ln 7}} \approx \frac{0.69315}{1.94591} \approx 0.3562
+\end{align*}
+
+\begin{tcolorbox}[colback=chalkgreen!6, colframe=chalkgreen, boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\textbf{Key Takeaway for Exponential Modeling:}\\[1pt]
+To solve for an exponent variable $t$ algebraically, isolate the exponential base term and take the natural logarithm ($\ln$) of both sides. The power property $\ln(a^t) = t \ln a$ pulls the variable down to linear form, allowing exact exact solution without guesswork.
+\end{tcolorbox}
+
+\end{document}
+

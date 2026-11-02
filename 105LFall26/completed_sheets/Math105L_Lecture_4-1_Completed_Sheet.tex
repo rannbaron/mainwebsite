@@ -1,0 +1,101 @@
+\documentclass[10.5pt]{article}
+\usepackage[letterpaper, margin=0.6in, top=0.5in, bottom=0.5in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{enumitem}
+\usepackage{tcolorbox}
+\usepackage{hyperref}
+
+% Define colors matching instructor board annotations
+\definecolor{chalkblue}{RGB}{0, 105, 185}
+\definecolor{chalkred}{RGB}{205, 35, 35}
+\definecolor{chalkpink}{RGB}{230, 90, 120}
+\definecolor{chalkcyan}{RGB}{15, 160, 190}
+\definecolor{chalkgreen}{RGB}{20, 130, 50}
+\definecolor{boxbg}{RGB}{252, 252, 254}
+\definecolor{boxframe}{RGB}{150, 160, 180}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2.5pt}
+
+\begin{document}
+
+% ==============================================================================
+% PAGE 1
+% ==============================================================================
+\noindent \textbf{\large Math 105L} \hfill \textbf{\large Lecture 4-1}\\[1pt]
+{\textbf{\Large Introduction to Rates of Change \& Average Velocity}}\\[-5pt]
+\rule{\textwidth}{1.2pt}
+
+\vspace{0.03in}
+
+\textbf{\large 1. Defining Average Velocity \& Distinguishing Velocity from Speed}
+
+The \textbf{average rate of change} of a position function $s(t)$ over an interval $[t_1, t_2]$ is the \textbf{average velocity}:
+\[
+  \mathbf{\text{Average Velocity} = \frac{\Delta s}{\Delta t} = \frac{s(t_2) - s(t_1)}{t_2 - t_1}}
+\]
+\begin{tcolorbox}[colback=boxbg, colframe=boxframe, boxrule=0.8pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=3pt]
+  \item \textbf{Velocity (Signed):} Carries directional information. A negative velocity means the position is decreasing (moving downward or backward); a positive velocity means position is increasing.
+  \item \textbf{Speed (Magnitude):} The non-negative magnitude of motion:
+  \[
+    \mathbf{\text{Speed} = |\text{Velocity}| \ge 0}
+  \]
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{0.03in}
+
+\textbf{\large 2. Classroom Demonstration: Free-Fall Data from Duke Chapel}
+
+A watermelon is dropped from Duke Chapel ($64.0\text{ ft}$) with height recorded every $0.5\text{ seconds}$:
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+  \hline
+  Time $t$ (sec) & $0.0$ & $0.5$ & $1.0$ & $1.5$ & $2.0$ & $2.5$ & $2.80$ (ground) \\
+  \hline
+  Position $s(t)$ (feet) & $64.0$ & $62.9$ & $57.3$ & $47.2$ & $32.5$ & $13.4$ & $0.0$ \\
+  \hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=3pt]
+  \item \textbf{Between $t = 0$ and $t = 1.0\text{ sec}$:}
+  \[
+    \text{Avg Vel} = \frac{57.3 - 64.0}{1.0 - 0.0} = \mathbf{-6.7\text{ ft/sec}}, \qquad \text{Avg Speed} = \mathbf{6.7\text{ ft/sec}}
+  \]
+  \item \textbf{Between $t = 1.0$ and $t = 1.5\text{ sec}$:}
+  \[
+    \text{Avg Vel} = \frac{47.2 - 57.3}{1.5 - 1.0} = \frac{-10.1}{0.5} = \mathbf{-20.2\text{ ft/sec}}, \qquad \text{Avg Speed} = \mathbf{20.2\text{ ft/sec}}
+  \]
+  \item \textbf{Observation:} As the object falls, its downward velocity becomes increasingly negative (speed increases due to gravity).
+\end{itemize}
+
+\vspace{0.04in}
+
+\textbf{\large 3. Transition to Function Models: $s(t) = -4t(t-1)$}
+
+For an object with trajectory $s(t) = -4t(t-1) = -4t^2 + 4t$ meters:
+\begin{itemize}[leftmargin=1.2em, topsep=1pt, itemsep=3pt]
+  \item $t = 0$ to $t = 1$: $\text{Avg Vel} = \frac{s(1) - s(0)}{1 - 0} = \frac{0 - 0}{1} = \mathbf{0\text{ m/s}}$ (net displacement is zero).
+  \item $t = 0$ to $t = 0.5$: $\text{Avg Vel} = \frac{s(0.5) - s(0)}{0.5 - 0} = \frac{1 - 0}{0.5} = \mathbf{2\text{ m/s}}$.
+  \item $t = 0$ to $t = 0.1$: $\text{Avg Vel} = \frac{0.36 - 0}{0.1} = \mathbf{3.6\text{ m/s}}$.
+\end{itemize}
+
+\vspace{0.03in}
+
+\begin{tcolorbox}[colback=chalkblue!6, colframe=chalkblue, boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\textbf{Key Concept:}\\[1pt]
+The average velocity over an interval is the slope of the secant line across that interval. To find the instantaneous velocity at an exact second, we must shrink the interval width $\Delta t \to 0$.
+\end{tcolorbox}
+
+\end{document}
+

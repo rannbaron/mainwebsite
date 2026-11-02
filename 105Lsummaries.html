@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <title>Math 105L Processed Lecture & Lab Summaries | Fall 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00539B;
+      --primary-light: #0582CA;
+      --primary-dark: #003366;
+      --bg: #0B0F19;
+      --surface: #131B2E;
+      --surface-border: #1E293B;
+      --surface-light: #1A243D;
+      --text: #F1F5F9;
+      --text-muted: #94A3B8;
+      --accent-green: #10B981;
+      --accent-purple: #8B5CF6;
+      --accent-amber: #F59E0B;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+    }
+
+    /* Password Barrier */
+    #auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 15, 25, 0.96);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 1.5rem;
+    }
+    .auth-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 1rem;
+      padding: 2.5rem;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .auth-lock-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(0, 83, 155, 0.2);
+      color: #38BDF8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .auth-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #FFF;
+    }
+    .auth-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .auth-input {
+      padding: 0.85rem 1rem;
+      background: #0B0F19;
+      border: 1px solid var(--surface-border);
+      border-radius: 0.5rem;
+      color: #FFF;
+      font-size: 1rem;
+      text-align: center;
+      letter-spacing: 0.1em;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .auth-input:focus {
+      border-color: #38BDF8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    }
+    .auth-btn {
+      padding: 0.85rem 1.5rem;
+      background: linear-gradient(135deg, #00539B, #0582CA);
+      color: #FFF;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.15s, opacity 0.2s;
+    }
+    .auth-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+    .auth-error {
+      color: #EF4444;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    /* Main Container */
+    #main-content {
+      display: none;
+      padding: 3rem 1.5rem 5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--surface-border);
+      padding-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .header-info h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #FFF;
+      margin-bottom: 0.4rem;
+    }
+    .header-info p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+    .header-badges {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    .lock-status-btn {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #F87171;
+      font-size: 0.8rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .lock-status-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+    }
+
+    /* Stats Grid */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }
+    .stat-val {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #FFF;
+      margin-top: 0.2rem;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      flex: 1;
+      min-width: 260px;
+      padding: 0.75rem 1rem;
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 0.5rem;
+      color: #FFF;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .search-input:focus {
+      border-color: #38BDF8;
+    }
+
+    /* Table Design */
+    .table-container {
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      border-radius: 0.75rem;
+      overflow-x: auto;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      text-align: left;
+    }
+    th {
+      background: #0E1626;
+      color: #94A3B8;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 0.9rem 1rem;
+      border-bottom: 1px solid var(--surface-border);
+      white-space: nowrap;
+    }
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--surface-border);
+      vertical-align: middle;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background: var(--surface-light);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 0.35rem;
+      white-space: nowrap;
+    }
+    .badge-lec {
+      background: rgba(56, 189, 248, 0.15);
+      color: #38BDF8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .badge-lab {
+      background: rgba(168, 85, 247, 0.15);
+      color: #C084FC;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .date-cell {
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      white-space: nowrap;
+    }
+    .topic-cell {
+      color: #F8FAFC;
+      min-width: 220px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      border-radius: 0.375rem;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .btn-video {
+      background: rgba(0, 83, 155, 0.3);
+      color: #60A5FA;
+      border: 1px solid rgba(0, 83, 155, 0.6);
+    }
+    .btn-video:hover {
+      background: rgba(0, 83, 155, 0.5);
+      color: #93C5FD;
+      transform: translateY(-1px);
+    }
+    .btn-pdf {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34D399;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .btn-pdf:hover {
+      background: rgba(16, 185, 129, 0.25);
+      color: #6EE7B7;
+      transform: translateY(-1px);
+    }
+    .btn-tex {
+      background: rgba(245, 158, 11, 0.15);
+      color: #FBBF24;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .btn-tex:hover {
+      background: rgba(245, 158, 11, 0.25);
+      color: #FCD34D;
+      transform: translateY(-1px);
+    }
+
+    footer {
+      margin-top: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--surface-border);
+      padding-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Password Barrier -->
+  <div id="auth-overlay">
+    <div class="auth-card">
+      <div class="auth-lock-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      </div>
+      <h2 class="auth-title">Math 105L Video Archive</h2>
+      <p class="auth-desc">Enter the authorized passcode to view the lecture & lab video summaries ledger.</p>
+      <form class="auth-form" id="password-form" onsubmit="handleAuth(event)">
+        <input type="password" id="pw-input" class="auth-input" placeholder="Enter passcode" autofocus required autocomplete="current-password">
+        <button type="submit" class="auth-btn">Access Archive</button>
+        <div id="auth-error" class="auth-error">Incorrect passcode. Access denied.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Protected Page Content -->
+  <div id="main-content">
+    <header>
+      <div class="header-info">
+        <h1>Math 105L Processed Video Archive</h1>
+        <p>Complete ledger of processed Panopto lecture recordings and completed discussion sheets & LaTeX sources.</p>
+        <div class="header-badges">
+          <span class="badge badge-lec">Fall 2026</span>
+          <span class="badge badge-lab">Math 105L</span>
+          <span style="font-size: 0.75rem; color: #94A3B8;">Internal Beta Archive</span>
+        </div>
+      </div>
+      <button class="lock-status-btn" onclick="lockArchive()" title="Lock this session">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        Lock Page
+      </button>
+    </header>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="stat-label">Processed Videos</div>
+        <div class="stat-val">27</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Completed Sheet PDFs</div>
+        <div class="stat-val">27</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">LaTeX Sources (.tex)</div>
+        <div class="stat-val">27</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Materials</div>
+        <div class="stat-val">54 Files</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-bar">
+      <input type="text" id="search-input" class="search-input" placeholder="Filter by day (e.g. 9-2, Lab 5), topic, or date..." oninput="filterTable()">
+    </div>
+
+    <!-- Table -->
+    <div class="table-container">
+      <table id="summaries-table">
+        <thead>
+          <tr>
+            <th>Day / Syllabus #</th>
+            <th>Date</th>
+            <th>Topic</th>
+            <th>Panopto Recording</th>
+            <th>Completed Sheet (PDF)</th>
+            <th>LaTeX Source (.tex)</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr data-search="1-3 linear functions 08/28/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">1-3</span>
+          </td>
+          <td class="date-cell">08/28/26</td>
+          <td class="topic-cell"><strong>Linear Functions</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=84286bd5-61b3-4478-81b3-b4a90132033a" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_1-3_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_1-3_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="2-1 power functions & polynomials 08/31/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">2-1</span>
+          </td>
+          <td class="date-cell">08/31/26</td>
+          <td class="topic-cell"><strong>Power Functions & Polynomials</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=37fe672c-6178-4cc8-b8ce-b4a901320352" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_2-1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_2-1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="2-2 rational functions 09/02/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">2-2</span>
+          </td>
+          <td class="date-cell">09/02/26</td>
+          <td class="topic-cell"><strong>Rational Functions</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=26c9b00d-7c19-4e13-bc60-b4a90130689d" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_2-2_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_2-2_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="lab 2 part 1 linear modeling 09/03/26">
+          <td class="day-cell">
+            <span class="badge badge-lab">Lab 2 Part 1</span>
+          </td>
+          <td class="date-cell">09/03/26</td>
+          <td class="topic-cell"><strong>Linear Modeling</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=3291018c-bb68-4494-b176-b4a901352c81" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_2_Part_1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_2_Part_1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="2-3 function transformations 09/04/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">2-3</span>
+          </td>
+          <td class="date-cell">09/04/26</td>
+          <td class="topic-cell"><strong>Function Transformations</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=1b3adbd1-0f2a-4308-9256-b4a9013068b5" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_2-3_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_2-3_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="3-2 modeling problems day 1 09/09/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">3-2</span>
+          </td>
+          <td class="date-cell">09/09/26</td>
+          <td class="topic-cell"><strong>Modeling Problems Day 1</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d6f7854c-6a60-43da-9208-b4a9013068e0" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_3-2_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_3-2_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="lab 3 part 1 exploring limits 09/10/26">
+          <td class="day-cell">
+            <span class="badge badge-lab">Lab 3 Part 1</span>
+          </td>
+          <td class="date-cell">09/10/26</td>
+          <td class="topic-cell"><strong>Exploring Limits</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=4a2d6b2f-9569-470d-b182-b4a901352cb4" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_3_Part_1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_3_Part_1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="4-1 rates of change 09/14/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">4-1</span>
+          </td>
+          <td class="date-cell">09/14/26</td>
+          <td class="topic-cell"><strong>Rates of Change</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=f844e85c-d569-4ec4-b086-b4a9013203fd" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_4-1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_4-1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="4-2 rates of change (continued) 09/16/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">4-2</span>
+          </td>
+          <td class="date-cell">09/16/26</td>
+          <td class="topic-cell"><strong>Rates of Change (Continued)</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=8aa2974b-b420-4863-a846-b4a901306923" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_4-2_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_4-2_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="lab 4 part 1 human growth 09/17/26">
+          <td class="day-cell">
+            <span class="badge badge-lab">Lab 4 Part 1</span>
+          </td>
+          <td class="date-cell">09/17/26</td>
+          <td class="topic-cell"><strong>Human Growth</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5e8e9ef1-69a1-4a22-8157-b4a901352ced" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_4_Part_1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_4_Part_1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="4-3 derivative at a point 09/18/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">4-3</span>
+          </td>
+          <td class="date-cell">09/18/26</td>
+          <td class="topic-cell"><strong>Derivative at a Point</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=51ef007b-020e-4ee0-8105-b4a90130693c" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_4-3_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_4-3_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="5-1 limits and continuity 09/21/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">5-1</span>
+          </td>
+          <td class="date-cell">09/21/26</td>
+          <td class="topic-cell"><strong>Limits and Continuity</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=958bdbd5-cdfc-43cc-9cd4-b4a901306953" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_5-1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_5-1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="lab 4 part 2 human growth 09/22/26">
+          <td class="day-cell">
+            <span class="badge badge-lab">Lab 4 Part 2</span>
+          </td>
+          <td class="date-cell">09/22/26</td>
+          <td class="topic-cell"><strong>Human Growth</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=ff929d20-b0f9-4628-9fd0-b4a901352d09" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_4_Part_2_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_4_Part_2_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="5-2 the derivative function 09/23/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">5-2</span>
+          </td>
+          <td class="date-cell">09/23/26</td>
+          <td class="topic-cell"><strong>The Derivative Function</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=4c0c4516-2a74-4b52-b437-b4a90130696a" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_5-2_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_5-2_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="lab 5 part 1 sum, difference & power rules 09/24/26">
+          <td class="day-cell">
+            <span class="badge badge-lab">Lab 5 Part 1</span>
+          </td>
+          <td class="date-cell">09/24/26</td>
+          <td class="topic-cell"><strong>Sum, Difference & Power Rules</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=be7c1b5a-ec92-4f11-9659-b4a901352d27" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_5_Part_1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_5_Part_1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="5-3 the second derivative 09/25/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">5-3</span>
+          </td>
+          <td class="date-cell">09/25/26</td>
+          <td class="topic-cell"><strong>The Second Derivative</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=95854897-40ee-4976-b68a-b4a901306981" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_5-3_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_5-3_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="lab 5 part 2 sum, difference & power rules 09/29/26">
+          <td class="day-cell">
+            <span class="badge badge-lab">Lab 5 Part 2</span>
+          </td>
+          <td class="date-cell">09/29/26</td>
+          <td class="topic-cell"><strong>Sum, Difference & Power Rules</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=3775bfdc-70ba-4aa7-b50a-b4a901352d37" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_5_Part_2_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_5_Part_2_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="7-1 compound interest 10/05/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">7-1</span>
+          </td>
+          <td class="date-cell">10/05/26</td>
+          <td class="topic-cell"><strong>Compound Interest</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=9942a632-f38b-4a57-ab29-b4a9013069d5" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_7-1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_7-1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="lab 7 inverse functions 10/08/26">
+          <td class="day-cell">
+            <span class="badge badge-lab">Lab 7</span>
+          </td>
+          <td class="date-cell">10/08/26</td>
+          <td class="topic-cell"><strong>Inverse Functions</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=12c6a237-7754-469b-8be8-b4a901352d3a" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_7_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_7_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="8-2 logarithms 10/14/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">8-2</span>
+          </td>
+          <td class="date-cell">10/14/26</td>
+          <td class="topic-cell"><strong>Logarithms</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=d55d3fec-3a32-4d00-bb65-b4a901306a4b" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_8-2_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_8-2_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="lab 8 part 1 log plots 10/15/26">
+          <td class="day-cell">
+            <span class="badge badge-lab">Lab 8 Part 1</span>
+          </td>
+          <td class="date-cell">10/15/26</td>
+          <td class="topic-cell"><strong>Log Plots</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=c79eec61-9c60-4966-9ab3-b4a901352d43" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_8_Part_1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_8_Part_1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="8-3 chain rule 10/16/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">8-3</span>
+          </td>
+          <td class="date-cell">10/16/26</td>
+          <td class="topic-cell"><strong>Chain Rule</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=516a2468-b80c-4fa7-8977-b4a901306a6b" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_8-3_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_8-3_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="9-1 differentiating exponential functions 10/19/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">9-1</span>
+          </td>
+          <td class="date-cell">10/19/26</td>
+          <td class="topic-cell"><strong>Differentiating Exponential Functions</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=da3b6d05-4f7f-449e-b9b5-b4a901306a88" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_9-1_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_9-1_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="9-2 implicit differentiation i 10/21/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">9-2</span>
+          </td>
+          <td class="date-cell">10/21/26</td>
+          <td class="topic-cell"><strong>Implicit Differentiation I</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6a8a04f2-959c-4861-ad7b-b4a901306a9d" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_9-2_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_9-2_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="lab 8 part 3 log plots report help day 10/22/26">
+          <td class="day-cell">
+            <span class="badge badge-lab">Lab 8 Part 3</span>
+          </td>
+          <td class="date-cell">10/22/26</td>
+          <td class="topic-cell"><strong>Log Plots Report Help Day</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=8e411545-c89b-449e-b7d1-b4a901352d7e" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_8_Part_3_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lab_8_Part_3_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="9-3 implicit differentiation ii 10/23/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">9-3</span>
+          </td>
+          <td class="date-cell">10/23/26</td>
+          <td class="topic-cell"><strong>Implicit Differentiation II</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=6133c851-6a98-4bf3-bedb-b4a901306aad" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_9-3_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_9-3_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        <tr data-search="10-3 using 1st & 2nd derivatives 10/30/26">
+          <td class="day-cell">
+            <span class="badge badge-lec">10-3</span>
+          </td>
+          <td class="date-cell">10/30/26</td>
+          <td class="topic-cell"><strong>Using 1st & 2nd Derivatives</strong></td>
+          <td class="action-cell">
+            <a href="https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a707feea-9f08-49a0-8bb7-b4a901306b01" target="_blank" rel="noopener" class="btn btn-video">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+              Panopto Video ↗
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_10-3_Completed_Sheet.pdf" target="_blank" rel="noopener" class="btn btn-pdf">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+              Completed Sheet (PDF)
+            </a>
+          </td>
+          <td class="action-cell">
+            <a href="105LFall26/completed_sheets/Math105L_Lecture_10-3_Completed_Sheet.tex" download class="btn btn-tex">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              LaTeX Source (.tex)
+            </a>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <footer>
+      Math 105L: Laboratory Calculus I &bull; Duke University &bull; Internal Video Archive
+    </footer>
+  </div>
+
+  <script>
+    const AUTH_KEY = '105L_videobeta_authenticated';
+    const VALID_PW = 'videobeta';
+
+    function checkAuth() {
+      if (sessionStorage.getItem(AUTH_KEY) === 'true') {
+        document.getElementById('auth-overlay').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+      }
+    }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      const val = document.getElementById('pw-input').value.trim();
+      const err = document.getElementById('auth-error');
+      if (val === VALID_PW) {
+        sessionStorage.setItem(AUTH_KEY, 'true');
+        err.style.display = 'none';
+        document.getElementById('auth-overlay').style.display = 'none';
+        document.getElementById('main-content').style.display = 'block';
+      } else {
+        err.style.display = 'block';
+        const card = document.querySelector('.auth-card');
+        card.style.animation = 'shake 0.3s ease';
+        setTimeout(() => card.style.animation = '', 300);
+      }
+    }
+
+    function lockArchive() {
+      sessionStorage.removeItem(AUTH_KEY);
+      document.getElementById('main-content').style.display = 'none';
+      document.getElementById('auth-overlay').style.display = 'flex';
+      document.getElementById('pw-input').value = '';
+      document.getElementById('pw-input').focus();
+    }
+
+    function filterTable() {
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
+      const rows = document.querySelectorAll('#summaries-table tbody tr');
+      rows.forEach(r => {
+        const text = r.getAttribute('data-search') || '';
+        r.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    // Check auth on load
+    window.addEventListener('DOMContentLoaded', checkAuth);
+  </script>
+</body>
+</html>
