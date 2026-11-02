@@ -92,10 +92,10 @@ def find_available_days():
     days.sort()
     return days
 
-def compute_daily_changes(prev_day=None, curr_day=None):
+def compute_daily_changes(prev_day=None, curr_day=None, is_election_day=False):
     """
     Computes all day-over-day changes between prev_day and curr_day.
-    Returns a dict with all structured statistics and county change records.
+    Returns a dict with all structured statistics, county change records, and legislative seat models.
     """
     days = find_available_days()
     if not days:
@@ -293,6 +293,8 @@ def compute_daily_changes(prev_day=None, curr_day=None):
             'ratings_summary_curr': st_curr.get('ratings_summary', {})
         },
         'races_summary': races_summary,
+        'legislative': vote_forecast.predict_legislative_seats(),
+        'is_election_day': is_election_day,
         'rating_changes': rating_changes,
         'confidence_changes': confidence_changes,
         'call_conf_changes': call_conf_changes,
@@ -308,11 +310,29 @@ def format_plain_text(data):
     """Generates a clean plain text version of the summary email."""
     t = data['turnout']
     sf = data['statewide_forecast']
+    is_el_day = data.get('is_election_day', False)
+
+    header_title = "NC ELECTION DAY 2026 SPECIAL UPDATE: FINAL BENCHMARKS & MARGINS" if is_el_day else f"NC EARLY VOTING DAILY UPDATE: DAY {data['curr_day']} VS DAY {data['prev_day']}"
+
     lines = [
-        f"NC EARLY VOTING DAILY UPDATE: DAY {data['curr_day']} VS DAY {data['prev_day']}",
+        header_title,
         f"Date: {data['date_str']}",
         f"=" * 70,
-        "",
+        ""
+    ]
+
+    if is_el_day:
+        lines.extend([
+            "ELECTION DAY ALERT:",
+            "  * Polls are open across all 100 North Carolina counties from 6:30 AM to 7:30 PM EST.",
+            f"  * Cumulative early voting closed with {t['curr_tot']:,} total ballots cast.",
+            "  * Below are the final pre-election benchmarks, statewide margins, and legislative supermajority watch.",
+            "",
+            "=" * 70,
+            ""
+        ])
+
+    lines.extend([
         "1. EXECUTIVE SUMMARY",
         f"  - Total Ballots Added: +{t['new_tot']:,} ({t['pct_increase']:+.1f}% increase; {t['prev_tot']:,} -> {t['curr_tot']:,})",
         f"  - Sunday Additions Party Split: Dem {t['pct_dem']}% | Rep {t['pct_rep']}% | Una {t['pct_una']}%",
@@ -334,6 +354,30 @@ def format_plain_text(data):
             f"    - Forecast: Dem {r['dem_curr']:.2f}% | Rep {r['rep_curr']:.2f}% (Margin: {m_sign}{r['margin']:.2f}%, Shift: {r['shift']:+.2f}%)",
             f"    - Win Probability: Dem {r['prob_dem']:.1f}% | Rep {r['prob_rep']:.1f}% -> Rating: {r['rating']} [{r['call_confidence']}]",
             ""
+        ])
+
+    leg = data.get('legislative', {})
+    if leg:
+        sen = leg.get('senate', {})
+        hou = leg.get('house', {})
+        lines.extend([
+            "=" * 70,
+            "1C. NC GENERAL ASSEMBLY LEGISLATIVE BENCHMARKS & 95% CIs",
+            "=" * 70,
+            "  * NC SENATE (50 SEATS TOTAL):",
+            f"    - Projected Democratic Seats: {sen.get('point_estimate_dem')} Dem (Point Est.) | {sen.get('expected_seats_dem')} Dem (Expected EV)",
+            f"    - 95% Confidence Interval: {sen.get('ci_str')} Dem",
+            f"    - Projected Republican Seats: {sen.get('point_estimate_rep')} Rep",
+            f"    - GOP Supermajority Threshold: 30 seats (60%) -> Democrats Need 21+ to Break",
+            f"    - Probability Democrats Break Supermajority: {sen.get('prob_break_supermajority')}% ({'SUPERMAJORITY BROKEN' if sen.get('prob_break_supermajority', 0) > 50 else 'GOP Supermajority Holds'})",
+            f"    - Probability Democrats Win Chamber Majority: {sen.get('prob_win_majority')}%\n",
+            "  * NC HOUSE (120 SEATS TOTAL):",
+            f"    - Projected Democratic Seats: {hou.get('point_estimate_dem')} Dem (Point Est.) | {hou.get('expected_seats_dem')} Dem (Expected EV)",
+            f"    - 95% Confidence Interval: {hou.get('ci_str')} Dem",
+            f"    - Projected Republican Seats: {hou.get('point_estimate_rep')} Rep",
+            f"    - GOP Supermajority Threshold: 72 seats (60%) -> Democrats Need 49+ to Break",
+            f"    - Probability Democrats Break Supermajority: {hou.get('prob_break_supermajority')}% ({'SUPERMAJORITY BROKEN' if hou.get('prob_break_supermajority', 0) > 50 else 'GOP Supermajority Holds'})",
+            f"    - Probability Democrats Win Chamber Majority: {hou.get('prob_win_majority')}%\n",
         ])
 
     lines.extend([

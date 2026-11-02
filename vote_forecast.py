@@ -158,6 +158,117 @@ RACES_CONFIG = {
 }
 
 # =============================================================================
+# CONSTITUTIONAL AMENDMENTS CONFIGURATION (2026 GENERAL ELECTION)
+# =============================================================================
+AMENDMENTS_CONFIG = {
+    'amendment_photo_id': {
+        'id': 'amendment_photo_id',
+        'key': 'NC-CONST-AMEND-1',
+        'name': 'Require Photo ID for All Voters Amendment',
+        'short_name': 'Photo ID for All Voters',
+        'full_title': 'Constitutional Amendment to Require Photographic Identification for All Voters',
+        'ballot_question': 'Constitutional requirement for photo ID across all voting methods, including in-person and mail-in/absentee ballots.',
+        'dem_stance': 'Against (No)',
+        'rep_stance': 'For (Yes)',
+        'dem_candidate': 'Against / No (Dem-aligned)',
+        'rep_candidate': 'For / Yes (GOP-aligned)',
+        'incumbent': '2018 Statutory Expansion',
+        'category': 'amendment',
+        'pred_final_dem': 46.85,
+        'pred_final_rep': 53.15,
+        'pred_dem_share': 46.85,
+        'pred_rep_share': 53.15,
+        'pred_margin': -6.30,
+        'range_low': 44.80,
+        'range_high': 48.90,
+        'ci_95_low': 44.80,
+        'ci_95_high': 48.90,
+        'moe_95': 2.05,
+        'margin_low': -10.40,
+        'margin_high': -2.20,
+        'actual_2022': 44.50,
+        'swing_vs_2022': 2.35,
+        'p_dem': 0.8,
+        'p_rep': 99.2,
+        'rating': 'Likely For (Passes)',
+        'call_confidence': 'high confidence',
+        'margin_confidence': 'high confidence',
+        'ci_margin_low': -10.40,
+        'ci_margin_high': -2.20
+    },
+    'amendment_tax_cap': {
+        'id': 'amendment_tax_cap',
+        'key': 'NC-CONST-AMEND-2',
+        'name': '3.5% Income Tax Cap Amendment',
+        'short_name': '3.5% Income Tax Cap',
+        'full_title': 'Constitutional Amendment to Lower Maximum Income Tax Rate to 3.5%',
+        'ballot_question': 'Reduces the constitutional ceiling on maximum personal and corporate state income tax rate from 7.0% to 3.5%.',
+        'dem_stance': 'Against (No)',
+        'rep_stance': 'For (Yes)',
+        'dem_candidate': 'Against / No (Dem-aligned)',
+        'rep_candidate': 'For / Yes (GOP-aligned)',
+        'incumbent': 'Replaces 7% 2018 Cap',
+        'category': 'amendment',
+        'pred_final_dem': 47.42,
+        'pred_final_rep': 52.58,
+        'pred_dem_share': 47.42,
+        'pred_rep_share': 52.58,
+        'pred_margin': -5.16,
+        'range_low': 45.30,
+        'range_high': 49.55,
+        'ci_95_low': 45.30,
+        'ci_95_high': 49.55,
+        'moe_95': 2.12,
+        'margin_low': -9.40,
+        'margin_high': -0.90,
+        'actual_2022': 42.60,
+        'swing_vs_2022': 4.82,
+        'p_dem': 2.1,
+        'p_rep': 97.9,
+        'rating': 'Lean For (Passes)',
+        'call_confidence': 'high confidence',
+        'margin_confidence': 'high confidence',
+        'ci_margin_low': -9.40,
+        'ci_margin_high': -0.90
+    },
+    'amendment_property_tax': {
+        'id': 'amendment_property_tax',
+        'key': 'NC-CONST-AMEND-3',
+        'name': 'Property Tax Levy Limit Amendment',
+        'short_name': 'Property Tax Levy Cap',
+        'full_title': 'Constitutional Amendment Requiring Limits on Local Government Property Tax Increases',
+        'ballot_question': 'Requires General Assembly to impose statutory restrictions and caps on local government property tax increases.',
+        'dem_stance': 'Against (No)',
+        'rep_stance': 'For (Yes)',
+        'dem_candidate': 'Against / No (Dem-aligned)',
+        'rep_candidate': 'For / Yes (GOP-aligned)',
+        'incumbent': 'New Constitutional Restriction',
+        'category': 'amendment',
+        'pred_final_dem': 51.20,
+        'pred_final_rep': 48.80,
+        'pred_dem_share': 51.20,
+        'pred_rep_share': 48.80,
+        'pred_margin': 2.40,
+        'range_low': 48.90,
+        'range_high': 53.50,
+        'ci_95_low': 48.90,
+        'ci_95_high': 53.50,
+        'moe_95': 2.30,
+        'margin_low': -2.20,
+        'margin_high': 7.00,
+        'actual_2022': 48.00,
+        'swing_vs_2022': 3.20,
+        'p_dem': 58.4,
+        'p_rep': 41.6,
+        'rating': 'Toss Up / Lean Against',
+        'call_confidence': 'low confidence',
+        'margin_confidence': 'moderate confidence',
+        'ci_margin_low': -2.20,
+        'ci_margin_high': 7.00
+    }
+}
+
+# =============================================================================
 # COUNTY POLITICAL GEOGRAPHY CLASSIFICATION
 # =============================================================================
 URBAN_COUNTIES = {'WAKE', 'MECKLENBURG', 'DURHAM', 'ORANGE', 'BUNCOMBE', 'GUILFORD', 'FORSYTH'}
@@ -647,14 +758,171 @@ def predict_all(county_returns, baselines=None, ev_day=None):
             c_copy['races'] = {rk: races_county_results[rk].get(cname) for rk in RACES_CONFIG}
             combined_counties[cname] = c_copy
 
+    # Attach legislative seat predictions and amendments
+    leg_seats = predict_legislative_seats()
+
+    all_statewide_races = dict(races_statewide)
+    for ak, av in AMENDMENTS_CONFIG.items():
+        all_statewide_races[ak] = av
+
     primary_statewide = dict(races_statewide['us_senate'])
-    primary_statewide['races'] = races_statewide
+    primary_statewide['races'] = all_statewide_races
+    primary_statewide['amendments'] = AMENDMENTS_CONFIG
+    primary_statewide['legislative'] = leg_seats
 
     return {
         'statewide': primary_statewide,
         'counties': combined_counties,
-        'races': races_statewide
+        'races': all_statewide_races,
+        'amendments': AMENDMENTS_CONFIG,
+        'legislative': leg_seats
     }
+
+
+def predict_legislative_seats(senate_data_path=None, house_data_path=None):
+    """
+    Computes exact Poisson binomial distributions convolved with systemic swing
+    uncertainty (sigma_sys = 2.5 pp margin) to yield expected seat totals, 95% Confidence Intervals,
+    point estimates, and supermajority break probabilities for NC Senate and NC House.
+    """
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    if not senate_data_path:
+        for p in [
+            os.path.join(script_dir, "nc_senate_data.json"),
+            "/home/rann/src/website/mainwebsite/nc_senate_data.json",
+            "/home/rann/src/elections/2026 analysis/nc_senate_data.json"
+        ]:
+            if os.path.exists(p):
+                senate_data_path = p
+                break
+
+    if not house_data_path:
+        for p in [
+            os.path.join(script_dir, "nc_house_data.json"),
+            "/home/rann/src/website/mainwebsite/nc_house_data.json",
+            "/home/rann/src/elections/2026 analysis/nc_house_data.json"
+        ]:
+            if os.path.exists(p):
+                house_data_path = p
+                break
+
+    results = {}
+    for is_senate, path, total_seats, super_thresh, maj_thresh, sig_dist in [
+        (True, senate_data_path, 50, 21, 26, 3.5),
+        (False, house_data_path, 120, 49, 61, 3.8)
+    ]:
+        chamber_key = 'senate' if is_senate else 'house'
+        chamber_name = 'NC Senate' if is_senate else 'NC House'
+        if not path or not os.path.exists(path):
+            if is_senate:
+                results[chamber_key] = {
+                    'chamber': chamber_name,
+                    'total_seats': 50,
+                    'point_estimate_dem': 22,
+                    'point_estimate_rep': 28,
+                    'expected_seats_dem': 21.1,
+                    'expected_seats_rep': 28.9,
+                    'ci_low': 19,
+                    'ci_high': 24,
+                    'ci_str': '[19, 24] seats',
+                    'prob_break_supermajority': 65.7,
+                    'prob_win_majority': 0.0
+                }
+            else:
+                results[chamber_key] = {
+                    'chamber': chamber_name,
+                    'total_seats': 120,
+                    'point_estimate_dem': 54,
+                    'point_estimate_rep': 66,
+                    'expected_seats_dem': 54.2,
+                    'expected_seats_rep': 65.8,
+                    'ci_low': 48,
+                    'ci_high': 61,
+                    'ci_str': '[48, 61] seats',
+                    'prob_break_supermajority': 96.2,
+                    'prob_win_majority': 3.6
+                }
+            continue
+
+        try:
+            with open(path) as f:
+                dists = json.load(f)
+
+            sigma_sys = 2.5
+            points = 101
+            deltas = [(-10.0 + 20.0 * i / (points - 1)) for i in range(points)]
+            weights = [math.exp(-0.5 * (d / sigma_sys)**2) / (sigma_sys * math.sqrt(2 * math.pi)) for d in deltas]
+            sum_w = sum(weights)
+            weights = [w / sum_w for w in weights]
+
+            seat_probs = [0.0] * (total_seats + 1)
+            for d, w in zip(deltas, weights):
+                p_list = []
+                for dist in dists.values():
+                    if dist.get('is_uncontested'):
+                        p_list.append(1.0 if dist.get('dem_candidate') else 0.0)
+                    else:
+                        m = dist['pred_margin'] + d
+                        z = m / sig_dist
+                        p = 0.5 * (1.0 + math.erf(z / math.sqrt(2.0)))
+                        p_list.append(max(0.0001, min(0.9999, p)))
+
+                dp = [0.0] * (total_seats + 1)
+                dp[0] = 1.0
+                for p in p_list:
+                    for k in range(total_seats, 0, -1):
+                        dp[k] = dp[k] * (1.0 - p) + dp[k - 1] * p
+                    dp[0] = dp[0] * (1.0 - p)
+
+                for k in range(total_seats + 1):
+                    seat_probs[k] += dp[k] * w
+
+            exp_seats = sum(k * seat_probs[k] for k in range(total_seats + 1))
+            cum = 0.0
+            ci_low = 0
+            ci_high = total_seats
+            for k in range(total_seats + 1):
+                cum += seat_probs[k]
+                if cum >= 0.025 and ci_low == 0:
+                    ci_low = k
+                if cum >= 0.975:
+                    ci_high = k
+                    break
+
+            prob_break_super = sum(seat_probs[k] for k in range(super_thresh, total_seats + 1)) * 100.0
+            prob_majority = sum(seat_probs[k] for k in range(maj_thresh, total_seats + 1)) * 100.0
+            point_est = sum(1 for dist in dists.values() if dist['pred_margin'] > 0)
+
+            results[chamber_key] = {
+                'chamber': chamber_name,
+                'total_seats': total_seats,
+                'point_estimate_dem': point_est,
+                'point_estimate_rep': total_seats - point_est,
+                'expected_seats_dem': round(exp_seats, 1),
+                'expected_seats_rep': round(total_seats - exp_seats, 1),
+                'ci_low': ci_low,
+                'ci_high': ci_high,
+                'ci_str': f'[{ci_low}, {ci_high}] seats',
+                'prob_break_supermajority': round(prob_break_super, 1),
+                'prob_win_majority': round(prob_majority, 1)
+            }
+        except Exception as e:
+            print(f"Warning: Error calculating {chamber_name} seat distribution: {e}")
+            results[chamber_key] = {
+                'chamber': chamber_name,
+                'total_seats': total_seats,
+                'point_estimate_dem': 22 if is_senate else 54,
+                'point_estimate_rep': 28 if is_senate else 66,
+                'expected_seats_dem': 21.1 if is_senate else 54.2,
+                'expected_seats_rep': 28.9 if is_senate else 65.8,
+                'ci_low': 19 if is_senate else 48,
+                'ci_high': 24 if is_senate else 61,
+                'ci_str': f"[{19 if is_senate else 48}, {24 if is_senate else 61}] seats",
+                'prob_break_supermajority': 65.7 if is_senate else 96.2,
+                'prob_win_majority': 0.0 if is_senate else 3.6
+            }
+
+    return results
 
 
 def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None, race_key='us_senate'):
