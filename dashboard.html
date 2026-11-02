@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
   <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
@@ -1035,6 +1038,18 @@
 </div>
 
 <script>
+  const STORAGE_ADMIN_KEY = 'task_dashboard_admin_2fa_v1';
+  const STORAGE_SESSION_KEY = 'task_dashboard_session_2fa_v1';
+
+  // IMMEDIATE SELF-PURGE OF LEGACY INSECURE ACCOUNTS
+  (function purgeLegacyInsecureAccounts() {
+    try {
+      localStorage.removeItem('task_dashboard_admin');
+      localStorage.removeItem('task_dashboard_session');
+      sessionStorage.clear();
+    } catch(e) {}
+  })();
+
   // Web Crypto Utilities for Cryptographic Hashing & Randomness
   async function computeHash(saltHex, password) {
     const encoder = new TextEncoder();
@@ -1107,8 +1122,16 @@
 
   // Auth State Evaluator
   function evaluateAuth() {
-    const storedAdmin = localStorage.getItem('task_dashboard_admin');
-    const activeSession = sessionStorage.getItem('task_dashboard_session');
+    // Purge any legacy unversioned storage
+    try {
+      if (localStorage.getItem('task_dashboard_admin')) {
+        localStorage.removeItem('task_dashboard_admin');
+        sessionStorage.clear();
+      }
+    } catch(e) {}
+
+    const storedAdmin = localStorage.getItem(STORAGE_ADMIN_KEY);
+    const activeSession = sessionStorage.getItem(STORAGE_SESSION_KEY);
 
     const overlay = document.getElementById('authOverlay');
     const initView = document.getElementById('initAdminView');
@@ -1126,9 +1149,9 @@
       }
     }
 
-    // Require twoFactorEnrolled to be considered a valid admin
+    // Require twoFactorEnrolled and verified phone to be considered an active admin
     if (!adminData || !adminData.twoFactorEnrolled || !adminData.phone) {
-      // Step 1: No valid 2FA admin exists -> Show Admin Setup Form
+      // Step 1: No valid 2FA admin exists -> Show Admin Setup Form with Mobile Phone requirement
       overlay.style.display = 'flex';
       initView.style.display = 'block';
       init2FAView.style.display = 'none';
@@ -1149,7 +1172,7 @@
     }
 
     if (!sessionData || !sessionData.twoFactorVerified) {
-      // Step 2: Valid admin exists, but user not authenticated with 2FA in this session -> Show Login Form
+      // Step 2: Valid admin exists, but session not authenticated with 2FA -> Show Login Form
       overlay.style.display = 'flex';
       initView.style.display = 'none';
       init2FAView.style.display = 'none';
@@ -1285,10 +1308,10 @@
       createdAt: new Date().toISOString()
     };
 
-    localStorage.setItem('task_dashboard_admin', JSON.stringify(adminRecord));
+    localStorage.setItem(STORAGE_ADMIN_KEY, JSON.stringify(adminRecord));
 
     // Create authenticated session with 2FA verified
-    sessionStorage.setItem('task_dashboard_session', JSON.stringify({
+    sessionStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify({
       username: setupPendingState.username,
       email: setupPendingState.email,
       phoneMasked: setupPendingState.phoneMasked,
@@ -1333,7 +1356,7 @@
     const username = document.getElementById('loginUsername').value.trim();
     const pwd = document.getElementById('loginPassword').value;
 
-    const storedAdmin = localStorage.getItem('task_dashboard_admin');
+    const storedAdmin = localStorage.getItem(STORAGE_ADMIN_KEY);
     if (!storedAdmin) {
       evaluateAuth();
       return;
@@ -1413,7 +1436,7 @@
       // 2FA Challenge Passed!
       if (countdownTimerId) clearInterval(countdownTimerId);
 
-      sessionStorage.setItem('task_dashboard_session', JSON.stringify({
+      sessionStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify({
         username: loginPendingState.username,
         email: loginPendingState.email,
         phoneMasked: loginPendingState.phoneMasked,
@@ -1480,7 +1503,7 @@
     const errEl = document.getElementById('login2FAError');
     errEl.style.display = 'none';
 
-    const storedAdmin = localStorage.getItem('task_dashboard_admin');
+    const storedAdmin = localStorage.getItem(STORAGE_ADMIN_KEY);
     if (!storedAdmin) return;
 
     try {
@@ -1494,7 +1517,7 @@
       const computedHash = await computeHash(adminData.recoverySalt, keyInput);
       if (computedHash === adminData.recoveryHash) {
         if (countdownTimerId) clearInterval(countdownTimerId);
-        sessionStorage.setItem('task_dashboard_session', JSON.stringify({
+        sessionStorage.setItem(STORAGE_SESSION_KEY, JSON.stringify({
           username: adminData.username,
           email: adminData.email,
           phoneMasked: adminData.phoneMasked || '(•••) •••-2800',
@@ -1517,7 +1540,7 @@
 
   // Handle Logout -> Purge session and evaluateAuth()
   function logout() {
-    sessionStorage.removeItem('task_dashboard_session');
+    sessionStorage.removeItem(STORAGE_SESSION_KEY);
     loginPendingState = null;
     setupPendingState = null;
     if (countdownTimerId) clearInterval(countdownTimerId);
@@ -1528,7 +1551,9 @@
   function switchAdminReset(event) {
     if (event) event.preventDefault();
     if (confirm('Reset administrator credentials and re-initialize master account with 2FA mobile phone setup?')) {
+      localStorage.removeItem(STORAGE_ADMIN_KEY);
       localStorage.removeItem('task_dashboard_admin');
+      sessionStorage.removeItem(STORAGE_SESSION_KEY);
       sessionStorage.removeItem('task_dashboard_session');
       loginPendingState = null;
       setupPendingState = null;
