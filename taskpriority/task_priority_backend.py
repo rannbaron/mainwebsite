@@ -120,6 +120,7 @@ def init_db():
             description TEXT,
             priority INTEGER NOT NULL CHECK(priority >= 1 AND priority <= 10),
             model TEXT NOT NULL,
+            assigned_agent TEXT,
             completion_percent INTEGER NOT NULL CHECK(completion_percent >= 0 AND completion_percent <= 100),
             status TEXT NOT NULL DEFAULT 'active', -- 'active', 'pending_approval', 'completed'
             created_by_user_id INTEGER NOT NULL,
@@ -129,6 +130,12 @@ def init_db():
             FOREIGN KEY (created_by_user_id) REFERENCES users(id)
         )
         """)
+        
+        # Backward-compatible column migration if table already exists
+        try:
+            cursor.execute("ALTER TABLE tasks ADD COLUMN assigned_agent TEXT")
+        except sqlite3.OperationalError:
+            pass
         
         # 5. Security Audit Log Table
         cursor.execute("""
