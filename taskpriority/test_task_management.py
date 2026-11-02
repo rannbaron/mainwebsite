@@ -79,5 +79,21 @@ class TestTaskManagement(unittest.TestCase):
         matches = re.findall(r'id:\s*(\d+),\s*priority:\s*(\d+)', self.index_html)
         self.assertEqual(len(matches), 17, f"Expected 17 tasks in DEFAULT_TASKS, got {len(matches)}")
 
+    def test_delete_task_action_and_agent_badges(self):
+        """Verify delete task button and agent badges exist."""
+        self.assertIn("function deleteTask(", self.index_html)
+        self.assertIn("function getAssignedAgentBadge(", self.index_html)
+        self.assertIn("btn-delete", self.index_html)
+        self.assertIn("Dedicated Argon Agent", self.index_html)
+        self.assertIn("Dedicated Flash High Agent", self.index_html)
+        self.assertIn("Shared Flash Medium Agent", self.index_html)
+
+    def test_model_defaults_by_priority(self):
+        """Verify priorities 8-10 default to Argon, 5-7 to Flash High, 1-4 to Flash Medium."""
+        self.assertIn("if (newPriority >= 8) {", self.index_html)
+        self.assertIn("task.model = 'Gemini 4 Argon';", self.index_html)
+        self.assertIn("task.model = 'Gemini 3.8 Flash (High)';", self.index_html)
+        self.assertIn("task.model = 'Gemini 3.8 Flash (Medium)';", self.index_html)
+
 if __name__ == "__main__":
     unittest.main()

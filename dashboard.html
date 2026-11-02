@@ -140,6 +140,52 @@
     .pri-5-7 { background: #d97706; color: #fff; }
     .pri-1-4 { background: #2563eb; color: #fff; }
 
+    .agent-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      margin-top: 5px;
+      line-height: 1.3;
+    }
+    .agent-argon {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .agent-flash-high {
+      background: rgba(56, 189, 248, 0.15);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .agent-flash-med {
+      background: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .btn-delete {
+      background: transparent;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-delete:hover {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #ef4444;
+      color: #fff;
+      transform: scale(1.08);
+    }
+
     select.model-select, select.priority-select {
       background: #0f172a;
       border: 1px solid var(--card-border);
@@ -807,6 +853,7 @@
           <th id="th-status" class="sortable-th" style="width: 140px;" onclick="setSortColumn('status')">
             Status <i class="sort-icon fa-solid fa-sort"></i>
           </th>
+          <th style="width: 70px; text-align: center;">Actions</th>
         </tr>
       </thead>
       <tbody id="tasksTableBody">
@@ -969,7 +1016,7 @@
       priority: 9,
       title: "Machine Lid-Close & Suspend Inhibit Daemon",
       scope: "Battery-aware inhibitor daemon preventing laptop sleep while on battery >= 20% (PID 773933 / task-8935).",
-      model: "Gemini 3.8 Flash (High)",
+      model: "Gemini 4 Argon",
       progress: "Active",
       progressPercent: 85,
       status: "Running",
@@ -981,7 +1028,7 @@
       priority: 9,
       title: "Locate UPS Account Username & Email in Gmail",
       scope: "Locate user's UPS account confirmation and registration records across Gmail archives and browser profiles.",
-      model: "Gemini 3.8 Flash (High)",
+      model: "Gemini 4 Argon",
       progress: "40%",
       progressPercent: 40,
       status: "Searching",
@@ -993,7 +1040,7 @@
       priority: 9,
       title: "Math 105L Day 11-1 Completed Sheet & Video Review Loop",
       scope: "Draft 3-page completed lecture sheet with circular markers, proven 2/√13<2, and 5-link prerequisite portals dispatched to rann@rannbar-on.com awaiting approval.",
-      model: "Gemini 3.8 Flash (High)",
+      model: "Gemini 4 Argon",
       progress: "90%",
       progressPercent: 90,
       status: "Review Pending",
@@ -1041,7 +1088,7 @@
       priority: 7,
       title: "Worksheet 10-1 & 10-2 Extension Summary Dispatch",
       scope: "Automated cron scheduled for 8:00 PM to audit Gradescope NP status and dispatch summary to rb6@duke.edu.",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "Scheduled (8:00 PM)",
       progressPercent: 70,
       status: "Scheduled",
@@ -1053,7 +1100,7 @@
       priority: 7,
       title: "Isaiah Nwoko Re-enrollment & Dynamic Quiz Windows",
       scope: "Nightly cron (00:00) maintaining 24-hour staggered quiz release and submission windows for re-enrolled student.",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "Active",
       progressPercent: 75,
       status: "Active",
@@ -1065,7 +1112,7 @@
       priority: 7,
       title: "Friday Office Hours Shift & Schedule Update",
       scope: "Public schedule updated across course sites reflecting new Friday office hours (1:45 PM – 3:45 PM).",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "100%",
       progressPercent: 100,
       status: "Updated",
@@ -1101,7 +1148,7 @@
       priority: 5,
       title: "Daily Midnight Workspace Maintenance & Auto-Push",
       scope: "Automated git commit, push, and daily report email running nightly at 00:00 via systemd / task scheduler.",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "Scheduled (00:00)",
       progressPercent: 50,
       status: "Scheduled",
@@ -1113,7 +1160,7 @@
       priority: 5,
       title: "Weekly Canvas Incapacitation & Attendance Audit",
       scope: "Scheduled Sunday 7:00 PM cron parsing Canvas gradebook for incapacitation excuses and attendance exemptions.",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "Scheduled (Sun 19:00)",
       progressPercent: 50,
       status: "Scheduled",
@@ -1149,7 +1196,7 @@
       priority: 4,
       title: "Control Dashboard Zero-Search Relocation",
       scope: "Relocated execution control center to rannbar-on.com/dashboard with multi-crawler robots shielding, test suite verification, and legacy route redirection.",
-      model: "Gemini 3.8 Flash (High)",
+      model: "Gemini 3.8 Flash (Medium)",
       progress: "100%",
       progressPercent: 100,
       status: "Deployed",
@@ -1189,11 +1236,46 @@
     return 'pri-1-4';
   }
 
+  function getAssignedAgentBadge(task) {
+    const pri = parseInt(task.priority, 10);
+    if (pri >= 8) {
+      return `<div class="agent-badge agent-argon" title="Dedicated subagent instance powered by Gemini 4 Argon"><i class="fa-solid fa-robot"></i> Dedicated Argon Agent #${task.id}</div>`;
+    } else if (pri >= 5) {
+      return `<div class="agent-badge agent-flash-high" title="Dedicated subagent instance powered by Gemini 3.8 Flash (High)"><i class="fa-solid fa-bolt"></i> Dedicated Flash High Agent #${task.id}</div>`;
+    } else {
+      return `<div class="agent-badge agent-flash-med" title="Shared background coordinator agent powered by Gemini 3.8 Flash (Medium)"><i class="fa-solid fa-users"></i> Shared Flash Medium Agent</div>`;
+    }
+  }
+
   function changeTaskPriority(taskId, newPriority) {
     newPriority = parseInt(newPriority, 10);
     const task = tasksState.find(t => t.id === taskId);
     if (!task) return;
     task.priority = newPriority;
+    // Policy:
+    // P8-10: Gemini 4 Argon by default, dedicated agent each
+    // P5-7: Gemini 3.8 Flash (High) by default, dedicated agent each
+    // P1-4: Gemini 3.8 Flash (Medium) by default, single shared agent
+    if (newPriority >= 8) {
+      task.model = 'Gemini 4 Argon';
+    } else if (newPriority >= 5) {
+      task.model = 'Gemini 3.8 Flash (High)';
+    } else {
+      task.model = 'Gemini 3.8 Flash (Medium)';
+    }
+    saveTasksState();
+    updateStatCards();
+    renderTasksTable();
+  }
+
+  function deleteTask(taskId) {
+    taskId = parseInt(taskId, 10);
+    const task = tasksState.find(t => t.id === taskId);
+    const title = task ? task.title : `#${taskId}`;
+    if (!confirm(`Are you sure you want to permanently delete task #${taskId} "${title}" from the dashboard queue?`)) {
+      return;
+    }
+    tasksState = tasksState.filter(t => t.id !== taskId);
     saveTasksState();
     updateStatCards();
     renderTasksTable();
@@ -1355,7 +1437,7 @@
     if (filteredTasks.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" style="text-align: center; padding: 36px 16px; color: var(--text-muted);">
+          <td colspan="7" style="text-align: center; padding: 36px 16px; color: var(--text-muted);">
             <i class="fa-solid fa-filter-circle-xmark" style="font-size: 28px; margin-bottom: 10px; display: block; opacity: 0.6;"></i>
             No tasks match the active filters or search criteria.
             <div style="margin-top: 10px;">
@@ -1402,6 +1484,7 @@
               <option ${task.model === 'Gemini 3.8 Flash (High)' ? 'selected' : ''}>Gemini 3.8 Flash (High)</option>
               <option ${task.model === 'Gemini 3.8 Flash (Medium)' ? 'selected' : ''}>Gemini 3.8 Flash (Medium)</option>
             </select>
+            ${getAssignedAgentBadge(task)}
           </td>
           <td>
             <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
@@ -1415,6 +1498,11 @@
             <span style="color: ${task.statusColor || 'var(--accent-cyan)'}; font-weight: 600;">
               <i class="${task.statusIcon || 'fa-solid fa-circle'}"></i> ${escapeHtml(task.status)}
             </span>
+          </td>
+          <td style="text-align: center;">
+            <button class="btn-delete" onclick="deleteTask(${task.id})" title="Delete task #${task.id} from queue">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
           </td>
         </tr>
       `;
