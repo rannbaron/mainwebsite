@@ -43,6 +43,8 @@ def load_baselines(path=None):
             path = "county_vote_baselines.json"
         elif os.path.exists("remote_deployment/county_vote_baselines.json"):
             path = "remote_deployment/county_vote_baselines.json"
+        elif os.path.exists("/home/rann/Documents/math/teaching/coursepack105L106L/county_vote_baselines.json"):
+            path = "/home/rann/Documents/math/teaching/coursepack105L106L/county_vote_baselines.json"
         else:
             raise FileNotFoundError(f"County baselines JSON not found at {path}")
     
@@ -70,6 +72,198 @@ def get_empirical_sigma(ev_day=None, default=2.578):
     except (ValueError, TypeError):
         pass
     return default
+
+# =============================================================================
+# HISTORICAL EARLY VOTE VS. ELECTION DAY TURNOUT & PARTISAN DECOMPOSITION
+# =============================================================================
+HISTORICAL_EV_VS_EDAY = {
+    # Midterms (Weighed heavily: 85% total weight)
+    2022: {
+        'type': 'midterm', 'weight': 0.40,
+        'tot_votes': 3780000, 'ev_votes': 2150000, 'ev_share': 0.5688,
+        'eday_votes': 1630000, 'eday_share': 0.4312,
+        'dem_ev_share': 52.12, 'rep_ev_share': 47.88,
+        'dem_eday_share': 41.82, 'rep_eday_share': 58.18,
+        'dem_eday_penalty': 10.30
+    },
+    2018: {
+        'type': 'midterm', 'weight': 0.30,
+        'tot_votes': 3755000, 'ev_votes': 2020000, 'ev_share': 0.5380,
+        'eday_votes': 1735000, 'eday_share': 0.4620,
+        'dem_ev_share': 53.05, 'rep_ev_share': 46.95,
+        'dem_eday_share': 43.55, 'rep_eday_share': 56.45,
+        'dem_eday_penalty': 9.50
+    },
+    2014: {
+        'type': 'midterm', 'weight': 0.15,
+        'tot_votes': 2940000, 'ev_votes': 1165000, 'ev_share': 0.3963,
+        'eday_votes': 1775000, 'eday_share': 0.6037,
+        'dem_ev_share': 51.75, 'rep_ev_share': 48.25,
+        'dem_eday_share': 42.75, 'rep_eday_share': 57.25,
+        'dem_eday_penalty': 9.00
+    },
+    # Presidential cycles (Total 15% weight)
+    2024: {
+        'type': 'presidential', 'weight': 0.08,
+        'tot_votes': 5700000, 'ev_votes': 4500000, 'ev_share': 0.7895,
+        'eday_votes': 1200000, 'eday_share': 0.2105,
+        'dem_ev_share': 50.20, 'rep_ev_share': 49.80,
+        'dem_eday_share': 33.50, 'rep_eday_share': 66.50,
+        'dem_eday_penalty': 16.70
+    },
+    2020: {
+        'type': 'presidential', 'weight': 0.04,
+        'tot_votes': 5545000, 'ev_votes': 4545000, 'ev_share': 0.8197,
+        'eday_votes': 1000000, 'eday_share': 0.1803,
+        'dem_ev_share': 53.25, 'rep_ev_share': 46.75,
+        'dem_eday_share': 36.05, 'rep_eday_share': 63.95,
+        'dem_eday_penalty': 17.20
+    },
+    2016: {
+        'type': 'presidential', 'weight': 0.02,
+        'tot_votes': 4740000, 'ev_votes': 3130000, 'ev_share': 0.6603,
+        'eday_votes': 1610000, 'eday_share': 0.3397,
+        'dem_ev_share': 52.80, 'rep_ev_share': 47.20,
+        'dem_eday_share': 44.90, 'rep_eday_share': 55.10,
+        'dem_eday_penalty': 7.90
+    },
+    2012: {
+        'type': 'presidential', 'weight': 0.01,
+        'tot_votes': 4505000, 'ev_votes': 2750000, 'ev_share': 0.6104,
+        'eday_votes': 1755000, 'eday_share': 0.3896,
+        'dem_ev_share': 52.40, 'rep_ev_share': 47.60,
+        'dem_eday_share': 44.50, 'rep_eday_share': 55.50,
+        'dem_eday_penalty': 7.90
+    }
+}
+
+WEIGHTED_HISTORICAL_EDAY_PENALTY_ALL = sum(
+    d['weight'] * d['dem_eday_penalty'] for d in HISTORICAL_EV_VS_EDAY.values()
+) / sum(d['weight'] for d in HISTORICAL_EV_VS_EDAY.values()) # ~10.58 pp
+
+WEIGHTED_HISTORICAL_EDAY_PENALTY_MIDTERM = sum(
+    d['weight'] * d['dem_eday_penalty'] for d in HISTORICAL_EV_VS_EDAY.values() if d['type'] == 'midterm'
+) / sum(d['weight'] for d in HISTORICAL_EV_VS_EDAY.values() if d['type'] == 'midterm') # ~9.79 pp
+
+def load_precinct_historical_modes(path=None):
+    if path is None:
+        path = "nc_precinct_historical_modes.json"
+    for cand in [
+        path,
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "nc_precinct_historical_modes.json"),
+        "/home/rann/Documents/math/teaching/coursepack105L106L/nc_precinct_historical_modes.json",
+        "/home/rann/src/website/mainwebsite/nc_precinct_historical_modes.json",
+        "/home/rann/src/elections/2026 analysis/nc_precinct_historical_modes.json"
+    ]:
+        if os.path.exists(cand):
+            try:
+                with open(cand, 'r') as f:
+                    return json.load(f)
+            except Exception:
+                pass
+    return {}
+
+def compute_eday_adjusted_forecast(c_key, ev_dem_share, ev_tot_votes, b, trans, rc, ev_day=None, pct_r26=26.2, pct_r22=31.5, delta_u=0.0):
+    """
+    Two-mode (Early Vote + Election Day) decomposition engine:
+    1. Total Electorate Projection:
+       - Projects total county turnout V_tot = max(V_ev * 1.05, b['votes_2022'] * 1.02 * (1 - roll_off)).
+       - Derives expected Election Day volume V_eday = max(0, V_tot - V_ev) and fraction f_eday = V_eday / V_tot.
+    2. Weighted Historical Democratic Penalty:
+       - Synthesizes all past NC general elections, weighing midterms heavily (85% weight) -> ~10.58 pp statewide penalty.
+    3. County-Specific Partisan Calibration:
+       - Inverts b['shift_2022'] against 2022 E-day share (0.4312) to obtain county-specific historical penalty.
+       - Calibrated by partisan geography: rural GOP strongholds higher (12-15 pp), urban centers lower (4-7 pp).
+    4. GOP Reservoir / Cannibalization Dynamics:
+       - If Republicans banked fewer EV votes than normal (GOP share 26.2% vs 31.5% in 2022), larger E-day reservoir strengthens surge.
+       - If Republicans banked high EV share, cannibalizes E-day pool (down to 0.75 discount).
+       - Unaffiliated low-propensity expansion premium.
+    5. Two-Mode Blended Vote Share:
+       - S_final = (1 - f_eday) * S_ev + f_eday * S_eday = S_ev - f_eday * Delta_eday_adj.
+    """
+    ev_dem_share = float(ev_dem_share)
+    ev_tot_votes = float(ev_tot_votes)
+    roll_off = rc.get('roll_off', 0.0) if rc else 0.0
+
+    # 1. Total Electorate Projection
+    v_base_2022 = float(b.get('votes_2022', 0.0)) * (1.0 - roll_off)
+    # Registration growth in NC midterms: ~3.5% over 2022
+    # At county level, account for early vote expansion while respecting historical base
+    v_tot_proj = max(ev_tot_votes * 1.05, v_base_2022 * 1.02)
+    v_eday_proj = max(0.0, v_tot_proj - ev_tot_votes)
+    f_eday = (v_eday_proj / v_tot_proj) if v_tot_proj > 0 else 0.4312
+    # Realistic bounds on Election Day turnout share
+    f_eday = max(0.12, min(0.65, f_eday))
+
+    # 2. Weighted Historical E-Day Penalty (85% midterm / 15% presidential)
+    weighted_penalty = WEIGHTED_HISTORICAL_EDAY_PENALTY_ALL # ~10.58 pp
+
+    # 3. County-Specific Partisan Calibration
+    # In 2022, statewide E-Day share was 0.4312.
+    # County implied 2022 penalty = -b['shift_2022'] / 0.4312
+    shift_2022 = float(b.get('shift_2022', -5.0))
+    implied_penalty_2022 = -shift_2022 / 0.4312
+
+    # Tier-based calibration for geographic realism (urban 4-7 pp, rural 12-15 pp)
+    tier = trans.get('tier', 'tier_2_suburban')
+    if tier == 'tier_1_urban':
+        tier_target = 6.2
+    elif tier == 'tier_3_rural':
+        tier_target = 13.8
+    else: # tier_2_suburban
+        tier_target = 9.8
+
+    # Blend county empirical 2022 implied penalty with weighted historical and tier targets
+    base_county_penalty = 0.55 * implied_penalty_2022 + 0.25 * weighted_penalty + 0.20 * tier_target
+    base_county_penalty = max(3.5, min(17.5, base_county_penalty))
+
+    # 4. GOP Reservoir / Cannibalization Adjustment
+    delta_r = float(pct_r26) - float(pct_r22)
+    delta_u = float(delta_u)
+
+    if delta_r < 0.0:
+        # Republicans banked fewer votes in early voting -> Election Day reservoir is larger, strengthening E-Day surge
+        reservoir_factor = 1.0 + 0.25 * min(1.0, max(0.0, -delta_r / 6.0))
+        cannibalization = 1.0
+    else:
+        # High-propensity Republican cannibalization discount
+        cannibalization = max(0.75, min(1.0, 1.0 - 0.25 * max(0.0, delta_r / 5.0)))
+        reservoir_factor = cannibalization
+
+    # Low-propensity Unaffiliated/young expansion premium
+    una_pref = trans.get('una_dem_share', 0.50)
+    expansion = max(-1.5, min(2.5, (delta_u / 100.0) * (una_pref - 0.50) * 15.0))
+
+    # Race-specific shift offset (e.g. -1.45 pp for Supreme Court, -1.85 pp for CoA 1)
+    race_shift = rc.get('shift_offset', 0.0) if rc else 0.0
+
+    # Adjusted Election Day penalty
+    eday_penalty_adj = base_county_penalty * reservoir_factor - expansion
+
+    # 5. Two-Mode Blended Vote Share
+    # S_final = (1 - f_eday) * S_ev + f_eday * S_eday + race_shift
+    # Where S_eday = S_ev - eday_penalty_adj
+    est_eday_dem = max(0.0, min(100.0, ev_dem_share - eday_penalty_adj))
+    raw_final_dem = (1.0 - f_eday) * ev_dem_share + f_eday * est_eday_dem + race_shift
+    raw_final_dem = max(0.0, min(100.0, raw_final_dem))
+
+    # Effective shift from EV Democratic share to final
+    adj_shift = raw_final_dem - ev_dem_share
+
+    return {
+        'raw_final_dem': raw_final_dem,
+        'est_ev_dem': ev_dem_share,
+        'est_eday_dem': est_eday_dem,
+        'f_eday': f_eday,
+        'v_tot_proj': v_tot_proj,
+        'v_eday_proj': v_eday_proj,
+        'eday_penalty': eday_penalty_adj,
+        'base_penalty': base_county_penalty,
+        'reservoir_factor': reservoir_factor,
+        'cannibalization': cannibalization,
+        'expansion': expansion,
+        'adj_shift': adj_shift
+    }
 
 # =============================================================================
 # STATEWIDE RACES CONFIGURATION
@@ -677,15 +871,15 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None,
     delta_u = pct_u26 - pct_u22
     delta_r = pct_r26 - pct_r22
 
-    # High-propensity Republican cannibalization discount
-    cannibalization = max(0.75, min(1.0, 1.0 - 0.25 * max(0.0, delta_r / 5.0)))
-    # Low-propensity Unaffiliated/young expansion premium
-    expansion = max(-1.5, min(2.5, (delta_u / 100.0) * (trans['una_dem_share'] - 0.50) * 15.0))
-
-    # Race-specific shift offset (e.g. -1.45 pp for Supreme Court, -1.85 pp for CoA 1)
-    race_shift = rc.get('shift_offset', 0.0)
-    adj_shift = b['shift_2022'] * cannibalization + expansion + race_shift
-    raw_final_dem = est_ev_dem + adj_shift
+    # Two-Mode (Early Vote vs Election Day) Decomposition Engine
+    eday_decomp = compute_eday_adjusted_forecast(
+        c_key, est_ev_dem, tot_f, b, trans, rc, ev_day=ev_day,
+        pct_r26=pct_r26, pct_r22=pct_r22, delta_u=delta_u
+    )
+    raw_final_dem = eday_decomp['raw_final_dem']
+    cannibalization = eday_decomp['cannibalization']
+    expansion = eday_decomp['expansion']
+    adj_shift = eday_decomp['adj_shift']
 
     # Day-specific error terms
     err_18 = b['err_2018']
@@ -774,13 +968,20 @@ def predict_county(county_name, dem, rep, una, tot, baselines=None, ev_day=None,
         'rep_candidate': rc['rep_candidate'],
         'incumbent': rc['incumbent'],
         'roll_off_rate': round(rc.get('roll_off', 0.0) * 100.0, 1),
-        # Analytical Diagnostics
+        # Analytical Diagnostics & Two-Mode Decomposition
         'tier': trans['tier'],
         'crossover_r_to_d': round(trans['rep_crossover_to_dem'] * 100.0, 1),
         'defection_d_to_r': round(trans['dem_defection_to_rep'] * 100.0, 1),
         'una_dem_share': round(trans['una_dem_share'] * 100.0, 1),
         'propensity_cannibalization_factor': round(cannibalization, 3),
-        'propensity_expansion_premium': round(expansion, 2)
+        'propensity_expansion_premium': round(expansion, 2),
+        'est_ev_dem': round(eday_decomp['est_ev_dem'], 2),
+        'est_eday_dem': round(eday_decomp['est_eday_dem'], 2),
+        'f_eday': round(eday_decomp['f_eday'], 4),
+        'eday_penalty': round(eday_decomp['eday_penalty'], 2),
+        'v_tot_proj': round(eday_decomp['v_tot_proj'], 1),
+        'v_eday_proj': round(eday_decomp['v_eday_proj'], 1),
+        'gop_reservoir_factor': round(eday_decomp['reservoir_factor'], 3)
     }
 
 
@@ -1283,12 +1484,16 @@ def predict_precinct(county_id, c26, c22, c_fc, baselines=None, ev_day=None, rac
 
     delta_u = pct_u26 - pct_u22
     delta_r = pct_r26 - pct_r22
-    cannibalization = max(0.75, min(1.0, 1.0 - 0.25 * max(0.0, delta_r / 5.0)))
-    expansion = max(-1.5, min(2.5, (delta_u / 100.0) * (trans['una_dem_share'] - 0.50) * 15.0))
-
     race_shift = rc.get('shift_offset', 0.0)
-    adj_shift = b['shift_2022'] * cannibalization + expansion + race_shift
-    raw_final_dem = est_ev_dem + adj_shift
+    # Two-Mode (Early Vote vs Election Day) Decomposition Engine
+    eday_decomp = compute_eday_adjusted_forecast(
+        c_key, est_ev_dem, tot26, b, trans, rc, ev_day=ev_day,
+        pct_r26=pct_r26, pct_r22=pct_r22, delta_u=delta_u
+    )
+    raw_final_dem = eday_decomp['raw_final_dem']
+    cannibalization = eday_decomp['cannibalization']
+    expansion = eday_decomp['expansion']
+    adj_shift = eday_decomp['adj_shift']
 
     # Empirical Bayes shrinkage toward the county's predicted margin for this race
     s = 250.0 / (250.0 + tot26)
