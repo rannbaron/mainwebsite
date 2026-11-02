@@ -1,4 +1,8 @@
 User-agent: *
+Disallow: /dashboard/
+Disallow: /dashboard.html
+Disallow: /dashboard
+Disallow: /*dashboard*
 Disallow: /taskpriority/
 Disallow: /taskpriority.html
 Disallow: /taskpriority

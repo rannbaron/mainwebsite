@@ -2,7 +2,7 @@
 """
 Task Priority Dashboard Secure Backend & API
 ===================================================
-Location: rannbar-on.com/taskpriority
+Location: rannbar-on.com/dashboard
 Security Profile: Absolute Maximum Defensive Security
 - Strict Password Policy: Min 50 characters, upper/lower/digits/symbols
 - Password Storage: Salte-hashed with bcrypt (cost factor 12) - Zero plaintext storage
@@ -273,7 +273,7 @@ def register_user(username, full_name, email, password, mobile_phone, ip_address
     if not is_admin:
         email_body = f"""
         <h3>New Task Dashboard Account Pending Your Approval</h3>
-        <p>A new user has submitted a registration request on the private task priority dashboard (<code>rannbar-on.com/taskpriority</code>):</p>
+        <p>A new user has submitted a registration request on the private task priority dashboard (<code>rannbar-on.com/dashboard</code>):</p>
         <ul>
             <li><strong>Username:</strong> {username}</li>
             <li><strong>Full Name:</strong> {full_name}</li>
@@ -558,7 +558,7 @@ def create_task(title, description, priority, model, completion_percent, user):
     if not is_admin:
         email_body = f"""
         <h3>Task Submission Awaiting Your Personal Approval</h3>
-        <p>A new task has been submitted on <code>rannbar-on.com/taskpriority</code> by user <strong>{user['username']}</strong> ({user['full_name']} &lt;{user['email']}&gt;):</p>
+        <p>A new task has been submitted on <code>rannbar-on.com/dashboard</code> by user <strong>{user['username']}</strong> ({user['full_name']} &lt;{user['email']}&gt;):</p>
         <table border="1" cellpadding="6" style="border-collapse:collapse;">
             <tr><td><strong>Task Title:</strong></td><td>{title}</td></tr>
             <tr><td><strong>Proposed Priority:</strong></td><td><strong>{priority}/10</strong> ({'Drop everything else and do immediately' if priority == 10 else 'Standard/Low' if priority <= 3 else 'Elevated'})</td></tr>

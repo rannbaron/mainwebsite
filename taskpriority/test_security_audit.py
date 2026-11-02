@@ -219,11 +219,13 @@ class TestTaskPrioritySecurityAudit(unittest.TestCase):
     # 7. SEARCH ENGINE SHIELDING (ZERO INDEXING)
     # --------------------------------------------------------------------------
     def test_10_robots_txt_disallow_rules(self):
-        """Verifies robots.txt explicitly disallows taskpriority path."""
+        """Verifies robots.txt explicitly disallows dashboard and taskpriority paths."""
         robots_path = '/home/rann/src/website/mainwebsite/robots.txt'
         self.assertTrue(os.path.exists(robots_path))
         with open(robots_path, 'r') as f:
             content = f.read()
+        self.assertIn("Disallow: /dashboard/", content)
+        self.assertIn("Disallow: /*dashboard*", content)
         self.assertIn("Disallow: /taskpriority/", content)
         self.assertIn("Disallow: /*taskpriority*", content)
 
