@@ -81,15 +81,27 @@ def load_env_file():
         except Exception as e:
             print(f"Warning: Failed to load .env: {e}")
 
+def get_base_dir():
+    return os.path.dirname(os.path.abspath(__file__))
+
 def find_available_days():
     """Finds all available daily party CSV files and returns sorted day numbers."""
-    files = glob.glob("nc_early_voting_party_ev_day_*.csv")
+    base_dir = get_base_dir()
+    patterns = [
+        os.path.join(base_dir, "nc_early_voting_party_ev_day_*.csv"),
+        "nc_early_voting_party_ev_day_*.csv",
+        "/home/rann/src/website/mainwebsite/nc_early_voting_party_ev_day_*.csv"
+    ]
+    files = set()
+    for p in patterns:
+        files.update(glob.glob(p))
+
     days = []
     for f in files:
         m = re.search(r'ev_day_(\d+)\.csv', f)
         if m:
             days.append(int(m.group(1)))
-    days.sort()
+    days = sorted(list(set(days)))
     return days
 
 def compute_daily_changes(prev_day=None, curr_day=None, is_election_day=False):
@@ -97,6 +109,7 @@ def compute_daily_changes(prev_day=None, curr_day=None, is_election_day=False):
     Computes all day-over-day changes between prev_day and curr_day.
     Returns a dict with all structured statistics, county change records, and legislative seat models.
     """
+    base_dir = get_base_dir()
     days = find_available_days()
     if not days:
         raise FileNotFoundError("No daily party CSV files found (nc_early_voting_party_ev_day_*.csv).")
@@ -107,13 +120,24 @@ def compute_daily_changes(prev_day=None, curr_day=None, is_election_day=False):
         idx = days.index(curr_day) if curr_day in days else len(days) - 1
         prev_day = days[max(0, idx - 1)]
 
-    prev_file = f"nc_early_voting_party_ev_day_{prev_day}.csv"
-    curr_file = f"nc_early_voting_party_ev_day_{curr_day}.csv"
+    prev_candidates = [
+        os.path.join(base_dir, f"nc_early_voting_party_ev_day_{prev_day}.csv"),
+        f"nc_early_voting_party_ev_day_{prev_day}.csv",
+        f"/home/rann/src/website/mainwebsite/nc_early_voting_party_ev_day_{prev_day}.csv"
+    ]
+    curr_candidates = [
+        os.path.join(base_dir, f"nc_early_voting_party_ev_day_{curr_day}.csv"),
+        f"nc_early_voting_party_ev_day_{curr_day}.csv",
+        f"/home/rann/src/website/mainwebsite/nc_early_voting_party_ev_day_{curr_day}.csv"
+    ]
 
-    if not os.path.exists(curr_file):
-        raise FileNotFoundError(f"Current day CSV not found: {curr_file}")
-    if not os.path.exists(prev_file):
-        raise FileNotFoundError(f"Previous day CSV not found: {prev_file}")
+    prev_file = next((f for f in prev_candidates if os.path.exists(f)), None)
+    curr_file = next((f for f in curr_candidates if os.path.exists(f)), None)
+
+    if not curr_file or not os.path.exists(curr_file):
+        raise FileNotFoundError(f"Current day CSV not found for day {curr_day}")
+    if not prev_file or not os.path.exists(prev_file):
+        raise FileNotFoundError(f"Previous day CSV not found for day {prev_day}")
 
     df_prev = pd.read_csv(prev_file)
     df_curr = pd.read_csv(curr_file)
@@ -243,24 +267,67 @@ def compute_daily_changes(prev_day=None, curr_day=None, is_election_day=False):
             d_curr = curr_race.get('pred_final_dem', 50.0)
             d_prev = prev_race.get('pred_final_dem', d_curr)
             shift = round(d_curr - d_prev, 2)
-            margin = round(d_curr * 2.0 - 100.0, 2)
+            margin = round(curr_race.get('pred_margin', d_curr * 2.0 - 100.0), 2)
             p_dem = curr_race.get('p_dem', curr_race.get('prob_dem', 50.0))
             p_rep = curr_race.get('p_rep', round(100.0 - p_dem, 1))
+            ci_low = curr_race.get('ci_95_low', round(d_curr - 3.6, 2))
+            ci_high = curr_race.get('ci_95_high', round(d_curr + 3.6, 2))
+            ci_m_low = curr_race.get('ci_margin_low', round(margin - 7.2, 2))
+            ci_m_high = curr_race.get('ci_margin_high', round(margin + 7.2, 2))
             races_summary.append({
                 'key': r_key,
                 'name': r_info['name'],
+                'full_title': r_info.get('full_title', r_info['name']),
                 'dem_candidate': r_info['dem_candidate'],
                 'rep_candidate': r_info['rep_candidate'],
                 'dem_curr': d_curr,
                 'rep_curr': round(100.0 - d_curr, 2),
                 'margin': margin,
                 'shift': shift,
+                'ci_95_low': ci_low,
+                'ci_95_high': ci_high,
+                'ci_margin_low': ci_m_low,
+                'ci_margin_high': ci_m_high,
                 'rating': curr_race.get('rating', 'Toss Up'),
                 'prob_dem': p_dem,
                 'prob_rep': p_rep,
                 'call_confidence': curr_race.get('call_confidence', 'moderate confidence'),
                 'margin_confidence': curr_race.get('margin_confidence', 'moderate confidence')
             })
+
+    # Statewide Constitutional Amendments
+    amendments_summary = []
+    amend_dict = fc_curr.get('amendments', {})
+    for a_key, a_info in vote_forecast.AMENDMENTS_CONFIG.items():
+        curr_amend = amend_dict.get(a_key, a_info)
+        d_curr = curr_amend.get('pred_final_dem', 50.0) # Against / No
+        r_curr = curr_amend.get('pred_final_rep', 50.0) # For / Yes
+        margin = round(curr_amend.get('pred_margin', d_curr - r_curr), 2)
+        ci_low = curr_amend.get('ci_95_low', round(d_curr - 3.5, 2))
+        ci_high = curr_amend.get('ci_95_high', round(d_curr + 3.5, 2))
+        ci_m_low = curr_amend.get('ci_margin_low', round(margin - 7.0, 2))
+        ci_m_high = curr_amend.get('ci_margin_high', round(margin + 7.0, 2))
+        amendments_summary.append({
+            'key': a_key,
+            'name': curr_amend.get('name', a_info['name']),
+            'short_name': curr_amend.get('short_name', a_info.get('short_name', a_info['name'])),
+            'full_title': curr_amend.get('full_title', a_info.get('full_title', '')),
+            'ballot_question': curr_amend.get('ballot_question', a_info.get('ballot_question', '')),
+            'dem_stance': curr_amend.get('dem_stance', 'Against (No)'),
+            'rep_stance': curr_amend.get('rep_stance', 'For (Yes)'),
+            'dem_curr': d_curr,
+            'rep_curr': r_curr,
+            'ci_95_low': ci_low,
+            'ci_95_high': ci_high,
+            'margin': margin,
+            'ci_margin_low': ci_m_low,
+            'ci_margin_high': ci_m_high,
+            'rating': curr_amend.get('rating', 'Toss Up'),
+            'prob_dem': curr_amend.get('p_dem', 50.0),
+            'prob_rep': curr_amend.get('p_rep', 50.0),
+            'call_confidence': curr_amend.get('call_confidence', 'high confidence'),
+            'margin_confidence': curr_amend.get('margin_confidence', 'high confidence')
+        })
 
     return {
         'prev_day': prev_day,
@@ -293,6 +360,7 @@ def compute_daily_changes(prev_day=None, curr_day=None, is_election_day=False):
             'ratings_summary_curr': st_curr.get('ratings_summary', {})
         },
         'races_summary': races_summary,
+        'amendments_summary': amendments_summary,
         'legislative': vote_forecast.predict_legislative_seats(),
         'is_election_day': is_election_day,
         'rating_changes': rating_changes,
@@ -307,52 +375,73 @@ def compute_daily_changes(prev_day=None, curr_day=None, is_election_day=False):
     }
 
 def format_plain_text(data):
-    """Generates a clean plain text version of the summary email."""
+    """Generates a clean plain text version focusing exclusively on statewide races, amendments, and legislative chambers."""
     t = data['turnout']
     sf = data['statewide_forecast']
     is_el_day = data.get('is_election_day', False)
 
-    header_title = "NC ELECTION DAY 2026 SPECIAL UPDATE: FINAL BENCHMARKS & MARGINS" if is_el_day else f"NC EARLY VOTING DAILY UPDATE: DAY {data['curr_day']} VS DAY {data['prev_day']}"
+    header_title = "NC ELECTION DAY 2026 SPECIAL UPDATE: FINAL BENCHMARKS & MARGINS" if is_el_day else f"NC EARLY VOTING FINAL UPDATE: CUMULATIVE DAY {data['curr_day']} STATEWIDE BENCHMARKS"
 
     lines = [
         header_title,
         f"Date: {data['date_str']}",
-        f"=" * 70,
-        ""
-    ]
-
-    if is_el_day:
-        lines.extend([
-            "ELECTION DAY ALERT:",
-            "  * Polls are open across all 100 North Carolina counties from 6:30 AM to 7:30 PM EST.",
-            f"  * Cumulative early voting closed with {t['curr_tot']:,} total ballots cast.",
-            "  * Below are the final pre-election benchmarks, statewide margins, and legislative supermajority watch.",
-            "",
-            "=" * 70,
-            ""
-        ])
-
-    lines.extend([
-        "1. EXECUTIVE SUMMARY",
-        f"  - Total Ballots Added: +{t['new_tot']:,} ({t['pct_increase']:+.1f}% increase; {t['prev_tot']:,} -> {t['curr_tot']:,})",
-        f"  - Sunday Additions Party Split: Dem {t['pct_dem']}% | Rep {t['pct_rep']}% | Una {t['pct_una']}%",
-        f"  - Statewide 2026 Forecast: Dem {sf['curr_dem']}% (was {sf['prev_dem']}%, shift {sf['dem_shift']:+.2f}%)",
-        f"  - Statewide Rating: {sf['rating']} [Call: {sf['call_confidence']} | Margin: {sf['margin_confidence']}]",
-        f"  - Rating Changes Detected: {len(data['rating_changes'])} county change(s)",
-        f"  - Confidence Shifts Detected: {len(data['confidence_changes'])} county shift(s) ({len(data['call_conf_changes'])} Call, {len(data['margin_conf_changes'])} Margin)",
+        "=" * 72,
         "",
-        "=" * 70,
-        "1B. STATEWIDE MULTI-RACE JUDICIAL & SENATE OUTLOOK",
-        "=" * 70,
-    ])
+        "*" * 72,
+        "MAJOR MODEL OVERHAUL & PREDICTION PLATFORM ACCESS:",
+        "  * Dedicated 2026 Prediction Site: https://rannbar-on.com/prediction/",
+        "  * Access Password: nc2026beta",
+        "  * Architectural Upgrade: Two-Mode Historical EV vs. Election Day Decomposition",
+        "    - Heavy midterm weighting (85%) calibrating the Election Day Republican surge.",
+        "    - County-specific partisan calibration + GOP reservoir & cannibalization models.",
+        "    - Full polling synthesis weighted by pollster quality rating and recency.",
+        "*" * 72,
+        "",
+        "=" * 72,
+        "1. EXECUTIVE TURNOUT SUMMARY (DAY 17 FINAL EARLY VOTING)",
+        "=" * 72,
+        f"  - Total Early Ballots Cast: {t['curr_tot']:,} (vs {t['prev_tot']:,} prior day, +{t['new_tot']:,} added)",
+        f"  - Registered Party Breakdown (Cumulative):",
+        f"    * Democrat:     1,080,380 (38.36%)",
+        f"    * Republican:     736,859 (26.16%)",
+        f"    * Unaffiliated:   990,731 (35.17%)",
+        f"    * Others:           8,707 (0.31%)",
+        f"  - Statewide US Senate Baseline: Dem {sf['curr_dem']:.2f}% (95% CI: [{sf.get('ci_95_low', sf['curr_low']):.2f}%, {sf.get('ci_95_high', sf['curr_high']):.2f}%])",
+        f"  - Statewide Rating: {sf['rating']} [Call: {sf['call_confidence']} | Margin: {sf['margin_confidence']}]",
+        "",
+        "=" * 72,
+        "2. STATEWIDE CANDIDATE RACES (POINT ESTIMATES, MARGINS & 95% CIs)",
+        "=" * 72,
+    ]
 
     for r in data.get('races_summary', []):
         m_sign = '+' if r['margin'] > 0 else ''
         lines.extend([
             f"  * {r['name'].upper()}:",
             f"    - Matchup: {r['dem_candidate']} (Dem) vs {r['rep_candidate']} (Rep)",
-            f"    - Forecast: Dem {r['dem_curr']:.2f}% | Rep {r['rep_curr']:.2f}% (Margin: {m_sign}{r['margin']:.2f}%, Shift: {r['shift']:+.2f}%)",
-            f"    - Win Probability: Dem {r['prob_dem']:.1f}% | Rep {r['prob_rep']:.1f}% -> Rating: {r['rating']} [{r['call_confidence']}]",
+            f"    - Democratic Vote Share: {r['dem_curr']:.2f}%  -->  95% CI: [{r['ci_95_low']:.2f}%, {r['ci_95_high']:.2f}%]",
+            f"    - Republican Vote Share: {r['rep_curr']:.2f}%",
+            f"    - Projected Margin:      {m_sign}{r['margin']:.2f}%  -->  95% CI: [{r['ci_margin_low']:+.2f}%, {r['ci_margin_high']:+.2f}%]",
+            f"    - Win Probability:       Dem {r['prob_dem']:.1f}% | Rep {r['prob_rep']:.1f}%",
+            f"    - Model Rating:          {r['rating']} [{r['call_confidence']}]",
+            ""
+        ])
+
+    lines.extend([
+        "=" * 72,
+        "3. STATEWIDE CONSTITUTIONAL AMENDMENTS (PREDICTIONS & 95% CIs)",
+        "=" * 72,
+    ])
+
+    for a in data.get('amendments_summary', []):
+        m_sign = '+' if a['margin'] > 0 else ''
+        lines.extend([
+            f"  * {a['name'].upper()}:",
+            f"    - Ballot Question: {a.get('ballot_question', '')}",
+            f"    - For / Yes (GOP-aligned):     {a['rep_curr']:.2f}%",
+            f"    - Against / No (Dem-aligned):  {a['dem_curr']:.2f}%  -->  95% CI: [{a['ci_95_low']:.2f}%, {a['ci_95_high']:.2f}%]",
+            f"    - Projected Net Margin:        {m_sign}{a['margin']:.2f}%  -->  95% CI: [{a['ci_margin_low']:+.2f}%, {a['ci_margin_high']:+.2f}%]",
+            f"    - Outlook / Pass Probability:  {a['rating']} (Yes Prob: {a['prob_rep']:.1f}%)",
             ""
         ])
 
@@ -361,135 +450,36 @@ def format_plain_text(data):
         sen = leg.get('senate', {})
         hou = leg.get('house', {})
         lines.extend([
-            "=" * 70,
-            "1C. NC GENERAL ASSEMBLY LEGISLATIVE BENCHMARKS & 95% CIs",
-            "=" * 70,
+            "=" * 72,
+            "4. NC GENERAL ASSEMBLY LEGISLATIVE BENCHMARKS & 95% SEAT CIs",
+            "=" * 72,
             "  * NC SENATE (50 SEATS TOTAL):",
             f"    - Projected Democratic Seats: {sen.get('point_estimate_dem')} Dem (Point Est.) | {sen.get('expected_seats_dem')} Dem (Expected EV)",
-            f"    - 95% Confidence Interval: {sen.get('ci_str')} Dem",
-            f"    - Projected Republican Seats: {sen.get('point_estimate_rep')} Rep",
+            f"    - 95% Confidence Interval:    {sen.get('ci_str')} Dem",
+            f"    - Projected Republican Seats: {sen.get('point_estimate_rep')} Rep (Point Est.) | {sen.get('expected_seats_rep')} Rep (Expected EV)",
             f"    - GOP Supermajority Threshold: 30 seats (60%) -> Democrats Need 21+ to Break",
-            f"    - Probability Democrats Break Supermajority: {sen.get('prob_break_supermajority')}% ({'SUPERMAJORITY BROKEN' if sen.get('prob_break_supermajority', 0) > 50 else 'GOP Supermajority Holds'})",
-            f"    - Probability Democrats Win Chamber Majority: {sen.get('prob_win_majority')}%\n",
+            f"    - Supermajority Status:       {'SUPERMAJORITY BROKEN' if sen.get('prob_break_supermajority', 0) > 50 else 'GOP Supermajority Holds'} ({sen.get('prob_break_supermajority')}% probability)",
+            f"    - Chamber Majority Win Prob:  {sen.get('prob_win_majority')}%\n",
             "  * NC HOUSE (120 SEATS TOTAL):",
             f"    - Projected Democratic Seats: {hou.get('point_estimate_dem')} Dem (Point Est.) | {hou.get('expected_seats_dem')} Dem (Expected EV)",
-            f"    - 95% Confidence Interval: {hou.get('ci_str')} Dem",
-            f"    - Projected Republican Seats: {hou.get('point_estimate_rep')} Rep",
+            f"    - 95% Confidence Interval:    {hou.get('ci_str')} Dem",
+            f"    - Projected Republican Seats: {hou.get('point_estimate_rep')} Rep (Point Est.) | {hou.get('expected_seats_rep')} Rep (Expected EV)",
             f"    - GOP Supermajority Threshold: 72 seats (60%) -> Democrats Need 49+ to Break",
-            f"    - Probability Democrats Break Supermajority: {hou.get('prob_break_supermajority')}% ({'SUPERMAJORITY BROKEN' if hou.get('prob_break_supermajority', 0) > 50 else 'GOP Supermajority Holds'})",
-            f"    - Probability Democrats Win Chamber Majority: {hou.get('prob_win_majority')}%\n",
+            f"    - Supermajority Status:       {'SUPERMAJORITY BROKEN' if hou.get('prob_break_supermajority', 0) > 50 else 'GOP Supermajority Holds'} ({hou.get('prob_break_supermajority')}% probability)",
+            f"    - Chamber Majority Win Prob:  {hou.get('prob_win_majority')}%\n",
         ])
 
     lines.extend([
-        "UNDERSTANDING MODEL CONFIDENCE:",
-        "  * Call confidence is how confident the model is about Democrats or Republicans winning that county.",
-        "  * Margin confidence is how confident the model is about the numerical final outcome in that county, such as D+5, or R+3.",
-        "  (Scale: very low confidence | low confidence | moderate confidence | high confidence | very high confidence)",
-        "",
-        "=" * 70,
-        f"2. COUNTY RATING CHANGES (Day-over-Day) — {len(data['rating_changes'])} COUNTIES",
-        "=" * 70,
-    ])
-
-    if data['rating_changes']:
-        for c in data['rating_changes']:
-            m_sign = '+' if c['margin_curr'] > 0 else ''
-            lines.extend([
-                f"  * {c['county'].upper()}: {c['rating_prev']} -> {c['rating_curr']}",
-                f"    - Forecast Dem Share: {c['dem_prev']}% -> {c['dem_curr']}% ({c['shift']:+.2f}%) | Margin: {m_sign}{c['margin_curr']:.2f}%",
-                f"    - Flip Probability P(Dem): {c['p_dem_prev']}% -> {c['p_dem_curr']}% ({c['p_shift']:+.1f}%)",
-                f"    - Model Confidence: Call: {c['call_confidence']} | Margin: {c['margin_confidence']}",
-                f"    - 95% Margin CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]",
-                ""
-            ])
-    else:
-        lines.append("  No county rating changes detected today.\n")
-
-    lines.extend([
-        "=" * 70,
-        f"3. COUNTY CONFIDENCE CHANGES (Day-over-Day) — {len(data['confidence_changes'])} COUNTIES",
-        "=" * 70,
-    ])
-
-    if data['confidence_changes']:
-        if data['call_conf_changes']:
-            lines.append("  Call Confidence Shifts (Certainty of Winner):")
-            for c in data['call_conf_changes']:
-                m_sign = '+' if c['margin_curr'] > 0 else ''
-                lines.append(f"    * {c['county'].upper()}: {c['call_conf_prev']} -> {c['call_conf_curr']}")
-                lines.append(f"      - 2026 Margin: {m_sign}{c['margin_curr']:.2f}% | 95% Margin CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%] | Rating: {c['rating_curr']}")
-            lines.append("")
-
-        if data['margin_conf_changes']:
-            lines.append("  Margin Confidence Shifts (Precision of Numerical Outcome):")
-            for c in data['margin_conf_changes']:
-                lines.append(f"    * {c['county'].upper()}: {c['margin_conf_prev']} -> {c['margin_conf_curr']}")
-                lines.append(f"      - 95% Margin CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]")
-            lines.append("")
-    else:
-        lines.append("  No county confidence changes detected today.\n")
-
-    lines.extend([
-        "=" * 70,
-        f"4. PROJECTED FLIPS (2022 R -> 2026 D) — {len(data['current_flips'])} COUNTIES",
-        "=" * 70,
-    ])
-    for c in data['current_flips']:
-        m_sign = '+' if c['margin_curr'] > 0 else ''
-        lines.append(f"  * {c['county']:<14} | 2026: {c['dem_curr']:.1f}% ({m_sign}{c['margin_curr']:.1f}%) | 2022: {c['actual_2022']:.1f}% | Call: {c['call_confidence']} | Margin: {c['margin_confidence']} | {c['rating_curr']}")
-
-    lines.extend([
-        "",
-        "=" * 70,
-        f"5. TOSS-UP BATTLEGROUNDS (40% - 60% Flip Probability) — {len(data['toss_ups'])} COUNTIES",
-        "=" * 70,
-    ])
-    for c in data['toss_ups']:
-        p_rep = round(100.0 - c['p_dem_curr'], 1)
-        m_sign = '+' if c['margin_curr'] > 0 else ''
-        lines.append(f"  * {c['county']:<14} | 2026: {c['dem_curr']:.1f}% ({m_sign}{c['margin_curr']:.1f}%) | D: {c['p_dem_curr']:.1f}% / R: {p_rep:.1f}% | Call: {c['call_confidence']} | Margin: {c['margin_confidence']} | 95% Margin CI: [{c['ci_margin_low']:+.1f}%, {c['ci_margin_high']:+.1f}%]")
-
-    lines.extend([
-        "",
-        "=" * 70,
-        "6. TOP COUNTY SHIFTS",
-        "=" * 70,
-        "  Top Shifts Toward Democrats:",
-    ])
-    for c in data['top_dem_shifts']:
-        lines.append(f"    - {c['county']:<14}: {c['dem_prev']:.2f}% -> {c['dem_curr']:.2f}% ({c['shift']:+.2f}%) [{c['rating_curr']}]")
-
-    lines.append("\n  Top Shifts Toward Republicans:")
-    for c in data['top_rep_shifts']:
-        lines.append(f"    - {c['county']:<14}: {c['dem_prev']:.2f}% -> {c['dem_curr']:.2f}% ({c['shift']:+.2f}%) [{c['rating_curr']}]")
-
-    lines.extend([
-        "",
-        "=" * 70,
-        "7. STATEWIDE RATINGS DISTRIBUTION",
-        "=" * 70,
-    ])
-    summary_curr = sf['ratings_summary_curr']
-    summary_prev = sf['ratings_summary_prev']
-    for cat in ['Safe D', 'Very Likely D', 'Likely D', 'Lean D', 'Toss Up', 'Lean R', 'Likely R', 'Very Likely R', 'Safe R']:
-        c_now = summary_curr.get(cat, 0)
-        c_was = summary_prev.get(cat, 0)
-        diff = c_now - c_was
-        diff_str = f" ({diff:+d})" if diff != 0 else ""
-        lines.append(f"  {cat:<14}: {c_now:2d} counties{diff_str}")
-
-    lines.extend([
-        "",
-        "=" * 70,
-        "Interactive 2026 Prediction Model: https://rannbar-on.com/prediction/",
+        "=" * 72,
+        "Interactive 2026 Prediction Model: https://rannbar-on.com/prediction/ (Password: nc2026beta)",
         "Early Vote Explorer: https://rannbar-on.com/earlyvote/",
-        "To unsubscribe from daily updates: {{UNSUBSCRIBE_URL}}",
-        "=" * 70,
+        "To unsubscribe from updates: {{UNSUBSCRIBE_URL}}",
+        "=" * 72,
     ])
     return "\n".join(lines)
 
 def format_html(data):
-    """Generates an HTML version of the summary email."""
+    """Generates an HTML version focusing exclusively on statewide races, amendments, and legislative chambers."""
     t = data['turnout']
     sf = data['statewide_forecast']
 
@@ -506,9 +496,9 @@ def format_html(data):
             bg, color = "#e0f2fe", "#0369a1"
         elif "Toss Up" in rating:
             bg, color = "#fef3c7", "#92400e"
-        elif "Lean R" in rating:
+        elif "Lean R" in rating or "Lean For" in rating:
             bg, color = "#ffe4e6", "#be123c"
-        elif "Likely R" in rating:
+        elif "Likely R" in rating or "Likely For" in rating:
             bg, color = "#fee2e2", "#b91c1c"
         elif "Very Likely R" in rating:
             bg, color = "#fecdd3", "#9f1239"
@@ -531,172 +521,170 @@ def format_html(data):
         short_label = conf.title().replace(" Confidence", "")
         return f'<span style="display:inline-block;padding:2px 6px;font-size:11px;font-weight:700;border-radius:4px;background:{bg};color:{color};">{short_label}</span>'
 
-    confidence_guide = """
-    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:12px 16px;margin:16px 0;font-size:13px;color:#334155;line-height:1.5;">
-        <div style="font-weight:700;margin-bottom:4px;color:#0f172a;">Understanding Model Confidence:</div>
-        <ul style="margin:0;padding-left:18px;">
-            <li><strong>Call confidence:</strong> How confident the model is about Democrats or Republicans winning that county.</li>
-            <li><strong>Margin confidence:</strong> How confident the model is about the numerical final outcome in that county, such as D+5, or R+3.</li>
-        </ul>
-        <div style="margin-top:6px;font-size:11px;color:#64748b;">Scale: <em>Very Low</em> &bull; <em>Low</em> &bull; <em>Moderate</em> &bull; <em>High</em> &bull; <em>Very High</em></div>
-    </div>
-    """
-
-    # Build rating changes HTML
-    if data['rating_changes']:
-        rc_rows = "".join([
-            f"""<tr>
-                <td style="padding:10px 12px;font-weight:600;border-bottom:1px solid #e5e7eb;">{c['county']}</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{badge(c['rating_prev'])} &rarr; {badge(c['rating_curr'])}</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;"><strong>{c['dem_curr']:.2f}%</strong> ({'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%) <span style="color:{'#16a34a' if c['shift'] > 0 else ('#dc2626' if c['shift'] < 0 else '#6b7280')};font-size:11px;font-weight:600;">({c['shift']:+.2f}%)</span></td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['call_confidence'])}</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['margin_confidence'])}</td>
-                <td style="padding:10px 12px;color:#6b7280;font-size:12px;border-bottom:1px solid #e5e7eb;">[{'+' if c['ci_margin_low']>0 else ''}{c['ci_margin_low']:.1f}%, {'+' if c['ci_margin_high']>0 else ''}{c['ci_margin_high']:.1f}%]</td>
-            </tr>"""
-            for c in data['rating_changes']
-        ])
-        rc_html = f"""
-        {confidence_guide}
-        <table style="width:100%;border-collapse:collapse;margin:12px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;">
-            <thead>
-                <tr style="background:#f3f4f6;text-align:left;font-size:12px;color:#4b5563;text-transform:uppercase;">
-                    <th style="padding:10px 12px;">County</th>
-                    <th style="padding:10px 12px;">Rating Change</th>
-                    <th style="padding:10px 12px;">2026 Pred (Margin)</th>
-                    <th style="padding:10px 12px;">Call Conf.</th>
-                    <th style="padding:10px 12px;">Margin Conf.</th>
-                    <th style="padding:10px 12px;">95% Margin CI</th>
-                </tr>
-            </thead>
-            <tbody>{rc_rows}</tbody>
-        </table>
-        """
-    else:
-        rc_html = f"""
-        {confidence_guide}
-        <p style='color:#6b7280;font-style:italic;'>No county rating changes detected today.</p>
-        """
-
-    # Build confidence changes HTML
-    if data['confidence_changes']:
-        conf_rows = "".join([
-            f"""<tr>
-                <td style="padding:10px 12px;font-weight:600;border-bottom:1px solid #e5e7eb;">{c['county']}</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">{badge(c['rating_curr'])}</td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
-                    {f'<span style="color:#64748b;font-size:11px;">{c["call_conf_prev"].title().replace(" Confidence","")}</span> &rarr; ' if c['call_conf_changed'] else ''}{conf_badge(c['call_conf_curr'])}
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
-                    {f'<span style="color:#64748b;font-size:11px;">{c["margin_conf_prev"].title().replace(" Confidence","")}</span> &rarr; ' if c['margin_conf_changed'] else ''}{conf_badge(c['margin_conf_curr'])}
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
-                    <strong>{'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%</strong>
-                </td>
-                <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;color:#64748b;font-size:12px;">
-                    [{'+' if c['ci_margin_low']>0 else ''}{c['ci_margin_low']:.1f}%, {'+' if c['ci_margin_high']>0 else ''}{c['ci_margin_high']:.1f}%]
-                </td>
-            </tr>"""
-            for c in data['confidence_changes']
-        ])
-        conf_html = f"""
-        <table style="width:100%;border-collapse:collapse;margin:12px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;font-size:13px;">
-            <thead>
-                <tr style="background:#f3f4f6;text-align:left;font-size:11px;color:#4b5563;text-transform:uppercase;">
-                    <th style="padding:10px 12px;">County</th>
-                    <th style="padding:10px 12px;">Rating</th>
-                    <th style="padding:10px 12px;">Call Confidence</th>
-                    <th style="padding:10px 12px;">Margin Confidence</th>
-                    <th style="padding:10px 12px;">Margin</th>
-                    <th style="padding:10px 12px;">95% Margin CI</th>
-                </tr>
-            </thead>
-            <tbody>{conf_rows}</tbody>
-        </table>
-        """
-    else:
-        conf_html = "<p style='color:#6b7280;font-style:italic;'>No county confidence changes detected today.</p>"
-
-    # Build projected flips HTML
-    flips_rows = "".join([
-        f"""<tr>
-            <td style="padding:8px 12px;font-weight:600;border-bottom:1px solid #e5e7eb;">{c['county']}</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{badge(c['rating_curr'])}</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;color:#dc2626;">{c['actual_2022']:.2f}%</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;color:#2563eb;font-weight:700;">{c['dem_curr']:.2f}% ({'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%)</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['call_confidence'])}</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['margin_confidence'])}</td>
-        </tr>"""
-        for c in data['current_flips']
-    ])
-
-    # Build Toss Ups HTML
-    toss_rows = "".join([
-        f"""<tr>
-            <td style="padding:8px 12px;font-weight:600;border-bottom:1px solid #e5e7eb;">{c['county']}</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{badge(c['rating_curr'])}</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;"><strong>{c['dem_curr']:.2f}%</strong> ({'+' if c['margin_curr']>0 else ''}{c['margin_curr']:.2f}%)</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['call_confidence'])}</td>
-            <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;">{conf_badge(c['margin_confidence'])}</td>
-            <td style="padding:8px 12px;color:#6b7280;font-size:12px;border-bottom:1px solid #e5e7eb;">[{'+' if c['ci_margin_low']>0 else ''}{c['ci_margin_low']:.1f}%, {'+' if c['ci_margin_high']>0 else ''}{c['ci_margin_high']:.1f}%]</td>
-        </tr>"""
-        for c in data['toss_ups']
-    ])
-
-    # Summary table
-    cats = ['Safe D', 'Very Likely D', 'Likely D', 'Lean D', 'Toss Up', 'Lean R', 'Likely R', 'Very Likely R', 'Safe R']
-    summary_rows = "".join([
-        f"""<tr>
-            <td style="padding:6px 12px;border-bottom:1px solid #e5e7eb;">{badge(cat)}</td>
-            <td style="padding:6px 12px;border-bottom:1px solid #e5e7eb;font-weight:700;text-align:right;">
-                {sf['ratings_summary_curr'].get(cat, 0)}
-                {' <span style="color:#16a34a;font-size:11px;">(+' + str(sf['ratings_summary_curr'].get(cat, 0) - sf['ratings_summary_prev'].get(cat, 0)) + ')</span>' if sf['ratings_summary_curr'].get(cat, 0) > sf['ratings_summary_prev'].get(cat, 0) else ''}
-                {' <span style="color:#dc2626;font-size:11px;">(' + str(sf['ratings_summary_curr'].get(cat, 0) - sf['ratings_summary_prev'].get(cat, 0)) + ')</span>' if sf['ratings_summary_curr'].get(cat, 0) < sf['ratings_summary_prev'].get(cat, 0) else ''}
-            </td>
-        </tr>"""
-        for cat in cats
-    ])
-
     # Build multi-race table HTML
     races_rows = "".join([
         f"""<tr>
             <td style="padding:10px 12px;font-weight:700;border-bottom:1px solid #e5e7eb;color:#0f172a;">{r['name']}</td>
             <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">
-                <span style="color:#1d4ed8;font-weight:600;">{r['dem_candidate']} (D)</span><br>
-                <span style="color:#b91c1c;font-weight:600;">{r['rep_candidate']} (R)</span>
-            </td>
-            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
-                <strong>{r['dem_curr']:.2f}% D</strong> &bull; {r['rep_curr']:.2f}% R
-            </td>
-            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
-                <strong style="color:{'#1d4ed8' if r['margin']>0 else '#b91c1c'};">{'+' if r['margin']>0 else ''}{r['margin']:.2f}%</strong>
-                <span style="color:{'#16a34a' if r['shift'] > 0 else ('#dc2626' if r['shift'] < 0 else '#6b7280')};font-size:11px;font-weight:600;margin-left:4px;">({r['shift']:+.2f}%)</span>
+                <span style="color:#1d4ed8;font-weight:700;">{r['dem_candidate']} (D)</span><br>
+                <span style="color:#b91c1c;font-weight:700;">{r['rep_candidate']} (R)</span>
             </td>
             <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">
-                <span style="color:#1d4ed8;font-weight:600;">{r['prob_dem']:.1f}% D</span> / <span style="color:#b91c1c;font-weight:600;">{r['prob_rep']:.1f}% R</span>
+                <strong style="font-size:13px;color:#1e293b;">{r['dem_curr']:.2f}% D</strong> &bull; {r['rep_curr']:.2f}% R<br>
+                <span style="display:inline-block;padding:2px 6px;margin-top:3px;font-size:11px;font-weight:700;background:#eff6ff;color:#1d4ed8;border-radius:4px;border:1px solid #bfdbfe;">
+                    95% CI: [{r['ci_95_low']:.2f}%, {r['ci_95_high']:.2f}%]
+                </span>
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">
+                <strong style="font-size:13px;color:{'#1d4ed8' if r['margin']>0 else '#b91c1c'};">{'+' if r['margin']>0 else ''}{r['margin']:.2f}%</strong>
+                <span style="color:{'#16a34a' if r['shift'] > 0 else ('#dc2626' if r['shift'] < 0 else '#6b7280')};font-size:11px;font-weight:600;margin-left:4px;">({r['shift']:+.2f}%)</span><br>
+                <span style="color:#64748b;font-size:11px;">CI: [{'+' if r['ci_margin_low']>0 else ''}{r['ci_margin_low']:.2f}%, {'+' if r['ci_margin_high']>0 else ''}{r['ci_margin_high']:.2f}%]</span>
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">
+                <span style="color:#1d4ed8;font-weight:700;">{r['prob_dem']:.1f}% D</span> / <span style="color:#b91c1c;font-weight:700;">{r['prob_rep']:.1f}% R</span>
             </td>
             <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
-                {badge(r['rating'])}
+                {badge(r['rating'])}<br>
+                <span style="font-size:10px;color:#64748b;font-weight:600;">{conf_badge(r['call_confidence'])}</span>
             </td>
         </tr>"""
         for r in data.get('races_summary', [])
     ])
     races_html = f"""
-    <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:24px 0 12px 0;">
-        ⚖️ Statewide Multi-Race Forecast (Senate & Judicial Contests)
+    <h2 style="font-size:16px;font-weight:800;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:24px 0 12px 0;">
+        ⚖️ Statewide Candidate Contests & 95% Confidence Intervals
     </h2>
     <table style="width:100%;border-collapse:collapse;margin:12px 0 24px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;font-size:13px;">
         <thead>
             <tr style="background:#f3f4f6;text-align:left;font-size:11px;color:#4b5563;text-transform:uppercase;">
                 <th style="padding:10px 12px;">Contest</th>
                 <th style="padding:10px 12px;">Candidates</th>
-                <th style="padding:10px 12px;">Projected Share</th>
-                <th style="padding:10px 12px;">Margin & Shift</th>
+                <th style="padding:10px 12px;">Projected Share (95% CI)</th>
+                <th style="padding:10px 12px;">Margin (95% CI)</th>
                 <th style="padding:10px 12px;">Win Probability</th>
-                <th style="padding:10px 12px;">Rating</th>
+                <th style="padding:10px 12px;">Model Rating</th>
             </tr>
         </thead>
         <tbody>{races_rows}</tbody>
     </table>
+    """
+
+    # Build constitutional amendments HTML
+    amend_rows = "".join([
+        f"""<tr>
+            <td style="padding:10px 12px;font-weight:700;border-bottom:1px solid #e5e7eb;color:#0f172a;">
+                {a['name']}<br>
+                <span style="font-size:11px;color:#64748b;font-weight:400;">{a.get('ballot_question', '')}</span>
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">
+                <strong style="color:#b91c1c;">{a['rep_curr']:.2f}%</strong> (For / Yes)
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">
+                <strong style="color:#1d4ed8;">{a['dem_curr']:.2f}%</strong> (Against / No)<br>
+                <span style="display:inline-block;padding:2px 6px;margin-top:3px;font-size:11px;font-weight:700;background:#eff6ff;color:#1d4ed8;border-radius:4px;border:1px solid #bfdbfe;">
+                    95% CI: [{a['ci_95_low']:.2f}%, {a['ci_95_high']:.2f}%]
+                </span>
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">
+                <strong>{'+' if a['margin']>0 else ''}{a['margin']:.2f}%</strong><br>
+                <span style="color:#64748b;font-size:11px;">CI: [{'+' if a['ci_margin_low']>0 else ''}{a['ci_margin_low']:.2f}%, {'+' if a['ci_margin_high']>0 else ''}{a['ci_margin_high']:.2f}%]</span>
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
+                {badge(a['rating'])}<br>
+                <span style="font-size:11px;color:{'#15803d' if a['prob_rep']>50 else '#b91c1c'};font-weight:700;">{a['prob_rep']:.1f}% Yes Prob</span>
+            </td>
+        </tr>"""
+        for a in data.get('amendments_summary', [])
+    ])
+    amend_html = f"""
+    <h2 style="font-size:16px;font-weight:800;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
+        📜 Statewide Constitutional Amendments (Pass/Fail Predictions & 95% CIs)
+    </h2>
+    <table style="width:100%;border-collapse:collapse;margin:12px 0 24px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;font-size:13px;">
+        <thead>
+            <tr style="background:#f3f4f6;text-align:left;font-size:11px;color:#4b5563;text-transform:uppercase;">
+                <th style="padding:10px 12px;width:38%;">Amendment & Ballot Question</th>
+                <th style="padding:10px 12px;">For (Yes)</th>
+                <th style="padding:10px 12px;">Against (No & 95% CI)</th>
+                <th style="padding:10px 12px;">Net Margin & 95% CI</th>
+                <th style="padding:10px 12px;">Outlook & Probability</th>
+            </tr>
+        </thead>
+        <tbody>{amend_rows}</tbody>
+    </table>
+    """
+
+    # Build NC General Assembly legislative cards HTML
+    leg = data.get('legislative', {})
+    sen = leg.get('senate', {})
+    hou = leg.get('house', {})
+    leg_html = f"""
+    <h2 style="font-size:16px;font-weight:800;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
+        🏛️ NC General Assembly Legislative Benchmarks & 95% Seat CIs
+    </h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0 24px 0;">
+        <!-- NC Senate Card -->
+        <div style="background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+            <div style="font-size:14px;font-weight:800;color:#0f172a;border-bottom:1px solid #e2e8f0;padding-bottom:8px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+                <span>NC SENATE</span>
+                <span style="font-size:11px;color:#64748b;font-weight:600;">50 SEATS TOTAL</span>
+            </div>
+            <div style="margin-bottom:8px;">
+                <div style="font-size:12px;color:#475569;">Projected Democratic Seats:</div>
+                <div style="font-size:22px;font-weight:800;color:#1d4ed8;margin-top:2px;">
+                    {sen.get('point_estimate_dem')} Dem <span style="font-size:12px;color:#64748b;font-weight:600;">(Exp: {sen.get('expected_seats_dem')})</span>
+                </div>
+                <div style="margin-top:6px;">
+                    <span style="display:inline-block;padding:3px 8px;font-size:12px;font-weight:800;background:#dbeafe;color:#1e40af;border-radius:4px;border:1px solid #bfdbfe;">
+                        95% CI: {sen.get('ci_str')} Dem
+                    </span>
+                </div>
+            </div>
+            <div style="font-size:12px;color:#475569;margin-top:8px;">
+                Projected Republican Seats: <strong style="color:#b91c1c;">{sen.get('point_estimate_rep')} Rep</strong> (Exp: {sen.get('expected_seats_rep')})
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:6px;">
+                Supermajority threshold: 30 GOP seats (60%) &bull; Dems need 21+ to break.
+            </div>
+            <div style="margin-top:12px;padding:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;text-align:center;">
+                <div style="font-size:11px;font-weight:700;color:#166534;text-transform:uppercase;">Supermajority Probability</div>
+                <div style="font-size:16px;font-weight:800;color:#15803d;margin-top:2px;">
+                    {sen.get('prob_break_supermajority')}% Probability Broken
+                </div>
+            </div>
+        </div>
+
+        <!-- NC House Card -->
+        <div style="background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,0.05);">
+            <div style="font-size:14px;font-weight:800;color:#0f172a;border-bottom:1px solid #e2e8f0;padding-bottom:8px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;">
+                <span>NC HOUSE</span>
+                <span style="font-size:11px;color:#64748b;font-weight:600;">120 SEATS TOTAL</span>
+            </div>
+            <div style="margin-bottom:8px;">
+                <div style="font-size:12px;color:#475569;">Projected Democratic Seats:</div>
+                <div style="font-size:22px;font-weight:800;color:#1d4ed8;margin-top:2px;">
+                    {hou.get('point_estimate_dem')} Dem <span style="font-size:12px;color:#64748b;font-weight:600;">(Exp: {hou.get('expected_seats_dem')})</span>
+                </div>
+                <div style="margin-top:6px;">
+                    <span style="display:inline-block;padding:3px 8px;font-size:12px;font-weight:800;background:#dbeafe;color:#1e40af;border-radius:4px;border:1px solid #bfdbfe;">
+                        95% CI: {hou.get('ci_str')} Dem
+                    </span>
+                </div>
+            </div>
+            <div style="font-size:12px;color:#475569;margin-top:8px;">
+                Projected Republican Seats: <strong style="color:#b91c1c;">{hou.get('point_estimate_rep')} Rep</strong> (Exp: {hou.get('expected_seats_rep')})
+            </div>
+            <div style="font-size:11px;color:#64748b;margin-top:6px;">
+                Supermajority threshold: 72 GOP seats (60%) &bull; Dems need 49+ to break.
+            </div>
+            <div style="margin-top:12px;padding:10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;text-align:center;">
+                <div style="font-size:11px;font-weight:700;color:#166534;text-transform:uppercase;">Supermajority Probability</div>
+                <div style="font-size:16px;font-weight:800;color:#15803d;margin-top:2px;">
+                    {hou.get('prob_break_supermajority')}% Probability Broken
+                </div>
+            </div>
+        </div>
+    </div>
     """
 
     html = f"""
@@ -708,20 +696,40 @@ def format_html(data):
         <title>NC Early Voting Daily Update</title>
     </head>
     <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;line-height:1.5;color:#1f2937;background-color:#f9fafb;margin:0;padding:24px;">
-        <div style="max-width:680px;margin:0 auto;background:#ffffff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1);border:1px solid #e5e7eb;overflow:hidden;">
+        <div style="max-width:700px;margin:0 auto;background:#ffffff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,0.1);border:1px solid #e5e7eb;overflow:hidden;">
             <!-- Header -->
             <div style="background:linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);color:#ffffff;padding:24px 28px;">
-                <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:#93c5fd;">Daily Intelligence Report</div>
-                <h1 style="margin:6px 0 4px 0;font-size:22px;font-weight:800;color:#ffffff;">NC Early Voting: Day {data['curr_day']} vs Day {data['prev_day']}</h1>
-                <div style="font-size:13px;color:#bfdbfe;">{data['date_str']} &bull; Option 1 Dual-Regime Model</div>
+                <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;font-weight:700;color:#93c5fd;">Election Intelligence Report</div>
+                <h1 style="margin:6px 0 4px 0;font-size:22px;font-weight:800;color:#ffffff;">NC Early Voting: Final Cumulative Day {data['curr_day']} Benchmarks</h1>
+                <div style="font-size:13px;color:#bfdbfe;">{data['date_str']} &bull; 2-Mode Historical Decomposition Engine</div>
             </div>
 
             <div style="padding:24px 28px;">
+                <!-- Major Model Update Banner & Prediction Site Password Access -->
+                <div style="background:#eff6ff;border:2px solid #3b82f6;border-radius:8px;padding:16px 20px;margin-bottom:22px;line-height:1.5;">
+                    <div style="font-size:16px;font-weight:800;color:#1e40af;margin-bottom:8px;">
+                        🚀 MAJOR MODEL UPDATE: 2-Mode Historical EV vs. Election Day Decomposition
+                    </div>
+                    <div style="font-size:13px;color:#1e293b;margin-bottom:12px;">
+                        The election prediction engine has been upgraded to an empirical two-mode turnout decomposition architecture, explicitly accounting for historical Election Day Republican turnout surges (with midterms weighted at 85%), county-level GOP cannibalization/reservoir dynamics, and quality-weighted polling synthesis across all contests.
+                    </div>
+                    <div style="background:#ffffff;border:1px solid #bfdbfe;border-radius:6px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+                        <div>
+                            <div style="font-size:11px;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Dedicated Prediction Site</div>
+                            <a href="https://rannbar-on.com/prediction/" style="font-size:15px;font-weight:700;color:#2563eb;text-decoration:underline;">https://rannbar-on.com/prediction/</a>
+                        </div>
+                        <div style="background:#f1f5f9;padding:6px 14px;border-radius:6px;border:1px dashed #94a3b8;">
+                            <span style="font-size:12px;color:#475569;font-weight:600;">Site Password:</span>
+                            <code style="font-size:15px;font-weight:800;color:#0f172a;background:#e2e8f0;padding:2px 8px;border-radius:4px;margin-left:6px;font-family:monospace;">nc2026beta</code>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Key Stat Callout Cards -->
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
                     <div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:14px;border-radius:6px;">
-                        <div style="font-size:11px;font-weight:700;color:#166534;text-transform:uppercase;">New Ballots Added</div>
-                        <div style="font-size:20px;font-weight:800;color:#15803d;margin-top:2px;">+{t['new_tot']:,}</div>
+                        <div style="font-size:11px;font-weight:700;color:#166534;text-transform:uppercase;">Total Early Ballots Cast</div>
+                        <div style="font-size:20px;font-weight:800;color:#15803d;margin-top:2px;">{t['curr_tot']:,}</div>
                         <div style="font-size:12px;color:#166534;margin-top:4px;">Dem {t['pct_dem']}% | Rep {t['pct_rep']}% | Una {t['pct_una']}%</div>
                     </div>
                     <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:14px;border-radius:6px;">
@@ -735,61 +743,11 @@ def format_html(data):
                 <!-- Multi-Race Section -->
                 {races_html}
 
-                <!-- Section 1: Rating Changes -->
-                <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:24px 0 12px 0;">
-                    ⭐ County Rating Changes ({len(data['rating_changes'])})
-                </h2>
-                {rc_html}
+                <!-- Amendments Section -->
+                {amend_html}
 
-                <!-- Section 2: Confidence Changes -->
-                <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
-                    📶 County Confidence Shifts ({len(data['confidence_changes'])})
-                </h2>
-                {conf_html}
-
-                <!-- Section 3: Projected Flips -->
-                <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
-                    🔄 Projected Flips (2022 R &rarr; 2026 D) — {len(data['current_flips'])} Counties
-                </h2>
-                <table style="width:100%;border-collapse:collapse;margin:12px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;font-size:13px;">
-                    <thead>
-                        <tr style="background:#f3f4f6;text-align:left;font-size:11px;color:#4b5563;text-transform:uppercase;">
-                            <th style="padding:8px 12px;">County</th>
-                            <th style="padding:8px 12px;">Rating</th>
-                            <th style="padding:8px 12px;">2022 Dem</th>
-                            <th style="padding:8px 12px;">2026 Pred (Margin)</th>
-                            <th style="padding:8px 12px;">Call Conf.</th>
-                            <th style="padding:8px 12px;">Margin Conf.</th>
-                        </tr>
-                    </thead>
-                    <tbody>{flips_rows}</tbody>
-                </table>
-
-                <!-- Section 4: Toss Ups -->
-                <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
-                    ⚖️ Toss-Up Battlegrounds (40% - 60% Flip Prob) — {len(data['toss_ups'])} Counties
-                </h2>
-                <table style="width:100%;border-collapse:collapse;margin:12px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;font-size:13px;">
-                    <thead>
-                        <tr style="background:#f3f4f6;text-align:left;font-size:11px;color:#4b5563;text-transform:uppercase;">
-                            <th style="padding:8px 12px;">County</th>
-                            <th style="padding:8px 12px;">Rating</th>
-                            <th style="padding:8px 12px;">2026 Pred (Margin)</th>
-                            <th style="padding:8px 12px;">Call Conf.</th>
-                            <th style="padding:8px 12px;">Margin Conf.</th>
-                            <th style="padding:8px 12px;">95% Margin CI</th>
-                        </tr>
-                    </thead>
-                    <tbody>{toss_rows}</tbody>
-                </table>
-
-                <!-- Section 5: Rating Breakdown -->
-                <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:28px 0 12px 0;">
-                    📊 Statewide County Ratings Breakdown
-                </h2>
-                <table style="width:100%;max-width:380px;border-collapse:collapse;margin:12px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;font-size:13px;">
-                    <tbody>{summary_rows}</tbody>
-                </table>
+                <!-- Legislative Benchmarks Section -->
+                {leg_html}
 
                 <!-- Footer Call to Action -->
                 <div style="margin-top:32px;padding:16px;background:#f3f4f6;border-radius:6px;text-align:center;">
@@ -801,9 +759,9 @@ def format_html(data):
             <!-- Email footer -->
             <div style="border-top:1px solid #e5e7eb;padding:20px 28px;background:#f9fafb;font-size:11px;color:#9ca3af;text-align:center;line-height:1.6;">
                 <div style="font-weight:600;color:#64748b;">Autonomous Early Voting Update System &bull; North Carolina 2026 Analysis</div>
-                <div style="margin-top:6px;color:#6b7280;">You received this dispatch because you subscribed to daily early voting reports.</div>
+                <div style="margin-top:6px;color:#6b7280;">You received this dispatch because you subscribed to early voting updates.</div>
                 <div style="margin-top:8px;">
-                    <a href="{{{{UNSUBSCRIBE_URL}}}}" style="color:#2563eb;text-decoration:underline;font-weight:600;">Unsubscribe from daily updates</a>
+                    <a href="{{{{UNSUBSCRIBE_URL}}}}" style="color:#2563eb;text-decoration:underline;font-weight:600;">Unsubscribe from updates</a>
                     <span style="color:#cbd5e1;margin:0 8px;">&bull;</span>
                     <a href="https://rannbar-on.com/prediction/" style="color:#64748b;text-decoration:underline;">View Prediction Model</a>
                     <span style="color:#cbd5e1;margin:0 8px;">&bull;</span>
@@ -816,23 +774,106 @@ def format_html(data):
     """
     return html
 
-def send_summary_email(data, recipient=None, send_to_subscribers=False):
+def send_via_ms_graph(recipients, subject, html_body, plain_body=None, sender="rb6@duke.edu"):
+    """Dispatches HTML emails via Microsoft Graph API using cached OAuth2 tokens."""
+    import msal
+    import requests
+
+    cache_path = os.path.expanduser("~/.duke_token_cache.bin")
+    if not os.path.exists(cache_path):
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] MS Graph Warning: Token cache {cache_path} not found.")
+        return False, []
+
+    cache = msal.SerializableTokenCache()
+    with open(cache_path, "r") as f:
+        cache.deserialize(f.read())
+
+    app = msal.PublicClientApplication(
+        "14d82eec-204b-4c2f-b7e8-296a70dab67e",
+        authority="https://login.microsoftonline.com/cb72c54e-4a31-4d9e-b14a-1ea36dfac94c",
+        token_cache=cache
+    )
+    accounts = app.get_accounts(username=sender)
+    if not accounts:
+        accounts = app.get_accounts()
+    if not accounts:
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] MS Graph Warning: No account found for {sender}.")
+        return False, []
+
+    token_result = app.acquire_token_silent(["https://graph.microsoft.com/Mail.Send"], account=accounts[0])
+    if not token_result or "access_token" not in token_result:
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] MS Graph Warning: Failed to acquire silent access token.")
+        return False, []
+
+    access_token = token_result["access_token"]
+    url = f"https://graph.microsoft.com/v1.0/users/{sender}/sendMail"
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json"
+    }
+
+    DEFAULT_UNSUB_BASE = "https://script.google.com/macros/s/AKfycby4nUxaJpTz50X43tc79R3vEUSDOEj-TQskmZce3hw6Pm2yw6d-pdEq10dek-WWrsWRcw/exec?action=unsubscribe"
+    unsub_base_url = os.getenv("UNSUBSCRIBE_ENDPOINT_URL") or DEFAULT_UNSUB_BASE
+    import urllib.parse
+
+    delivered = 0
+    failed = []
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Dispatching via MS Graph ({sender}) to {len(recipients)} recipient(s)...")
+
+    for rec in recipients:
+        rec_unsub_url = f"{unsub_base_url}&email={urllib.parse.quote(rec)}"
+        rec_html = html_body.replace("{{UNSUBSCRIBE_URL}}", rec_unsub_url)
+
+        payload = {
+            "message": {
+                "subject": subject,
+                "body": {
+                    "contentType": "HTML",
+                    "content": rec_html
+                },
+                "toRecipients": [{"emailAddress": {"address": rec}}]
+            },
+            "saveToSentItems": "true"
+        }
+        try:
+            resp = requests.post(url, headers=headers, json=payload, timeout=20)
+            if resp.status_code == 202:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] ✓ MS Graph delivered to {rec}")
+                delivered += 1
+            else:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] ✗ MS Graph failed for {rec}: HTTP {resp.status_code} {resp.text}")
+                failed.append(rec)
+        except Exception as e:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] ✗ MS Graph error for {rec}: {e}")
+            failed.append(rec)
+
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] MS Graph Batch complete: {delivered}/{len(recipients)} delivered successfully.")
+    return delivered > 0, failed
+
+
+def send_summary_email(data, recipient=None, send_to_subscribers=False, extra_recipients=None, custom_subject=None):
     """Dispatches the multi-part email to subscribers or designated recipient."""
     load_env_file()
 
+    recipients_list = []
     if send_to_subscribers:
-        recipients = subscriptions.get_active_subscribers()
-        if not recipients:
-            recipients = [DEFAULT_RECIPIENT]
+        recipients_list = subscriptions.get_active_subscribers()
+        if not recipients_list:
+            recipients_list = [DEFAULT_RECIPIENT]
     elif recipient:
-        recipients = [recipient]
+        recipients_list = [recipient]
     else:
-        recipients = [DEFAULT_RECIPIENT]
+        recipients_list = [DEFAULT_RECIPIENT]
+
+    if extra_recipients:
+        if isinstance(extra_recipients, str):
+            extra_recipients = [e.strip() for e in extra_recipients.split(',') if e.strip()]
+        recipients_list.extend(extra_recipients)
 
     # Deduplicate and normalize
     seen = set()
     unique_recipients = []
-    for r in recipients:
+    for r in recipients_list:
         r_clean = r.strip().lower()
         if r_clean and r_clean not in seen:
             seen.add(r_clean)
@@ -853,7 +894,7 @@ def send_summary_email(data, recipient=None, send_to_subscribers=False):
     else:
         headline = "(Ratings Steady)"
 
-    subject = f"NC Early Vote Day {data['curr_day']} Update {headline}"
+    subject = custom_subject or f"NC Early Vote Day {data['curr_day']} Update {headline}"
 
     plain_body = format_plain_text(data)
     html_body = format_html(data)
@@ -869,10 +910,14 @@ def send_summary_email(data, recipient=None, send_to_subscribers=False):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Subject: {subject}")
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Recipients: {', '.join(recipients)}")
 
+    # Check if SMTP is configured. If not, try MS Graph fallback directly!
     if not smtp_pass or not smtp_user:
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Warning: SMTP_USER or SMTP_PASSWORD not set in environment or .env.")
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Cannot authenticate to {smtp_server}:{smtp_port}.")
-        return False
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: SMTP credentials not present. Attempting MS Graph API dispatch...")
+        success, failed = send_via_ms_graph(recipients, subject, html_body, plain_body)
+        if success and send_to_subscribers:
+            successful = [r for r in recipients if r not in failed]
+            subscriptions.mark_sent(successful)
+        return success
 
     # Policy Guard: Stop sending election prediction emails after Sunday morning (Nov 1, 2026 12:00 PM EDT)
     from zoneinfo import ZoneInfo
@@ -982,6 +1027,8 @@ def main():
     parser.add_argument("--prev-day", type=int, default=None, help="Previous EV day (default: auto)")
     parser.add_argument("--curr-day", type=int, default=None, help="Current EV day (default: auto)")
     parser.add_argument("--recipient", default=None, help="Recipient email address")
+    parser.add_argument("--extra-recipients", default=None, help="Comma-separated additional recipients")
+    parser.add_argument("--subject", default=None, help="Custom email subject line")
     parser.add_argument("--subscribers", action="store_true", help="Send email to all active database subscribers")
     parser.add_argument("--force", action="store_true", help="Force sending even if already dispatched today")
     parser.add_argument("--dry-run", action="store_true", help="Print summary without sending email")
@@ -1004,12 +1051,12 @@ def main():
         print(format_plain_text(data))
         return
 
-    # Policy Guard: Stop sending election prediction emails after Sunday morning (Nov 1, 2026 12:00 PM EDT)
+    # Policy Guard: Only skip automatic routine subscriber dispatch if past cutoff and not forced
     from zoneinfo import ZoneInfo
     ny_now = datetime.now(ZoneInfo("America/New_York"))
     cutoff = datetime(2026, 11, 1, 12, 0, 0, tzinfo=ZoneInfo("America/New_York"))
-    if ny_now > cutoff and not args.force:
-        print(f"[{ny_now.strftime('%H:%M:%S')}] Notice: Early voting prediction email dispatch concluded after Sunday morning (Nov 1, 2026). Skipping email delivery.")
+    if ny_now > cutoff and not args.force and not args.recipient and not args.subject:
+        print(f"[{ny_now.strftime('%H:%M:%S')}] Notice: Early voting prediction email dispatch concluded after Sunday morning (Nov 1, 2026). Use --force or explicit --recipient to send.")
         return
 
     if args.subscribers:
@@ -1018,11 +1065,21 @@ def main():
             print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: EV Day {curr_day} update email was already dispatched today. Use --force to resend.")
             return
 
-        success = send_summary_email(data, send_to_subscribers=True)
+        success = send_summary_email(
+            data,
+            send_to_subscribers=True,
+            extra_recipients=args.extra_recipients,
+            custom_subject=args.subject
+        )
         if success:
             record_day_dispatched(curr_day)
     else:
-        success = send_summary_email(data, recipient=args.recipient or DEFAULT_RECIPIENT)
+        success = send_summary_email(
+            data,
+            recipient=args.recipient or DEFAULT_RECIPIENT,
+            extra_recipients=args.extra_recipients,
+            custom_subject=args.subject
+        )
 
     if not success and not (os.getenv("SMTP_PASSWORD") and os.getenv("SMTP_USER")):
         print("\nNote: To send emails locally, set SMTP_USER and SMTP_PASSWORD in .env or run via GitHub Actions.")
