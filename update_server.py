@@ -285,8 +285,8 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
         for cid, plist in data.get('precincts', {}).items():
             c_fc = forecast_res['counties'].get(cid)
             for p in plist:
-                p['forecast'] = vote_forecast.predict_precinct(cid, p['data'].get('2026'), p['data'].get('2022'), c_fc)
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Updated 2026 Vote Forecast: Statewide Dem {data['state']['forecast']['pred_final_dem']}% [{data['state']['forecast']['range_low']}% - {data['state']['forecast']['range_high']}%]")
+                p['forecast'] = vote_forecast.predict_precinct_all_races(cid, p['data'].get('2026'), p['data'].get('2022'), c_fc)
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Updated 2026 Vote Forecast (5 Races): Statewide US Senate Dem {data['state']['forecast']['pred_final_dem']}% | Supreme Court Dem {data['state']['forecast']['races']['supreme_court']['pred_final_dem']}%")
     except Exception as e:
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Warning: Error computing vote forecast: {e}")
 
