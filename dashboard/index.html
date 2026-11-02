@@ -823,12 +823,12 @@
         <input type="text" id="newTaskTitle" placeholder="e.g. Ingest 2026 Midterm Turnout Data">
       </div>
       <div class="form-group">
-        <label>Priority (1-10)</label>
+        <label>Priority (1-10) — Immediate Admin (Local Machine)</label>
         <select id="newTaskPriority">
-          <option value="10">10 (Immediate / Drop All)</option>
+          <option value="10" selected>10 (Immediate Admin / Drop All)</option>
           <option value="9">9 (Urgent Execution)</option>
           <option value="8">8 (High Priority)</option>
-          <option value="7" selected>7 (Standard Elevated)</option>
+          <option value="7">7 (Standard Elevated)</option>
           <option value="6">6 (Normal Intermediate)</option>
           <option value="5">5 (Normal Routine)</option>
           <option value="4">4 (Low / Standby)</option>
@@ -1472,24 +1472,25 @@
       return;
     }
 
-    const priority = parseInt(priInput?.value || '7', 10);
+    // Policy: All tasks submitted locally from this machine have immediate admin status P=10
+    const priority = 10;
     const model = modelInput?.value || 'Gemini 4 Argon';
     const progressVal = parseInt(progInput?.value || '0', 10);
-    const scope = (scopeInput?.value || '').trim() || 'Automated task queued via control dashboard.';
+    const scope = (scopeInput?.value || '').trim() || 'Automated task submitted locally with immediate admin status.';
 
     const newId = tasksState.length > 0 ? (Math.max(...tasksState.map(t => t.id)) + 1) : 1;
 
     const newTask = {
       id: newId,
-      priority: priority,
+      priority: 10,
       title: title,
       scope: scope,
       model: model,
-      progress: progressVal > 0 ? `${progressVal}%` : "Queued (0%)",
-      progressPercent: progressVal,
-      status: "Ready",
-      statusIcon: "fa-solid fa-circle-play",
-      statusColor: "var(--accent-cyan)"
+      progress: progressVal > 0 ? `${progressVal}%` : "Active (P10)",
+      progressPercent: progressVal > 0 ? progressVal : 10,
+      status: "Active / Admin",
+      statusIcon: "fa-solid fa-bolt",
+      statusColor: "var(--accent-red)"
     };
 
     tasksState.unshift(newTask);
@@ -1502,7 +1503,7 @@
     updateStatCards();
     renderTasksTable();
 
-    alert(`Task #${newId} "${title}" successfully queued with Priority P${priority}.`);
+    alert(`Task #${newId} "${title}" submitted locally with immediate admin status (P=10).`);
   }
 
   function evaluateAuth() {

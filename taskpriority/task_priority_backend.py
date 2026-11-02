@@ -531,26 +531,51 @@ def update_task_priority_and_model(task_id, new_priority, new_model, user):
                     details={"task_id": task_id, "new_priority": new_priority, "new_model": new_model})
     return {"success": True, "message": f"Task #{task_id} updated: Priority {new_priority}/10, Model {new_model}"}
 
-def create_task(title, description, priority, model, completion_percent, user):
+def create_task(title, description, priority=10, model="Gemini 4 Argon", completion_percent=0, user=None, is_local_machine=False):
     """
-    If initiated by anyone other than Rann's account, personal approval is required:
-    Emails Rann immediately with task details.
+    Creates and enqueues an automated task.
+    Rule: All tasks submitted locally from this machine have immediate admin status P=10.
+    Non-admin remote users require personal approval from Rann before activation.
     """
     title = title.strip()
     description = description.strip()
-    priority = int(priority)
     completion_percent = int(completion_percent)
 
     if not title:
         return {"success": False, "error": "Task title cannot be empty."}
-    if not (1 <= priority <= 10):
-        return {"success": False, "error": "Priority must be between 1 and 10."}
     if model not in AVAILABLE_MODELS:
-        return {"success": False, "error": "Invalid model selection."}
+        return {"success": False, "error": f"Invalid model selection. Choose from: {', '.join(AVAILABLE_MODELS)}"}
 
-    is_admin = (user['role'] == 'admin' or user['username'] == ADMIN_USERNAME)
-    approved = 1 if is_admin else 0
-    status = 'active' if is_admin else 'pending_approval'
+    # Fetch admin account if user is not provided (e.g. local CLI submission)
+    if user is None or is_local_machine:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, username, full_name, email, role FROM users WHERE role = 'admin' OR username = ? LIMIT 1", (ADMIN_USERNAME,))
+            row = cursor.fetchone()
+            if row:
+                user = dict(row)
+            else:
+                cursor.execute("""
+                    INSERT INTO users (username, full_name, email, phone, password_hash, salt, status, role, approved_at)
+                    VALUES (?, ?, ?, ?, ?, ?, 'approved', 'admin', CURRENT_TIMESTAMP)
+                """, (ADMIN_USERNAME, "Rann Bar-On", ADMIN_EMAIL, "919-660-2800", "LOCAL_ADMIN_HASH", "LOCAL_ADMIN_SALT"))
+                conn.commit()
+                cursor.execute("SELECT id, username, full_name, email, role FROM users WHERE username = ? LIMIT 1", (ADMIN_USERNAME,))
+                user = dict(cursor.fetchone())
+
+    # Rule: All tasks submitted locally from this machine have immediate admin status P=10
+    if is_local_machine:
+        priority = 10
+        is_admin = True
+        approved = 1
+        status = 'active'
+    else:
+        priority = int(priority)
+        if not (1 <= priority <= 10):
+            return {"success": False, "error": "Priority must be between 1 and 10."}
+        is_admin = (user.get('role') == 'admin' or user.get('username') == ADMIN_USERNAME)
+        approved = 1 if is_admin else 0
+        status = 'active' if is_admin else 'pending_approval'
 
     with get_db_connection() as conn:
         cursor = conn.cursor()
@@ -562,9 +587,9 @@ def create_task(title, description, priority, model, completion_percent, user):
         conn.commit()
 
     log_audit_event("TASK_CREATED", user_id=user['id'], username=user['username'],
-                    details={"task_id": task_id, "title": title, "priority": priority, "model": model, "approved": approved})
+                    details={"task_id": task_id, "title": title, "priority": priority, "model": model, "approved": approved, "is_local_machine": is_local_machine})
 
-    # If initiated by anyone other than Rann, personal approval is strictly required
+    # If initiated by anyone other than Rann / not local admin, personal approval is strictly required
     if not is_admin:
         email_body = f"""
         <h3>Task Submission Awaiting Your Personal Approval</h3>
@@ -588,10 +613,25 @@ def create_task(title, description, priority, model, completion_percent, user):
     return {
         "success": True,
         "task_id": task_id,
+        "priority": priority,
         "approved": bool(approved),
         "status": status,
-        "message": "Task created and activated." if is_admin else "Task submitted. Awaiting personal approval from Rann before activation."
+        "message": "Task created with immediate admin status (P=10)." if is_local_machine else ("Task created and activated." if is_admin else "Task submitted. Awaiting personal approval from Rann before activation.")
     }
+
+def submit_local_task(title, description="Local task submitted from host machine.", model="Gemini 4 Argon", completion_percent=0):
+    """
+    Submits a task locally from this machine.
+    Enforces rule: All tasks submitted locally from this machine have immediate admin status P=10.
+    """
+    return create_task(
+        title=title,
+        description=description,
+        priority=10,
+        model=model,
+        completion_percent=completion_percent,
+        is_local_machine=True
+    )
 
 def approve_task(task_id):
     with get_db_connection() as conn:
@@ -635,6 +675,41 @@ if __name__ == '__main__':
         t_id = int(sys.argv[sys.argv.index('--approve-task') + 1])
         ok = approve_task(t_id)
         print(f"Task #{t_id} approval status: {ok}")
+
+    elif '--submit-task' in sys.argv:
+        title_idx = sys.argv.index('--submit-task') + 1
+        if title_idx >= len(sys.argv) or sys.argv[title_idx].startswith('--'):
+            print("Usage: --submit-task \"<title>\" [--description \"<desc>\"] [--model \"<model>\"] [--completion <0-100>]")
+            sys.exit(1)
+        task_title = sys.argv[title_idx]
+
+        task_desc = "Local task submitted from host machine."
+        if '--description' in sys.argv:
+            d_idx = sys.argv.index('--description') + 1
+            if d_idx < len(sys.argv):
+                task_desc = sys.argv[d_idx]
+
+        task_model = "Gemini 4 Argon"
+        if '--model' in sys.argv:
+            m_idx = sys.argv.index('--model') + 1
+            if m_idx < len(sys.argv):
+                task_model = sys.argv[m_idx]
+
+        task_comp = 0
+        if '--completion' in sys.argv:
+            c_idx = sys.argv.index('--completion') + 1
+            if c_idx < len(sys.argv):
+                task_comp = int(sys.argv[c_idx])
+
+        res = submit_local_task(title=task_title, description=task_desc, model=task_model, completion_percent=task_comp)
+        if res.get('success'):
+            print(f"[SUCCESS] Task #{res['task_id']} '{task_title}' created successfully!")
+            print(f"          Priority: P={res['priority']} (Immediate Admin)")
+            print(f"          Status: {res['status'].upper()} (Approved by Admin: {res['approved']})")
+            print(f"          Model: {task_model}")
+        else:
+            print(f"[ERROR] Task creation failed: {res.get('error')}")
+            sys.exit(1)
 
     elif '--list-tasks' in sys.argv:
         tasks = get_all_tasks()
