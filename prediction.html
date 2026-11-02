@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="googlebot" content="noindex, nofollow">
-  <title>North Carolina Early Voting Partisan & Racial Swing Explorer</title>
+  <title>North Carolina 2026 Election Forecast & Prediction Model</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     if (!window.tailwind) {
@@ -112,12 +112,12 @@
 
       <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 mb-4">
         <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
-        2026 Vote Forecast &bull; Beta Access
+        2026 General Election Forecast &bull; Password Protected
       </div>
 
       <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Protected Dashboard</h2>
       <p class="text-xs sm:text-sm text-slate-400 mt-2 mb-6">
-        This preview contains experimental 2026 election forecast models and dual-regime analytics. Enter the access password to continue.
+        This dashboard contains North Carolina 2026 general election prediction models, polling aggregation, and legislative benchmarks. Enter the password to continue.
       </p>
 
       <form id="authForm" onsubmit="handleAuthSubmit(event)" class="space-y-4">
@@ -148,7 +148,7 @@
       </form>
 
       <div class="mt-6 pt-4 border-t border-slate-800 text-[11px] text-slate-500">
-        North Carolina 2026 Early Voting Analysis &bull; Confidential Beta
+        North Carolina 2026 Election Forecast &bull; Protected Access
       </div>
     </div>
   </div>
@@ -158,72 +158,51 @@
     <div class="max-w-[1720px] mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-3">
       <div>
         <div class="flex items-center gap-2.5 flex-wrap">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span id="headerDayBadge">Cumulative Day 17</span>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>
+            2026 GENERAL ELECTION
           </span>
-          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
-            BETA PREVIEW
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">
+            POLL-INFORMED FORECAST
           </span>
           <h1 class="text-xl lg:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-            North Carolina Early Voting Swing Explorer
+            North Carolina 2026 Prediction Model
           </h1>
         </div>
-        <p class="text-xs lg:text-sm text-slate-400 mt-0.5" id="headerSubtitle">
-          Interactive comparison across 2026, 2022, and 2018 early voting returns &bull; 100 Counties &bull; 2,600+ Precincts
+        <p class="text-xs lg:text-sm text-slate-400 mt-0.5">
+          Empirical Bayes synthesis of early voting transition curves &amp; quality-weighted polling consensus &bull; 8 Statewide Contests &bull; Legislative Supermajority Watch
         </p>
       </div>
 
-      <!-- Quick Summary Badges -->
+      <!-- Quick Summary & Actions -->
       <div class="flex items-center gap-3 overflow-x-auto py-1">
-        <div class="bg-slate-900/90 border border-slate-800 rounded-lg px-3 py-1.5 min-w-[125px]">
-          <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider" id="hdrTotLabel">2026 vs 2022 Turnout</div>
-          <div class="text-sm lg:text-base font-bold text-white font-mono flex items-baseline gap-1.5" id="hdrTotVal">
-            501,318 <span class="text-xs text-emerald-400 font-semibold" id="hdrTotGrowth">+38.2%</span>
-          </div>
-        </div>
+        <!-- Prominent Link to Early Vote Explorer -->
+        <a href="/earlyvote" class="bg-slate-900 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700/80 rounded-lg px-3 py-1.5 flex items-center gap-1.5 transition text-xs font-semibold shrink-0 cursor-pointer shadow-sm">
+          <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+          <span>Early Vote Explorer</span>
+        </a>
 
-        <div class="bg-slate-900/90 border border-slate-800 rounded-lg px-3 py-1.5 min-w-[110px]">
-          <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider" id="hdrMetric1Label">Dem Share</div>
-          <div class="text-sm lg:text-base font-bold text-blue-400 font-mono" id="hdrMetric1Val">
-            45.4% <span class="text-xs text-blue-300 font-normal" id="hdrMetric1Sub">('22: 40.6%)</span>
-          </div>
-        </div>
-
-        <div class="bg-slate-900/90 border border-slate-800 rounded-lg px-3 py-1.5 min-w-[110px]">
-          <div class="text-[10px] font-medium text-slate-400 uppercase tracking-wider" id="hdrMetric2Label">Rep Share</div>
-          <div class="text-sm lg:text-base font-bold text-red-400 font-mono" id="hdrMetric2Val">
-            20.1% <span class="text-xs text-red-300 font-normal" id="hdrMetric2Sub">('22: 29.7%)</span>
-          </div>
-        </div>
-
-        <div class="bg-slate-900/90 border border-slate-800 rounded-lg px-3 py-1.5 min-w-[130px]" id="hdrSwingBox">
-          <div class="text-[10px] font-semibold text-blue-300 uppercase tracking-wider" id="hdrSwingLabel">State Net Swing</div>
-          <div class="text-sm lg:text-base font-extrabold text-blue-300 font-mono flex items-center gap-1" id="hdrSwingVal">
-            <span>&nwarrow;</span> D +14.4 pp
-          </div>
-        </div>
-
-        <div class="bg-blue-950/40 border border-blue-700/60 rounded-lg px-3 py-1.5 min-w-[165px] cursor-pointer hover:border-blue-400 transition shadow-sm" id="hdrForecastBox" onclick="setMapMode('forecast')">
+        <!-- Selected Contest Forecast Header Card -->
+        <div class="bg-blue-950/40 border border-blue-700/60 rounded-lg px-3 py-1.5 min-w-[165px] cursor-pointer hover:border-blue-400 transition shadow-sm" id="hdrForecastBox">
           <div class="text-[10px] font-semibold text-blue-300 uppercase tracking-wider flex items-center justify-between">
             <span id="hdrForecastTitle">Vote Forecast</span>
             <span class="text-[9px] bg-blue-500/20 text-blue-300 px-1 rounded font-mono font-bold" id="hdrForecastSub">US Senate</span>
           </div>
           <div class="text-sm lg:text-base font-extrabold text-white font-mono flex items-baseline gap-1" id="hdrForecastVal">
-            51.0% <span class="text-xs text-blue-300 font-normal">[49.5% - 52.6%]</span>
+            54.3% <span class="text-xs text-blue-300 font-normal">[50.6% – 57.9%]</span>
           </div>
           <div class="text-[10px] text-slate-400 flex items-center justify-between font-mono mt-0.5" id="hdrForecastMeta">
             <span id="hdrForecastRating">Safe D</span>
-            <span id="hdrForecastWinProb" class="text-blue-300 font-semibold">P(D): 99.9%</span>
+            <span id="hdrForecastWinProb" class="text-blue-300 font-semibold">P(D): 98.9%</span>
           </div>
         </div>
 
         <button onclick="focusSubscribe()" class="bg-blue-600/20 hover:bg-blue-600/35 active:bg-blue-600/40 text-blue-300 border border-blue-500/40 rounded-lg px-3 py-1.5 flex items-center gap-1.5 transition text-xs font-semibold shrink-0 cursor-pointer shadow-sm">
           <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-          <span>Subscribe to Updates</span>
+          <span class="hidden sm:inline">Subscribe</span>
         </button>
 
-        <button onclick="lockDashboard()" title="Lock dashboard session" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition text-xs flex items-center gap-1.5 font-medium">
+        <button onclick="lockDashboard()" title="Lock prediction dashboard" class="px-2.5 py-1.5 rounded-lg text-slate-400 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition text-xs flex items-center gap-1.5 font-medium">
           <span>&#128274;</span>
           <span class="hidden sm:inline">Lock</span>
         </button>
@@ -231,7 +210,7 @@
     </div>
   </header>
 
-  <!-- Interactive Controls Bar -->
+  <!-- Prediction Contest & Chamber Navigation Toolbar -->
   <div class="border-b border-slate-800/70 bg-[#0e1628]/90 px-4 lg:px-8 py-2.5 z-30 shadow-sm">
     <div class="max-w-[1720px] mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
       
@@ -239,51 +218,22 @@
       <div class="flex items-center gap-3">
         <button id="btnBackToState" onclick="resetToStateView()" class="hidden items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm transition">
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-          &larr; Back to State Map
+          &larr; Back to Statewide
         </button>
 
         <div class="flex items-center text-xs lg:text-sm text-slate-300">
-          <span id="breadcrumbRoot" class="cursor-pointer hover:text-white font-medium" onclick="resetToStateView()">North Carolina (Statewide)</span>
+          <span id="breadcrumbRoot" class="cursor-pointer hover:text-white font-medium" onclick="resetToStateView()">North Carolina (Statewide Projection)</span>
           <span id="breadcrumbSep" class="mx-2 text-slate-600 hidden">&rsaquo;</span>
           <span id="breadcrumbCurrent" class="font-bold text-white hidden"></span>
         </div>
       </div>
 
-      <!-- Right: Election Comparators & Matchup Controls -->
-      <div class="flex flex-wrap items-center gap-3.5">
+      <!-- Right: Statewide Contests, Amendments & Legislative Selectors -->
+      <div class="flex flex-wrap items-center gap-2.5">
         
-        <!-- 1. Compare Elections (Any 2 of the 3) -->
-        <div class="flex items-center bg-slate-900 border border-slate-700/80 rounded-lg p-1 gap-1">
-          <span class="text-[11px] font-semibold text-slate-400 px-1.5">Compare:</span>
-          <button id="btnPair2622" onclick="setElectionPair('2026', '2022')" class="px-2.5 py-1 rounded text-xs font-semibold bg-blue-600 text-white transition">2026 vs 2022</button>
-          <button id="btnPair2618" onclick="setElectionPair('2026', '2018')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition">2026 vs 2018</button>
-          <button id="btnPair2218" onclick="setElectionPair('2022', '2018')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition">2022 vs 2018</button>
-        </div>
-
-        <!-- 2. Metric Dimension: Party vs Race -->
-        <div class="flex items-center bg-slate-900 border border-slate-700/80 rounded-lg p-1 gap-1">
-          <span class="text-[11px] font-semibold text-slate-400 px-1.5">Dimension:</span>
-          <button id="btnDimParty" onclick="setMetricDimension('party')" class="px-2.5 py-1 rounded text-xs font-semibold bg-blue-600 text-white transition">Party Registration</button>
-          <button id="btnDimRace" onclick="setMetricDimension('race')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition">Race (White vs Black)</button>
-        </div>
-
-        <!-- 3. Party Sub-matchup (D vs R, D vs U, R vs U) - Visible only in Party mode -->
-        <div id="partyMatchupGroup" class="flex items-center bg-slate-900 border border-slate-700/80 rounded-lg p-1 gap-1">
-          <span class="text-[11px] font-semibold text-slate-400 px-1.5">Matchup:</span>
-          <button id="btnMatchDR" onclick="setPartyMatchup('dr')" class="px-2.5 py-1 rounded text-xs font-semibold bg-blue-600 text-white transition">D vs R</button>
-          <button id="btnMatchDU" onclick="setPartyMatchup('du')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition">D vs U</button>
-          <button id="btnMatchRU" onclick="setPartyMatchup('ru')" class="px-2.5 py-1 rounded text-xs font-semibold text-slate-400 hover:text-white transition">R vs U</button>
-        </div>
-
-        <!-- 4. County Jump Dropdown -->
-        <div class="flex items-center gap-1.5">
-          <select id="countySelector" onchange="onCountySelect(this.value)" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
-            <option value="">Jump to County (100 total)...</option>
-          </select>
-        </div>
-
-        <!-- 4b. Multi-Race Forecast Selector Toolbar -->
-        <div id="forecastRaceSelectorGroup" class="hidden items-center bg-slate-900 border border-blue-500/60 rounded-lg p-0.5 gap-0.5 flex-wrap">
+        <!-- 1. Statewide Candidate Contests -->
+        <div class="flex items-center bg-slate-900 border border-blue-500/60 rounded-lg p-0.5 gap-0.5 flex-wrap">
+          <span class="text-[10px] uppercase font-bold text-blue-400 px-1.5 hidden sm:inline">Races:</span>
           <button id="btnRace_us_senate" onclick="setForecastRace('us_senate')" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-600 text-white transition flex items-center gap-1 shadow">
             <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
             US Senate
@@ -304,18 +254,39 @@
             <span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
             CoA Seat 3
           </button>
-          <span class="text-slate-600 px-1 font-mono text-xs hidden md:inline">|</span>
+        </div>
+
+        <!-- 2. Constitutional Amendments -->
+        <div class="flex items-center bg-slate-900 border border-slate-700/80 rounded-lg p-0.5 gap-0.5 flex-wrap">
+          <span class="text-[10px] uppercase font-bold text-amber-400 px-1.5 hidden sm:inline">Amendments:</span>
           <button id="btnRace_amendment_photo_id" onclick="setForecastRace('amendment_photo_id')" class="px-2 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-1" title="Require Photo ID for All Voters Amendment">
             <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-            Photo ID Amend
+            Photo ID
           </button>
           <button id="btnRace_amendment_tax_cap" onclick="setForecastRace('amendment_tax_cap')" class="px-2 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-1" title="3.5% Income Tax Cap Amendment">
             <span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span>
-            Tax Cap Amend
+            Tax Cap
           </button>
           <button id="btnRace_amendment_property_tax" onclick="setForecastRace('amendment_property_tax')" class="px-2 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-1" title="Property Tax Levy Limit Amendment">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            Property Tax Amend
+            Property Tax
+          </button>
+        </div>
+
+        <!-- 3. Legislative Chambers -->
+        <div class="flex items-center bg-slate-900 border border-slate-700/80 rounded-lg p-0.5 gap-0.5">
+          <span class="text-[10px] uppercase font-bold text-purple-400 px-1.5 hidden sm:inline">Chambers:</span>
+          <button id="btnModeCD" onclick="setMapMode('cd')" class="px-2 py-1 rounded-md text-xs font-semibold text-purple-300 hover:text-white transition flex items-center gap-1 border border-purple-500/30 bg-purple-950/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+            US House
+          </button>
+          <button id="btnModeSenate" onclick="setMapMode('senate')" class="px-2 py-1 rounded-md text-xs font-semibold text-emerald-300 hover:text-white transition flex items-center gap-1 border border-emerald-500/30 bg-emerald-950/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            NC Senate
+          </button>
+          <button id="btnModeHouse" onclick="setMapMode('house')" class="px-2 py-1 rounded-md text-xs font-semibold text-amber-300 hover:text-white transition flex items-center gap-1 border border-amber-500/30 bg-amber-950/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+            NC House
           </button>
         </div>
 
@@ -343,48 +314,23 @@
         <!-- NC Senate Mode Selector Dropdown -->
         <div id="senateSelectorGroup" class="hidden items-center gap-1.5">
           <select id="senateSelector" onchange="selectSenateDistrict(this.value)" class="bg-emerald-950/80 border border-emerald-500/60 text-emerald-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-emerald-500 focus:outline-none font-semibold max-w-[280px]">
-            <option value="">All NC Senate Districts (50 Districts)...</option><option value="SD-01">SD-01 &bull; BERTIE, CAMDEN, CURRITUCK &bull; Tillett (R) +13.3%</option><option value="SD-02">SD-02 &bull; CARTERET, CHOWAN, HALIFAX &bull; Sanderson (R) +13.6%</option><option value="SD-03">SD-03 &bull; BEAUFORT, CRAVEN, LENOIR &bull; Brinson (R) +14.4%</option><option value="SD-04">SD-04 &bull; GREENE, WAYNE, WILSON &bull; Newton (R) +4.9%</option><option value="SD-05">SD-05 &bull; EDGECOMBE, PITT &bull; Smith (D) +14.3%</option><option value="SD-06">SD-06 &bull; ONSLOW &bull; Lazzara (R) +34.7%</option><option value="SD-07">SD-07 &bull; NEW HANOVER &bull; Lee (R) +4.1%</option><option value="SD-08">SD-08 &bull; BRUNSWICK, COLUMBUS, NEW  &bull; Rabon (R) +18.1%</option><option value="SD-09">SD-09 &bull; BLADEN, DUPLIN, JONES (+2 &bull; Jackson (R) +26.6%</option><option value="SD-10">SD-10 &bull; JOHNSTON &bull; Sawrey (R) +13.1%</option><option value="SD-11">SD-11 &bull; FRANKLIN, NASH, VANCE &bull; Gailliard (D) +0.1% [FLIP R→D]</option><option value="SD-12">SD-12 &bull; HARNETT, LEE, SAMPSON &bull; Burgin (R) +17.0%</option><option value="SD-13">SD-13 &bull; WAKE &bull; Grafstein (D) +8.4%</option><option value="SD-14">SD-14 &bull; WAKE &bull; Blue (D) +54.9%</option><option value="SD-15">SD-15 &bull; WAKE &bull; Chaudhuri (D) +40.8%</option><option value="SD-16">SD-16 &bull; WAKE &bull; Adcock (D) +45.1%</option><option value="SD-17">SD-17 &bull; WAKE &bull; Batch (D) +45.1%</option><option value="SD-18">SD-18 &bull; GRANVILLE, WAKE &bull; Fatmi (D) +3.4%</option><option value="SD-19">SD-19 &bull; CUMBERLAND &bull; Applewhite (D) +34.0%</option><option value="SD-20">SD-20 &bull; CHATHAM, DURHAM &bull; Natalie S. Murdock (D) Uncontested</option><option value="SD-21">SD-21 &bull; CUMBERLAND, MOORE &bull; McInnis (R) +20.1%</option><option value="SD-22">SD-22 &bull; DURHAM &bull; Chitlik (D) +42.1%</option><option value="SD-23">SD-23 &bull; CASWELL, ORANGE, PERSON &bull; Garson (D) +32.9%</option><option value="SD-24">SD-24 &bull; HOKE, ROBESON, SCOTLAND &bull; Jr. (R) +20.0%</option><option value="SD-25">SD-25 &bull; ALAMANCE, RANDOLPH &bull; Galey (R) +14.3%</option><option value="SD-26">SD-26 &bull; GUILFORD, ROCKINGHAM &bull; Page (R) +8.8%</option><option value="SD-27">SD-27 &bull; GUILFORD &bull; Michael K. Garrett (D) Uncontested</option><option value="SD-28">SD-28 &bull; GUILFORD &bull; Gladys A. Robinson (D) Uncontested</option><option value="SD-29">SD-29 &bull; ANSON, MONTGOMERY, RANDOL &bull; Craven (R) +33.3%</option><option value="SD-30">SD-30 &bull; DAVIDSON, DAVIE &bull; Jarvis (R) +40.7%</option><option value="SD-31">SD-31 &bull; FORSYTH, STOKES &bull; Jones (R) +20.1%</option><option value="SD-32">SD-32 &bull; FORSYTH &bull; Jr. (D) +46.9%</option><option value="SD-33">SD-33 &bull; ROWAN, STANLY &bull; Ford (R) +35.7%</option><option value="SD-34">SD-34 &bull; CABARRUS &bull; Cook (D) +0.1% [FLIP R→D]</option><option value="SD-35">SD-35 &bull; CABARRUS, UNION &bull; Johnson (R) +18.3%</option><option value="SD-36">SD-36 &bull; ALEXANDER, SURRY, WILKES  &bull; Settle (R) +54.3%</option><option value="SD-37">SD-37 &bull; IREDELL, MECKLENBURG &bull; Sawyer (R) +21.5%</option><option value="SD-38">SD-38 &bull; MECKLENBURG &bull; Mujtaba A. Mohammed (D) Uncontested</option><option value="SD-39">SD-39 &bull; MECKLENBURG &bull; DeAndrea Salvador (D) Uncontested</option><option value="SD-40">SD-40 &bull; MECKLENBURG &bull; Waddell (D) +48.4%</option><option value="SD-41">SD-41 &bull; MECKLENBURG &bull; Theodros (D) +48.4%</option><option value="SD-42">SD-42 &bull; MECKLENBURG &bull; Bradley (D) +8.6%</option><option value="SD-43">SD-43 &bull; GASTON &bull; Overcash (R) +15.9%</option><option value="SD-44">SD-44 &bull; CLEVELAND, GASTON, LINCOL &bull; Alexander (R) +39.3%</option><option value="SD-45">SD-45 &bull; CALDWELL, CATAWBA &bull; Hollo (R) +34.2%</option><option value="SD-46">SD-46 &bull; BUNCOMBE, BURKE, MCDOWELL &bull; Daniel (R) +27.1%</option><option value="SD-47">SD-47 &bull; ALLEGHANY, ASHE, AVERY (+ &bull; Hise (R) +24.5%</option><option value="SD-48">SD-48 &bull; HENDERSON, POLK, RUTHERFO &bull; Moffitt (R) +23.6%</option><option value="SD-49">SD-49 &bull; BUNCOMBE &bull; Mayfield (D) +42.0%</option><option value="SD-50">SD-50 &bull; CHEROKEE, CLAY, GRAHAM (+ &bull; Corbin (R) +30.5%</option>
+            <option value="">All NC Senate Districts (50 Districts)...</option>
           </select>
         </div>
 
         <!-- NC House Mode Selector Dropdown -->
         <div id="houseSelectorGroup" class="hidden items-center gap-1.5">
           <select id="houseSelector" onchange="selectHouseDistrict(this.value)" class="bg-amber-950/80 border border-amber-500/60 text-amber-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-amber-500 focus:outline-none font-semibold max-w-[280px]">
-            <option value="">All NC House Districts (120 Districts)...</option><option value="HD-001">HD-001 &bull; CHOWAN, CURRITUCK, DARE ( &bull; Goodwin (R) +29.1%</option><option value="HD-002">HD-002 &bull; DURHAM, PERSON &bull; Ray Jeffers (D) Uncontested</option><option value="HD-003">HD-003 &bull; CRAVEN &bull; Tyson (R) +20.1%</option><option value="HD-004">HD-004 &bull; DUPLIN, WAYNE &bull; Dixon (R) +24.4%</option><option value="HD-005">HD-005 &bull; CAMDEN, GATES, HERTFORD ( &bull; Ward (R) +7.8%</option><option value="HD-006">HD-006 &bull; HARNETT &bull; Pike (R) +16.1%</option><option value="HD-007">HD-007 &bull; FRANKLIN, VANCE &bull; Thornton (R) +10.7%</option><option value="HD-008">HD-008 &bull; PITT &bull; Brown (D) +34.2%</option><option value="HD-009">HD-009 &bull; PITT &bull; Reeder (R) +5.8%</option><option value="HD-010">HD-010 &bull; WAYNE &bull; Bell (R) +15.8%</option><option value="HD-011">HD-011 &bull; WAKE &bull; Dahle (D) +37.0%</option><option value="HD-012">HD-012 &bull; GREENE, JONES, LENOIR &bull; Humphrey (R) +10.4%</option><option value="HD-013">HD-013 &bull; CARTERET, CRAVEN &bull; Cairns (R) +37.5%</option><option value="HD-014">HD-014 &bull; ONSLOW &bull; Wyatt Gable (R) Uncontested</option><option value="HD-015">HD-015 &bull; ONSLOW &bull; Shepard (R) +28.4%</option><option value="HD-016">HD-016 &bull; ONSLOW, PENDER &bull; Smith (R) +36.9%</option><option value="HD-017">HD-017 &bull; BRUNSWICK &bull; Iler (R) +18.9%</option><option value="HD-018">HD-018 &bull; NEW HANOVER &bull; Butler (D) +86.8%</option><option value="HD-019">HD-019 &bull; BRUNSWICK, NEW HANOVER &bull; Miller (R) +18.0%</option><option value="HD-020">HD-020 &bull; NEW HANOVER &bull; Scalise (R) +7.5%</option><option value="HD-021">HD-021 &bull; WAKE &bull; Liu (D) +30.3%</option><option value="HD-022">HD-022 &bull; BLADEN, SAMPSON &bull; Jackson (R) +17.1%</option><option value="HD-023">HD-023 &bull; BERTIE, EDGECOMBE, MARTIN &bull; Smith (D) +15.8%</option><option value="HD-024">HD-024 &bull; NASH, WILSON &bull; Pittman (D) +6.3%</option><option value="HD-025">HD-025 &bull; NASH &bull; Wilkins (D) +1.9% [FLIP R→D]</option><option value="HD-026">HD-026 &bull; JOHNSTON &bull; White (R) +5.8%</option><option value="HD-027">HD-027 &bull; HALIFAX, NORTHAMPTON, WAR &bull; Pierce (D) +100.8%</option><option value="HD-028">HD-028 &bull; JOHNSTON &bull; Strickland (R) +30.2%</option><option value="HD-029">HD-029 &bull; DURHAM &bull; Vernetta Alston (D) Uncontested</option><option value="HD-030">HD-030 &bull; DURHAM &bull; Morey (D) +102.0%</option><option value="HD-031">HD-031 &bull; DURHAM &bull; Zack Hawkins (D) Uncontested</option><option value="HD-032">HD-032 &bull; GRANVILLE, VANCE &bull; Cohn (D) +2.8%</option><option value="HD-033">HD-033 &bull; WAKE &bull; Johnson-Hostler (D) +85.0%</option><option value="HD-034">HD-034 &bull; WAKE &bull; Longest (D) +80.6%</option><option value="HD-035">HD-035 &bull; WAKE &bull; Hopkins (D) +1.6% [FLIP R→D]</option><option value="HD-036">HD-036 &bull; WAKE &bull; Haefen (D) +16.7%</option><option value="HD-037">HD-037 &bull; WAKE &bull; Pare (R) +1.3%</option><option value="HD-038">HD-038 &bull; WAKE &bull; Abe Jones (D) Uncontested</option><option value="HD-039">HD-039 &bull; WAKE &bull; Roberson (D) +104.8%</option><option value="HD-040">HD-040 &bull; WAKE &bull; Rubin (D) +32.5%</option><option value="HD-041">HD-041 &bull; WAKE &bull; Cervania (D) +81.4%</option><option value="HD-042">HD-042 &bull; CUMBERLAND &bull; Mike Colvin (D) Uncontested</option><option value="HD-043">HD-043 &bull; CUMBERLAND &bull; Wheatley (R) +10.0%</option><option value="HD-044">HD-044 &bull; CUMBERLAND &bull; Smith (D) +29.2%</option><option value="HD-045">HD-045 &bull; CUMBERLAND &bull; Frances Jackson (D) Uncontested</option><option value="HD-046">HD-046 &bull; COLUMBUS, ROBESON &bull; Jones (R) +105.1%</option><option value="HD-047">HD-047 &bull; ROBESON &bull; Lowery (R) +34.5%</option><option value="HD-048">HD-048 &bull; HOKE, SCOTLAND &bull; Pierce (D) +3.0%</option><option value="HD-049">HD-049 &bull; WAKE &bull; Ball (D) +104.8%</option><option value="HD-050">HD-050 &bull; CASWELL, ORANGE &bull; Renee A. Price (D) Uncontested</option><option value="HD-051">HD-051 &bull; LEE, MOORE &bull; Taylor (R) +23.3%</option><option value="HD-052">HD-052 &bull; MOORE, RICHMOND &bull; Moss (R) +19.3%</option><option value="HD-053">HD-053 &bull; HARNETT, JOHNSTON &bull; Jr. (R) +19.5%</option><option value="HD-054">HD-054 &bull; CHATHAM, RANDOLPH &bull; Robert T. Reives II (D) Uncontested</option><option value="HD-055">HD-055 &bull; ANSON, UNION &bull; Baucom (R) +23.2%</option><option value="HD-056">HD-056 &bull; ORANGE &bull; Buansi (D) +73.5%</option><option value="HD-057">HD-057 &bull; GUILFORD &bull; Tracy Clark (D) Uncontested</option><option value="HD-058">HD-058 &bull; GUILFORD &bull; Amos Quick (D) Uncontested</option><option value="HD-059">HD-059 &bull; GUILFORD &bull; Branson (R) +3.6%</option><option value="HD-060">HD-060 &bull; GUILFORD &bull; Cook (D) +33.1%</option><option value="HD-061">HD-061 &bull; GUILFORD &bull; Mary Price (Pricey) Harrison (D) Uncontested</option><option value="HD-062">HD-062 &bull; GUILFORD &bull; Blust (R) +0.2%</option><option value="HD-063">HD-063 &bull; ALAMANCE &bull; Moffitt (R) +4.6%</option><option value="HD-064">HD-064 &bull; ALAMANCE &bull; Riddell (R) +4.2%</option><option value="HD-065">HD-065 &bull; ROCKINGHAM &bull; Woodall (R) +98.9%</option><option value="HD-066">HD-066 &bull; WAKE &bull; Sarah Crawford (D) Uncontested</option><option value="HD-067">HD-067 &bull; MONTGOMERY, STANLY &bull; Huneycutt (R) +43.7%</option><option value="HD-068">HD-068 &bull; UNION &bull; Willis (R) +17.5%</option><option value="HD-069">HD-069 &bull; UNION &bull; Arp (R) +19.0%</option><option value="HD-070">HD-070 &bull; RANDOLPH &bull; Biggs (R) +46.1%</option><option value="HD-071">HD-071 &bull; FORSYTH &bull; Brown (D) +105.7%</option><option value="HD-072">HD-072 &bull; FORSYTH &bull; Amber M. Baker (D) Uncontested</option><option value="HD-073">HD-073 &bull; CABARRUS &bull; Monks (D) +1.9% [FLIP R→D]</option><option value="HD-074">HD-074 &bull; FORSYTH &bull; North (D) +2.1% [FLIP R→D]</option><option value="HD-075">HD-075 &bull; FORSYTH &bull; Lambeth (R) +8.2%</option><option value="HD-076">HD-076 &bull; ROWAN &bull; Edds (R) +19.1%</option><option value="HD-077">HD-077 &bull; DAVIE, ROWAN, YADKIN &bull; Howard (R) +52.3%</option><option value="HD-078">HD-078 &bull; MOORE, RANDOLPH &bull; Jackson (R) +47.0%</option><option value="HD-079">HD-079 &bull; BEAUFORT, DARE, HYDE (+1  &bull; Darren Armstrong (R) Uncontested</option><option value="HD-080">HD-080 &bull; DAVIDSON &bull; Watford (R) +44.9%</option><option value="HD-081">HD-081 &bull; DAVIDSON &bull; Potts (R) +37.2%</option><option value="HD-082">HD-082 &bull; CABARRUS &bull; Echevarria (R) +0.3%</option><option value="HD-083">HD-083 &bull; CABARRUS, ROWAN &bull; Campbell (R) +24.4%</option><option value="HD-084">HD-084 &bull; IREDELL &bull; McNeely (R) +31.8%</option><option value="HD-085">HD-085 &bull; AVERY, MCDOWELL, MITCHELL &bull; Greene (R) +43.6%</option><option value="HD-086">HD-086 &bull; BURKE &bull; Blackwell (R) +39.0%</option><option value="HD-087">HD-087 &bull; CALDWELL, WATAUGA &bull; Hall (R) +45.6%</option><option value="HD-088">HD-088 &bull; MECKLENBURG &bull; Belk (D) +107.9%</option><option value="HD-089">HD-089 &bull; CATAWBA, IREDELL &bull; Setzer (R) +45.1%</option><option value="HD-090">HD-090 &bull; SURRY, WILKES &bull; Kiger (R) +52.2%</option><option value="HD-091">HD-091 &bull; FORSYTH, STOKES &bull; Hall (R) +29.7%</option><option value="HD-092">HD-092 &bull; MECKLENBURG &bull; Terry Brown (D) Uncontested</option><option value="HD-093">HD-093 &bull; ALLEGHANY, ASHE, WATAUGA &bull; Pickett (R) +11.2%</option><option value="HD-094">HD-094 &bull; ALEXANDER, WILKES &bull; Eddins (R) +50.8%</option><option value="HD-095">HD-095 &bull; IREDELL &bull; Carver (R) +21.9%</option><option value="HD-096">HD-096 &bull; CATAWBA &bull; Adams (R) +21.7%</option><option value="HD-097">HD-097 &bull; LINCOLN &bull; Rhyne (R) +96.0%</option><option value="HD-098">HD-098 &bull; MECKLENBURG &bull; Helfrich (D) +12.3%</option><option value="HD-099">HD-099 &bull; MECKLENBURG &bull; Veleria M. Levy (D) Uncontested</option><option value="HD-100">HD-100 &bull; MECKLENBURG &bull; Julia Greenfield (D) Uncontested</option><option value="HD-101">HD-101 &bull; MECKLENBURG &bull; Carolyn G. Logan (D) Uncontested</option><option value="HD-102">HD-102 &bull; MECKLENBURG &bull; Carney (D) +107.9%</option><option value="HD-103">HD-103 &bull; MECKLENBURG &bull; Laura Budd (D) Uncontested</option><option value="HD-104">HD-104 &bull; MECKLENBURG &bull; Lofton (D) +19.8%</option><option value="HD-105">HD-105 &bull; MECKLENBURG &bull; McCool (D) +7.5% [FLIP R→D]</option><option value="HD-106">HD-106 &bull; MECKLENBURG &bull; Rodney Sadler (D) Uncontested</option><option value="HD-107">HD-107 &bull; MECKLENBURG &bull; Aisha O. Dew (D) Uncontested</option><option value="HD-108">HD-108 &bull; GASTON &bull; Torbett (R) +22.0%</option><option value="HD-109">HD-109 &bull; GASTON &bull; Loftis (R) +8.9%</option><option value="HD-110">HD-110 &bull; CLEVELAND, GASTON &bull; Eason (R) +27.0%</option><option value="HD-111">HD-111 &bull; CLEVELAND, RUTHERFORD &bull; Scott (R) +43.3%</option><option value="HD-112">HD-112 &bull; MECKLENBURG &bull; Jordan Lopez (D) Uncontested</option><option value="HD-113">HD-113 &bull; HENDERSON, MCDOWELL, POLK &bull; Johnson (R) +30.1%</option><option value="HD-114">HD-114 &bull; BUNCOMBE &bull; Eric Ager (D) Uncontested</option><option value="HD-115">HD-115 &bull; BUNCOMBE &bull; Prather (D) +6.5%</option><option value="HD-116">HD-116 &bull; BUNCOMBE &bull; Brian Turner (D) Uncontested</option><option value="HD-117">HD-117 &bull; HENDERSON &bull; Balkcom (R) +10.0%</option><option value="HD-118">HD-118 &bull; HAYWOOD, MADISON &bull; Rogers (R) +22.1%</option><option value="HD-119">HD-119 &bull; JACKSON, SWAIN, TRANSYLVA &bull; Ferguson (R) +8.1%</option><option value="HD-120">HD-120 &bull; CHEROKEE, CLAY, GRAHAM (+ &bull; Gillespie (R) +47.8%</option>
+            <option value="">All NC House Districts (120 Districts)...</option>
           </select>
         </div>
 
-        <!-- 5. Arrow Prominence Controls -->
-        <div class="flex items-center bg-slate-900 border border-slate-700/80 rounded-lg p-1 gap-1">
-          <span class="text-[11px] font-semibold text-slate-400 px-1.5">Arrows:</span>
-          <button id="btnArrowNormal" onclick="setArrowWeight(1.0)" class="px-2 py-0.5 rounded text-[11px] font-medium text-slate-400 hover:text-white transition">Regular</button>
-          <button id="btnArrowBold" onclick="setArrowWeight(1.45)" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-blue-600 text-white transition">Bold</button>
-          <button id="btnArrowExtra" onclick="setArrowWeight(1.95)" class="px-2 py-0.5 rounded text-[11px] font-semibold text-slate-400 hover:text-white transition">Extra Thick</button>
+        <!-- County Jump Dropdown -->
+        <div class="flex items-center gap-1.5">
+          <select id="countySelector" onchange="onCountySelect(this.value)" class="bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <option value="">Jump to County (100 total)...</option>
+          </select>
         </div>
-
-        <!-- 6. Display Mode -->
-        <div class="flex items-center bg-slate-900 border border-slate-700/80 rounded-lg p-0.5">
-          <button id="btnModeSwing" onclick="setMapMode('swing')" class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-600 text-white transition">Swing Shift</button>
-          <button id="btnModeMargin" onclick="setMapMode('margin')" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition">Margin</button>
-          <button id="btnModeForecast" onclick="setMapMode('forecast')" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
-            Vote Forecast (D vs R)
-          </button>
-          <button id="btnModeCD" onclick="setMapMode('cd')" class="px-2 py-1 rounded-md text-xs font-semibold text-purple-300 hover:text-white transition flex items-center gap-1 border border-purple-500/30 bg-purple-950/30">
-            <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
-            US House
-          </button>
-          <button id="btnModeSenate" onclick="setMapMode('senate')" class="px-2 py-1 rounded-md text-xs font-semibold text-emerald-300 hover:text-white transition flex items-center gap-1 border border-emerald-500/30 bg-emerald-950/30">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            NC Senate
-          </button>
-          <button id="btnModeHouse" onclick="setMapMode('house')" class="px-2 py-1 rounded-md text-xs font-semibold text-amber-300 hover:text-white transition flex items-center gap-1 border border-amber-500/30 bg-amber-950/30">
-            <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-            NC House
-          </button>
-          <button id="btnModeEditorial" onclick="setMapMode('editorial')" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-white transition">Print Slate</button>
-        </div>
-
       </div>
     </div>
   </div>
@@ -516,7 +462,7 @@
           </div>
         </div>
 
-        <!-- Key Metrics 2x2 Grid -->
+        <div id="earlyVoteTurnoutBlock" class="hidden space-y-4"><!-- Key Metrics 2x2 Grid -->
         <div class="grid grid-cols-2 gap-3">
           <div class="bg-slate-900/90 border border-slate-800/80 rounded-xl p-3">
             <div class="text-[11px] font-medium text-slate-400 uppercase" id="metricTitleYearA">2026 Turnout</div>
@@ -561,6 +507,8 @@
           <div id="tableRowsContainer" class="space-y-1.5 font-mono">
             <!-- Injected by JS -->
           </div>
+        </div>
+
         </div>
 
         <!-- 2026 Vote Forecast Section -->
@@ -2557,6 +2505,7 @@
     }
 
     function updateTopHeaderRibbon(st) {
+      if (!document.getElementById('hdrTotLabel')) return;
       const evDay = (DATA.state && DATA.state.ev_day) ? DATA.state.ev_day : 4;
       const dayBadge = document.getElementById('headerDayBadge');
       if (dayBadge) dayBadge.textContent = `Cumulative Day ${evDay}`;
@@ -2911,7 +2860,7 @@
 
     function checkAuthSession() {
       try {
-        return sessionStorage.getItem('nc_beta_auth') === 'granted';
+        return (sessionStorage.getItem('nc_prediction_auth') === 'granted' || sessionStorage.getItem('nc_beta_auth') === 'granted');
       } catch (e) {
         return false;
       }
@@ -2926,7 +2875,7 @@
 
       if (calculatedHash === AUTH_HASH) {
         try {
-          sessionStorage.setItem('nc_beta_auth', 'granted');
+          sessionStorage.setItem('nc_prediction_auth', 'granted');
         } catch (err) {}
         unlockDashboardUI();
       } else {
@@ -2951,7 +2900,7 @@
 
     function lockDashboard() {
       try {
-        sessionStorage.removeItem('nc_beta_auth');
+        sessionStorage.removeItem('nc_prediction_auth'); sessionStorage.removeItem('nc_beta_auth');
       } catch (e) {}
       const overlay = document.getElementById('authOverlay');
       const input = document.getElementById('authPasswordInput');
@@ -4073,15 +4022,14 @@
       }
     }
 
-    function init() {
+        function init() {
       initAuth();
       tooltipEl = document.getElementById('floatingTooltip');
       populateCountyDropdown();
-      renderCounties();
-      renderCountyArrows();
+      setMapMode('forecast');
+      setForecastRace('us_senate');
       updateInspectorWithState();
       updateHeaderForecastRibbon();
-      updateLegendUI();
       setupKeyboardShortcuts();
       initMapPanZoom();
       checkSubscriberStorage();

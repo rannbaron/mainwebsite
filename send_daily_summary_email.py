@@ -481,7 +481,8 @@ def format_plain_text(data):
     lines.extend([
         "",
         "=" * 70,
-        "Interactive Map: https://rannbar-on.com/beta/",
+        "Interactive 2026 Prediction Model: https://rannbar-on.com/prediction/",
+        "Early Vote Explorer: https://rannbar-on.com/earlyvote/",
         "To unsubscribe from daily updates: {{UNSUBSCRIBE_URL}}",
         "=" * 70,
     ])
@@ -792,8 +793,8 @@ def format_html(data):
 
                 <!-- Footer Call to Action -->
                 <div style="margin-top:32px;padding:16px;background:#f3f4f6;border-radius:6px;text-align:center;">
-                    <div style="font-size:13px;color:#4b5563;margin-bottom:8px;">View live precinct swings, turnout progression, and dual-regime map:</div>
-                    <a href="https://rannbar-on.com/beta/" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:700;padding:8px 18px;border-radius:4px;font-size:13px;">Open Early Vote Swing Explorer &rarr;</a>
+                    <div style="font-size:13px;color:#4b5563;margin-bottom:8px;">View live 2026 election prediction models, polling synthesis, and legislative watch:</div>
+                    <a href="https://rannbar-on.com/prediction/" style="display:inline-block;background:#2563eb;color:#ffffff;text-decoration:none;font-weight:700;padding:8px 18px;border-radius:4px;font-size:13px;">Open 2026 Prediction Model &rarr;</a>
                 </div>
             </div>
 
@@ -804,7 +805,9 @@ def format_html(data):
                 <div style="margin-top:8px;">
                     <a href="{{{{UNSUBSCRIBE_URL}}}}" style="color:#2563eb;text-decoration:underline;font-weight:600;">Unsubscribe from daily updates</a>
                     <span style="color:#cbd5e1;margin:0 8px;">&bull;</span>
-                    <a href="https://rannbar-on.com/beta/" style="color:#64748b;text-decoration:underline;">View Interactive Map</a>
+                    <a href="https://rannbar-on.com/prediction/" style="color:#64748b;text-decoration:underline;">View Prediction Model</a>
+                    <span style="color:#cbd5e1;margin:0 8px;">&bull;</span>
+                    <a href="https://rannbar-on.com/earlyvote/" style="color:#64748b;text-decoration:underline;">Early Vote Explorer</a>
                 </div>
             </div>
         </div>

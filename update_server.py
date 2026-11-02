@@ -300,7 +300,8 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
     target_pages = [
         os.path.join(base_dir, "earlyvote", "index.html"),
         os.path.join(base_dir, "earlyvote.html"),
-        os.path.join(base_dir, "beta", "index.html")
+        os.path.join(base_dir, "prediction", "index.html"),
+        os.path.join(base_dir, "prediction.html")
     ]
     # Do not inject into root index.html (which is now the projects portal)
     if output_html_path and not output_html_path.endswith("/index.html") and not output_html_path.endswith("index.html") and output_html_path not in target_pages:
