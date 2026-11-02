@@ -232,6 +232,36 @@ def compute_daily_changes(prev_day=None, curr_day=None):
     # Toss Ups (40% - 60% flip probability)
     toss_ups = [c for c in all_county_shifts if c['rating_curr'] == 'Toss Up']
 
+    # Multi-Race Statewide Summary
+    races_summary = []
+    races_curr = fc_curr.get('races') or fc_curr.get('statewide', {}).get('races', {})
+    races_prev = fc_prev.get('races') or fc_prev.get('statewide', {}).get('races', {})
+    for r_key, r_info in vote_forecast.RACES_CONFIG.items():
+        curr_race = races_curr.get(r_key, {})
+        prev_race = races_prev.get(r_key, {})
+        if curr_race:
+            d_curr = curr_race.get('pred_final_dem', 50.0)
+            d_prev = prev_race.get('pred_final_dem', d_curr)
+            shift = round(d_curr - d_prev, 2)
+            margin = round(d_curr * 2.0 - 100.0, 2)
+            p_dem = curr_race.get('p_dem', curr_race.get('prob_dem', 50.0))
+            p_rep = curr_race.get('p_rep', round(100.0 - p_dem, 1))
+            races_summary.append({
+                'key': r_key,
+                'name': r_info['name'],
+                'dem_candidate': r_info['dem_candidate'],
+                'rep_candidate': r_info['rep_candidate'],
+                'dem_curr': d_curr,
+                'rep_curr': round(100.0 - d_curr, 2),
+                'margin': margin,
+                'shift': shift,
+                'rating': curr_race.get('rating', 'Toss Up'),
+                'prob_dem': p_dem,
+                'prob_rep': p_rep,
+                'call_confidence': curr_race.get('call_confidence', 'moderate confidence'),
+                'margin_confidence': curr_race.get('margin_confidence', 'moderate confidence')
+            })
+
     return {
         'prev_day': prev_day,
         'curr_day': curr_day,
@@ -262,6 +292,7 @@ def compute_daily_changes(prev_day=None, curr_day=None):
             'ratings_summary_prev': st_prev.get('ratings_summary', {}),
             'ratings_summary_curr': st_curr.get('ratings_summary', {})
         },
+        'races_summary': races_summary,
         'rating_changes': rating_changes,
         'confidence_changes': confidence_changes,
         'call_conf_changes': call_conf_changes,
@@ -290,6 +321,22 @@ def format_plain_text(data):
         f"  - Rating Changes Detected: {len(data['rating_changes'])} county change(s)",
         f"  - Confidence Shifts Detected: {len(data['confidence_changes'])} county shift(s) ({len(data['call_conf_changes'])} Call, {len(data['margin_conf_changes'])} Margin)",
         "",
+        "=" * 70,
+        "1B. STATEWIDE MULTI-RACE JUDICIAL & SENATE OUTLOOK",
+        "=" * 70,
+    ]
+
+    for r in data.get('races_summary', []):
+        m_sign = '+' if r['margin'] > 0 else ''
+        lines.extend([
+            f"  * {r['name'].upper()}:",
+            f"    - Matchup: {r['dem_candidate']} (Dem) vs {r['rep_candidate']} (Rep)",
+            f"    - Forecast: Dem {r['dem_curr']:.2f}% | Rep {r['rep_curr']:.2f}% (Margin: {m_sign}{r['margin']:.2f}%, Shift: {r['shift']:+.2f}%)",
+            f"    - Win Probability: Dem {r['prob_dem']:.1f}% | Rep {r['prob_rep']:.1f}% -> Rating: {r['rating']} [{r['call_confidence']}]",
+            ""
+        ])
+
+    lines.extend([
         "UNDERSTANDING MODEL CONFIDENCE:",
         "  * Call confidence is how confident the model is about Democrats or Republicans winning that county.",
         "  * Margin confidence is how confident the model is about the numerical final outcome in that county, such as D+5, or R+3.",
@@ -298,7 +345,7 @@ def format_plain_text(data):
         "=" * 70,
         f"2. COUNTY RATING CHANGES (Day-over-Day) — {len(data['rating_changes'])} COUNTIES",
         "=" * 70,
-    ]
+    ])
 
     if data['rating_changes']:
         for c in data['rating_changes']:
@@ -564,6 +611,49 @@ def format_html(data):
         for cat in cats
     ])
 
+    # Build multi-race table HTML
+    races_rows = "".join([
+        f"""<tr>
+            <td style="padding:10px 12px;font-weight:700;border-bottom:1px solid #e5e7eb;color:#0f172a;">{r['name']}</td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">
+                <span style="color:#1d4ed8;font-weight:600;">{r['dem_candidate']} (D)</span><br>
+                <span style="color:#b91c1c;font-weight:600;">{r['rep_candidate']} (R)</span>
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
+                <strong>{r['dem_curr']:.2f}% D</strong> &bull; {r['rep_curr']:.2f}% R
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
+                <strong style="color:{'#1d4ed8' if r['margin']>0 else '#b91c1c'};">{'+' if r['margin']>0 else ''}{r['margin']:.2f}%</strong>
+                <span style="color:{'#16a34a' if r['shift'] > 0 else ('#dc2626' if r['shift'] < 0 else '#6b7280')};font-size:11px;font-weight:600;margin-left:4px;">({r['shift']:+.2f}%)</span>
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;font-size:12px;">
+                <span style="color:#1d4ed8;font-weight:600;">{r['prob_dem']:.1f}% D</span> / <span style="color:#b91c1c;font-weight:600;">{r['prob_rep']:.1f}% R</span>
+            </td>
+            <td style="padding:10px 12px;border-bottom:1px solid #e5e7eb;">
+                {badge(r['rating'])}
+            </td>
+        </tr>"""
+        for r in data.get('races_summary', [])
+    ])
+    races_html = f"""
+    <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:24px 0 12px 0;">
+        ⚖️ Statewide Multi-Race Forecast (Senate & Judicial Contests)
+    </h2>
+    <table style="width:100%;border-collapse:collapse;margin:12px 0 24px 0;background:#ffffff;border:1px solid #e5e7eb;border-radius:6px;overflow:hidden;font-size:13px;">
+        <thead>
+            <tr style="background:#f3f4f6;text-align:left;font-size:11px;color:#4b5563;text-transform:uppercase;">
+                <th style="padding:10px 12px;">Contest</th>
+                <th style="padding:10px 12px;">Candidates</th>
+                <th style="padding:10px 12px;">Projected Share</th>
+                <th style="padding:10px 12px;">Margin & Shift</th>
+                <th style="padding:10px 12px;">Win Probability</th>
+                <th style="padding:10px 12px;">Rating</th>
+            </tr>
+        </thead>
+        <tbody>{races_rows}</tbody>
+    </table>
+    """
+
     html = f"""
     <!DOCTYPE html>
     <html>
@@ -596,6 +686,9 @@ def format_html(data):
                         <div style="font-size:11px;color:#475569;margin-top:4px;">Call: {conf_badge(sf['call_confidence'])} &bull; Margin: {conf_badge(sf['margin_confidence'])}</div>
                     </div>
                 </div>
+
+                <!-- Multi-Race Section -->
+                {races_html}
 
                 <!-- Section 1: Rating Changes -->
                 <h2 style="font-size:16px;font-weight:700;color:#111827;border-bottom:2px solid #e5e7eb;padding-bottom:6px;margin:24px 0 12px 0;">
