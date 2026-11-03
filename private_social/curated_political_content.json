@@ -1,9 +1,9 @@
 {
-  "harvested_at": "2026-11-03T12:43:56.091829",
+  "harvested_at": "2026-11-03T13:11:18.718902",
   "items": [
     {
-      "id": "harvest_20261103_1243_1",
-      "harvested_at": "12:43 PM EST (Nov 3, 2026)",
+      "id": "harvest_20261103_1311_1",
+      "harvested_at": "01:11 PM EST (Nov 3, 2026)",
       "category": "Turnout Surge",
       "title": "Wake & Mecklenburg BOE Report High Midday Precinct Volumes",
       "source": "Wake County Board of Elections",
@@ -21,8 +21,8 @@
       "status": "staged_for_review"
     },
     {
-      "id": "harvest_20261103_1243_2",
-      "harvested_at": "12:43 PM EST (Nov 3, 2026)",
+      "id": "harvest_20261103_1311_2",
+      "harvested_at": "01:11 PM EST (Nov 3, 2026)",
       "category": "Swing District Alert",
       "title": "Cabarrus & Union Suburbs Show Elevated Independent Participation",
       "source": "NC State Board of Elections",
@@ -40,8 +40,8 @@
       "status": "staged_for_review"
     },
     {
-      "id": "harvest_20261103_1243_3",
-      "harvested_at": "12:43 PM EST (Nov 3, 2026)",
+      "id": "harvest_20261103_1311_3",
+      "harvested_at": "01:11 PM EST (Nov 3, 2026)",
       "category": "Judicial & Downballot",
       "title": "Supreme Court Seat 1 & Court of Appeals Ticket Splitting",
       "source": "Carolina Election Analytics",
@@ -59,8 +59,8 @@
       "status": "staged_for_review"
     },
     {
-      "id": "harvest_20261103_1243_4",
-      "harvested_at": "12:43 PM EST (Nov 3, 2026)",
+      "id": "harvest_20261103_1311_4",
+      "harvested_at": "01:11 PM EST (Nov 3, 2026)",
       "category": "Student & Campus Turnout",
       "title": "UNC Chapel Hill, Duke, NCSU & NCCU Precincts Report Heavy Midday Student Flow",
       "source": "NC Student Voting Hub",

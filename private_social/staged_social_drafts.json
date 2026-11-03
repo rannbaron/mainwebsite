@@ -1,9 +1,10 @@
 {
-  "batch_id": "batch_20261103_124356",
-  "slot_label": "12:43 PM EST",
-  "generated_at": "2026-11-03T12:43:56.147629",
+  "batch_id": "batch_20261103_131118",
+  "slot_label": "01:11 PM EST",
+  "generated_at": "2026-11-03T13:11:18.766410",
   "status": "PENDING_RANN_APPROVAL",
   "lock_notice": "STRICT RULE GUARD: ZERO posts are dispatched until Rann clicks approve.",
+  "engagement_directive": "MAX_VIRAL_ENGAGEMENT (Hooks, Tension, Interactive Prompts, Top Viral Hashtags)",
   "metrics_snapshot": {
     "total_turnout": 2828131,
     "dem_share": 38.37,
@@ -17,26 +18,26 @@
   "drafts": {
     "twitter": {
       "platform": "X / Twitter",
-      "character_count": 307,
-      "text": "\ud83d\udea8 NC ELECTION UPDATE (12:43 PM EST)\n\n\ud83d\uddf3\ufe0f Turnout: 2,828,131 ballots\n\u2022 Unaffiliated: 35.2%\n\u2022 Dem: 38.4% | Rep: 26.1%\n\n\ud83c\udfaf Live Needle Projections:\n\u2022 #NCSen Cooper (D): +9.5% (Likely D)\n\u2022 #NCGA Supermajority: BROKEN (House 54.2 D, Sen 21.1 D)\n\nLive dials: rannbar-on.com/needle\n#NCpol #NCSen #NCGov #VoteNC #NCGA",
+      "character_count": 249,
+      "text": "\ud83d\udea8 NORTH CAROLINA TURNOUT ALERT (01:11 PM EST):\n\n2.83M+ votes in. Unaffiliated voters SURGE to 35.2%, outpacing GOP (26.1%).\n\n\u26a1 Needle: Cooper +9.5%\n\ud83c\udfdb\ufe0f Supermajority: 96.2% BROKEN\n\nDrop your county wait time below! \ud83d\udc47\n#NCpol #NCSen #SwingState #VoteNC",
       "status": "PENDING_APPROVAL"
     },
     "threads": {
       "platform": "Threads",
-      "character_count": 794,
-      "text": "North Carolina Turnout & Needle Pulse \u2014 12:43 PM EST\n\nMidday voter returns across all 100 NC counties show Unaffiliated voters remaining the decisive swing voting bloc at 35.2% of total check-ins (995,378 ballots), tracking ahead of registered Republicans (26.1%).\n\n\ud83d\udcca Key Model Highlights:\n1. US Senate: Roy Cooper holds an estimated +9.46 pp advantage (54.73% Dem) powered by strong suburban crossover in Wake and Mecklenburg.\n2. Governor: Josh Stein projected at +9.70 pp margin.\n3. Legislative Supermajority: Both chambers continue tracking in supermajority-breaker territory. NC House models at 54.2 D seats (threshold: 49); NC Senate models at 21.1 D seats (threshold: 20).\n\nExplore the interactive precinct maps and live dials at rannbar-on.com/needle.\n\n#NCpol #NCSen #NCGov #VoteNC #NCGA",
+      "character_count": 1087,
+      "text": "\ud83d\udea8 NORTH CAROLINA IS BREAKING HISTORIC TURNOUT PATTERNS RIGHT NOW. HERE IS THE DATA:\n\nOver 2.82 MILLION ballots are already in across all 100 counties\u2014and North Carolina is the ultimate national battleground tonight. Here is the high-stakes breakdown from our live Bayesian model (01:11 PM EST):\n\n\ud83d\udd25 THE INDEPENDENT EXPLOSION:\nUnaffiliated voters have officially overtaken registered Republicans, accounting for 35.2% of all check-ins (995,378 ballots vs. 738,717 GOP). In suburban perimeter battlegrounds like Cabarrus and Union, independent crossover is breaking standard midterm baselines.\n\n\u26a1 HIGH STAKES ON THE NEEDLE:\n\u2022 US Senate: Roy Cooper holds an estimated +9.46 pp advantage (54.7% Dem) [Likely D]\n\u2022 Supermajority Breaker: With 54.2 projected D seats in the House, the GOP supermajority is modeled as BROKEN at 96.2% confidence.\n\n\ud83d\udcac SOUND OFF: What does turnout look like at your polling station right now? Drop your county and predict the final Cooper margin below! \ud83d\udc47\n\nLive dials: rannbar-on.com/needle\n\n#NCpol #NCSen #NCGov #Elections2026 #DecisionDesk #SwingState #VoteNC #NCGA",
       "status": "PENDING_APPROVAL"
     },
     "instagram": {
       "platform": "Instagram (@carolina_turnout_pulse / @nc_election_live)",
-      "character_count": 990,
-      "text": "\ud83d\uddf3\ufe0f NORTH CAROLINA ELECTION DAY LIVE UPDATE [12:43 PM EST]\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nSwipe for county precinct shifts, turnout breakdown, and General Assembly needle dials \u27a1\ufe0f\n\n\ud83d\udccd STATEWIDE TURNOUT SNAPSHOT (All 100 Counties):\n\u2022 Total Ballots Processed: 2,828,131\n\u2022 Unaffiliated (UNA): 995,378 (35.2%)\n\u2022 Registered Democrats (DEM): 1,085,262 (38.4%)\n\u2022 Registered Republicans (REP): 738,717 (26.1%)\n\n\u2696\ufe0f MARQUEE RACE PROJECTIONS:\n\ud83d\udd35 US Senate: Roy Cooper (D) leading by +9.46 pp [Likely D]\n\ud83d\udd35 NC Supreme Court (Seat 1): Anita Earls (D) leading by +5.46 pp [Lean D]\n\ud83c\udfdb\ufe0f NC General Assembly Supermajority Breaker: House 54.2/120 D seats (Breaks supermajority at 49); Senate 21.1/50 D seats (Breaks supermajority at 20).\n\n\ud83d\udd17 Tap link in bio (@carolina_turnout_pulse / @nc_election_live) or visit rannbar-on.com/needle for real-time dial movements!\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n#NCpol #NCSen #NCGov #VoteNC #NCGA #NorthCarolina #ElectionDay2026 #TurnoutMatters #WakeCounty #Mecklenburg #CharlotteVotes #RaleighVotes",
+      "character_count": 1273,
+      "text": "\ud83d\udea8 NORTH CAROLINA IS BREAKING HISTORIC TURNOUT PATTERNS RIGHT NOW.\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\ud83d\udc49 SWIPE FOR SUBURBAN COUNTY SHIFTS & LIVE NEEDLE DIALS \u27a1\ufe0f\n\nOver 2.82 MILLION North Carolinians have cast their ballots [01:11 PM EST]\u2014and the live data reveals a seismic realignment underway across all 100 counties:\n\n\u26a1 THE BIGGEST STORY: UNAFFILIATED SURGE\n\u2022 35.2% of the entire electorate is UNAFFILIATED (995,378 votes), completely outpacing registered Republicans (26.1%).\n\u2022 Independent voters in Cabarrus, Union, and Wake are pushing margins into uncharted territory.\n\n\ud83c\udfaf REAL-TIME RACE PREDICTIONS:\n\ud83d\udd35 US Senate: Roy Cooper (D) leading by +9.46 pp [Likely D, 99.5% win prob]\n\ud83d\udd35 NC Supreme Court (Seat 1): Anita Earls leading by +5.46 pp [Lean D]\n\ud83c\udfdb\ufe0f NC General Assembly: House supermajority is 96.2% BROKEN (54.2/120 D seats; threshold 49).\n\n\ud83d\udc47 SOUND OFF IN THE COMMENTS:\n1. How long are lines at your precinct right now?\n2. Predict the final Cooper vs. Republican margin below!\n\n\ud83d\udd17 Tap link in bio (@carolina_turnout_pulse / @nc_election_live) or visit rannbar-on.com/needle for live precinct heatmaps!\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n#NCpol #NCSen #NCGov #Elections2026 #DecisionDesk #SwingState #VoteNC #NCGA #NorthCarolina #ElectionDay2026 #WakeCounty #Mecklenburg #CharlotteVotes #RaleighVotes",
       "status": "PENDING_APPROVAL"
     },
     "bluesky": {
       "platform": "Bluesky",
-      "character_count": 552,
-      "text": "NC 2026 Turnout & Bayesian Forecast Update (12:43 PM EST):\n\nTurnout at 2,828,131 accepted ballots. Electorate composition: UNA 35.2%, DEM 38.4%, REP 26.1%.\n\nUnder our dual-regime empirical bounds and Partisan Crossover Matrix:\n\u2022 US Senate: Cooper (D) projected at 54.73% (+9.46 pp) [Likely D, 99.5% Dem win prob]\n\u2022 Supreme Court Seat 1: Earls (D) 52.73% (+5.46 pp)\n\u2022 NC House Supermajority: Expected D seats at 54.2 (GOP supermajority broken with 96.2% statistical confidence)\n\nFull methodology & needle dials: rannbar-on.com/needle\n#NCpol #NCSen #NCGA",
+      "character_count": 259,
+      "text": "\ud83d\udea8 NC TURNOUT ALERT (01:11 PM EST):\n2.82M+ votes. Unaffiliated surge to 35.2%, outpacing GOP (26.1%).\n\n\ud83d\udcca Live Needle:\n\u2022 #NCSen Cooper: +9.5% (Likely D)\n\u2022 #NCGA Supermajority: 96.2% BROKEN\n\nDrop your county & wait time below! \ud83d\udc47\n#NCpol #NCSen #SwingState #VoteNC",
       "status": "PENDING_APPROVAL"
     }
   }

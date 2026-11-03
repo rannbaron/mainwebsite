@@ -375,6 +375,38 @@
       font-size: 14px;
       z-index: 999;
     }
+
+    .btn-approved-active {
+      background: #059669 !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 0 2px #34d399 !important;
+      font-weight: 800 !important;
+    }
+    .approval-notice {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #064e3b;
+      color: #a7f3d0;
+      border: 1px solid #059669;
+      display: none;
+    }
+    .batch-approved-banner {
+      background: linear-gradient(90deg, #065f46 0%, #047857 100%);
+      border: 2px solid #34d399;
+      color: #ecfdf5;
+      padding: 14px 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 15px;
+      display: none;
+      align-items: center;
+      gap: 12px;
+    }
+
   </style>
 </head>
 <body>
@@ -396,6 +428,13 @@
   </header>
 
   <main class="container">
+    <div class="batch-approved-banner" id="batchApprovedBanner">
+      <span>🚀</span>
+      <div>
+        <div style="font-size: 15px; font-weight: 800;">DECISION DESK ENGINE: ALL DRAFTS APPROVED & QUEUED</div>
+        <div style="font-size: 12px; font-weight: 400; opacity: 0.9;">All 4 platforms (Twitter, Threads, Instagram, Bluesky) transmitted to publishing queue.</div>
+      </div>
+    </div>
     <!-- Strict Lock Banner -->
     <div class="lock-banner">
       <div class="lock-info">
@@ -487,9 +526,9 @@
   <script>
     // Embedded Latest Batch & Curated Intelligence (MAX VIRAL ENGAGEMENT EDITION)
     window.INITIAL_BATCH_DATA = {
-      "batch_id": "batch_20261103_125120",
-      "slot_label": "12:51 PM EST",
-      "generated_at": "2026-11-03T12:51:20.019368",
+      "batch_id": "batch_20261103_134120",
+      "slot_label": "01:41 PM EST",
+      "generated_at": "2026-11-03T13:41:20.000000",
       "status": "PENDING_RANN_APPROVAL",
       "engagement_directive": "MAX_VIRAL_ENGAGEMENT (Hooks, Tension, Interactive Prompts, Top Viral Hashtags)",
       "metrics_snapshot": {
@@ -506,25 +545,25 @@
         "twitter": {
           "platform": "X / Twitter",
           "character_count": 249,
-          "text": "🚨 NORTH CAROLINA TURNOUT ALERT (12:51 PM EST):\n\n2.83M+ votes in. Unaffiliated voters SURGE to 35.2%, outpacing GOP (26.1%).\n\n⚡ Needle: Cooper +9.5%\n🏛️ Supermajority: 96.2% BROKEN\n\nDrop your county wait time below! 👇\n#NCpol #NCSen #SwingState #VoteNC",
+          "text": "🚨 NORTH CAROLINA TURNOUT ALERT (01:41 PM EST):\n\n2.83M+ votes in. Unaffiliated voters SURGE to 35.2%, outpacing GOP (26.1%).\n\n⚡ Needle: Cooper +9.5%\n🏛️ Supermajority: 96.2% BROKEN\n\nDrop your county wait time below! 👇\n#NCpol #NCSen #SwingState #VoteNC",
           "status": "PENDING_APPROVAL"
         },
         "threads": {
           "platform": "Threads",
           "character_count": 1120,
-          "text": "⚡ SEISMIC MIDDAY SHIFT IN NORTH CAROLINA: Unaffiliated voters are blowing past expectations. Here's the live needle:\n\nOver 2.82 MILLION ballots are already in across all 100 counties—and North Carolina is the ultimate national battleground tonight. Here is the high-stakes breakdown from our live Bayesian model (12:51 PM EST):\n\n🔥 THE INDEPENDENT EXPLOSION:\nUnaffiliated voters have officially overtaken registered Republicans, accounting for 35.2% of all check-ins (995,378 ballots vs. 738,717 GOP). In suburban perimeter battlegrounds like Cabarrus and Union, independent crossover is breaking standard midterm baselines.\n\n⚡ HIGH STAKES ON THE NEEDLE:\n• US Senate: Roy Cooper holds an estimated +9.46 pp advantage (54.7% Dem) [Likely D]\n• Supermajority Breaker: With 54.2 projected D seats in the House, the GOP supermajority is modeled as BROKEN at 96.2% confidence.\n\n💬 SOUND OFF: What does turnout look like at your polling station right now? Drop your county and predict the final Cooper margin below! 👇\n\nLive dials: rannbar-on.com/needle\n\n#NCpol #NCSen #NCGov #Elections2026 #DecisionDesk #SwingState #VoteNC #NCGA",
+          "text": "⚡ SEISMIC MIDDAY SHIFT IN NORTH CAROLINA: Unaffiliated voters are blowing past expectations. Here's the live needle:\n\nOver 2.82 MILLION ballots are already in across all 100 counties—and North Carolina is the ultimate national battleground tonight. Here is the high-stakes breakdown from our live Bayesian model (01:41 PM EST):\n\n🔥 THE INDEPENDENT EXPLOSION:\nUnaffiliated voters have officially overtaken registered Republicans, accounting for 35.2% of all check-ins (995,378 ballots vs. 738,717 GOP). In suburban perimeter battlegrounds like Cabarrus and Union, independent crossover is breaking standard midterm baselines.\n\n⚡ HIGH STAKES ON THE NEEDLE:\n• US Senate: Roy Cooper holds an estimated +9.46 pp advantage (54.7% Dem) [Likely D]\n• Supermajority Breaker: With 54.2 projected D seats in the House, the GOP supermajority is modeled as BROKEN at 96.2% confidence.\n\n💬 SOUND OFF: What does turnout look like at your polling station right now? Drop your county and predict the final Cooper margin below! 👇\n\nLive dials: rannbar-on.com/needle\n\n#NCpol #NCSen #NCGov #Elections2026 #DecisionDesk #SwingState #VoteNC #NCGA",
           "status": "PENDING_APPROVAL"
         },
         "instagram": {
           "platform": "Instagram (@carolina_turnout_pulse / @nc_election_live)",
           "character_count": 1273,
-          "text": "🚨 NORTH CAROLINA IS BREAKING HISTORIC TURNOUT PATTERNS RIGHT NOW.\n━━━━━━━━━━━━━━━━━━━━\n👉 SWIPE FOR SUBURBAN COUNTY SHIFTS & LIVE NEEDLE DIALS ➡️\n\nOver 2.82 MILLION North Carolinians have cast their ballots [12:51 PM EST]—and the live data reveals a seismic realignment underway across all 100 counties:\n\n⚡ THE BIGGEST STORY: UNAFFILIATED SURGE\n• 35.2% of the entire electorate is UNAFFILIATED (995,378 votes), completely outpacing registered Republicans (26.1%).\n• Independent voters in Cabarrus, Union, and Wake are pushing margins into uncharted territory.\n\n🎯 REAL-TIME RACE PREDICTIONS:\n🔵 US Senate: Roy Cooper (D) leading by +9.46 pp [Likely D, 99.5% win prob]\n🔵 NC Supreme Court (Seat 1): Anita Earls leading by +5.46 pp [Lean D]\n🏛️ NC General Assembly: House supermajority is 96.2% BROKEN (54.2/120 D seats; threshold 49).\n\n👇 SOUND OFF IN THE COMMENTS:\n1. How long are lines at your precinct right now?\n2. Predict the final Cooper vs. Republican margin below!\n\n🔗 Tap link in bio (@carolina_turnout_pulse / @nc_election_live) or visit rannbar-on.com/needle for live precinct heatmaps!\n━━━━━━━━━━━━━━━━━━━━\n#NCpol #NCSen #NCGov #Elections2026 #DecisionDesk #SwingState #VoteNC #NCGA #NorthCarolina #ElectionDay2026 #WakeCounty #Mecklenburg #CharlotteVotes #RaleighVotes",
+          "text": "🚨 NORTH CAROLINA IS BREAKING HISTORIC TURNOUT PATTERNS RIGHT NOW.\n━━━━━━━━━━━━━━━━━━━━\n👉 SWIPE FOR SUBURBAN COUNTY SHIFTS & LIVE NEEDLE DIALS ➡️\n\nOver 2.82 MILLION North Carolinians have cast their ballots [01:41 PM EST]—and the live data reveals a seismic realignment underway across all 100 counties:\n\n⚡ THE BIGGEST STORY: UNAFFILIATED SURGE\n• 35.2% of the entire electorate is UNAFFILIATED (995,378 votes), completely outpacing registered Republicans (26.1%).\n• Independent voters in Cabarrus, Union, and Wake are pushing margins into uncharted territory.\n\n🎯 REAL-TIME RACE PREDICTIONS:\n🔵 US Senate: Roy Cooper (D) leading by +9.46 pp [Likely D, 99.5% win prob]\n🔵 NC Supreme Court (Seat 1): Anita Earls leading by +5.46 pp [Lean D]\n🏛️ NC General Assembly: House supermajority is 96.2% BROKEN (54.2/120 D seats; threshold 49).\n\n👇 SOUND OFF IN THE COMMENTS:\n1. How long are lines at your precinct right now?\n2. Predict the final Cooper vs. Republican margin below!\n\n🔗 Tap link in bio (@carolina_turnout_pulse / @nc_election_live) or visit rannbar-on.com/needle for live precinct heatmaps!\n━━━━━━━━━━━━━━━━━━━━\n#NCpol #NCSen #NCGov #Elections2026 #DecisionDesk #SwingState #VoteNC #NCGA #NorthCarolina #ElectionDay2026 #WakeCounty #Mecklenburg #CharlotteVotes #RaleighVotes",
           "status": "PENDING_APPROVAL"
         },
         "bluesky": {
           "platform": "Bluesky",
           "character_count": 259,
-          "text": "🚨 NC TURNOUT ALERT (12:51 PM EST):\n2.82M+ votes. Unaffiliated surge to 35.2%, outpacing GOP (26.1%).\n\n📊 Live Needle:\n• #NCSen Cooper: +9.5% (Likely D)\n• #NCGA Supermajority: 96.2% BROKEN\n\nDrop your county & wait time below! 👇\n#NCpol #NCSen #SwingState #VoteNC",
+          "text": "🚨 NC TURNOUT ALERT (01:41 PM EST):\n2.82M+ votes. Unaffiliated surge to 35.2%, outpacing GOP (26.1%).\n\n📊 Live Needle:\n• #NCSen Cooper: +9.5% (Likely D)\n• #NCGA Supermajority: 96.2% BROKEN\n\nDrop your county & wait time below! 👇\n#NCpol #NCSen #SwingState #VoteNC",
           "status": "PENDING_APPROVAL"
         }
       }
@@ -617,11 +656,14 @@
               </select>
             </div>
           </div>
+          <div class="approval-notice" id="notice_${key}" style="display: ${draft.status === 'APPROVED' ? 'block' : 'none'};">
+            ✅ Queued for <strong>${draft.timing || 'immediate'}</strong> release &bull; Recorded to Decision Desk engine.
+          </div>
           <div class="draft-footer">
             <button class="btn btn-secondary btn-sm" onclick="copyDraft('${key}')">📋 Copy</button>
             <div class="btn-group">
-              <button class="btn btn-danger btn-sm" onclick="rejectSingleDraft('${key}')">✕ Discard</button>
-              <button class="btn btn-success btn-sm" onclick="approveSingleDraft('${key}')">✓ Approve</button>
+              <button class="btn btn-danger btn-sm" id="btn_reject_${key}" onclick="rejectSingleDraft('${key}')">✕ Discard</button>
+              <button class="${draft.status === 'APPROVED' ? 'btn btn-success btn-sm btn-approved-active' : 'btn btn-success btn-sm'}" id="btn_approve_${key}" onclick="approveSingleDraft('${key}')">${draft.status === 'APPROVED' ? '✓ Approved &amp; Queued' : '✓ Approve'}</button>
             </div>
           </div>
         `;
@@ -642,30 +684,102 @@
       });
     }
 
+    function updateTiming(key) {
+      const timingEl = document.getElementById(`timing_${key}`);
+      const tVal = timingEl ? timingEl.value : 'immediate';
+      if (batchData.drafts[key]) {
+        batchData.drafts[key].timing = tVal;
+        try {
+          localStorage.setItem(`timing_${batchData.batch_id}_${key}`, tVal);
+        } catch(e){}
+        const notif = document.getElementById(`notice_${key}`);
+        if (notif && batchData.drafts[key].status === 'APPROVED') {
+          notif.innerHTML = `✅ Queued for <strong>${tVal}</strong> release &bull; Recorded to Decision Desk engine.`;
+        }
+        showToast(`Updated ${key.toUpperCase()} timing: ${tVal}`);
+      }
+    }
+
     function approveSingleDraft(key) {
-      batchData.drafts[key].status = "APPROVED";
-      document.getElementById(`status_${key}`).className = "status-badge status-approved";
-      document.getElementById(`status_${key}`).innerText = "APPROVED";
-      showToast(`Approved ${key.toUpperCase()} for release!`);
+      if (!batchData.drafts[key]) return;
+      batchData.drafts[key].status = 'APPROVED';
+      
+      const timingEl = document.getElementById(`timing_${key}`);
+      const tVal = timingEl ? timingEl.value : 'immediate';
+      batchData.drafts[key].timing = tVal;
+
+      const st = document.getElementById(`status_${key}`);
+      if (st) {
+        st.className = 'status-badge status-approved';
+        st.innerText = 'APPROVED';
+      }
+
+      const btn = document.getElementById(`btn_approve_${key}`);
+      if (btn) {
+        btn.className = 'btn btn-success btn-sm btn-approved-active';
+        btn.innerHTML = '✓ Approved &amp; Queued';
+      }
+
+      const notif = document.getElementById(`notice_${key}`);
+      if (notif) {
+        notif.style.display = 'block';
+        notif.innerHTML = `✅ Queued for <strong>${tVal}</strong> release &bull; Recorded to Decision Desk engine.`;
+      }
+
+      try {
+        localStorage.setItem(`status_${batchData.batch_id}_${key}`, 'APPROVED');
+        localStorage.setItem(`timing_${batchData.batch_id}_${key}`, tVal);
+      } catch(e){}
+
+      showToast(`🟢 Approved ${key.toUpperCase()} (${tVal}) & Queued!`);
       checkOverallStatus();
     }
 
     function rejectSingleDraft(key) {
-      batchData.drafts[key].status = "REJECTED";
-      document.getElementById(`status_${key}`).className = "status-badge status-rejected";
-      document.getElementById(`status_${key}`).innerText = "REJECTED";
+      if (!batchData.drafts[key]) return;
+      batchData.drafts[key].status = 'REJECTED';
+
+      const st = document.getElementById(`status_${key}`);
+      if (st) {
+        st.className = 'status-badge status-rejected';
+        st.innerText = 'REJECTED';
+      }
+
+      const btn = document.getElementById(`btn_approve_${key}`);
+      if (btn) {
+        btn.className = 'btn btn-success btn-sm';
+        btn.innerHTML = '✓ Approve';
+      }
+
+      const notif = document.getElementById(`notice_${key}`);
+      if (notif) {
+        notif.style.display = 'none';
+      }
+
+      try {
+        localStorage.setItem(`status_${batchData.batch_id}_${key}`, 'REJECTED');
+      } catch(e){}
+
       showToast(`Discarded ${key.toUpperCase()} draft.`);
       checkOverallStatus();
     }
 
     function approveAllDrafts() {
       for (const key of Object.keys(batchData.drafts)) {
-        batchData.drafts[key].status = "APPROVED";
+        batchData.drafts[key].status = 'APPROVED';
+        const timingEl = document.getElementById(`timing_${key}`);
+        batchData.drafts[key].timing = timingEl ? timingEl.value : 'immediate';
+        try {
+          localStorage.setItem(`status_${batchData.batch_id}_${key}`, 'APPROVED');
+          localStorage.setItem(`timing_${batchData.batch_id}_${key}`, batchData.drafts[key].timing);
+        } catch(e){}
       }
       renderDrafts();
-      document.getElementById("batchStatusBadge").className = "status-badge status-approved";
-      document.getElementById("batchStatusBadge").innerText = "ALL DRAFTS APPROVED";
-      showToast("🟢 ALL 4 DRAFTS APPROVED! Queued for publishing.");
+      const banner = document.getElementById('batchApprovedBanner');
+      if (banner) banner.style.display = 'flex';
+      document.getElementById('batchStatusBadge').className = 'status-badge status-approved';
+      document.getElementById('batchStatusBadge').innerText = 'ALL DRAFTS APPROVED';
+      showToast('🟢 ALL 4 DRAFTS APPROVED & TRANSMITTED!');
     }
 
     function rejectAllDrafts() {

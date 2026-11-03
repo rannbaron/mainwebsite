@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="120">
+  <title>Election Day 2026 Live Updates Hub | North Carolina Decision Desk</title>
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+      --blue: #2563eb;
+      --green: #10b981;
+      --red: #ef4444;
+      --purple: #8b5cf6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    header {
+      background: #0f172a;
+      border-bottom: 1px solid #1e293b;
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .live-badge {
+      background: #ef4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-top: 4px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--blue); color: #fff; }
+    .btn-secondary { background: #1e293b; color: #cbd5e1; border: 1px solid #334155; }
+    .btn-primary:hover { background: #1d4ed8; }
+    .btn-secondary:hover { background: #334155; }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 28px 0;
+    }
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+    }
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 6px 0;
+    }
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Section Cards */
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #f1f5f9;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 10px;
+    }
+    
+    .news-item {
+      padding: 14px 0;
+      border-bottom: 1px solid #1e293b;
+    }
+    .news-item:last-child { border-bottom: none; }
+    .news-time {
+      font-size: 12px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+    .news-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .news-body {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 0;
+      font-size: 12px;
+      color: #64748b;
+      border-top: 1px solid #1e293b;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container header-row">
+      <div>
+        <div class="live-badge"><span class="live-dot"></span> Live Election Day Coverage</div>
+        <h1>NC 2026 Election Day Live Updates Hub</h1>
+      </div>
+      <div class="nav-links">
+        <a href="https://rannbar-on.com/needle" class="btn btn-primary" target="_blank">📊 Live Needles ↗</a>
+        <a href="https://rannbar-on.com/prediction" class="btn btn-secondary" target="_blank">🎯 Race Predictions ↗</a>
+        <a href="https://rannbar-on.com/durhamprecinctmap.pdf" class="btn btn-secondary" target="_blank">🗺️ Durham Map ↗</a>
+        <a href="https://rannbar-on.com/vote" class="btn btn-secondary" target="_blank">🗳️ Campus Guides ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- KPI Overview -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Statewide Ballots Cast</div>
+        <div class="kpi-value" style="color: #38bdf8;">2,828,131</div>
+        <div class="kpi-sub">Across all 100 NC counties</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Unaffiliated Share</div>
+        <div class="kpi-value" style="color: #a78bfa;">35.20%</div>
+        <div class="kpi-sub">995,378 independent check-ins</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Party Split</div>
+        <div class="kpi-value" style="font-size: 20px;">D 38.4% / R 26.1%</div>
+        <div class="kpi-sub">DEM 1,085,262 &bull; REP 738,717</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">US Senate Model</div>
+        <div class="kpi-value" style="color: #60a5fa;">Cooper +9.5%</div>
+        <div class="kpi-sub">99.5% win prob (Likely D)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">NC General Assembly</div>
+        <div class="kpi-value" style="color: #34d399; font-size: 20px;">SUPERMAJORITY BROKEN</div>
+        <div class="kpi-sub">House: 54.2 D (96.2%) &bull; Sen: 21.1 D</div>
+      </div>
+    </div>
+
+    <!-- Live Election Day Dispatch Feed -->
+    <div class="section-card">
+      <div class="section-title">🚨 Real-Time Operational &amp; Model Updates</div>
+      
+      <div class="news-item">
+        <div class="news-time">01:30 PM EST &bull; TURNOUT MOMENTUM</div>
+        <div class="news-title">Unaffiliated Ballots Surpass Registered Republicans Across Suburban Metros</div>
+        <div class="news-body">
+          Statewide check-in logs show unaffiliated voters representing 35.2% of all ballots cast, breaking traditional midterm party ratios. Strongest independent volumes are concentrating in Cabarrus, Union, Wake, and Durham suburbs.
+        </div>
+      </div>
+
+      <div class="news-item">
+        <div class="news-time">12:50 PM EST &bull; DURHAM COUNTY BENCHMARK</div>
+        <div class="news-title">Durham County BOE Midday Status: Outpacing 2022 by +19.4% and 2018 by +26.8%</div>
+        <div class="news-body">
+          Durham County has logged 104,180 cumulative votes (43.1% of registered voters). Suburban precincts (56 St. Stephen's, 57 Triangle Grace) continue leading raw turnout, while campus precincts (02 Duke, 14 NCCU) show heavy midday line growth.
+        </div>
+      </div>
+
+      <div class="news-item">
+        <div class="news-time">11:45 AM EST &bull; GENERAL ASSEMBLY BALANCE</div>
+        <div class="news-title">GOP Legislative Supermajority Modeled as Broken at 96.2% Bayesian Confidence</div>
+        <div class="news-body">
+          Current early-vote and Election Day precinct tracking projects Democrats capturing 54.2 seats in the North Carolina House (threshold: 49) and 21.1 seats in the North Carolina Senate (threshold: 20), effectively ending the supermajority margin.
+        </div>
+      </div>
+    </div>
+
+    <!-- Durham County 58 Precinct Report Ingested -->
+    <div class="section-card">
+      <div class="section-title">🗳️ Durham County Board of Elections: 58 Precinct Live Canvass</div>
+      <div style="background: #ffffff; color: #1e293b; border-radius: 8px; padding: 16px; overflow: hidden;">
+        
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 960px; margin: 0 auto; color: #1e293b;">
+      <div style="background: linear-gradient(135deg, #00539b, #0f2240); padding: 24px; border-radius: 10px; color: white;">
+        <h2 style="margin: 0 0 6px 0; font-size: 22px;">Durham County Board of Elections: Election Day Turnout Monitor </h2>
+        <p style="margin: 0; opacity: 0.85; font-size: 14px;">Posting Milestone: <strong>10:00 AM Morning Update</strong> &bull; Comprehensive 5-Election &amp; 58-Precinct Comparison</p>
+      </div>
+
+      <!-- Top Metric Cards -->
+      <div style="display: flex; gap: 12px; margin: 16px 0;">
+        <div style="flex: 1; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-size: 22px; font-weight: bold; color: #00539b;">127,300</div>
+          <div style="font-size: 11px; color: #64748b; text-transform: uppercase;">Total Ballots Cast So Far</div>
+        </div>
+        <div style="flex: 1; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-size: 22px; font-weight: bold; color: #16a34a;">153,980</div>
+          <div style="font-size: 11px; color: #166534; text-transform: uppercase;">Projected Total Turnout</div>
+        </div>
+        <div style="flex: 1; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-size: 22px; font-weight: bold; color: #1d4ed8;">62.1%</div>
+          <div style="font-size: 11px; color: #1e40af; text-transform: uppercase;">Projected Turnout Rate</div>
+        </div>
+        <div style="flex: 1; background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 12px; text-align: center;">
+          <div style="font-size: 22px; font-weight: bold; color: #7e22ce;">58</div>
+          <div style="font-size: 11px; color: #6b21a8; text-transform: uppercase;">Precincts Modeled</div>
+        </div>
+      </div>
+
+      <!-- Section 1: Official BOE Posting Milestones -->
+      <div style="margin: 20px 0;">
+        <h3 style="color: #00539b; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;">1. Durham County Official Posting Milestones</h3>
+        <p style="font-size: 13.5px; color: #475569; margin-bottom: 10px;">
+          The Durham County Board of Elections releases official voter turnout updates at the following milestones during Election Day:
+        </p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12.5px;">
+          <thead>
+            <tr style="background: #f8fafc; border-bottom: 2px solid #cbd5e1; text-align: left;">
+              <th style="padding: 8px;">Scheduled Time</th>
+              <th style="padding: 8px;">Milestone Name</th>
+              <th style="padding: 8px;">Operational Description</th>
+              <th style="padding: 8px;">Monitoring Status</th>
+            </tr>
+          </thead>
+          <tbody>
+    
+            <tr style="border-bottom: 1px solid #e2e8f0; background: #f0fdf4;">
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">10:00 AM</td>
+              <td style="padding: 8px; font-weight: 600;">Morning Turnout Benchmark</td>
+              <td style="padding: 8px; color: #475569;">First morning check (commuter rush & opening hours)</td>
+              <td style="padding: 8px;"><span style='background:#dcfce7;color:#166534;font-weight:bold;padding:2px 6px;border-radius:4px;'>LIVE / ACTIVE</span></td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #e2e8f0; ">
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">2:00 PM</td>
+              <td style="padding: 8px; font-weight: 600;">Midday Turnout Benchmark</td>
+              <td style="padding: 8px; color: #475569;">Mid-afternoon check (incorporating lunch hour voting)</td>
+              <td style="padding: 8px;"><span style='background:#f1f5f9;color:#64748b;padding:2px 6px;border-radius:4px;'>STANDBY</span></td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #e2e8f0; ">
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">4:30 PM</td>
+              <td style="padding: 8px; font-weight: 600;">Late Afternoon Benchmark</td>
+              <td style="padding: 8px; color: #475569;">Pre-evening commute check before final peak rush</td>
+              <td style="padding: 8px;"><span style='background:#f1f5f9;color:#64748b;padding:2px 6px;border-radius:4px;'>STANDBY</span></td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #e2e8f0; ">
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">7:30 PM</td>
+              <td style="padding: 8px; font-weight: 600;">Poll Close & Early Vote Drop</td>
+              <td style="padding: 8px; color: #475569;">Poll closing; release of all One-Stop and mail absentee ballots</td>
+              <td style="padding: 8px;"><span style='background:#f1f5f9;color:#64748b;padding:2px 6px;border-radius:4px;'>STANDBY</span></td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #e2e8f0; ">
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">8:15 PM+</td>
+              <td style="padding: 8px; font-weight: 600;">Rolling Precinct Tabulation</td>
+              <td style="padding: 8px; color: #475569;">Continuous precinct reporting until 100% canvass complete</td>
+              <td style="padding: 8px;"><span style='background:#f1f5f9;color:#64748b;padding:2px 6px;border-radius:4px;'>STANDBY</span></td>
+            </tr>
+        
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 2: Historical Comparison to Last 5 Elections -->
+      <div style="margin: 24px 0;">
+        <h3 style="color: #00539b; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;">2. Comparison to Last 5 Non-Local Elections (Countywide)</h3>
+        <p style="font-size: 13.5px; color: #475569; margin-bottom: 10px;">
+          Comprehensive benchmark comparing 2026 Durham County turnout against the previous 5 statewide/federal elections:
+        </p>
+        <table style="width: 100%; border-collapse: collapse; font-size: 12.5px;">
+          <thead>
+            <tr style="background: #f8fafc; border-bottom: 2px solid #cbd5e1; text-align: left;">
+              <th style="padding: 8px;">Election</th>
+              <th style="padding: 8px;">Election Type</th>
+              <th style="padding: 8px;">Reg. Voters</th>
+              <th style="padding: 8px;">Early / Absentee</th>
+              <th style="padding: 8px;">Election Day</th>
+              <th style="padding: 8px;">Total Votes</th>
+              <th style="padding: 8px;">Turnout %</th>
+              <th style="padding: 8px;">Dem Margin</th>
+            </tr>
+          </thead>
+          <tbody>
+    
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 8px; font-weight: bold; color: #0f172a;">2024</td>
+              <td style="padding: 8px; color: #475569;">General (Presidential)</td>
+              <td style="padding: 8px;">241,920</td>
+              <td style="padding: 8px;">141,850</td>
+              <td style="padding: 8px;">40,600</td>
+              <td style="padding: 8px; font-weight: 600;">182,450</td>
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">75.4%</td>
+              <td style="padding: 8px; color: #166534; font-weight: bold;">+62.4 pp</td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 8px; font-weight: bold; color: #0f172a;">2022</td>
+              <td style="padding: 8px; color: #475569;">Midterm (U.S. Senate)</td>
+              <td style="padding: 8px;">236,810</td>
+              <td style="padding: 8px;">91,240</td>
+              <td style="padding: 8px;">38,540</td>
+              <td style="padding: 8px; font-weight: 600;">129,780</td>
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">54.8%</td>
+              <td style="padding: 8px; color: #166534; font-weight: bold;">+63.9 pp</td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 8px; font-weight: bold; color: #0f172a;">2020</td>
+              <td style="padding: 8px; color: #475569;">General (Presidential)</td>
+              <td style="padding: 8px;">238,540</td>
+              <td style="padding: 8px;">145,120</td>
+              <td style="padding: 8px;">31,860</td>
+              <td style="padding: 8px; font-weight: 600;">176,980</td>
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">74.2%</td>
+              <td style="padding: 8px; color: #166534; font-weight: bold;">+62.4 pp</td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 8px; font-weight: bold; color: #0f172a;">2018</td>
+              <td style="padding: 8px; color: #475569;">Midterm (Congressional)</td>
+              <td style="padding: 8px;">227,600</td>
+              <td style="padding: 8px;">80,110</td>
+              <td style="padding: 8px;">45,530</td>
+              <td style="padding: 8px; font-weight: 600;">125,640</td>
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">55.2%</td>
+              <td style="padding: 8px; color: #166534; font-weight: bold;">+68.6 pp</td>
+            </tr>
+        
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 8px; font-weight: bold; color: #0f172a;">2016</td>
+              <td style="padding: 8px; color: #475569;">General (Presidential)</td>
+              <td style="padding: 8px;">226,800</td>
+              <td style="padding: 8px;">111,450</td>
+              <td style="padding: 8px;">44,830</td>
+              <td style="padding: 8px; font-weight: 600;">156,280</td>
+              <td style="padding: 8px; font-weight: bold; color: #00539b;">68.9%</td>
+              <td style="padding: 8px; color: #166534; font-weight: bold;">+59.7 pp</td>
+            </tr>
+        
+            <tr style="background: #f0fdf4; border-top: 2px solid #16a34a; font-weight: bold;">
+              <td style="padding: 8px; color: #166534;">2026 (Projected)</td>
+              <td style="padding: 8px; color: #166534;">Midterm (Statewide/Judicial)</td>
+              <td style="padding: 8px;">248,150</td>
+              <td style="padding: 8px;">112,480</td>
+              <td style="padding: 8px;">~41,500</td>
+              <td style="padding: 8px; color: #166534;">~153,980</td>
+              <td style="padding: 8px; color: #166534;">62.1%</td>
+              <td style="padding: 8px; color: #166534;">+62.5 pp</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Section 3: Comprehensive Precinct-Level Breakdown -->
+      <div style="margin: 28px 0;">
+        <h3 style="color: #00539b; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px;">3. Comprehensive Precinct-Level Breakdown (All 58 Durham Precincts)</h3>
+        <p style="font-size: 13.5px; color: #475569; margin-bottom: 12px;">
+          Detailed precinct metrics incorporating actual 2026 Early Voting returns, historical 2022 and 2018 midterms, demographic breakdown, and projected 2026 Election Day turnout:
+        </p>
+
+        <!-- Top Precinct Highlights -->
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <div style="flex: 1; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; font-size: 12.5px;">
+            <strong style="color: #00539b;">Top 3 Early Vote Precincts:</strong>
+            <ul style="margin: 6px 0 0 16px; padding: 0;">
+    <li><strong>Precinct 32</strong> (Neal Middle School): 5,507 EV (38.9% D / 43.6% U)</li><li><strong>Precinct 51</strong> (Southwest Elementary): 5,155 EV (56.4% D / 40.5% U)</li><li><strong>Precinct 31</strong> (Bethesda Ruritan Club): 5,031 EV (58.5% D / 36.4% U)</li>
+            </ul>
+          </div>
+          <div style="flex: 1; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 12px; font-size: 12.5px;">
+            <strong style="color: #16a34a;">Top 3 Projected Election Day Turnout:</strong>
+            <ul style="margin: 6px 0 0 16px; padding: 0;">
+    <li><strong>Precinct 32</strong> (Neal Middle School): ~2,313 projected ED votes</li><li><strong>Precinct 51</strong> (Southwest Elementary): ~2,165 projected ED votes</li><li><strong>Precinct 31</strong> (Bethesda Ruritan Club): ~2,113 projected ED votes</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Full Precinct Directory Table -->
+        <div style="overflow-x: auto; max-height: 480px; border: 1px solid #cbd5e1; border-radius: 6px;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 11.5px;">
+            <thead style="position: sticky; top: 0; background: #0f172a; color: white;">
+              <tr>
+                <th style="padding: 8px 6px; text-align: left;">Pct</th>
+                <th style="padding: 8px 6px; text-align: left;">Name / Location</th>
+                <th style="padding: 8px 6px; text-align: center;">Archetype</th>
+                <th style="padding: 8px 6px; text-align: right;">2026 EV</th>
+                <th style="padding: 8px 6px; text-align: center;">Dem / Una %</th>
+                <th style="padding: 8px 6px; text-align: right;">Proj. ED</th>
+                <th style="padding: 8px 6px; text-align: right;">Proj. Total</th>
+                <th style="padding: 8px 6px; text-align: right;">2022 Midterm</th>
+                <th style="padding: 8px 6px; text-align: right;">2018 Midterm</th>
+                <th style="padding: 8px 6px; text-align: right;">Proj Margin</th>
+              </tr>
+            </thead>
+            <tbody>
+    
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">32</td>
+                <td style="padding: 6px; font-weight: 500;">Neal Middle School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">5,507</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">39% / 44%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">2,313</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">7,820</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,452</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,316</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+23.7%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">51</td>
+                <td style="padding: 6px; font-weight: 500;">Southwest Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">5,155</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">56% / 40%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">2,165</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">7,320</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,763</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,933</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+51.4%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">31</td>
+                <td style="padding: 6px; font-weight: 500;">Bethesda Ruritan Club</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Historically Heavy Election Day</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">5,031</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">59% / 36%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">2,113</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">7,144</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,858</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,509</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+50.9%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">43</td>
+                <td style="padding: 6px; font-weight: 500;">Forest View Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">4,262</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">57% / 36%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,790</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">6,052</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,130</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,914</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+47.6%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">30-2</td>
+                <td style="padding: 6px; font-weight: 500;">Southern High School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">4,116</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">66% / 29%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,729</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">5,845</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,565</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,954</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+55.5%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">44</td>
+                <td style="padding: 6px; font-weight: 500;">North Regional Library</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">4,096</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">49% / 38%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,720</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">5,816</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,292</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,361</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+35.6%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">54</td>
+                <td style="padding: 6px; font-weight: 500;">Waterford Village Apts</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">3,982</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">59% / 36%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,672</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">5,654</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,710</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,019</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+52.5%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">38</td>
+                <td style="padding: 6px; font-weight: 500;">Hope Valley Baptist</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">3,916</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">55% / 39%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,645</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">5,561</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,567</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,144</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+47.5%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">37</td>
+                <td style="padding: 6px; font-weight: 500;">Cole Mill Church</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Historically Heavy Election Day</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">3,547</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">51% / 39%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,490</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">5,037</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,661</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,314</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+39.9%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">33-1</td>
+                <td style="padding: 6px; font-weight: 500;">Bethesda Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">3,291</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">51% / 40%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,382</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">4,673</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,585</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,006</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+40.3%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">23</td>
+                <td style="padding: 6px; font-weight: 500;">The River Church</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">3,261</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">69% / 27%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,370</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">4,631</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,050</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,225</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+58.3%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">30-4</td>
+                <td style="padding: 6px; font-weight: 500;">Spring Valley Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">3,139</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">56% / 36%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,318</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">4,457</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,817</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,908</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+45.9%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">35-4</td>
+                <td style="padding: 6px; font-weight: 500;">Lyons Farm Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">High-Propensity Suburban</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">3,095</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">52% / 41%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,300</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">4,395</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">4,481</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">4,313</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+44.4%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">45</td>
+                <td style="padding: 6px; font-weight: 500;">Temple Baptist Church</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">3,037</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">53% / 33%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,276</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">4,313</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,316</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">2,390</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+36.2%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">56</td>
+                <td style="padding: 6px; font-weight: 500;">St. Stephen's Episcopal</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">High-Propensity Suburban</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">2,996</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">56% / 36%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,258</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">4,254</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,238</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,313</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+46.5%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">57</td>
+                <td style="padding: 6px; font-weight: 500;">Triangle Grace Church</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">High-Propensity Suburban</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">2,983</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">54% / 41%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,253</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">4,236</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,238</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,313</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+47.0%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">30-3</td>
+                <td style="padding: 6px; font-weight: 500;">East Regional Library</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">2,844</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">59% / 33%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,194</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">4,038</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,817</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">3,908</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+47.3%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">34-2</td>
+                <td style="padding: 6px; font-weight: 500;">Ivy Community Center</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">2,829</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">65% / 32%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,188</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">4,017</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,625</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,812</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+57.8%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">35-5</td>
+                <td style="padding: 6px; font-weight: 500;">Zakat Community Center</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">2,765</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">57% / 37%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,161</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">3,926</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">4,481</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">4,313</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+47.9%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">53-2</td>
+                <td style="padding: 6px; font-weight: 500;">Triangle Church</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">2,732</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">54% / 40%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,147</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">3,879</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,914</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,608</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+47.0%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">33-2</td>
+                <td style="padding: 6px; font-weight: 500;">Lowe's Grove Baptist</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">2,621</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">53% / 42%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">1,101</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">3,722</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+47.8%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">21</td>
+                <td style="padding: 6px; font-weight: 500;">Club Boulevard School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">2,360</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">58% / 40%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">991</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">3,351</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,703</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,930</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+54.3%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">24</td>
+                <td style="padding: 6px; font-weight: 500;">Dps Staff Development Center</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">2,027</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">55% / 34%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">851</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,878</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,502</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,379</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+41.6%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">28</td>
+                <td style="padding: 6px; font-weight: 500;">Bahama Ruritan Club</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Historically Heavy Election Day</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,967</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">40% / 39%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">826</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,793</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,297</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,342</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+23.2%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">29</td>
+                <td style="padding: 6px; font-weight: 500;">Glenn Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,955</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">60% / 30%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">821</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,776</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,237</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,314</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+44.9%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">17</td>
+                <td style="padding: 6px; font-weight: 500;">County Main Library</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Urban Core / Downtown</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,933</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">64% / 35%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">812</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,745</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,150</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,086</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+57.9%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">27</td>
+                <td style="padding: 6px; font-weight: 500;">Creekside Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,912</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">54% / 38%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">803</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,715</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,417</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,171</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+43.8%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">34-1</td>
+                <td style="padding: 6px; font-weight: 500;">Pearsontown Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">High-Propensity Suburban</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,877</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">64% / 33%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">788</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,665</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,181</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,199</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+56.5%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">50</td>
+                <td style="padding: 6px; font-weight: 500;">Mcmannen United Methodist</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,792</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">57% / 36%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">753</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,545</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,220</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,320</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+47.8%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">25</td>
+                <td style="padding: 6px; font-weight: 500;">Northern High School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,757</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">43% / 36%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">738</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,495</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,422</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,489</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+23.8%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">22</td>
+                <td style="padding: 6px; font-weight: 500;">Vfw Post 2740</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,650</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">73% / 24%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">693</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,343</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,109</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,323</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+62.0%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">41</td>
+                <td style="padding: 6px; font-weight: 500;">White Rock Baptist Church</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,523</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">73% / 25%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">640</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,163</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">999</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,065</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+62.9%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">52</td>
+                <td style="padding: 6px; font-weight: 500;">Evangel Assembly Of God</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,510</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">73% / 24%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">634</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,144</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">857</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,059</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+62.3%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">09</td>
+                <td style="padding: 6px; font-weight: 500;">Forest Hills Club House</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,498</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">65% / 32%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">629</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,127</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,093</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,050</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+56.3%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">46</td>
+                <td style="padding: 6px; font-weight: 500;">Edison Johnson Center</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,484</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">65% / 29%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">623</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,107</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">972</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,072</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+52.8%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">19</td>
+                <td style="padding: 6px; font-weight: 500;">American Legion Post 7</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,475</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">68% / 29%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">620</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,095</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">903</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">1,018</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+57.7%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">07</td>
+                <td style="padding: 6px; font-weight: 500;">School Of The Arts</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,415</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">62% / 36%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">594</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">2,009</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">921</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">982</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+57.5%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">08</td>
+                <td style="padding: 6px; font-weight: 500;">Morehead Montessori</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Urban Core / Downtown</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,350</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">67% / 32%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">567</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,917</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">856</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">840</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+60.0%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">36</td>
+                <td style="padding: 6px; font-weight: 500;">Yates Baptist Church</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,293</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">64% / 32%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">543</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,836</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">891</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">956</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+55.9%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">20</td>
+                <td style="padding: 6px; font-weight: 500;">County Agricultural Building</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,231</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">66% / 32%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">517</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,748</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">852</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">954</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+59.1%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">10</td>
+                <td style="padding: 6px; font-weight: 500;">C C Spaulding School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,124</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">66% / 32%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">472</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,596</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">644</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">479</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+58.8%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">55-49</td>
+                <td style="padding: 6px; font-weight: 500;">NCCU Turner Law Building</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Student / University Campus</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,067</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">58% / 41%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">448</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,515</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">216</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">585</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+54.9%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">40</td>
+                <td style="padding: 6px; font-weight: 500;">Rogers-Herr Middle School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">1,053</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">66% / 30%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">442</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,495</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">789</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">847</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+57.1%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">06</td>
+                <td style="padding: 6px; font-weight: 500;">Lakewood School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Urban Core / Downtown</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">982</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">69% / 29%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">412</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,394</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">757</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">808</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+59.7%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">47</td>
+                <td style="padding: 6px; font-weight: 500;">Holmes Recreation Center</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">846</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">76% / 22%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">355</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,201</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">571</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">570</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+63.9%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">18</td>
+                <td style="padding: 6px; font-weight: 500;">First United Antioch</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Urban Core / Downtown</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">720</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">71% / 28%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">302</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,022</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">456</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">490</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+61.9%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">14</td>
+                <td style="padding: 6px; font-weight: 500;">Y E Smith School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Student / University Campus</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">714</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">68% / 28%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">300</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">1,014</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">417</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">480</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+59.2%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">26</td>
+                <td style="padding: 6px; font-weight: 500;">Bahama Vfd - Rougemont Station</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">631</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">36% / 36%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">265</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">896</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">421</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">436</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+13.1%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">55-11</td>
+                <td style="padding: 6px; font-weight: 500;">Weaver Street Rec Center</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">551</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">74% / 25%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">231</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">782</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">380</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">398</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+63.9%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">01</td>
+                <td style="padding: 6px; font-weight: 500;">Brogden Middle School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">530</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">64% / 32%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">223</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">753</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">421</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">486</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+57.1%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">15</td>
+                <td style="padding: 6px; font-weight: 500;">Mt Calvary Church</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">498</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">67% / 32%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">209</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">707</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">300</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">344</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+59.6%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">42</td>
+                <td style="padding: 6px; font-weight: 500;">Shephard Magnet School</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">477</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">78% / 21%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">200</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">677</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">351</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">393</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+68.5%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">12</td>
+                <td style="padding: 6px; font-weight: 500;">Monument Of Faith Church</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">249</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">68% / 31%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">105</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">354</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">122</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">158</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+62.1%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">13</td>
+                <td style="padding: 6px; font-weight: 500;">Burton Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">231</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">76% / 23%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">97</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">328</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">167</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">190</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+65.9%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">04</td>
+                <td style="padding: 6px; font-weight: 500;">School Of Science And Math</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">0</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">0% / 0%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">0</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">0</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+58.5%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">02</td>
+                <td style="padding: 6px; font-weight: 500;">George Watts Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Student / University Campus</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">0</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">0% / 0%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">0</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">0</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+58.5%</td>
+              </tr>
+        
+              <tr style="background: #ffffff; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">03</td>
+                <td style="padding: 6px; font-weight: 500;">E K Powe Elementary</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">0</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">0% / 0%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">0</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">0</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+58.5%</td>
+              </tr>
+        
+              <tr style="background: #f8fafc; border-bottom: 1px solid #e2e8f0;">
+                <td style="padding: 6px; font-weight: bold; color: #00539b;">05</td>
+                <td style="padding: 6px; font-weight: 500;">Patterson Rec Center</td>
+                <td style="padding: 6px; text-align: center; font-size: 10.5px; color: #64748b;">Suburban Residential</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold; color: #0f172a;">0</td>
+                <td style="padding: 6px; text-align: center; color: #475569;">0% / 0%</td>
+                <td style="padding: 6px; text-align: right; color: #16a34a; font-weight: bold;">0</td>
+                <td style="padding: 6px; text-align: right; font-weight: bold;">0</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #64748b;">0</td>
+                <td style="padding: 6px; text-align: right; color: #166534; font-weight: bold;">+58.5%</td>
+              </tr>
+        
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size: 11px; color: #64748b; margin-top: 6px;">
+          Scrollable table displays all 58 official Durham County precincts with harmonized historical boundaries.
+        </div>
+      </div>
+
+      <!-- Section 4: Operational Takeaways -->
+      <div style="margin: 20px 0; background: #f8fafc; border-left: 4px solid #00539b; padding: 14px 18px; border-radius: 0 8px 8px 0;">
+        <h4 style="margin: 0 0 6px 0; color: #00539b; font-size: 15px;">Turnout Pace &amp; Trend Takeaways</h4>
+        <ul style="margin: 0 0 0 16px; padding: 0; font-size: 13px; line-height: 1.6; color: #334155;">
+          <li><strong>Midterm Surge:</strong> 2026 Durham turnout is outpacing both recent midterm cycles: <strong>+18.6% higher total turnout pace</strong> and <strong>+22.5% higher total turnout pace</strong>.</li>
+          <li><strong>Suburban vs Campus Dispersion:</strong> Suburban precincts (56 St. Stephen's, 57 Triangle Grace) lead the county in raw early votes, while campus precincts (02 Duke, 14 NCCU) carry historical ratios indicating over 50% of their total votes will arrive in-person on Election Day.</li>
+          <li><strong>Unaffiliated Growth:</strong> Unaffiliated registered voters casting ballots in Durham represent <strong>29.3%</strong> of early voters (up from 24.1% in 2022 and 21.8% in 2018).</li>
+          <li><strong>Next Milestone:</strong> Automated poller will ingest the <strong>2:00 PM Midday Update</strong> and dispatch fresh counts immediately upon publication.</li>
+        </ul>
+      </div>
+
+      <div style="font-size: 12px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+        Automated Monitoring Daemon &bull; North Carolina 2026 Election Specialist &bull; Recipients: Rann Bar-On, Embry Owen, Nana Asante, Rochelle Sparko
+      </div>
+    </div>
+    
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>North Carolina 2026 Election Decision Desk &bull; Live Coverage &bull; Updated Continuously</p>
+      <p style="margin-top: 6px;">Hosted at <a href="https://rannbar-on.com/eday" style="color: #38bdf8;">rannbar-on.com/eday</a></p>
+    </div>
+  </footer>
+
+</body>
+</html>
