@@ -1,0 +1,255 @@
+[
+  {
+    "id": "election_specialist",
+    "name": "Election Specialist Agent",
+    "category": "Domain Specialist",
+    "category_color": "#3b82f6",
+    "status": "RUNNING",
+    "status_color": "#10b981",
+    "status_label": "ACTIVE / PROCESSING",
+    "priority": 9,
+    "priority_label": "P9 (High Urgency)",
+    "summary": "Real-time ballot ingestion across all 100 NC counties, Bayesian 3-mode needle models, and decision desk race caller.",
+    "details": {
+      "current_task": "Monitoring late precinct reporting, suburban independent crossover, and Senate/House margin shifts.",
+      "target_scripts": [
+        "/home/rann/src/website/mainwebsite/update_server.py",
+        "/home/rann/src/website/mainwebsite/election_night_race_caller.py",
+        "/home/rann/src/website/mainwebsite/generate_needle_page.py",
+        "/home/rann/src/website/mainwebsite/vote_forecast.py"
+      ],
+      "active_resources": [
+        "nc_map_base.json (2.83M+ voter records)",
+        "needle/needle_data.json (Bayesian margin parameters)",
+        "needle/called_races.json (Certified decision desk calls)"
+      ],
+      "key_metrics": {
+        "Processed Ballots": "2,828,131",
+        "US Senate Margin": "Cooper +9.46% (99.5% win prob)",
+        "NC House Supermajority": "96.2% Broken (54.2 D seats)",
+        "Flipped Counties": "13 Projected Flips"
+      },
+      "guardrails": "Protected against non-current assignments. Enforces Duke Election Firewall across all outbound notifications.",
+      "execution_context": "Multiprocessing pipeline coordinated by AgentDAG with SQLite WAL state synchronization."
+    }
+  },
+  {
+    "id": "social_pulse_scheduler",
+    "name": "Social Pulse Broadcast Daemon",
+    "category": "Autonomous Daemon",
+    "category_color": "#8b5cf6",
+    "status": "RUNNING",
+    "status_color": "#10b981",
+    "status_label": "ACTIVE / 30-MIN LOOP",
+    "priority": 8,
+    "priority_label": "P8 (High Priority)",
+    "summary": "Generates 30-minute social media broadcast cycles for X/Twitter, Threads, Instagram, and Bluesky linking directly to rannbar-on.com/ncpoliticssocials.",
+    "details": {
+      "current_task": "Maintains bio links pointing to rannbar-on.com/ncpoliticssocials; auto-publishes to public continuous feed; stages external drafts and dispatches 1-click approval emails to Rann.",
+      "target_scripts": [
+        "/home/rann/src/website/mainwebsite/social_pulse_scheduler.py",
+        "/home/rann/src/website/mainwebsite/social_media_dispatcher.py"
+      ],
+      "active_resources": [
+        "private_social/staged_social_drafts.json",
+        "private_social/index.html",
+        "ncpoliticssocials/feed.json"
+      ],
+      "key_metrics": {
+        "Cycle Interval": "30 Minutes",
+        "Bio Link Target": "https://rannbar-on.com/ncpoliticssocials",
+        "Approval Mechanism": "1-Click Email Action to Rann",
+        "Supported Channels": "Twitter, Threads, Instagram, Bluesky"
+      },
+      "guardrails": "Never publishes to external social APIs without Rann's manual 1-click approval. Public feed updates immediately without approval.",
+      "execution_context": "Stand-alone background daemon with automated timer and Microsoft Graph email dispatcher."
+    }
+  },
+  {
+    "id": "continuous_feed_streamer",
+    "name": "Continuous Feed Streamer",
+    "category": "Web Engine",
+    "category_color": "#0284c7",
+    "status": "RUNNING",
+    "status_color": "#10b981",
+    "status_label": "ONLINE / AUTO-SYNC",
+    "priority": 8,
+    "priority_label": "P8 (Operational)",
+    "summary": "Maintains the phone-oriented continuous feed at rannbar-on.com/ncpoliticssocials with sub-25s auto-polling and audio alert chimes.",
+    "details": {
+      "current_task": "Ingesting Decision Desk post drafts, live needle movements, county turnout alerts, and curated NC news into a phone-optimized stream.",
+      "target_scripts": [
+        "/home/rann/src/website/mainwebsite/ncpoliticssocials_updater.py"
+      ],
+      "active_resources": [
+        "ncpoliticssocials/feed.json",
+        "ncpoliticssocials/index.html",
+        "ncpoliticssocials.html"
+      ],
+      "key_metrics": {
+        "Active Feed Items": "12 Rich Timeline Cards",
+        "Polling Frequency": "25 Seconds (Client-side JSON poll)",
+        "Layout Format": "Mobile Phone Shell (480px, Safe-Area Inset)",
+        "Actions": "1-Tap Copy, Native Web Share, Gauge Mini-Dials"
+      },
+      "guardrails": "Public page; bypasses approval requirements per user directive. Static initial state embedded in HTML for zero-latency load.",
+      "execution_context": "Integrated API callable by any script via ncpoliticssocials_updater.post_to_feed()."
+    }
+  },
+  {
+    "id": "agent_dag_orchestrator",
+    "name": "Agent DAG Parallel Orchestrator",
+    "category": "Core Infrastructure",
+    "category_color": "#10b981",
+    "status": "RUNNING",
+    "status_color": "#10b981",
+    "status_label": "ACTIVE / DISPATCHER ONLINE",
+    "priority": 10,
+    "priority_label": "P10 (Max / Architecture)",
+    "summary": "Preemptive parallel multi-agent scheduler that infers Bernstein dependencies, spawns worker agents, and affinity-routes dependent jobs.",
+    "details": {
+      "current_task": "Evaluating task dependency graph; managing parallel worker allocations and local pipeline forwarding.",
+      "target_scripts": [
+        "/home/rann/src/agent_orchestrator/agent_dag.py",
+        "/home/rann/src/agent_orchestrator/resource_analyzer.py",
+        "/home/rann/src/agent_orchestrator/dag_models.py"
+      ],
+      "active_resources": [
+        "/home/rann/src/agent_orchestrator/dag_state.db (SQLite WAL Mode)",
+        "/home/rann/bin/agent-dag (Global CLI executable)"
+      ],
+      "key_metrics": {
+        "DAG Resolution Latency": "Sub-100ms Scheduler Tick",
+        "Verification Speed": "0.32s (4-Job Parallel Chained Suite)",
+        "Hazard Inferences": "RAW (Read-After-Write), WAR, WAW",
+        "Affinity Invariant": "J_dep forwarded directly to Agent(J_anc)"
+      },
+      "guardrails": "Tarjan / Kahn cycle detection prevents recursive execution loops. Process isolation for worker threads.",
+      "execution_context": "Native Linux daemon with Python 3.14 multithreading and subprocess isolation."
+    }
+  },
+  {
+    "id": "student_ta_comms_specialist",
+    "name": "Student & TA Communications Specialist",
+    "category": "Domain Specialist",
+    "category_color": "#f59e0b",
+    "status": "QUEUED",
+    "status_color": "#f59e0b",
+    "status_label": "QUEUED / AWAITING APPROVAL",
+    "priority": 7,
+    "priority_label": "P7 (Elevated Priority)",
+    "summary": "Prepares student morning election briefings, TA meeting notices, bug tracker guides, and courseware correspondence.",
+    "details": {
+      "current_task": "Awaiting Rann's 1-click email authorization for the tomorrow 10:10 AM Math 105L student election briefing and rannbar-on.com/ncpoliticssocials announcement.",
+      "target_scripts": [
+        "/home/rann/src/generate_student_election_sample_email.py",
+        "/home/rann/src/send_feed_announcement_approval_email.py",
+        "/home/rann/src/gradescopetools/stage_stakeholder_dispatch.py"
+      ],
+      "active_resources": [
+        "Math 105L Section 001 & 002 rosters",
+        "Math 105L TA Staff List (8 teaching assistants)"
+      ],
+      "key_metrics": {
+        "Enrolled Students": "~120 active students",
+        "Teaching Assistants": "8 graduate & undergraduate TAs",
+        "Scheduled Delivery": "Tomorrow 10:10 AM EST (10m pre-class)",
+        "Approval State": "Pending Rann's 1-Click Action"
+      },
+      "guardrails": "Strict Duke Election Firewall suppresses partisan messages to @duke.edu. Enforces dropped students policy (Nwoko, Payne, Kumi).",
+      "execution_context": "Microsoft Graph OAuth2 integration via cached Duke credentials."
+    }
+  },
+  {
+    "id": "gradescope_tools_specialist",
+    "name": "Gradescope Tools Specialist",
+    "category": "Domain Specialist",
+    "category_color": "#065f46",
+    "status": "STANDBY",
+    "status_color": "#64748b",
+    "status_label": "IDLE / STANDBY",
+    "priority": 7,
+    "priority_label": "P7 (Standard)",
+    "summary": "Maintains Math 105L/106L assignment rubrics, submission windows, quiz/lab retake management, and deadline extension enforcement.",
+    "details": {
+      "current_task": "Standby mode. All non-current extensions locked. Ready for next scheduled quiz/lab download cycle.",
+      "target_scripts": [
+        "/home/rann/src/gradescopetools/gradescope_tasks.py",
+        "/home/rann/src/gradescopetools/manage_nwoko_quiz_windows.py",
+        "/home/rann/src/gradescopetools/incapacitation_manager.py"
+      ],
+      "active_resources": [
+        ".gradescope_auth.json (Session authentication)",
+        "coursepack105L106L/ grading databases"
+      ],
+      "key_metrics": {
+        "Excessive NP Limits": "Worksheets >8, Quizzes >4, Labs >2",
+        "Quiz Retake Download Guard": "1 week + 1 hour delay enforced",
+        "Late Retake Policy": "Dec 4, 2027 1-year offset for re-retakes"
+      },
+      "guardrails": "NEVER modify old assignments or grant unapproved extensions. Rann email notification mandatory on any assignment creation/update.",
+      "execution_context": "Automated headless Python requests & BS4 parser with persistent auth cookie store."
+    }
+  },
+  {
+    "id": "travel_research_specialist",
+    "name": "Travel & Flight Research Specialist",
+    "category": "Subagent",
+    "category_color": "#ec4899",
+    "status": "COMPLETED",
+    "status_color": "#60a5fa",
+    "status_label": "COMPLETED / REPORT DELIVERED",
+    "priority": 5,
+    "priority_label": "P5 (Task Complete)",
+    "summary": "Evaluated holiday 2026 family business class routes (4 passengers) across South America & Central America; report delivered to Rann's email.",
+    "details": {
+      "current_task": "Subagent task execution complete. Full 12-day itineraries and hard-product comparisons dispatched.",
+      "target_scripts": [
+        "/home/rann/src/send_south_america_travel_report.py"
+      ],
+      "active_resources": [
+        "Conversation 1ce39757-f5ff-410f-8ab9-3d0682aea016 transcript",
+        "Comprehensive HTML Guide delivered to rann@rannbar-on.com"
+      ],
+      "key_metrics": {
+        "Rank #1 Destination": "Festive Colombia (Medellin lights, Coffee Triangle, Cartagena)",
+        "Top RDU Routing": "Copa Airlines non-stop RDU-PTY (eliminates domestic layovers)",
+        "Lie-Flat Pick": "Delta One ATL-GIG / Copa Dreams MAX 9 to Brazil (Iguazu Falls)",
+        "Booking Window": "Mid-January to early February 2026 (330 days out)"
+      },
+      "guardrails": "Completed within requested 1-hour window. Sent directly to Rann with zero external broadcast.",
+      "execution_context": "Isolated subagent process running in read-only analysis sandbox with web retrieval."
+    }
+  },
+  {
+    "id": "system_housekeeping_agent",
+    "name": "System Housekeeping & Infrastructure Agent",
+    "category": "System Daemon",
+    "category_color": "#475569",
+    "status": "MONITORING",
+    "status_color": "#64748b",
+    "status_label": "IDLE / MONITORING",
+    "priority": 3,
+    "priority_label": "P3 (Routine Background)",
+    "summary": "Monitors laptop lid-close behavior, printer pipelines (Cauchy CUPS suite), workspace sync, and nightly model performance audits.",
+    "details": {
+      "current_task": "Periodic telemetry inspection; ensures codebase knowledge database integrity and git remote synchronization.",
+      "target_scripts": [
+        "/home/rann/bin/cauchy_print.sh",
+        "/home/rann/src/task_priority_scheduler.py",
+        "/home/rann/src/code_learner.py"
+      ],
+      "active_resources": [
+        "/home/rann/src/codebase_knowledge.json",
+        "/home/rann/src/model_comparison_24h_log.json"
+      ],
+      "key_metrics": {
+        "Codebase Knowledge Records": "23 verified architectural topics",
+        "Model Comparative Trials": "16 logged benchmark trials",
+        "System Battery / Lid Status": "Continuous inhibitor active"
+      },
+      "guardrails": "Auto-approval recording rule active across GEMINI.md, SKILL.md, and codebase_knowledge.json.",
+      "execution_context": "Standard Linux background daemons and systemd service scripts."
+    }
+  }
+]
