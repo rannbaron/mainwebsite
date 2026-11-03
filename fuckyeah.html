@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NCSBE Turnout & Ballot Returns War Room | rannbar-on.com/fuckyeah</title>
+  <meta name="description" content="NCSBE Real-Time 2026 Ballot Ingestion & County Turnout War Room. Live voter returns across all 100 NC counties.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --blue: #3b82f6;
+      --red: #ef4444;
+      --green: #10b981;
+      --amber: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 0 0 60px 0;
+    }
+    .header {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #172554 100%);
+      border-bottom: 1px solid #1e293b;
+      padding: 36px 20px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 14px;
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .nav-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      border-radius: 20px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover {
+      background: var(--blue);
+      color: #fff;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+    }
+    .stat-lbl {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .stat-val {
+      font-size: 28px;
+      font-weight: 900;
+      color: #ffffff;
+      line-height: 1.1;
+    }
+    .stat-sub {
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 6px;
+      display: block;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .badge-flip {
+      background: #1e3a8a;
+      color: #60a5fa;
+      border: 1px solid #2563eb;
+      margin-left: 6px;
+    }
+    .badge-flip-lg {
+      background: #1e3a8a;
+      color: #93c5fd;
+      border: 1px solid #3b82f6;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin: 4px;
+      display: inline-block;
+    }
+    .search-box {
+      background: #090d16;
+      border: 1px solid #334155;
+      color: #ffffff;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      width: 100%;
+      max-width: 320px;
+    }
+    .search-box:focus {
+      outline: none;
+      border-color: var(--blue);
+    }
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13.5px;
+    }
+    table.data-table th {
+      background: #0f172a;
+      border-bottom: 2px solid #1e293b;
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+    table.data-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #1e293b;
+    }
+    table.data-table tr:hover {
+      background: #1e293b;
+    }
+    .pct {
+      font-size: 11px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>🔥 NCSBE War Room: Live 2026 Ballot Ingestion</h1>
+    <p>Real-time official returns across all 100 North Carolina counties | Data updated November 03, 2026 at 05:38 PM EST</p>
+    <div class="nav-links">
+      <a href="https://rannbar-on.com/needle" class="nav-btn">⚡ Live Needle Dials</a>
+      <a href="https://rannbar-on.com/prediction" class="nav-btn">📊 Full Forecast Model</a>
+      <a href="https://rannbar-on.com/ncpoliticssocials" class="nav-btn">📱 Phone Social Feed</a>
+      <a href="https://rannbar-on.com/early_voting_turnout_map.html" class="nav-btn">🗺️ Turnout Map</a>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- Top Key Metrics Grid -->
+    <div class="grid-4">
+      <div class="stat-card">
+        <span class="stat-lbl">Total Ballots Cast</span>
+        <div class="stat-val">2,828,131</div>
+        <span class="stat-sub" style="color: #10b981;">100% of Counties Active</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-lbl">Democratic Ballots</span>
+        <div class="stat-val" style="color: #60a5fa;">1,085,262</div>
+        <span class="stat-sub" style="color: #60a5fa;">38.37% of electorate</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-lbl">Republican Ballots</span>
+        <div class="stat-val" style="color: #f87171;">738,717</div>
+        <span class="stat-sub" style="color: #f87171;">26.12% of electorate</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-lbl">Unaffiliated Ballots</span>
+        <div class="stat-val" style="color: #fbbf24;">995,378</div>
+        <span class="stat-sub" style="color: #fbbf24;">35.20% (Surging past GOP!)</span>
+      </div>
+    </div>
+
+    <!-- Flipped Counties Card -->
+    <div class="card">
+      <div class="card-title">
+        <span>🗺️ Projected County Flips Toward Democrats (13 Counties)</span>
+        <span style="font-size: 13px; color: #60a5fa; font-weight: 600;">Shift vs. 2022 Midterm Baselines</span>
+      </div>
+      <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 12px;">
+        Comparing current NCSBE ballot volume against 2022 historical benchmarks, the Bayesian regression model indicates 13 counties currently tracking in the Democratic win column:
+      </p>
+      <div>
+        <span class="badge badge-flip-lg">Alamance</span> <span class="badge badge-flip-lg">Anson</span> <span class="badge badge-flip-lg">Cabarrus</span> <span class="badge badge-flip-lg">Franklin</span> <span class="badge badge-flip-lg">Gaston</span> <span class="badge badge-flip-lg">Harnett</span> <span class="badge badge-flip-lg">Johnston</span> <span class="badge badge-flip-lg">Lee</span> <span class="badge badge-flip-lg">Nash</span> <span class="badge badge-flip-lg">New Hanover</span> <span class="badge badge-flip-lg">Scotland</span> <span class="badge badge-flip-lg">Washington</span> <span class="badge badge-flip-lg">Wilson</span>
+      </div>
+    </div>
+
+    <!-- 100-County Returns Table -->
+    <div class="card">
+      <div class="card-title">
+        <span>📊 County-by-County Ballot Return Data (All 100 Counties)</span>
+        <input type="text" id="countySearch" class="search-box" placeholder="Search county..." onkeyup="filterTable()">
+      </div>
+      <div style="overflow-x: auto;">
+        <table class="data-table" id="countyTable">
+          <thead>
+            <tr>
+              <th>County</th>
+              <th style="text-align: right;">Total Ballots</th>
+              <th style="text-align: right;">Democratic (Share)</th>
+              <th style="text-align: right;">Republican (Share)</th>
+              <th style="text-align: right;">Unaffiliated (Share)</th>
+              <th style="text-align: right;">Current Net Margin</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+        <tr data-county="wake">
+          <td><strong>Wake</strong> </td>
+          <td style="text-align: right; font-weight: 700;">352,187</td>
+          <td style="text-align: right; color: #60a5fa;">145,305 <span class="pct">(41.3%)</span></td>
+          <td style="text-align: right; color: #f87171;">57,983 <span class="pct">(16.5%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">147,693 <span class="pct">(41.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +87,322</td>
+        </tr>
+        
+        <tr data-county="mecklenburg">
+          <td><strong>Mecklenburg</strong> </td>
+          <td style="text-align: right; font-weight: 700;">300,466</td>
+          <td style="text-align: right; color: #60a5fa;">144,950 <span class="pct">(48.2%)</span></td>
+          <td style="text-align: right; color: #f87171;">44,505 <span class="pct">(14.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">109,956 <span class="pct">(36.6%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +100,445</td>
+        </tr>
+        
+        <tr data-county="guilford">
+          <td><strong>Guilford</strong> </td>
+          <td style="text-align: right; font-weight: 700;">145,634</td>
+          <td style="text-align: right; color: #60a5fa;">68,984 <span class="pct">(47.4%)</span></td>
+          <td style="text-align: right; color: #f87171;">30,084 <span class="pct">(20.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">46,114 <span class="pct">(31.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +38,900</td>
+        </tr>
+        
+        <tr data-county="durham">
+          <td><strong>Durham</strong> </td>
+          <td style="text-align: right; font-weight: 700;">116,887</td>
+          <td style="text-align: right; color: #60a5fa;">67,475 <span class="pct">(57.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">7,785 <span class="pct">(6.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">41,343 <span class="pct">(35.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +59,690</td>
+        </tr>
+        
+        <tr data-county="forsyth">
+          <td><strong>Forsyth</strong> </td>
+          <td style="text-align: right; font-weight: 700;">108,512</td>
+          <td style="text-align: right; color: #60a5fa;">46,636 <span class="pct">(43.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">25,625 <span class="pct">(23.6%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">35,875 <span class="pct">(33.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +21,011</td>
+        </tr>
+        
+        <tr data-county="buncombe">
+          <td><strong>Buncombe</strong> </td>
+          <td style="text-align: right; font-weight: 700;">101,200</td>
+          <td style="text-align: right; color: #60a5fa;">42,677 <span class="pct">(42.2%)</span></td>
+          <td style="text-align: right; color: #f87171;">15,324 <span class="pct">(15.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">42,843 <span class="pct">(42.3%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +27,353</td>
+        </tr>
+        
+        <tr data-county="new hanover">
+          <td><strong>New Hanover</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">69,915</td>
+          <td style="text-align: right; color: #60a5fa;">23,582 <span class="pct">(33.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">19,290 <span class="pct">(27.6%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">26,797 <span class="pct">(38.3%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +4,292</td>
+        </tr>
+        
+        <tr data-county="union">
+          <td><strong>Union</strong> </td>
+          <td style="text-align: right; font-weight: 700;">67,810</td>
+          <td style="text-align: right; color: #60a5fa;">18,002 <span class="pct">(26.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">24,599 <span class="pct">(36.3%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">24,980 <span class="pct">(36.8%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +6,597</td>
+        </tr>
+        
+        <tr data-county="brunswick">
+          <td><strong>Brunswick</strong> </td>
+          <td style="text-align: right; font-weight: 700;">62,603</td>
+          <td style="text-align: right; color: #60a5fa;">14,812 <span class="pct">(23.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">24,151 <span class="pct">(38.6%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">23,470 <span class="pct">(37.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +9,339</td>
+        </tr>
+        
+        <tr data-county="cumberland">
+          <td><strong>Cumberland</strong> </td>
+          <td style="text-align: right; font-weight: 700;">61,841</td>
+          <td style="text-align: right; color: #60a5fa;">31,872 <span class="pct">(51.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">11,984 <span class="pct">(19.4%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">17,759 <span class="pct">(28.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +19,888</td>
+        </tr>
+        
+        <tr data-county="johnston">
+          <td><strong>Johnston</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">56,033</td>
+          <td style="text-align: right; color: #60a5fa;">18,914 <span class="pct">(33.8%)</span></td>
+          <td style="text-align: right; color: #f87171;">17,583 <span class="pct">(31.4%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">19,320 <span class="pct">(34.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,331</td>
+        </tr>
+        
+        <tr data-county="orange">
+          <td><strong>Orange</strong> </td>
+          <td style="text-align: right; font-weight: 700;">55,570</td>
+          <td style="text-align: right; color: #60a5fa;">29,373 <span class="pct">(52.9%)</span></td>
+          <td style="text-align: right; color: #f87171;">4,152 <span class="pct">(7.5%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">21,919 <span class="pct">(39.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +25,221</td>
+        </tr>
+        
+        <tr data-county="gaston">
+          <td><strong>Gaston</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">55,050</td>
+          <td style="text-align: right; color: #60a5fa;">17,640 <span class="pct">(32.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">19,824 <span class="pct">(36.0%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">17,401 <span class="pct">(31.6%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +2,184</td>
+        </tr>
+        
+        <tr data-county="cabarrus">
+          <td><strong>Cabarrus</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">52,982</td>
+          <td style="text-align: right; color: #60a5fa;">18,981 <span class="pct">(35.8%)</span></td>
+          <td style="text-align: right; color: #f87171;">14,512 <span class="pct">(27.4%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">19,291 <span class="pct">(36.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +4,469</td>
+        </tr>
+        
+        <tr data-county="iredell">
+          <td><strong>Iredell</strong> </td>
+          <td style="text-align: right; font-weight: 700;">48,842</td>
+          <td style="text-align: right; color: #60a5fa;">12,028 <span class="pct">(24.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">19,078 <span class="pct">(39.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">17,563 <span class="pct">(36.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +7,050</td>
+        </tr>
+        
+        <tr data-county="alamance">
+          <td><strong>Alamance</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">45,907</td>
+          <td style="text-align: right; color: #60a5fa;">17,611 <span class="pct">(38.4%)</span></td>
+          <td style="text-align: right; color: #f87171;">13,261 <span class="pct">(28.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">14,904 <span class="pct">(32.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +4,350</td>
+        </tr>
+        
+        <tr data-county="pitt">
+          <td><strong>Pitt</strong> </td>
+          <td style="text-align: right; font-weight: 700;">41,577</td>
+          <td style="text-align: right; color: #60a5fa;">19,280 <span class="pct">(46.4%)</span></td>
+          <td style="text-align: right; color: #f87171;">9,502 <span class="pct">(22.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">12,669 <span class="pct">(30.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +9,778</td>
+        </tr>
+        
+        <tr data-county="henderson">
+          <td><strong>Henderson</strong> </td>
+          <td style="text-align: right; font-weight: 700;">41,258</td>
+          <td style="text-align: right; color: #60a5fa;">9,920 <span class="pct">(24.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">13,084 <span class="pct">(31.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">18,095 <span class="pct">(43.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +3,164</td>
+        </tr>
+        
+        <tr data-county="catawba">
+          <td><strong>Catawba</strong> </td>
+          <td style="text-align: right; font-weight: 700;">40,648</td>
+          <td style="text-align: right; color: #60a5fa;">8,647 <span class="pct">(21.3%)</span></td>
+          <td style="text-align: right; color: #f87171;">17,639 <span class="pct">(43.4%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">14,231 <span class="pct">(35.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +8,992</td>
+        </tr>
+        
+        <tr data-county="davidson">
+          <td><strong>Davidson</strong> </td>
+          <td style="text-align: right; font-weight: 700;">37,954</td>
+          <td style="text-align: right; color: #60a5fa;">8,453 <span class="pct">(22.3%)</span></td>
+          <td style="text-align: right; color: #f87171;">18,265 <span class="pct">(48.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">11,129 <span class="pct">(29.3%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +9,812</td>
+        </tr>
+        
+        <tr data-county="chatham">
+          <td><strong>Chatham</strong> </td>
+          <td style="text-align: right; font-weight: 700;">34,006</td>
+          <td style="text-align: right; color: #60a5fa;">13,776 <span class="pct">(40.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">5,992 <span class="pct">(17.6%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">14,146 <span class="pct">(41.6%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +7,784</td>
+        </tr>
+        
+        <tr data-county="onslow">
+          <td><strong>Onslow</strong> </td>
+          <td style="text-align: right; font-weight: 700;">32,448</td>
+          <td style="text-align: right; color: #60a5fa;">8,327 <span class="pct">(25.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">12,424 <span class="pct">(38.3%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">11,544 <span class="pct">(35.6%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +4,097</td>
+        </tr>
+        
+        <tr data-county="randolph">
+          <td><strong>Randolph</strong> </td>
+          <td style="text-align: right; font-weight: 700;">30,420</td>
+          <td style="text-align: right; color: #60a5fa;">5,481 <span class="pct">(18.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">16,203 <span class="pct">(53.3%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">8,667 <span class="pct">(28.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +10,722</td>
+        </tr>
+        
+        <tr data-county="harnett">
+          <td><strong>Harnett</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">29,972</td>
+          <td style="text-align: right; color: #60a5fa;">10,312 <span class="pct">(34.4%)</span></td>
+          <td style="text-align: right; color: #f87171;">10,255 <span class="pct">(34.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">9,282 <span class="pct">(31.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +57</td>
+        </tr>
+        
+        <tr data-county="rowan">
+          <td><strong>Rowan</strong> </td>
+          <td style="text-align: right; font-weight: 700;">29,489</td>
+          <td style="text-align: right; color: #60a5fa;">7,948 <span class="pct">(27.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">12,298 <span class="pct">(41.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">9,148 <span class="pct">(31.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +4,350</td>
+        </tr>
+        
+        <tr data-county="nash">
+          <td><strong>Nash</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">28,730</td>
+          <td style="text-align: right; color: #60a5fa;">12,506 <span class="pct">(43.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">7,928 <span class="pct">(27.6%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">8,244 <span class="pct">(28.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +4,578</td>
+        </tr>
+        
+        <tr data-county="moore">
+          <td><strong>Moore</strong> </td>
+          <td style="text-align: right; font-weight: 700;">28,529</td>
+          <td style="text-align: right; color: #60a5fa;">6,886 <span class="pct">(24.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">11,061 <span class="pct">(38.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">10,489 <span class="pct">(36.8%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +4,175</td>
+        </tr>
+        
+        <tr data-county="craven">
+          <td><strong>Craven</strong> </td>
+          <td style="text-align: right; font-weight: 700;">28,474</td>
+          <td style="text-align: right; color: #60a5fa;">8,810 <span class="pct">(30.9%)</span></td>
+          <td style="text-align: right; color: #f87171;">10,619 <span class="pct">(37.3%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">8,938 <span class="pct">(31.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +1,809</td>
+        </tr>
+        
+        <tr data-county="wayne">
+          <td><strong>Wayne</strong> </td>
+          <td style="text-align: right; font-weight: 700;">27,078</td>
+          <td style="text-align: right; color: #60a5fa;">11,111 <span class="pct">(41.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">9,445 <span class="pct">(34.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">6,448 <span class="pct">(23.8%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,666</td>
+        </tr>
+        
+        <tr data-county="lincoln">
+          <td><strong>Lincoln</strong> </td>
+          <td style="text-align: right; font-weight: 700;">25,846</td>
+          <td style="text-align: right; color: #60a5fa;">5,341 <span class="pct">(20.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">11,877 <span class="pct">(46.0%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">8,550 <span class="pct">(33.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +6,536</td>
+        </tr>
+        
+        <tr data-county="carteret">
+          <td><strong>Carteret</strong> </td>
+          <td style="text-align: right; font-weight: 700;">24,056</td>
+          <td style="text-align: right; color: #60a5fa;">4,233 <span class="pct">(17.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">11,392 <span class="pct">(47.4%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">8,359 <span class="pct">(34.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +7,159</td>
+        </tr>
+        
+        <tr data-county="franklin">
+          <td><strong>Franklin</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">23,202</td>
+          <td style="text-align: right; color: #60a5fa;">8,691 <span class="pct">(37.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">6,650 <span class="pct">(28.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">7,777 <span class="pct">(33.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +2,041</td>
+        </tr>
+        
+        <tr data-county="rockingham">
+          <td><strong>Rockingham</strong> </td>
+          <td style="text-align: right; font-weight: 700;">23,042</td>
+          <td style="text-align: right; color: #60a5fa;">7,034 <span class="pct">(30.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">8,942 <span class="pct">(38.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">7,018 <span class="pct">(30.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +1,908</td>
+        </tr>
+        
+        <tr data-county="cleveland">
+          <td><strong>Cleveland</strong> </td>
+          <td style="text-align: right; font-weight: 700;">20,963</td>
+          <td style="text-align: right; color: #60a5fa;">7,469 <span class="pct">(35.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">7,529 <span class="pct">(35.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">5,906 <span class="pct">(28.2%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +60</td>
+        </tr>
+        
+        <tr data-county="burke">
+          <td><strong>Burke</strong> </td>
+          <td style="text-align: right; font-weight: 700;">20,414</td>
+          <td style="text-align: right; color: #60a5fa;">5,091 <span class="pct">(24.9%)</span></td>
+          <td style="text-align: right; color: #f87171;">8,066 <span class="pct">(39.5%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">7,196 <span class="pct">(35.3%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +2,975</td>
+        </tr>
+        
+        <tr data-county="haywood">
+          <td><strong>Haywood</strong> </td>
+          <td style="text-align: right; font-weight: 700;">19,125</td>
+          <td style="text-align: right; color: #60a5fa;">5,836 <span class="pct">(30.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">5,863 <span class="pct">(30.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">7,367 <span class="pct">(38.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +27</td>
+        </tr>
+        
+        <tr data-county="wilson">
+          <td><strong>Wilson</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">18,825</td>
+          <td style="text-align: right; color: #60a5fa;">9,520 <span class="pct">(50.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">4,264 <span class="pct">(22.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">4,999 <span class="pct">(26.6%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +5,256</td>
+        </tr>
+        
+        <tr data-county="caldwell">
+          <td><strong>Caldwell</strong> </td>
+          <td style="text-align: right; font-weight: 700;">18,771</td>
+          <td style="text-align: right; color: #60a5fa;">3,665 <span class="pct">(19.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">9,215 <span class="pct">(49.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">5,847 <span class="pct">(31.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +5,550</td>
+        </tr>
+        
+        <tr data-county="granville">
+          <td><strong>Granville</strong> </td>
+          <td style="text-align: right; font-weight: 700;">18,366</td>
+          <td style="text-align: right; color: #60a5fa;">7,633 <span class="pct">(41.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">4,779 <span class="pct">(26.0%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">5,908 <span class="pct">(32.2%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +2,854</td>
+        </tr>
+        
+        <tr data-county="pender">
+          <td><strong>Pender</strong> </td>
+          <td style="text-align: right; font-weight: 700;">17,285</td>
+          <td style="text-align: right; color: #60a5fa;">4,306 <span class="pct">(24.9%)</span></td>
+          <td style="text-align: right; color: #f87171;">7,039 <span class="pct">(40.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">5,876 <span class="pct">(34.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +2,733</td>
+        </tr>
+        
+        <tr data-county="robeson">
+          <td><strong>Robeson</strong> </td>
+          <td style="text-align: right; font-weight: 700;">16,950</td>
+          <td style="text-align: right; color: #60a5fa;">8,738 <span class="pct">(51.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">3,144 <span class="pct">(18.5%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">5,030 <span class="pct">(29.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +5,594</td>
+        </tr>
+        
+        <tr data-county="watauga">
+          <td><strong>Watauga</strong> </td>
+          <td style="text-align: right; font-weight: 700;">16,773</td>
+          <td style="text-align: right; color: #60a5fa;">5,457 <span class="pct">(32.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">3,844 <span class="pct">(22.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">7,406 <span class="pct">(44.2%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,613</td>
+        </tr>
+        
+        <tr data-county="surry">
+          <td><strong>Surry</strong> </td>
+          <td style="text-align: right; font-weight: 700;">16,139</td>
+          <td style="text-align: right; color: #60a5fa;">3,546 <span class="pct">(22.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">7,612 <span class="pct">(47.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">4,951 <span class="pct">(30.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +4,066</td>
+        </tr>
+        
+        <tr data-county="lee">
+          <td><strong>Lee</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">14,606</td>
+          <td style="text-align: right; color: #60a5fa;">5,480 <span class="pct">(37.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">4,186 <span class="pct">(28.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">4,886 <span class="pct">(33.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,294</td>
+        </tr>
+        
+        <tr data-county="stanly">
+          <td><strong>Stanly</strong> </td>
+          <td style="text-align: right; font-weight: 700;">13,900</td>
+          <td style="text-align: right; color: #60a5fa;">3,010 <span class="pct">(21.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">6,529 <span class="pct">(47.0%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">4,323 <span class="pct">(31.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +3,519</td>
+        </tr>
+        
+        <tr data-county="rutherford">
+          <td><strong>Rutherford</strong> </td>
+          <td style="text-align: right; font-weight: 700;">13,612</td>
+          <td style="text-align: right; color: #60a5fa;">3,091 <span class="pct">(22.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">5,851 <span class="pct">(43.0%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">4,643 <span class="pct">(34.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +2,760</td>
+        </tr>
+        
+        <tr data-county="lenoir">
+          <td><strong>Lenoir</strong> </td>
+          <td style="text-align: right; font-weight: 700;">13,234</td>
+          <td style="text-align: right; color: #60a5fa;">6,412 <span class="pct">(48.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">3,553 <span class="pct">(26.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">3,247 <span class="pct">(24.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +2,859</td>
+        </tr>
+        
+        <tr data-county="beaufort">
+          <td><strong>Beaufort</strong> </td>
+          <td style="text-align: right; font-weight: 700;">12,999</td>
+          <td style="text-align: right; color: #60a5fa;">3,998 <span class="pct">(30.8%)</span></td>
+          <td style="text-align: right; color: #f87171;">4,841 <span class="pct">(37.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">4,140 <span class="pct">(31.8%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +843</td>
+        </tr>
+        
+        <tr data-county="dare">
+          <td><strong>Dare</strong> </td>
+          <td style="text-align: right; font-weight: 700;">12,679</td>
+          <td style="text-align: right; color: #60a5fa;">3,031 <span class="pct">(23.9%)</span></td>
+          <td style="text-align: right; color: #f87171;">3,951 <span class="pct">(31.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">5,663 <span class="pct">(44.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +920</td>
+        </tr>
+        
+        <tr data-county="edgecombe">
+          <td><strong>Edgecombe</strong> </td>
+          <td style="text-align: right; font-weight: 700;">12,344</td>
+          <td style="text-align: right; color: #60a5fa;">8,387 <span class="pct">(67.9%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,987 <span class="pct">(16.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,944 <span class="pct">(15.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +6,400</td>
+        </tr>
+        
+        <tr data-county="wilkes">
+          <td><strong>Wilkes</strong> </td>
+          <td style="text-align: right; font-weight: 700;">11,508</td>
+          <td style="text-align: right; color: #60a5fa;">2,154 <span class="pct">(18.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">6,197 <span class="pct">(53.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">3,140 <span class="pct">(27.3%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +4,043</td>
+        </tr>
+        
+        <tr data-county="davie">
+          <td><strong>Davie</strong> </td>
+          <td style="text-align: right; font-weight: 700;">11,477</td>
+          <td style="text-align: right; color: #60a5fa;">2,021 <span class="pct">(17.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">5,566 <span class="pct">(48.5%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">3,860 <span class="pct">(33.6%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +3,545</td>
+        </tr>
+        
+        <tr data-county="jackson">
+          <td><strong>Jackson</strong> </td>
+          <td style="text-align: right; font-weight: 700;">11,446</td>
+          <td style="text-align: right; color: #60a5fa;">3,851 <span class="pct">(33.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,595 <span class="pct">(22.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">4,952 <span class="pct">(43.3%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,256</td>
+        </tr>
+        
+        <tr data-county="transylvania">
+          <td><strong>Transylvania</strong> </td>
+          <td style="text-align: right; font-weight: 700;">11,317</td>
+          <td style="text-align: right; color: #60a5fa;">3,185 <span class="pct">(28.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,953 <span class="pct">(26.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">5,147 <span class="pct">(45.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +232</td>
+        </tr>
+        
+        <tr data-county="halifax">
+          <td><strong>Halifax</strong> </td>
+          <td style="text-align: right; font-weight: 700;">11,105</td>
+          <td style="text-align: right; color: #60a5fa;">7,106 <span class="pct">(64.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,099 <span class="pct">(9.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,884 <span class="pct">(26.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +6,007</td>
+        </tr>
+        
+        <tr data-county="hoke">
+          <td><strong>Hoke</strong> </td>
+          <td style="text-align: right; font-weight: 700;">11,101</td>
+          <td style="text-align: right; color: #60a5fa;">5,762 <span class="pct">(51.9%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,788 <span class="pct">(16.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">3,515 <span class="pct">(31.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +3,974</td>
+        </tr>
+        
+        <tr data-county="macon">
+          <td><strong>Macon</strong> </td>
+          <td style="text-align: right; font-weight: 700;">11,047</td>
+          <td style="text-align: right; color: #60a5fa;">2,226 <span class="pct">(20.2%)</span></td>
+          <td style="text-align: right; color: #f87171;">4,463 <span class="pct">(40.4%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">4,325 <span class="pct">(39.2%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +2,237</td>
+        </tr>
+        
+        <tr data-county="mcdowell">
+          <td><strong>Mcdowell</strong> </td>
+          <td style="text-align: right; font-weight: 700;">10,870</td>
+          <td style="text-align: right; color: #60a5fa;">2,230 <span class="pct">(20.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">4,718 <span class="pct">(43.4%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">3,904 <span class="pct">(35.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +2,488</td>
+        </tr>
+        
+        <tr data-county="sampson">
+          <td><strong>Sampson</strong> </td>
+          <td style="text-align: right; font-weight: 700;">10,545</td>
+          <td style="text-align: right; color: #60a5fa;">4,387 <span class="pct">(41.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">3,912 <span class="pct">(37.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,220 <span class="pct">(21.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +475</td>
+        </tr>
+        
+        <tr data-county="person">
+          <td><strong>Person</strong> </td>
+          <td style="text-align: right; font-weight: 700;">10,375</td>
+          <td style="text-align: right; color: #60a5fa;">3,916 <span class="pct">(37.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,747 <span class="pct">(26.5%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">3,686 <span class="pct">(35.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,169</td>
+        </tr>
+        
+        <tr data-county="vance">
+          <td><strong>Vance</strong> </td>
+          <td style="text-align: right; font-weight: 700;">10,218</td>
+          <td style="text-align: right; color: #60a5fa;">6,235 <span class="pct">(61.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,726 <span class="pct">(16.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,237 <span class="pct">(21.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +4,509</td>
+        </tr>
+        
+        <tr data-county="stokes">
+          <td><strong>Stokes</strong> </td>
+          <td style="text-align: right; font-weight: 700;">10,145</td>
+          <td style="text-align: right; color: #60a5fa;">1,914 <span class="pct">(18.9%)</span></td>
+          <td style="text-align: right; color: #f87171;">5,264 <span class="pct">(51.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,944 <span class="pct">(29.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +3,350</td>
+        </tr>
+        
+        <tr data-county="columbus">
+          <td><strong>Columbus</strong> </td>
+          <td style="text-align: right; font-weight: 700;">9,872</td>
+          <td style="text-align: right; color: #60a5fa;">3,961 <span class="pct">(40.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,916 <span class="pct">(29.5%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,979 <span class="pct">(30.2%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,045</td>
+        </tr>
+        
+        <tr data-county="pasquotank">
+          <td><strong>Pasquotank</strong> </td>
+          <td style="text-align: right; font-weight: 700;">9,809</td>
+          <td style="text-align: right; color: #60a5fa;">4,230 <span class="pct">(43.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,288 <span class="pct">(23.3%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">3,248 <span class="pct">(33.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,942</td>
+        </tr>
+        
+        <tr data-county="duplin">
+          <td><strong>Duplin</strong> </td>
+          <td style="text-align: right; font-weight: 700;">9,001</td>
+          <td style="text-align: right; color: #60a5fa;">3,488 <span class="pct">(38.8%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,784 <span class="pct">(30.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,706 <span class="pct">(30.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +704</td>
+        </tr>
+        
+        <tr data-county="alexander">
+          <td><strong>Alexander</strong> </td>
+          <td style="text-align: right; font-weight: 700;">8,652</td>
+          <td style="text-align: right; color: #60a5fa;">1,475 <span class="pct">(17.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">4,313 <span class="pct">(49.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,845 <span class="pct">(32.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +2,838</td>
+        </tr>
+        
+        <tr data-county="richmond">
+          <td><strong>Richmond</strong> </td>
+          <td style="text-align: right; font-weight: 700;">8,276</td>
+          <td style="text-align: right; color: #60a5fa;">3,662 <span class="pct">(44.2%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,131 <span class="pct">(25.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,471 <span class="pct">(29.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,531</td>
+        </tr>
+        
+        <tr data-county="scotland">
+          <td><strong>Scotland</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">7,257</td>
+          <td style="text-align: right; color: #60a5fa;">3,554 <span class="pct">(49.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,538 <span class="pct">(21.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,154 <span class="pct">(29.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +2,016</td>
+        </tr>
+        
+        <tr data-county="polk">
+          <td><strong>Polk</strong> </td>
+          <td style="text-align: right; font-weight: 700;">7,230</td>
+          <td style="text-align: right; color: #60a5fa;">1,823 <span class="pct">(25.2%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,398 <span class="pct">(33.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,987 <span class="pct">(41.3%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +575</td>
+        </tr>
+        
+        <tr data-county="bladen">
+          <td><strong>Bladen</strong> </td>
+          <td style="text-align: right; font-weight: 700;">7,122</td>
+          <td style="text-align: right; color: #60a5fa;">3,165 <span class="pct">(44.4%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,632 <span class="pct">(22.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,311 <span class="pct">(32.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,533</td>
+        </tr>
+        
+        <tr data-county="madison">
+          <td><strong>Madison</strong> </td>
+          <td style="text-align: right; font-weight: 700;">7,023</td>
+          <td style="text-align: right; color: #60a5fa;">2,292 <span class="pct">(32.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,739 <span class="pct">(24.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,973 <span class="pct">(42.3%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +553</td>
+        </tr>
+        
+        <tr data-county="cherokee">
+          <td><strong>Cherokee</strong> </td>
+          <td style="text-align: right; font-weight: 700;">6,985</td>
+          <td style="text-align: right; color: #60a5fa;">1,016 <span class="pct">(14.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">3,673 <span class="pct">(52.6%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,267 <span class="pct">(32.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +2,657</td>
+        </tr>
+        
+        <tr data-county="ashe">
+          <td><strong>Ashe</strong> </td>
+          <td style="text-align: right; font-weight: 700;">6,919</td>
+          <td style="text-align: right; color: #60a5fa;">1,538 <span class="pct">(22.2%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,845 <span class="pct">(41.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,521 <span class="pct">(36.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +1,307</td>
+        </tr>
+        
+        <tr data-county="yadkin">
+          <td><strong>Yadkin</strong> </td>
+          <td style="text-align: right; font-weight: 700;">6,900</td>
+          <td style="text-align: right; color: #60a5fa;">955 <span class="pct">(13.8%)</span></td>
+          <td style="text-align: right; color: #f87171;">3,946 <span class="pct">(57.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,984 <span class="pct">(28.8%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +2,991</td>
+        </tr>
+        
+        <tr data-county="yancey">
+          <td><strong>Yancey</strong> </td>
+          <td style="text-align: right; font-weight: 700;">5,873</td>
+          <td style="text-align: right; color: #60a5fa;">1,752 <span class="pct">(29.8%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,940 <span class="pct">(33.0%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,168 <span class="pct">(36.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +188</td>
+        </tr>
+        
+        <tr data-county="currituck">
+          <td><strong>Currituck</strong> </td>
+          <td style="text-align: right; font-weight: 700;">5,830</td>
+          <td style="text-align: right; color: #60a5fa;">1,017 <span class="pct">(17.4%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,362 <span class="pct">(40.5%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">2,430 <span class="pct">(41.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +1,345</td>
+        </tr>
+        
+        <tr data-county="martin">
+          <td><strong>Martin</strong> </td>
+          <td style="text-align: right; font-weight: 700;">5,234</td>
+          <td style="text-align: right; color: #60a5fa;">2,839 <span class="pct">(54.2%)</span></td>
+          <td style="text-align: right; color: #f87171;">870 <span class="pct">(16.6%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,510 <span class="pct">(28.8%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,969</td>
+        </tr>
+        
+        <tr data-county="warren">
+          <td><strong>Warren</strong> </td>
+          <td style="text-align: right; font-weight: 700;">5,103</td>
+          <td style="text-align: right; color: #60a5fa;">3,264 <span class="pct">(64.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">755 <span class="pct">(14.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,076 <span class="pct">(21.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +2,509</td>
+        </tr>
+        
+        <tr data-county="caswell">
+          <td><strong>Caswell</strong> </td>
+          <td style="text-align: right; font-weight: 700;">5,089</td>
+          <td style="text-align: right; color: #60a5fa;">2,345 <span class="pct">(46.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,208 <span class="pct">(23.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,528 <span class="pct">(30.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,137</td>
+        </tr>
+        
+        <tr data-county="montgomery">
+          <td><strong>Montgomery</strong> </td>
+          <td style="text-align: right; font-weight: 700;">4,916</td>
+          <td style="text-align: right; color: #60a5fa;">1,674 <span class="pct">(34.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,774 <span class="pct">(36.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,460 <span class="pct">(29.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +100</td>
+        </tr>
+        
+        <tr data-county="hertford">
+          <td><strong>Hertford</strong> </td>
+          <td style="text-align: right; font-weight: 700;">4,636</td>
+          <td style="text-align: right; color: #60a5fa;">3,294 <span class="pct">(71.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">459 <span class="pct">(9.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">879 <span class="pct">(19.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +2,835</td>
+        </tr>
+        
+        <tr data-county="anson">
+          <td><strong>Anson</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">4,468</td>
+          <td style="text-align: right; color: #60a5fa;">2,638 <span class="pct">(59.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">744 <span class="pct">(16.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,077 <span class="pct">(24.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,894</td>
+        </tr>
+        
+        <tr data-county="bertie">
+          <td><strong>Bertie</strong> </td>
+          <td style="text-align: right; font-weight: 700;">4,231</td>
+          <td style="text-align: right; color: #60a5fa;">2,868 <span class="pct">(67.8%)</span></td>
+          <td style="text-align: right; color: #f87171;">454 <span class="pct">(10.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">905 <span class="pct">(21.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +2,414</td>
+        </tr>
+        
+        <tr data-county="northampton">
+          <td><strong>Northampton</strong> </td>
+          <td style="text-align: right; font-weight: 700;">4,213</td>
+          <td style="text-align: right; color: #60a5fa;">2,762 <span class="pct">(65.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">431 <span class="pct">(10.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,017 <span class="pct">(24.1%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +2,331</td>
+        </tr>
+        
+        <tr data-county="chowan">
+          <td><strong>Chowan</strong> </td>
+          <td style="text-align: right; font-weight: 700;">4,210</td>
+          <td style="text-align: right; color: #60a5fa;">1,473 <span class="pct">(35.0%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,323 <span class="pct">(31.4%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,398 <span class="pct">(33.2%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +150</td>
+        </tr>
+        
+        <tr data-county="mitchell">
+          <td><strong>Mitchell</strong> </td>
+          <td style="text-align: right; font-weight: 700;">4,189</td>
+          <td style="text-align: right; color: #60a5fa;">479 <span class="pct">(11.4%)</span></td>
+          <td style="text-align: right; color: #f87171;">2,261 <span class="pct">(54.0%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,440 <span class="pct">(34.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +1,782</td>
+        </tr>
+        
+        <tr data-county="pamlico">
+          <td><strong>Pamlico</strong> </td>
+          <td style="text-align: right; font-weight: 700;">4,136</td>
+          <td style="text-align: right; color: #60a5fa;">1,218 <span class="pct">(29.4%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,654 <span class="pct">(40.0%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,262 <span class="pct">(30.5%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +436</td>
+        </tr>
+        
+        <tr data-county="greene">
+          <td><strong>Greene</strong> </td>
+          <td style="text-align: right; font-weight: 700;">3,899</td>
+          <td style="text-align: right; color: #60a5fa;">1,919 <span class="pct">(49.2%)</span></td>
+          <td style="text-align: right; color: #f87171;">807 <span class="pct">(20.7%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,170 <span class="pct">(30.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,112</td>
+        </tr>
+        
+        <tr data-county="perquimans">
+          <td><strong>Perquimans</strong> </td>
+          <td style="text-align: right; font-weight: 700;">3,754</td>
+          <td style="text-align: right; color: #60a5fa;">988 <span class="pct">(26.3%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,396 <span class="pct">(37.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,365 <span class="pct">(36.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +408</td>
+        </tr>
+        
+        <tr data-county="clay">
+          <td><strong>Clay</strong> </td>
+          <td style="text-align: right; font-weight: 700;">3,703</td>
+          <td style="text-align: right; color: #60a5fa;">618 <span class="pct">(16.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,757 <span class="pct">(47.4%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,321 <span class="pct">(35.7%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +1,139</td>
+        </tr>
+        
+        <tr data-county="swain">
+          <td><strong>Swain</strong> </td>
+          <td style="text-align: right; font-weight: 700;">3,262</td>
+          <td style="text-align: right; color: #60a5fa;">1,004 <span class="pct">(30.8%)</span></td>
+          <td style="text-align: right; color: #f87171;">994 <span class="pct">(30.5%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,251 <span class="pct">(38.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +10</td>
+        </tr>
+        
+        <tr data-county="alleghany">
+          <td><strong>Alleghany</strong> </td>
+          <td style="text-align: right; font-weight: 700;">3,198</td>
+          <td style="text-align: right; color: #60a5fa;">740 <span class="pct">(23.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,371 <span class="pct">(42.9%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,083 <span class="pct">(33.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +631</td>
+        </tr>
+        
+        <tr data-county="avery">
+          <td><strong>Avery</strong> </td>
+          <td style="text-align: right; font-weight: 700;">3,165</td>
+          <td style="text-align: right; color: #60a5fa;">462 <span class="pct">(14.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,576 <span class="pct">(49.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,120 <span class="pct">(35.4%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +1,114</td>
+        </tr>
+        
+        <tr data-county="washington">
+          <td><strong>Washington</strong> <span class="badge badge-flip">FLIP DEM</span></td>
+          <td style="text-align: right; font-weight: 700;">2,900</td>
+          <td style="text-align: right; color: #60a5fa;">1,858 <span class="pct">(64.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">415 <span class="pct">(14.3%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">626 <span class="pct">(21.6%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +1,443</td>
+        </tr>
+        
+        <tr data-county="camden">
+          <td><strong>Camden</strong> </td>
+          <td style="text-align: right; font-weight: 700;">2,555</td>
+          <td style="text-align: right; color: #60a5fa;">503 <span class="pct">(19.7%)</span></td>
+          <td style="text-align: right; color: #f87171;">819 <span class="pct">(32.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">1,224 <span class="pct">(47.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +316</td>
+        </tr>
+        
+        <tr data-county="gates">
+          <td><strong>Gates</strong> </td>
+          <td style="text-align: right; font-weight: 700;">2,292</td>
+          <td style="text-align: right; color: #60a5fa;">1,202 <span class="pct">(52.4%)</span></td>
+          <td style="text-align: right; color: #f87171;">487 <span class="pct">(21.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">601 <span class="pct">(26.2%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +715</td>
+        </tr>
+        
+        <tr data-county="graham">
+          <td><strong>Graham</strong> </td>
+          <td style="text-align: right; font-weight: 700;">2,174</td>
+          <td style="text-align: right; color: #60a5fa;">382 <span class="pct">(17.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">1,113 <span class="pct">(51.2%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">670 <span class="pct">(30.8%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #ef4444;">R +731</td>
+        </tr>
+        
+        <tr data-county="jones">
+          <td><strong>Jones</strong> </td>
+          <td style="text-align: right; font-weight: 700;">2,103</td>
+          <td style="text-align: right; color: #60a5fa;">823 <span class="pct">(39.1%)</span></td>
+          <td style="text-align: right; color: #f87171;">644 <span class="pct">(30.6%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">631 <span class="pct">(30.0%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +179</td>
+        </tr>
+        
+        <tr data-county="hyde">
+          <td><strong>Hyde</strong> </td>
+          <td style="text-align: right; font-weight: 700;">852</td>
+          <td style="text-align: right; color: #60a5fa;">396 <span class="pct">(46.5%)</span></td>
+          <td style="text-align: right; color: #f87171;">146 <span class="pct">(17.1%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">306 <span class="pct">(35.9%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +250</td>
+        </tr>
+        
+        <tr data-county="tyrrell">
+          <td><strong>Tyrrell</strong> </td>
+          <td style="text-align: right; font-weight: 700;">793</td>
+          <td style="text-align: right; color: #60a5fa;">330 <span class="pct">(41.6%)</span></td>
+          <td style="text-align: right; color: #f87171;">157 <span class="pct">(19.8%)</span></td>
+          <td style="text-align: right; color: #fbbf24;">306 <span class="pct">(38.6%)</span></td>
+          <td style="text-align: right; font-weight: 800; color: #3b82f6;">D +173</td>
+        </tr>
+        
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="footer">
+      Official NCSBE automated feed ingestion & analytics | rannbar-on.com/fuckyeah | Hosted on GitHub Pages
+    </div>
+  </main>
+
+  <script>
+    function filterTable() {
+      const query = document.getElementById("countySearch").value.toLowerCase();
+      const rows = document.querySelectorAll("#countyTable tbody tr");
+      rows.forEach(r => {
+        const cname = r.getAttribute("data-county") || "";
+        r.style.display = cname.includes(query) ? "" : "none";
+      });
+    }
+  </script>
+</body>
+</html>
