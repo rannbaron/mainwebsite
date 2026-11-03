@@ -1,5 +1,37 @@
 [
   {
+    "id": "post_1793746120",
+    "type": "custom",
+    "category": "\ud83d\udce2 Our Posts",
+    "badge_color": "#1d9bf0",
+    "source": "NC Decision Desk Live",
+    "source_handle": "@NC_DecisionDesk",
+    "timestamp": "Just now",
+    "exact_time": "05:48 PM EST",
+    "created_at": "2026-11-03T17:48:40.638071",
+    "title": "\ud83d\udce2 30-MIN SOCIAL PULSE (05:48 PM EST)",
+    "content": "\ud83d\udea8 NC ELECTION PULSE (05:48 PM EST):\n\n2.83M+ votes in. Unaffiliated surge (35.2%) outpacing GOP (26.1%).\n\n\u26a1 Live Needle: Cooper +9.46%\n\ud83c\udfdb\ufe0f Supermajority: 96.2% BROKEN\n\n\ud83d\udcf1 Follow our phone-oriented continuous feed in real-time:\n\ud83d\udd17 https://rannbar-on.com/ncpoliticssocials\n\n#NCpol #NCSen #SwingState #VoteNC",
+    "metrics": [
+      {
+        "label": "Turnout",
+        "val": "2,828,131",
+        "color": "#f8fafc"
+      },
+      {
+        "label": "Needle Margin",
+        "val": "+9.46%",
+        "color": "#3b82f6"
+      },
+      {
+        "label": "House D Seats",
+        "val": "54.2",
+        "color": "#10b981"
+      }
+    ],
+    "action_link": "https://rannbar-on.com/ncpoliticssocials",
+    "action_text": "Live Feed \u27a1\ufe0f"
+  },
+  {
     "id": "post_live_needle_alert",
     "type": "needle_dial",
     "category": "\u26a1 Needle Dials",
