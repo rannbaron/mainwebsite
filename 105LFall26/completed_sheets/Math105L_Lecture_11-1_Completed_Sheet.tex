@@ -1,126 +1,377 @@
-\documentclass[10pt]{article}
-\usepackage[letterpaper, margin=0.42in, top=0.35in, bottom=0.35in]{geometry}
-\usepackage{amsmath,amssymb,amsthm}
+\documentclass[11pt]{article}
+\usepackage[letterpaper, margin=0.6in, top=0.45in, bottom=0.45in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage{fancyhdr}
 \usepackage{xcolor}
 \usepackage{tikz}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.18}
+\usetikzlibrary{calc,positioning}
+\usepackage{booktabs,array,tabularx}
 \usepackage{enumitem}
 \usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
 \usepackage{hyperref}
 
-\definecolor{chalkblue}{RGB}{0, 105, 185}
-\definecolor{chalkred}{RGB}{205, 35, 35}
-\definecolor{chalkpink}{RGB}{230, 90, 120}
-\definecolor{chalkcyan}{RGB}{15, 160, 190}
-\definecolor{chalkgreen}{RGB}{20, 130, 50}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=dukeBlue,
+  urlcolor=dukeBlue,
+  citecolor=dukeBlue
+}
+
+% Professional Color Palette
+\definecolor{dukeNavy}{RGB}{0, 45, 98}        % Duke Royal/Navy Blue
+\definecolor{dukeBlue}{RGB}{0, 83, 155}       % Secondary Blue
+\definecolor{accentTeal}{RGB}{15, 118, 110}   % Emerald/Teal
+\definecolor{accentRed}{RGB}{190, 24, 24}      % Crimson/Coral Red
+\definecolor{accentGreen}{RGB}{21, 128, 61}   % Forest Green
+\definecolor{accentAmber}{RGB}{180, 83, 9}    % Deep Amber/Gold
+\definecolor{boxBg}{RGB}{248, 250, 252}       % Crisp light background
+\definecolor{warnBg}{RGB}{254, 242, 242}      % Soft light red
+\definecolor{geomBg}{RGB}{240, 249, 255}      % Soft sky/ice blue
+\definecolor{refBg}{RGB}{245, 243, 255}       % Soft lavender/violet
+
+% Custom TColorBoxes
+\newtcolorbox{calloutbox}[2][]{
+  enhanced,
+  colback=boxBg,
+  colframe=dukeNavy,
+  arc=2mm,
+  boxrule=0.8pt,
+  leftrule=3.5pt,
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=dukeNavy,
+  title={#2},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={arc=1.2mm, boxrule=0pt},
+  top=2mm, bottom=1.8mm, left=3mm, right=3mm,
+  #1
+}
+
+\newtcolorbox{warnbox}[2][]{
+  enhanced,
+  colback=warnBg,
+  colframe=accentRed,
+  arc=2mm,
+  boxrule=0.8pt,
+  leftrule=3.5pt,
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=accentRed,
+  title={#2},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={arc=1.2mm, boxrule=0pt},
+  top=2mm, bottom=1.8mm, left=3mm, right=3mm,
+  #1
+}
+
+\newtcolorbox{geombox}[2][]{
+  enhanced,
+  colback=geomBg,
+  colframe=dukeBlue,
+  arc=2mm,
+  boxrule=0.85pt,
+  leftrule=3.8pt,
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=dukeBlue,
+  title={#2},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={arc=1.2mm, boxrule=0pt},
+  top=2.2mm, bottom=2mm, left=3mm, right=3mm,
+  #1
+}
+
+\newtcolorbox{refbox}[2][]{
+  enhanced,
+  colback=refBg,
+  colframe=accentTeal,
+  arc=2mm,
+  boxrule=0.8pt,
+  leftrule=3.5pt,
+  fonttitle=\bfseries\small,
+  coltitle=white,
+  colbacktitle=accentTeal,
+  title={#2},
+  attach boxed title to top left={yshift=-2mm, xshift=4mm},
+  boxed title style={arc=1.2mm, boxrule=0pt},
+  top=2.2mm, bottom=2mm, left=3mm, right=3mm,
+  #1
+}
 
 \pagestyle{fancy}
 \fancyhf{}
 \renewcommand{\headrulewidth}{0pt}
-\renewcommand{\footrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\fancyfoot[C]{\footnotesize \textcolor{gray}{Math 105L: Laboratory Calculus I \quad $\vert$ \quad Lecture 11-1 Completed Sheet \quad $\vert$ \quad Page \thepage\ of 3}}
 
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{2pt}
+\setlength{\parskip}{1.8pt}
 
 \begin{document}
 
+% ==============================================================================
+% PAGE 1: HEADER, CORE THEORETICAL FOUNDATION & FIRST DERIVATIVE ANALYSIS
+% ==============================================================================
 \begin{center}
-{\Large \textbf{Math 105L: Using First and Second Derivatives II (Lecture 11-1)}}\\[1pt]
-{\large Completed Board Lecture \& Discussion Sheet \quad $\vert$ \quad Monday, November 2, 2026}
+  {\fontsize{15}{18}\selectfont \textbf{\textcolor{dukeNavy}{Math 105L: Using First and Second Derivatives II}}}\\[2pt]
+  {\normalsize \textbf{Lecture 11-1 Completed Board Lecture \& Discussion Sheet}}\\[1pt]
+  {\footnotesize \textcolor{gray!80!black}{Duke University \quad $\vert$ \quad Department of Mathematics \quad $\vert$ \quad Monday, November 2, 2026}}
 \end{center}
-\vspace{-2pt}
-\hrule
+\vspace{-7pt}
+{\color{dukeNavy}\hrule height 1pt}
 \vspace{4pt}
 
-\textbf{\large 1. Core Principles: Local Extrema vs. Inflection Points}
+% SECTION 1: CORE THEORETICAL PRINCIPLES
+\textbf{\normalsize \textcolor{dukeNavy}{1. Theoretical Foundation: Extrema vs. Inflection Points}}
+\vspace{1pt}
+
+\begin{calloutbox}{First Derivative Test vs. Points of Inflection}
 \begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=1pt]
-  \item \textbf{Local Extrema (First Derivative Test)}: Let $a$ be in domain of continuous $f$. If $f'(x)$ changes sign at $a$, then $a$ is a local extremum (+ to $-$ is a \textcolor{chalkblue}{\textbf{local max}}; $-$ to + is a \textcolor{chalkblue}{\textbf{local min}}). A critical point ($f'=0$ or undefined) is \textit{necessary} but \textit{not sufficient}.
-  \item \textbf{Points of Inflection}: A point $(c, f(c))$ is an \textcolor{chalkred}{\textbf{inflection point}} if $f$ is continuous and the \textbf{concavity changes sign} across $c$. The condition $f''(c) = 0$ (or undefined) is a candidate requirement, but concavity must strictly alternate ($f''$ changes sign).
-  \item \textbf{Critical Warning (Common Exam Pitfall)}: Setting $f''(x) = 0$ does \textbf{NOT} find local extrema! Local extrema occur where $f'(x) = 0$ (or undefined) and $f'$ changes sign. The second derivative test classifies an \textit{already identified} critical point ($f'(a)=0$) by checking the sign of $f''(a)$.
+  \item \textbf{Local Extrema (First Derivative Test)}: Let $a$ be in the interior of the domain of continuous $f$. If $f'(x)$ changes sign across $a$, then $(a, f(a))$ is a local extremum. Specifically, a transition from positive to negative ($+\to-$) yields a \textcolor{dukeBlue}{\textbf{local maximum}}, while negative to positive ($-\to+$) yields a \textcolor{dukeBlue}{\textbf{local minimum}}. A critical point ($f'=0$ or undefined) is a \textit{candidate}, but not sufficient on its own.
+  \item \textbf{Points of Inflection}: A point $(c, f(c))$ on the curve is an \textcolor{accentRed}{\textbf{inflection point}} if $f$ is continuous at $c$ and the \textbf{concavity changes sign} across $c$ ($f''$ transitions $+\to-$ or $-\to+$). The algebraic condition $f''(c) = 0$ (or undefined) identifies \textit{candidates}, but concavity must strictly alternate across the point.
 \end{itemize}
+\end{calloutbox}
 
-\vspace{-2pt}
+\vspace{1pt}
+\begin{warnbox}{Common Exam Fallacy: Setting $f''(x) = 0$ Does NOT Find Extrema!}
+Setting $f''(x) = 0$ identifies candidate inflection points, \textbf{not} local extrema. Local extrema occur exclusively at critical points ($f'=0$ or undefined) where $f'$ changes sign. The \textbf{Second Derivative Test} evaluates the sign of $f''(a)$ at an \textit{already known} critical point where $f'(a) = 0$ ($f''(a) > 0 \implies$ local min; $f''(a) < 0 \implies$ local max; $f''(a) = 0 \implies$ inconclusive).
+\end{warnbox}
+
+\vspace{2pt}
+\textbf{\small Comparative Benchmark: Why Candidates Must Be Tested for Sign Changes}
+\vspace{1pt}
+
 \begin{center}
+\renewcommand{\arraystretch}{1.08}
 \footnotesize
-\begin{tabular}{|c|c|c|c|l|}
-\hline
-\textbf{Function} & $f'(x)$ & $f''(x)$ & \textbf{Candidate at $x=0$} & \textbf{True Classification at $x=0$} \\ \hline
-$y = x^3$ & $3x^2 \ge 0$ & $6x$ & $f'(0)=0, f''(0)=0$ & \textbf{Inflection Point} ($f''$ changes $-$ to $+$); \textit{Neither} max nor min. \\ \hline
-$y = x^4$ & $4x^3$ & $12x^2 \ge 0$ & $f'(0)=0, f''(0)=0$ & \textbf{Local Minimum} ($f'$ changes $-$ to $+$); \textit{NOT} an inflection point ($f'' \ge 0$). \\ \hline
-$y = -x^4$ & $-4x^3$ & $-12x^2 \le 0$ & $f'(0)=0, f''(0)=0$ & \textbf{Local Maximum} ($f'$ changes $+$ to $-$); \textit{NOT} an inflection point ($f'' \le 0$). \\ \hline
-\end{tabular}
+\begin{tabularx}{\textwidth}{@{} l c c c X @{}}
+\toprule
+\textbf{Function} & $f'(x)$ & $f''(x)$ & \textbf{At $x=0$} & \textbf{Geometric Classification at $x=0$} \\
+\midrule
+$y = x^3$  & $3x^2 \ge 0$ & $6x$       & $f'(0)=0, f''(0)=0$ & \textcolor{accentTeal}{\textbf{Inflection Point}} ($f''$ changes sign $-\to+$). Neither local max nor min. \\
+$y = x^4$  & $4x^3$       & $12x^2 \ge 0$ & $f'(0)=0, f''(0)=0$ & \textcolor{dukeBlue}{\textbf{Local Minimum}} ($f'$ changes $-\to+$). \textit{NOT} an inflection point ($f'' \ge 0$). \\
+$y = -x^4$ & $-4x^3$      & $-12x^2 \le 0$ & $f'(0)=0, f''(0)=0$ & \textcolor{accentRed}{\textbf{Local Maximum}} ($f'$ changes $+\to-$). \textit{NOT} an inflection point ($f'' \le 0$). \\
+\bottomrule
+\end{tabularx}
 \end{center}
 
-\vspace{1pt}
-\textbf{\large 2. Case Study: The High-Degree Polynomial $f(x) = (x^2 - 4)^7$}
+\vspace{2pt}
+% SECTION 2: CASE STUDY - PART I (ROOTS & FIRST DERIVATIVE)
+\textbf{\normalsize \textcolor{dukeNavy}{2. Case Study: High-Degree Polynomial $f(x) = (x^2 - 4)^7$}}
 \vspace{1pt}
 
-\textbf{Algebraic Properties}: Degree $2 \times 7 = 14$ (even degree, positive leading coefficient $\implies \lim_{x \to \pm\infty} f(x) = +\infty$). Roots at $x = \pm 2$.
-
-\textbf{First Derivative \& Critical Points}:
-$f'(x) = 7(x^2 - 4)^6 \cdot (2x) = 14x(x^2 - 4)^6$. Setting $f'(x) = 0 \implies 14x = 0$ or $(x^2 - 4)^6 = 0 \implies \mathbf{x = 0, \pm 2}$.
-Since $(x^2 - 4)^6 \ge 0$ for all $x$, the sign of $f'(x)$ is governed strictly by $14x$:
-\begin{itemize}[leftmargin=1.2em, itemsep=0.5pt, topsep=1pt]
-  \item $x < 0 \implies f'(x) < 0$ (\textbf{decreasing}); \quad $x > 0 \implies f'(x) > 0$ (\textbf{increasing}).
-  \item At $x = 0$: $f'$ changes from $-$ to $+$ $\implies$ \textbf{Local Minimum} at $(0, -16384)$ where $(-4)^7 = -16384$.
-  \item At $x = \pm 2$: $f'$ does \textbf{not} change sign ($f' \le 0$ on both sides of $-2$; $f' \ge 0$ on both sides of $2$) $\implies$ \textbf{Neither max nor min}!
+\textbf{Global Algebraic Structure}:
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=1pt]
+  \item \textbf{Degree \& Parity}: Degree $2 \times 7 = 14$ (even degree, positive leading coefficient $\implies \lim_{x \to \pm\infty} f(x) = +\infty$). Even function ($f(-x) = f(x)$), reflecting bilateral symmetry across the $y$-axis.
+  \item \textbf{Roots ($x$-intercepts)}: Setting $f(x) = 0 \implies (x^2 - 4)^7 = 0 \implies x^2 - 4 = 0 \implies \mathbf{x = \pm 2}$.
 \end{itemize}
 
-\textbf{Second Derivative \& The Factoring Strategy}:
-Applying product rule and chain rule to $f'(x) = 14x (x^2 - 4)^6$:
+\textbf{First Derivative \& Critical Point Classification}:
+Applying the Generalized Power Rule (Chain Rule):
 \[
-f''(x) = [14](x^2 - 4)^6 + 14x \cdot \left[6(x^2 - 4)^5 \cdot (2x)\right] = 14(x^2 - 4)^5 \left[ (x^2 - 4) + 12x^2 \right] = \mathbf{14(x^2 - 4)^5 (13x^2 - 4)}
+f'(x) = 7(x^2 - 4)^6 \cdot \frac{d}{dx}[x^2 - 4] = 7(x^2 - 4)^6 \cdot (2x) = \mathbf{14x(x^2 - 4)^6}
 \]
-Setting $f''(x) = 0$ yields 4 candidate inflection points:
-$x^2 - 4 = 0 \implies x = \pm 2$ \quad and \quad $13x^2 - 4 = 0 \implies x^2 = \frac{4}{13} \implies x = \pm \frac{2}{\sqrt{13}} \approx \pm 0.5547$.
+Setting $f'(x) = 0$ yields critical points at $14x = 0 \implies \mathbf{x = 0}$ or $(x^2 - 4)^6 = 0 \implies \mathbf{x = \pm 2}$.
 
-\textbf{Non-Calculator Sign Analysis via Parabolas}:
-$(x^2 - 4)^5$ has the same sign as $x^2 - 4$ (negative inside $(-2, 2)$, positive outside).
-$13x^2 - 4$ is a parabola opening up (negative inside $(-\frac{2}{\sqrt{13}}, \frac{2}{\sqrt{13}})$, positive outside).
+\textbf{First Derivative Sign Mechanics}:
+Because $(x^2 - 4)^6$ has an even exponent ($6$), it is \textbf{strictly non-negative} for all real numbers ($(x^2 - 4)^6 \ge 0$). Consequently, the sign of $f'(x)$ is governed entirely by the linear factor $14x$:
+\begin{itemize}[leftmargin=1.2em, itemsep=1pt, topsep=1pt]
+  \item On $(-\infty, 0)$: $x < 0 \implies f'(x) < 0$, so $f(x)$ is \textbf{strictly decreasing}.
+  \item On $(0, \infty)$: $x > 0 \implies f'(x) > 0$, so $f(x)$ is \textbf{strictly increasing}.
+  \item \textbf{At $x = 0$}: $f'$ transitions from negative to positive ($-\to+$) $\implies$ \textcolor{accentGreen}{\textbf{Strict Local Minimum}} at $(0, (-4)^7) = (0, -16384)$.
+  \item \textbf{At $x = \pm 2$}: $f'$ attains zero but does \textbf{not} change sign ($f' \le 0$ on $(-\infty, 0]$ and $f' \ge 0$ on $[0, \infty)$) $\implies$ \textbf{Horizontal shelf points (Neither local max nor min)}!
+\end{itemize}
 
-\vspace{-4pt}
+\clearpage
+
+% ==============================================================================
+% PAGE 2: SECOND DERIVATIVE & THE NON-CALCULATOR GLOBAL VIEW
+% ==============================================================================
+\textbf{\normalsize \textcolor{dukeNavy}{2. Case Study: High-Degree Polynomial (Continued)}}
+\vspace{1pt}
+
+\textbf{Second Derivative Derivation via Product \& Chain Rules}:
+Differentiating $f'(x) = 14x \cdot (x^2 - 4)^6$:
+\begin{align*}
+f''(x) &= \frac{d}{dx}[14x] \cdot (x^2 - 4)^6 + 14x \cdot \frac{d}{dx}\left[(x^2 - 4)^6\right] \\
+       &= 14(x^2 - 4)^6 + 14x \cdot \left[6(x^2 - 4)^5 \cdot (2x)\right] = 14(x^2 - 4)^6 + 168x^2(x^2 - 4)^5 \\
+       &= 14(x^2 - 4)^5 \left[ (x^2 - 4) + 12x^2 \right] = \mathbf{14(x^2 - 4)^5 (13x^2 - 4)}
+\end{align*}
+\textbf{The Factoring Rule}: Always factor out the greatest common factor $14(x^2 - 4)^5$. Expanding $(x^2 - 4)^6$ would lead to an unmanageable degree-13 polynomial!
+
+Setting $f''(x) = 0$ yields two sets of candidate inflection boundaries:
+\[
+(x^2 - 4)^5 = 0 \implies \mathbf{x = \pm 2}, \qquad \text{and} \qquad 13x^2 - 4 = 0 \implies x^2 = \frac{4}{13} \implies \mathbf{x = \pm \frac{2}{\sqrt{13}}}.
+\]
+
+\textbf{Why $\mathbf{\frac{2}{\sqrt{13}} < 2}$ (Strictly Without Calculators)}:
+To order our candidates along the real line without decimal approximations, observe that:
+\[
+13 > 4 \implies \sqrt{13} > \sqrt{4} = 2 \implies \frac{2}{\sqrt{13}} < \frac{2}{2} = 1 < 2.
+\]
+Because $\sqrt{13} > 2$, dividing $2$ by a number strictly greater than $2$ yields a value strictly less than $1$, which is strictly less than $2$. By bilateral symmetry, $-\frac{2}{\sqrt{13}}$ lies strictly between $-2$ and $0$.
+Thus, the candidate roots are strictly ordered along the real line as:
+\[
+\mathbf{-2 < -\frac{2}{\sqrt{13}} < \frac{2}{\sqrt{13}} < 2}.
+\]
+
+\vspace{3pt}
+% BIG BOX: THE NON-CALCULATOR GLOBAL VIEW & PARABOLA GEOMETRY
+\begin{geombox}{The Non-Calculator Global View: Signs via Parabola Geometry}
+\textbf{The Primary Course Objective}: In Math 105L, our goal is to execute complete curve sketching and concavity analysis \textbf{entirely without calculators}. Rather than testing arbitrary test points, we adopt a \textbf{global geometric view} by observing the shape and orientation of each factor across the whole real line:
+\begin{itemize}[leftmargin=1.2em, itemsep=2pt, topsep=1.5pt]
+  \item \textbf{Factored Second Derivative}: $f''(x) = 14 \cdot (x^2 - 4)^5 \cdot (13x^2 - 4)$ is the product of a positive scalar ($14 > 0$) and \textbf{two quadratic expressions}:
+  \begin{enumerate}[leftmargin=1.3em, itemsep=1.5pt]
+    \item \textbf{Factor 1}: $(x^2 - 4)^5$. The base is the parabola $y = x^2 - 4$. Because its leading coefficient is positive ($+1 > 0$), it is an \textbf{upward-opening parabola (tails pointing up)} with roots at $x = \pm 2$. Geometrically, any upward-opening parabola is \textbf{positive outside its roots} ($|x| > 2$) and \textbf{negative between its roots} ($-2 < x < 2$). Because $5$ is an odd exponent, $(x^2 - 4)^5$ preserves this exact sign signature everywhere!
+    \item \textbf{Factor 2}: $(13x^2 - 4)$. This is also an \textbf{upward-opening parabola (tails pointing up)}, having leading coefficient $13 > 0$ and roots at $x = \pm \frac{2}{\sqrt{13}}$. By identical parabola geometry, it is \textbf{positive outside its roots} ($|x| > \frac{2}{\sqrt{13}}$) and \textbf{negative between its roots} ($|x| < \frac{2}{\sqrt{13}}$).
+  \end{enumerate}
+  \item \textbf{The Global Multiplying Rule}: Because \textbf{both parabolas have their tails pointing up}, both factors are positive as $x \to \pm\infty$ and dip negative precisely between their roots. We determine the sign of $f''(x)$ across all five intervals by pure geometry with \textbf{zero calculator arithmetic}!
+\end{itemize}
+\end{geombox}
+
+\clearpage
+
+% ==============================================================================
+% PAGE 3: NUMBER LINES, PREREQUISITE PORTAL & ROADMAP
+% ==============================================================================
+% SECTION 3: ALIGNED COMPARATIVE NUMBER LINES
+\textbf{\normalsize \textcolor{dukeNavy}{3. Aligned Comparative Number Lines: $f(x)$, $f'(x)$, and $f''(x)$}}
+\vspace{1pt}
+
+The diagram below connects key $x$-coordinates vertically across all three functions. All points are rendered as completely round circular markers, and dashed cords illustrate the geometric alignment.
+
 \begin{center}
-\begin{tikzpicture}[xscale=1.55, yscale=0.72]
-  % f(x) number line
-  \draw[thick, ->] (-3.1, 2.0) -- (3.1, 2.0) node[right] {\footnotesize $f(x)$};
-  \draw[thick] (-2, 1.9) -- (-2, 2.1) node[below=1pt] {\scriptsize $-2$};
-  \draw[thick] (2, 1.9) -- (2, 2.1) node[below=1pt] {\scriptsize $2$};
-  \node at (-2.6, 2.25) {\textcolor{chalkblue}{\textbf{+}}};
-  \node at (0, 2.25) {\textcolor{chalkblue}{\textbf{$-$}}};
-  \node at (2.6, 2.25) {\textcolor{chalkblue}{\textbf{+}}};
+\begin{tikzpicture}[xscale=2.2, yscale=0.95, >=stealth]
+  % Vertical alignment dashed guide cords connecting key x-values across all three number lines
+  \foreach \x in {-2.0, -0.5547, 0.0, 0.5547, 2.0} {
+    \draw[gray!30, dashed, line width=0.8pt] (\x, -0.45) -- (\x, 3.55);
+  }
 
-  % f'(x) number line
-  \draw[thick, ->] (-3.1, 1.0) -- (3.1, 1.0) node[right] {\footnotesize $f'(x)$};
-  \draw[thick] (-2, 0.9) -- (-2, 1.1) node[below=1pt] {\scriptsize $-2$};
-  \draw[thick] (0, 0.9) -- (0, 1.1) node[below=1pt] {\scriptsize $0$};
-  \draw[thick] (2, 0.9) -- (2, 1.1) node[below=1pt] {\scriptsize $2$};
-  \node at (-2.6, 1.25) {\textcolor{chalkred}{\textbf{$-$}}};
-  \node at (-1.0, 1.25) {\textcolor{chalkred}{\textbf{$-$}}};
-  \node at (1.0, 1.25) {\textcolor{chalkgreen}{\textbf{+}}};
-  \node at (2.6, 1.25) {\textcolor{chalkgreen}{\textbf{+}}};
-  \node at (0, 0.5) {\tiny \textbf{Local Min}};
+  % ===================== AXIS 1: f(x) =====================
+  \node[left=10pt, font=\bfseries\small, color=dukeNavy] at (-3.2, 3.2) {$\boldsymbol{f(x)}$};
+  \draw[<->, line width=1.1pt, dukeNavy] (-3.2, 3.2) -- (3.2, 3.2);
+  
+  % Roots at x = \pm 2 (Completely round circular nodes)
+  \node[circle, fill=dukeNavy, inner sep=0pt, minimum size=6pt] at (-2, 3.2) {};
+  \node[below=3pt, font=\bfseries\small] at (-2, 3.2) {$-2$};
+  \node[below=14pt, font=\scriptsize, color=dukeBlue] at (-2, 3.2) {Root};
 
-  % f''(x) number line
-  \draw[thick, ->] (-3.1, -0.1) -- (3.1, -0.1) node[right] {\footnotesize $f''(x)$};
-  \draw[thick] (-2, -0.2) -- (-2, 0.0) node[below=1pt] {\scriptsize $-2$};
-  \draw[thick] (-0.75, -0.2) -- (-0.75, 0.0) node[below=1pt] {\tiny $-\frac{2}{\sqrt{13}}$};
-  \draw[thick] (0.75, -0.2) -- (0.75, 0.0) node[below=1pt] {\tiny $\frac{2}{\sqrt{13}}$};
-  \draw[thick] (2, -0.2) -- (2, 0.0) node[below=1pt] {\scriptsize $2$};
-  \node at (-2.6, 0.15) {\textcolor{chalkblue}{\textbf{+}}};
-  \node at (-1.4, 0.15) {\textcolor{chalkred}{\textbf{$-$}}};
-  \node at (0, 0.15) {\textcolor{chalkblue}{\textbf{+}}};
-  \node at (1.4, 0.15) {\textcolor{chalkred}{\textbf{$-$}}};
-  \node at (2.6, 0.15) {\textcolor{chalkblue}{\textbf{+}}};
-  \node at (-2, -0.55) {\tiny \textbf{Inflection}};
-  \node at (-0.75, -0.55) {\tiny \textbf{Inflection}};
-  \node at (0.75, -0.55) {\tiny \textbf{Inflection}};
-  \node at (2, -0.55) {\tiny \textbf{Inflection}};
+  \node[circle, fill=dukeNavy, inner sep=0pt, minimum size=6pt] at (2, 3.2) {};
+  \node[below=3pt, font=\bfseries\small] at (2, 3.2) {$2$};
+  \node[below=14pt, font=\scriptsize, color=dukeBlue] at (2, 3.2) {Root};
+
+  % Signs of f(x)
+  \node[font=\bfseries\normalsize, color=accentGreen] at (-2.6, 3.45) {$+$};
+  \node[font=\bfseries\normalsize, color=accentRed] at (0, 3.45) {$-$};
+  \node[font=\bfseries\normalsize, color=accentGreen] at (2.6, 3.45) {$+$};
+
+  % ===================== AXIS 2: f'(x) =====================
+  \node[left=10pt, font=\bfseries\small, color=dukeNavy] at (-3.2, 1.6) {$\boldsymbol{f'(x)}$};
+  \draw[<->, line width=1.1pt, dukeNavy] (-3.2, 1.6) -- (3.2, 1.6);
+
+  % Critical point at -2 (Completely round circular node)
+  \node[circle, fill=white, draw=dukeNavy, line width=1.2pt, inner sep=0pt, minimum size=6pt] at (-2, 1.6) {};
+  \node[below=3pt, font=\bfseries\small] at (-2, 1.6) {$-2$};
+  \node[below=14pt, font=\scriptsize, color=gray!70!black] at (-2, 1.6) {Crit. Pt};
+
+  % Local Min at 0 (Completely round circular node)
+  \node[circle, fill=accentGreen, inner sep=0pt, minimum size=6.5pt] at (0, 1.6) {};
+  \node[below=3pt, font=\bfseries\small] at (0, 1.6) {$0$};
+  \node[below=14pt, font=\bfseries\scriptsize, color=accentGreen] at (0, 1.6) {Local Min};
+
+  % Critical point at 2 (Completely round circular node)
+  \node[circle, fill=white, draw=dukeNavy, line width=1.2pt, inner sep=0pt, minimum size=6pt] at (2, 1.6) {};
+  \node[below=3pt, font=\bfseries\small] at (2, 1.6) {$2$};
+  \node[below=14pt, font=\scriptsize, color=gray!70!black] at (2, 1.6) {Crit. Pt};
+
+  % Signs & Direction arrows for f'(x)
+  \node[font=\bfseries\small, color=accentRed] at (-2.6, 1.85) {$-$};
+  \node[font=\tiny, color=accentRed] at (-2.6, 1.25) {$\searrow$ \textit{dec}};
+  \node[font=\bfseries\small, color=accentRed] at (-1.0, 1.85) {$-$};
+  \node[font=\tiny, color=accentRed] at (-1.0, 1.25) {$\searrow$ \textit{dec}};
+
+  \node[font=\bfseries\small, color=accentGreen] at (1.0, 1.85) {$+$};
+  \node[font=\tiny, color=accentGreen] at (1.0, 1.25) {$\nearrow$ \textit{inc}};
+  \node[font=\bfseries\small, color=accentGreen] at (2.6, 1.85) {$+$};
+  \node[font=\tiny, color=accentGreen] at (2.6, 1.25) {$\nearrow$ \textit{inc}};
+
+  % ===================== AXIS 3: f''(x) =====================
+  \node[left=10pt, font=\bfseries\small, color=dukeNavy] at (-3.2, 0.0) {$\boldsymbol{f''(x)}$};
+  \draw[<->, line width=1.1pt, dukeNavy] (-3.2, 0.0) -- (3.2, 0.0);
+
+  % Candidate inflection points (Completely round circular nodes)
+  \node[circle, fill=accentAmber, inner sep=0pt, minimum size=6pt] at (-2, 0.0) {};
+  \node[below=3pt, font=\bfseries\small] at (-2, 0.0) {$-2$};
+  \node[below=22pt, font=\scriptsize, color=accentAmber] at (-2, 0.0) {Candidate};
+
+  \node[circle, fill=accentAmber, inner sep=0pt, minimum size=6pt] at (-0.5547, 0.0) {};
+  \node[below=3pt, font=\bfseries\small] at (-0.5547, 0.0) {$-\frac{2}{\sqrt{13}}$};
+  \node[below=22pt, font=\scriptsize, color=accentAmber] at (-0.5547, 0.0) {Candidate};
+
+  \node[circle, fill=accentAmber, inner sep=0pt, minimum size=6pt] at (0.5547, 0.0) {};
+  \node[below=3pt, font=\bfseries\small] at (0.5547, 0.0) {$\frac{2}{\sqrt{13}}$};
+  \node[below=22pt, font=\scriptsize, color=accentAmber] at (0.5547, 0.0) {Candidate};
+
+  \node[circle, fill=accentAmber, inner sep=0pt, minimum size=6pt] at (2, 0.0) {};
+  \node[below=3pt, font=\bfseries\small] at (2, 0.0) {$2$};
+  \node[below=22pt, font=\scriptsize, color=accentAmber] at (2, 0.0) {Candidate};
 \end{tikzpicture}
+
+\vspace{5pt}
+{\footnotesize \textcolor{gray!80!black}{\textit{Note: Candidate boundaries established from $f''(x) = 0$. Interval sign testing across the 5 open intervals is assigned for Homework using Parabola Geometry (see Section 5 below).}}}
 \end{center}
 
-\vspace{-4pt}
-\textbf{Conclusion}: All four candidate roots ($x = -2, -\frac{2}{\sqrt{13}}, \frac{2}{\sqrt{13}}, 2$) exhibit sign changes in $f''(x)$. Therefore, \textbf{all four points are true inflection points}!
+\vspace{1pt}
+% SECTION 4: PREREQUISITE PRIOR WORKSHEETS & COURSEWARE PORTAL
+\textbf{\normalsize \textcolor{dukeNavy}{4. Prerequisite Prior Worksheets \& Resource Portals}}
+\vspace{1pt}
+
+\begin{refbox}{Connected Course Materials \& Submission Portals}
+To solidify the algebraic foundations, leading behavior, and curve analysis used today, review these prior worksheets:
+\vspace{2pt}
+
+\begin{itemize}[leftmargin=1.2em, itemsep=3.5pt, topsep=1pt]
+  \item \textbf{\normalsize Worksheet 2-1: Power Functions, Monomials, \& Polynomials (Week 2)}
+  \begin{itemize}[leftmargin=1.2em, itemsep=1.5pt, topsep=0.5pt]
+    \item \textbf{Why It Connects}: Dominant terms as $x \to \pm\infty$, even vs. odd polynomial parity, root multiplicity, and sign preservation in power factors (e.g., $(x^2 - 4)^6 \ge 0$ vs. $(x^2 - 4)^5$).
+    \item \textbf{Courseware Links}: 
+      \href{https://rannbar-on.com/105LFall26/completed_sheets/Math105L_Lecture_2-1_Completed_Sheet.pdf}{\textbf{Completed Summary (PDF)}} $\vert$
+      \href{https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=37fe672c-6178-4cc8-b8ce-b4a901320352}{\textbf{Panopto Video $\nearrow$}} $\vert$
+      \href{https://rannbar-on.com/duke/classworksheets105Lpdfs/2-1.pdf}{\textbf{Original Worksheet (PDF)}} $\vert$
+      \href{https://www.gradescope.com/courses/1318300/assignments/8177952}{\textbf{Gradescope Sub 1}} $\vert$
+      \href{https://www.gradescope.com/courses/1318300/assignments/8617938}{\textbf{Gradescope Resub}}
+  \end{itemize}
+
+  \item \textbf{\normalsize Worksheet 10-3: Using First and Second Derivatives I (Week 10)}
+  \begin{itemize}[leftmargin=1.2em, itemsep=1.5pt, topsep=0.5pt]
+    \item \textbf{Why It Connects}: Establishing critical points, classifying extrema via the First Derivative Test, and identifying candidates for inflection points.
+    \item \textbf{Courseware Links}: 
+      \href{https://rannbar-on.com/105LFall26/completed_sheets/Math105L_Lecture_10-3_Completed_Sheet.pdf}{\textbf{Completed Summary (PDF)}} $\vert$
+      \href{https://duke.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=a707feea-9f08-49a0-8bb7-b4a901306b01}{\textbf{Panopto Video $\nearrow$}} $\vert$
+      \href{https://rannbar-on.com/duke/classworksheets105Lpdfs/10-3.pdf}{\textbf{Original Worksheet (PDF)}} $\vert$
+      \href{https://www.gradescope.com/courses/1318300/assignments/8177894}{\textbf{Gradescope Sub 1}} $\vert$
+      \href{https://www.gradescope.com/courses/1318300/assignments/8177925}{\textbf{Gradescope Resub}}
+  \end{itemize}
+\end{itemize}
+\end{refbox}
+
+\vspace{3pt}
+% SECTION 5: KEY TAKEAWAYS & HOMEWORK
+\textbf{\normalsize \textcolor{dukeNavy}{5. Key Conceptual Takeaways \& Homework Assignment}}
+\vspace{1pt}
+
+\begin{calloutbox}{Executive Takeaways \& Practice for Homework}
+\begin{itemize}[leftmargin=1.2em, itemsep=2pt, topsep=1pt]
+  \item \textbf{Critical Points vs. Extrema}: $f'(x) = 14x(x^2 - 4)^6$ has three critical points ($x = 0, \pm 2$). Only $x = 0$ is a true extremum (local minimum) because $f'$ changes sign. At $x = \pm 2$, $f'$ does not change sign, producing horizontal shelf/terrace points.
+  \item \textbf{The Factoring Rule}: When computing higher derivatives of composite functions, always factor out the lowest power of the repeated factor ($14(x^2 - 4)^5$). Never expand!
+  \item \textbf{Candidates for Inflection}: Setting $f''(x) = 0$ produces four candidates: $x = \pm 2$ and $x = \pm \frac{2}{\sqrt{13}}$.
+  \item \textbf{Homework Next Steps}: For homework, apply the Parabola Geometry rule across the five open intervals:
+  \[
+  (-\infty, -2), \quad \left(-2, -\frac{2}{\sqrt{13}}\right), \quad \left(-\frac{2}{\sqrt{13}}, \frac{2}{\sqrt{13}}\right), \quad \left(\frac{2}{\sqrt{13}}, 2\right), \quad (2, \infty)
+  \]
+  to prove that concavity alternates across all four candidates and complete the global curve sketch of $f(x)$.
+\end{itemize}
+\end{calloutbox}
 
 \end{document}
