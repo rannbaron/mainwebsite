@@ -7,3 +7,7 @@
   - NC Trivia Flashcards: `~/src/website/nctrivialflash/`
   - Math 105L Teaching: `~/Documents/math/teaching/105L/Fall26/`
 - **Output Protocol**: All scripts and generators must output exclusively within their designated project target directories.
+
+## Task Priority Dashboard Notification Protocol
+- **Strict Email Destination**: ALL task dashboard notifications, registration alerts, admin approval requests, task queues, and 2FA dispatches MUST go exclusively to `rann@rannbar-on.com`.
+- **No rb6 Destination**: Never send, CC, or dispatch any dashboard notifications or alerts to `rb6` or `rb6@duke.edu`.
