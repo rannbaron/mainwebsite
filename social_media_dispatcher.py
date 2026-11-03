@@ -267,6 +267,25 @@ def dispatch_race_call_socials(call_record):
         "webhook": post_to_webhook(call_record, post_text, creds)
     }
 
+    # Auto-publish to public continuous feed (rannbar-on.com/ncpoliticssocials) WITHOUT APPROVAL
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        import ncpoliticssocials_updater
+        ncpoliticssocials_updater.post_to_feed(
+            title=f"🚨 RACE CALL: {call_record.get('race_name', 'Race')}",
+            content=post_text,
+            category="🚨 Race Calls",
+            metrics=[
+                {"label": "Winner", "val": f"{call_record.get('winner')} ({call_record.get('party', '')[0] if call_record.get('party') else ''})", "color": "#3b82f6" if call_record.get('party', '').lower() == 'democrat' else "#ef4444"},
+                {"label": "Win Prob", "val": f"{call_record.get('win_prob_pct', '99.5')}%", "color": "#10b981"},
+                {"label": "Margin", "val": call_record.get('proj_margin_str', ''), "color": "#3b82f6"}
+            ],
+            action_link="https://rannbar-on.com/needle",
+            action_text="Live Needle Dial ➡️"
+        )
+    except Exception as e_feed:
+        print(f"[Social Feed] Auto-post notice: {e_feed}")
+
     log_social_call(call_record, post_text, results)
     return results
 

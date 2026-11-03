@@ -1,0 +1,290 @@
+[
+  {
+    "id": "post_live_needle_alert",
+    "type": "needle_dial",
+    "category": "\u26a1 Needle Dials",
+    "badge_color": "#3b82f6",
+    "source": "Bayesian Needle Engine",
+    "source_handle": "@NC_DecisionDesk",
+    "timestamp": "Just now",
+    "exact_time": "04:47 PM EST",
+    "created_at": "2026-11-03T16:47:39.852695",
+    "title": "US SENATE NEEDLE: Cooper Advantage Expands to +9.5%",
+    "content": "\u26a1 Real-time Bayesian 3-mode decomposition shows Roy Cooper (D) commanding a +9.46 pp projected margin (54.73% Dem vs 45.27% Rep). Win probability stands at 99.5% [Safe D]. Substantial independent crossover in Cabarrus and Union counties continues to outpace 2022 midterm baselines.",
+    "metrics": [
+      {
+        "label": "Proj Margin",
+        "val": "DEM +9.5%",
+        "color": "#3b82f6"
+      },
+      {
+        "label": "Win Prob",
+        "val": "99.5%",
+        "color": "#10b981"
+      },
+      {
+        "label": "Model Rating",
+        "val": "Safe D",
+        "color": "#3b82f6"
+      }
+    ],
+    "action_link": "https://rannbar-on.com/needle",
+    "action_text": "Live Needle Dial \u27a1\ufe0f"
+  },
+  {
+    "id": "post_house_supermajority",
+    "type": "needle_dial",
+    "category": "\u26a1 Needle Dials",
+    "badge_color": "#10b981",
+    "source": "Legislative Decision Desk",
+    "source_handle": "@NC_DecisionDesk",
+    "timestamp": "4m ago",
+    "exact_time": "04:36 PM EST",
+    "created_at": "2026-11-03T16:36:00",
+    "title": "NC HOUSE SUPERMAJORITY: 96.2% Confidence Broken",
+    "content": "\ud83c\udfdb\ufe0f The live legislative needle estimates Democrats will capture 54.2 seats in the North Carolina House of Representatives (95% CI: [48, 61] seats). With the threshold for breaking the supermajority set at 49 seats, statistical confidence of breaking the Republican supermajority is modeled at 96.2%.",
+    "metrics": [
+      {
+        "label": "Exp D Seats",
+        "val": "54.2 / 120",
+        "color": "#3b82f6"
+      },
+      {
+        "label": "Break Supermajority",
+        "val": "96.2%",
+        "color": "#10b981"
+      },
+      {
+        "label": "Threshold",
+        "val": "49 Seats",
+        "color": "#94a3b8"
+      }
+    ],
+    "action_link": "https://rannbar-on.com/needle",
+    "action_text": "Legislative Needle \u27a1\ufe0f"
+  },
+  {
+    "id": "post_social_twitter_pulse",
+    "type": "social_post",
+    "category": "\ud83d\udce2 Our Posts",
+    "badge_color": "#1d9bf0",
+    "source": "Official Post (X / Twitter)",
+    "source_handle": "@NC_Election_Live",
+    "timestamp": "12m ago",
+    "exact_time": "04:28 PM EST",
+    "created_at": "2026-11-03T16:28:00",
+    "title": "\ud83d\udea8 TURNOUT UPDATE: 2.83M+ Ballots In",
+    "content": "\ud83d\udea8 NORTH CAROLINA TURNOUT ALERT:\n\n2.83M+ votes in across all 100 counties. Unaffiliated voters SURGE to 35.2%, outpacing GOP (26.1%).\n\n\u26a1 Needle: Cooper +9.5%\n\ud83c\udfdb\ufe0f Supermajority: 96.2% BROKEN\n\nDrop your county wait time below! \ud83d\udc47\n#NCpol #NCSen #SwingState #VoteNC",
+    "metrics": [
+      {
+        "label": "Total Turnout",
+        "val": "2,828,131",
+        "color": "#f8fafc"
+      },
+      {
+        "label": "Unaffiliated",
+        "val": "35.2%",
+        "color": "#f59e0b"
+      },
+      {
+        "label": "Dem / Rep",
+        "val": "38.4% / 26.1%",
+        "color": "#3b82f6"
+      }
+    ],
+    "action_link": "https://rannbar-on.com/needle",
+    "action_text": "View Live Model \u27a1\ufe0f"
+  },
+  {
+    "id": "post_turnout_surge_unaffiliated",
+    "type": "turnout_alert",
+    "category": "\ud83d\uddf3\ufe0f Turnout",
+    "badge_color": "#f59e0b",
+    "source": "NC State Board of Elections Ingestion",
+    "source_handle": "@NCSBE",
+    "timestamp": "18m ago",
+    "exact_time": "04:22 PM EST",
+    "created_at": "2026-11-03T16:22:00",
+    "title": "SEISMIC INDEPENDENT TURNOUT: Unaffiliated Surpasses GOP Statewide",
+    "content": "\ud83d\uddf3\ufe0f Ballot ingestion across all 100 counties confirms a historic voter realignment: Unaffiliated voters have cast 995,378 ballots (35.20% of the electorate), compared to 738,717 registered Republicans (26.12%) and 1,085,262 registered Democrats (38.37%). Suburban perimeter battlegrounds are showing the highest independent surge.",
+    "metrics": [
+      {
+        "label": "Unaffiliated Ballots",
+        "val": "995,378",
+        "color": "#f59e0b"
+      },
+      {
+        "label": "Democratic Ballots",
+        "val": "1,085,262",
+        "color": "#3b82f6"
+      },
+      {
+        "label": "Republican Ballots",
+        "val": "738,717",
+        "color": "#ef4444"
+      }
+    ],
+    "action_link": "https://rannbar-on.com/prediction",
+    "action_text": "County Turnout Map \u27a1\ufe0f"
+  },
+  {
+    "id": "post_news_wake_meck_boe",
+    "type": "news_update",
+    "category": "\ud83d\udcf0 NC News",
+    "badge_color": "#8b5cf6",
+    "source": "County Boards of Elections",
+    "source_handle": "@WakeElections",
+    "timestamp": "25m ago",
+    "exact_time": "04:15 PM EST",
+    "created_at": "2026-11-03T16:15:00",
+    "title": "Wake & Mecklenburg BOE Report Peak Midday Precinct Volumes",
+    "content": "\ud83d\udcf0 Turnout across all 212 Wake County precincts and 195 Mecklenburg precincts is operating at peak midterm velocity. Average wait times remain brisk at under 12 minutes, with poll workers managing heavy afternoon queues smoothly. Suburban precincts in Cary, Apex, and Huntersville report steady lines.",
+    "metrics": [],
+    "action_link": "https://rannbar-on.com/vote",
+    "action_text": "Precinct Directory \u27a1\ufe0f"
+  },
+  {
+    "id": "post_social_threads_deepdive",
+    "type": "social_post",
+    "category": "\ud83d\udce2 Our Posts",
+    "badge_color": "#000000",
+    "source": "Official Post (Threads)",
+    "source_handle": "@carolina_turnout_pulse",
+    "timestamp": "32m ago",
+    "exact_time": "04:08 PM EST",
+    "created_at": "2026-11-03T16:08:00",
+    "title": "\u26a1 THE INDEPENDENT EXPLOSION: Comprehensive Midday Analysis",
+    "content": "Over 2.82 MILLION ballots are already in across all 100 counties\u2014and North Carolina is the ultimate national battleground tonight. Here is the high-stakes breakdown from our live Bayesian model:\n\n\ud83d\udd25 THE INDEPENDENT EXPLOSION:\nUnaffiliated voters have officially overtaken registered Republicans, accounting for 35.2% of all check-ins. In suburban perimeter battlegrounds like Cabarrus and Union, independent crossover is breaking standard midterm baselines.\n\n\u26a1 HIGH STAKES ON THE NEEDLE:\n\u2022 US Senate: Roy Cooper holds an estimated +9.46 pp advantage [Likely D]\n\u2022 Supermajority Breaker: With 54.2 projected D seats in the House, the GOP supermajority is modeled as BROKEN at 96.2% confidence.\n\n#NCpol #NCSen #NCGov #Elections2026 #DecisionDesk #SwingState #VoteNC #NCGA",
+    "metrics": [],
+    "action_link": "https://rannbar-on.com/needle",
+    "action_text": "Live Dials \u27a1\ufe0f"
+  },
+  {
+    "id": "post_supreme_court_earls",
+    "type": "needle_dial",
+    "category": "\u26a1 Needle Dials",
+    "badge_color": "#3b82f6",
+    "source": "Judicial Forecast Engine",
+    "source_handle": "@NC_DecisionDesk",
+    "timestamp": "40m ago",
+    "exact_time": "04:00 PM EST",
+    "created_at": "2026-11-03T16:00:00",
+    "title": "NC SUPREME COURT SEAT 1: Anita Earls Leads by +5.5%",
+    "content": "\u2696\ufe0f In the marquee statewide judicial contest, incumbent Justice Anita Earls (D) is projected at 52.73% (a +5.46 pp advantage over Republican challenger Sarah Stevens). Downballot voter retention in urban and suburban precincts remains exceptionally robust.",
+    "metrics": [
+      {
+        "label": "Projected Dem",
+        "val": "52.73%",
+        "color": "#3b82f6"
+      },
+      {
+        "label": "Projected Margin",
+        "val": "DEM +5.5%",
+        "color": "#3b82f6"
+      },
+      {
+        "label": "Rating",
+        "val": "Lean D",
+        "color": "#3b82f6"
+      }
+    ],
+    "action_link": "https://rannbar-on.com/prediction",
+    "action_text": "Judicial Breakdown \u27a1\ufe0f"
+  },
+  {
+    "id": "post_news_student_campus_turnout",
+    "type": "news_update",
+    "category": "\ud83d\udcf0 NC News",
+    "badge_color": "#8b5cf6",
+    "source": "NC Student Voting Hub",
+    "source_handle": "@NCStudentVote",
+    "timestamp": "50m ago",
+    "exact_time": "03:50 PM EST",
+    "created_at": "2026-11-03T15:50:00",
+    "title": "UNC, Duke, NCSU & NCCU Campus Precincts Report Heavy Midday Flow",
+    "content": "\ud83c\udf93 Campus voting stations across the Triangle and Triad are reporting strong Election Day youth mobilization. Polling locations at UNC Chapel Hill (Morehead Planetarium), Duke University (Karsh Alumni Center), NC State (Talley Student Union), and NC Central report steady student queues following intensive student body mobilization.",
+    "metrics": [],
+    "action_link": "https://rannbar-on.com/vote",
+    "action_text": "Campus Voting Guides \u27a1\ufe0f"
+  },
+  {
+    "id": "post_needle_flipped_counties",
+    "type": "turnout_alert",
+    "category": "\ud83d\uddf3\ufe0f Turnout",
+    "badge_color": "#3b82f6",
+    "source": "County Baseline Model",
+    "source_handle": "@NC_DecisionDesk",
+    "timestamp": "1h ago",
+    "exact_time": "03:40 PM EST",
+    "created_at": "2026-11-03T15:40:00",
+    "title": "COUNTY FLIP RADAR: 13 Counties Shifted Toward Democratic Column",
+    "content": "\ud83d\uddfa\ufe0f Comparing 2026 ballot returns against 2022 midterms, the model tracks 13 North Carolina counties currently projecting a Democratic flip: Alamance, Anson, Cabarrus, Franklin, Gaston, Harnett, Johnston, Lee, Nash, New Hanover, Scotland, Washington, and Wilson.",
+    "metrics": [
+      {
+        "label": "Total Flipped",
+        "val": "13 Counties",
+        "color": "#3b82f6"
+      },
+      {
+        "label": "Key Flip",
+        "val": "Cabarrus",
+        "color": "#10b981"
+      },
+      {
+        "label": "Key Flip",
+        "val": "New Hanover",
+        "color": "#10b981"
+      }
+    ],
+    "action_link": "https://rannbar-on.com/early_voting_turnout_map.html",
+    "action_text": "Precinct Swing Map \u27a1\ufe0f"
+  },
+  {
+    "id": "post_amendments_update",
+    "type": "needle_dial",
+    "category": "\u26a1 Needle Dials",
+    "badge_color": "#ec4899",
+    "source": "Constitutional Amendments Monitor",
+    "source_handle": "@NC_DecisionDesk",
+    "timestamp": "1h 15m ago",
+    "exact_time": "03:25 PM EST",
+    "created_at": "2026-11-03T15:25:00",
+    "title": "CONSTITUTIONAL AMENDMENTS: Photo ID & Tax Cap Status",
+    "content": "\ud83d\udcdc Three constitutional amendments on today's ballot:\n\u2022 Amend 1 (Photo ID for All Voters): 56.85% For (99.9% probability passes)\n\u2022 Amend 2 (3.5% Income Tax Cap): 53.45% For (94.8% probability passes)\n\u2022 Amend 3 (Property Tax Levy Limits): 51.45% Against (68.4% probability rejected)",
+    "metrics": [
+      {
+        "label": "Photo ID",
+        "val": "Passes (56.9%)",
+        "color": "#ef4444"
+      },
+      {
+        "label": "Tax Cap",
+        "val": "Passes (53.5%)",
+        "color": "#ef4444"
+      },
+      {
+        "label": "Property Tax",
+        "val": "Lean Reject",
+        "color": "#3b82f6"
+      }
+    ],
+    "action_link": "https://rannbar-on.com/needle",
+    "action_text": "Amendment Dials \u27a1\ufe0f"
+  },
+  {
+    "id": "post_social_bluesky_pulse",
+    "type": "social_post",
+    "category": "\ud83d\udce2 Our Posts",
+    "badge_color": "#0285ff",
+    "source": "Official Post (Bluesky)",
+    "source_handle": "@carolinapulse.bsky.social",
+    "timestamp": "1h 30m ago",
+    "exact_time": "03:10 PM EST",
+    "created_at": "2026-11-03T15:10:00",
+    "title": "\ud83d\udea8 BLUE SKY LIVE PULSE: Breaking Turnout & Dials",
+    "content": "\ud83d\udea8 NC TURNOUT ALERT:\n2.82M+ votes. Unaffiliated surge to 35.2%, outpacing GOP (26.1%).\n\n\ud83d\udcca Live Needle:\n\u2022 #NCSen Cooper: +9.5% (Likely D)\n\u2022 #NCGA Supermajority: 96.2% BROKEN\n\nDrop your county & wait time below! \ud83d\udc47\n#NCpol #NCSen #SwingState #VoteNC",
+    "metrics": [],
+    "action_link": "https://rannbar-on.com/needle",
+    "action_text": "Live Needle \u27a1\ufe0f"
+  }
+]
