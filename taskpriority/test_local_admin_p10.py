@@ -85,8 +85,8 @@ class TestLocalAdminP10(unittest.TestCase):
                 html = f.read()
             self.assertIn("Priority (1-10) — Immediate Admin (Local Machine)", html)
             self.assertIn("<option value=\"10\" selected>10 (Immediate Admin / Drop All)</option>", html)
-            self.assertIn("const priority = 10;", html)
-            self.assertIn("submitted locally with immediate admin status (P=10)", html)
+            self.assertIn("const priority = parseInt(priInput?.value || '10', 10);", html)
+            self.assertIn("Priority: P${priority}", html)
 
 if __name__ == "__main__":
     unittest.main()

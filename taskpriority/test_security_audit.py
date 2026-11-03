@@ -229,6 +229,139 @@ class TestTaskPrioritySecurityAudit(unittest.TestCase):
         self.assertIn("Disallow: /taskpriority/", content)
         self.assertIn("Disallow: /*taskpriority*", content)
 
+    # --------------------------------------------------------------------------
+    # 8. TASK DELETION & REACTIVE AUDITING
+    # --------------------------------------------------------------------------
+    def test_11_delete_task_functionality(self):
+        """Verifies task deletion, database removal, and audit logging."""
+        create_res = backend.create_task(
+            "Test Task For Deletion", "Scope details", priority=6,
+            user={"id": self.admin_user_id, "username": "admin_rann", "role": "admin"}
+        )
+        self.assertTrue(create_res['success'])
+        task_id = create_res['task_id']
+
+        # Confirm task exists
+        conn = sqlite3.connect(backend.DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM tasks WHERE id = ?", (task_id,))
+        self.assertIsNotNone(cursor.fetchone())
+        conn.close()
+
+        # Delete task
+        del_ok = backend.delete_task(task_id, user={"id": self.admin_user_id, "username": "admin_rann"})
+        self.assertTrue(del_ok)
+
+        # Confirm task no longer exists
+        conn = sqlite3.connect(backend.DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM tasks WHERE id = ?", (task_id,))
+        self.assertIsNone(cursor.fetchone())
+
+        # Verify audit log contains TASK_DELETED
+        cursor.execute("SELECT details FROM audit_logs WHERE event_type = 'TASK_DELETED' ORDER BY id DESC LIMIT 1")
+        audit_row = cursor.fetchone()
+        conn.close()
+        self.assertIsNotNone(audit_row)
+        self.assertIn(str(task_id), audit_row[0])
+
+        # Attempting to delete already-deleted task returns False
+        del_again = backend.delete_task(task_id)
+        self.assertFalse(del_again)
+
+    # --------------------------------------------------------------------------
+    # 9. PRIORITY-BASED MODEL DEFAULTS & AGENT TIERING
+    # --------------------------------------------------------------------------
+    def test_12_priority_model_defaults_and_agent_tiering(self):
+        """
+        Enforces tiering architecture:
+        - P 8-10: Gemini 4 Argon, dedicated agent 'argon-agent-<id>'
+        - P 5-7:  Gemini 3.8 Flash (High), dedicated agent 'flash-high-agent-<id>'
+        - P 1-4:  Gemini 3.8 Flash (Medium), shared agent 'shared-flash-medium-coordinator'
+        """
+        # Test helper functions
+        for p in [10, 9, 8]:
+            self.assertEqual(backend.get_default_model_for_priority(p), "Gemini 4 Argon")
+            self.assertEqual(backend.get_assigned_agent(p, 42), "argon-agent-42")
+
+        for p in [7, 6, 5]:
+            self.assertEqual(backend.get_default_model_for_priority(p), "Gemini 3.8 Flash (High)")
+            self.assertEqual(backend.get_assigned_agent(p, 42), "flash-high-agent-42")
+
+        for p in [4, 3, 2, 1]:
+            self.assertEqual(backend.get_default_model_for_priority(p), "Gemini 3.8 Flash (Medium)")
+            self.assertEqual(backend.get_assigned_agent(p, 42), "shared-flash-medium-coordinator")
+
+        # Test creation with omitted model
+        admin_u = {"id": self.admin_user_id, "username": "admin_rann", "role": "admin"}
+        t10 = backend.create_task("P10 Task", priority=10, user=admin_u)
+        self.assertEqual(t10['model'], "Gemini 4 Argon")
+        self.assertEqual(t10['assigned_agent'], f"argon-agent-{t10['task_id']}")
+
+        t6 = backend.create_task("P6 Task", priority=6, user=admin_u)
+        self.assertEqual(t6['model'], "Gemini 3.8 Flash (High)")
+        self.assertEqual(t6['assigned_agent'], f"flash-high-agent-{t6['task_id']}")
+
+        t3 = backend.create_task("P3 Task", priority=3, user=admin_u)
+        self.assertEqual(t3['model'], "Gemini 3.8 Flash (Medium)")
+        self.assertEqual(t3['assigned_agent'], "shared-flash-medium-coordinator")
+
+    # --------------------------------------------------------------------------
+    # 10. DYNAMIC PRIORITY & MODEL TIER UPDATES
+    # --------------------------------------------------------------------------
+    def test_13_dynamic_priority_and_model_updates(self):
+        """Updating priority or model dynamically re-assigns the agent."""
+        admin_u = {"id": self.admin_user_id, "username": "admin_rann", "role": "admin"}
+        task = backend.create_task("Dynamic Upgrade Task", priority=3, user=admin_u)
+        task_id = task['task_id']
+        self.assertEqual(task['assigned_agent'], "shared-flash-medium-coordinator")
+
+        # Upgrade to P9 -> automatically switches to Argon and dedicated argon agent
+        res_up = backend.update_task_priority_and_model(task_id, new_priority=9, user=admin_u)
+        self.assertTrue(res_up['success'])
+        self.assertEqual(res_up['model'], "Gemini 4 Argon")
+        self.assertEqual(res_up['assigned_agent'], f"argon-agent-{task_id}")
+
+        # Downgrade to P6 -> automatically switches to Flash High and dedicated flash-high agent
+        res_mid = backend.update_task_priority_and_model(task_id, new_priority=6, user=admin_u)
+        self.assertTrue(res_mid['success'])
+        self.assertEqual(res_mid['model'], "Gemini 3.8 Flash (High)")
+        self.assertEqual(res_mid['assigned_agent'], f"flash-high-agent-{task_id}")
+
+        # Downgrade to P2 -> automatically switches to Flash Medium and shared coordinator
+        res_low = backend.update_task_priority_and_model(task_id, new_priority=2, user=admin_u)
+        self.assertTrue(res_low['success'])
+        self.assertEqual(res_low['model'], "Gemini 3.8 Flash (Medium)")
+        self.assertEqual(res_low['assigned_agent'], "shared-flash-medium-coordinator")
+
+    # --------------------------------------------------------------------------
+    # 11. CLI --delete-task FLAG VERIFICATION
+    # --------------------------------------------------------------------------
+    def test_14_cli_delete_task(self):
+        """Verifies CLI flag --delete-task successfully removes tasks."""
+        import subprocess
+        admin_u = {"id": self.admin_user_id, "username": "admin_rann", "role": "admin"}
+        task = backend.create_task("CLI Delete Candidate", priority=5, user=admin_u)
+        t_id = task['task_id']
+
+        cli_res = subprocess.run(
+            [sys.executable, backend.__file__, "--delete-task", str(t_id)],
+            capture_output=True,
+            text=True,
+            env=dict(os.environ, TASK_PRIORITY_DB_PATH=backend.DB_PATH)
+        )
+        self.assertEqual(cli_res.returncode, 0)
+        self.assertIn(f"Task #{t_id} deleted successfully", cli_res.stdout)
+
+        # Deleting again should fail with code 1
+        cli_res_fail = subprocess.run(
+            [sys.executable, backend.__file__, "--delete-task", str(t_id)],
+            capture_output=True,
+            text=True,
+            env=dict(os.environ, TASK_PRIORITY_DB_PATH=backend.DB_PATH)
+        )
+        self.assertEqual(cli_res_fail.returncode, 1)
+
 if __name__ == '__main__':
     unittest.main()
 

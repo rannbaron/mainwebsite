@@ -140,6 +140,66 @@
     .pri-5-7 { background: #d97706; color: #fff; }
     .pri-1-4 { background: #2563eb; color: #fff; }
 
+    .agent-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-top: 6px;
+      line-height: 1.3;
+      width: fit-content;
+      max-width: 100%;
+    }
+    .agent-argon {
+      background: rgba(168, 85, 247, 0.18);
+      color: #d8b4fe;
+      border: 1px solid rgba(168, 85, 247, 0.35);
+    }
+    .agent-flash-high {
+      background: rgba(245, 158, 11, 0.18);
+      color: #fde047;
+      border: 1px solid rgba(245, 158, 11, 0.35);
+    }
+    .agent-flash-med {
+      background: rgba(56, 189, 248, 0.18);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.35);
+    }
+    .agent-tag-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 10px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 1px 5px;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin-left: 2px;
+      font-weight: 500;
+    }
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      color: #f87171;
+      padding: 5px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11.5px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      justify-content: center;
+    }
+    .btn-delete:hover {
+      background: #dc2626;
+      border-color: #ef4444;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+
     select.model-select, select.priority-select {
       background: #0f172a;
       border: 1px solid var(--card-border);
@@ -798,15 +858,16 @@
           <th id="th-title" class="sortable-th" onclick="setSortColumn('title')">
             Task Title &amp; Scope <i class="sort-icon fa-solid fa-sort"></i>
           </th>
-          <th id="th-model" class="sortable-th" style="width: 220px;" onclick="setSortColumn('model')">
-            Assigned Model Tier <i class="sort-icon fa-solid fa-sort"></i>
+          <th id="th-model" class="sortable-th" style="width: 270px;" onclick="setSortColumn('model')">
+            Model &amp; Assigned Agent <i class="sort-icon fa-solid fa-sort"></i>
           </th>
-          <th id="th-progress" class="sortable-th" style="width: 180px;" onclick="setSortColumn('progress')">
+          <th id="th-progress" class="sortable-th" style="width: 170px;" onclick="setSortColumn('progress')">
             Estimated Progress <i class="sort-icon fa-solid fa-sort"></i>
           </th>
-          <th id="th-status" class="sortable-th" style="width: 140px;" onclick="setSortColumn('status')">
+          <th id="th-status" class="sortable-th" style="width: 130px;" onclick="setSortColumn('status')">
             Status <i class="sort-icon fa-solid fa-sort"></i>
           </th>
+          <th style="width: 90px; text-align: center;">Actions</th>
         </tr>
       </thead>
       <tbody id="tasksTableBody">
@@ -824,7 +885,7 @@
       </div>
       <div class="form-group">
         <label>Priority (1-10) — Immediate Admin (Local Machine)</label>
-        <select id="newTaskPriority">
+        <select id="newTaskPriority" onchange="handleNewTaskPriorityChange(this.value)">
           <option value="10" selected>10 (Immediate Admin / Drop All)</option>
           <option value="9">9 (Urgent Execution)</option>
           <option value="8">8 (High Priority)</option>
@@ -969,7 +1030,7 @@
       priority: 9,
       title: "Machine Lid-Close & Suspend Inhibit Daemon",
       scope: "Battery-aware inhibitor daemon preventing laptop sleep while on battery >= 20% (PID 773933 / task-8935).",
-      model: "Gemini 3.8 Flash (High)",
+      model: "Gemini 4 Argon",
       progress: "Active",
       progressPercent: 85,
       status: "Running",
@@ -981,7 +1042,7 @@
       priority: 9,
       title: "Locate UPS Account Username & Email in Gmail",
       scope: "Locate user's UPS account confirmation and registration records across Gmail archives and browser profiles.",
-      model: "Gemini 3.8 Flash (High)",
+      model: "Gemini 4 Argon",
       progress: "40%",
       progressPercent: 40,
       status: "Searching",
@@ -993,7 +1054,7 @@
       priority: 9,
       title: "Math 105L Day 11-1 Completed Sheet & Video Review Loop",
       scope: "Draft 3-page completed lecture sheet with circular markers, proven 2/√13<2, and 5-link prerequisite portals dispatched to rann@rannbar-on.com awaiting approval.",
-      model: "Gemini 3.8 Flash (High)",
+      model: "Gemini 4 Argon",
       progress: "90%",
       progressPercent: 90,
       status: "Review Pending",
@@ -1041,7 +1102,7 @@
       priority: 7,
       title: "Worksheet 10-1 & 10-2 Extension Summary Dispatch",
       scope: "Automated cron scheduled for 8:00 PM to audit Gradescope NP status and dispatch summary to rb6@duke.edu.",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "Scheduled (8:00 PM)",
       progressPercent: 70,
       status: "Scheduled",
@@ -1053,7 +1114,7 @@
       priority: 7,
       title: "Isaiah Nwoko Re-enrollment & Dynamic Quiz Windows",
       scope: "Nightly cron (00:00) maintaining 24-hour staggered quiz release and submission windows for re-enrolled student.",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "Active",
       progressPercent: 75,
       status: "Active",
@@ -1065,7 +1126,7 @@
       priority: 7,
       title: "Friday Office Hours Shift & Schedule Update",
       scope: "Public schedule updated across course sites reflecting new Friday office hours (1:45 PM – 3:45 PM).",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "100%",
       progressPercent: 100,
       status: "Updated",
@@ -1101,7 +1162,7 @@
       priority: 5,
       title: "Daily Midnight Workspace Maintenance & Auto-Push",
       scope: "Automated git commit, push, and daily report email running nightly at 00:00 via systemd / task scheduler.",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "Scheduled (00:00)",
       progressPercent: 50,
       status: "Scheduled",
@@ -1113,7 +1174,7 @@
       priority: 5,
       title: "Weekly Canvas Incapacitation & Attendance Audit",
       scope: "Scheduled Sunday 7:00 PM cron parsing Canvas gradebook for incapacitation excuses and attendance exemptions.",
-      model: "Gemini 3.8 Flash (Medium)",
+      model: "Gemini 3.8 Flash (High)",
       progress: "Scheduled (Sun 19:00)",
       progressPercent: 50,
       status: "Scheduled",
@@ -1149,7 +1210,7 @@
       priority: 4,
       title: "Control Dashboard Zero-Search Relocation",
       scope: "Relocated execution control center to rannbar-on.com/dashboard with multi-crawler robots shielding, test suite verification, and legacy route redirection.",
-      model: "Gemini 3.8 Flash (High)",
+      model: "Gemini 3.8 Flash (Medium)",
       progress: "100%",
       progressPercent: 100,
       status: "Deployed",
@@ -1173,6 +1234,12 @@
       tasksState = JSON.parse(JSON.stringify(DEFAULT_TASKS));
       saveTasksState();
     }
+    // Ensure all tasks have assignedAgent populated
+    tasksState.forEach(task => {
+      if (!task.assignedAgent) {
+        task.assignedAgent = getAssignedAgent(task.priority, task.id, task.model);
+      }
+    });
   }
 
   function saveTasksState() {
@@ -1189,11 +1256,72 @@
     return 'pri-1-4';
   }
 
+  function getDefaultModelForPriority(priority) {
+    const p = parseInt(priority, 10);
+    if (p >= 8) return 'Gemini 4 Argon';
+    if (p >= 5) return 'Gemini 3.8 Flash (High)';
+    return 'Gemini 3.8 Flash (Medium)';
+  }
+
+  function getAssignedAgent(priority, taskId, model) {
+    const p = parseInt(priority, 10);
+    const idStr = taskId != null ? `-${taskId}` : '';
+    if (model === 'Gemini 4 Argon' || (p >= 8 && (!model || model.includes('Argon')))) {
+      return `argon-agent${idStr}`;
+    } else if (model === 'Gemini 3.8 Flash (High)' || (p >= 5 && p <= 7 && (!model || model.includes('High')))) {
+      return `flash-high-agent${idStr}`;
+    } else if (model === 'Gemini 3.8 Flash (Medium)' || p < 5) {
+      return 'shared-flash-medium-coordinator';
+    } else {
+      if (p >= 8) return `argon-agent${idStr}`;
+      if (p >= 5) return `flash-high-agent${idStr}`;
+      return 'shared-flash-medium-coordinator';
+    }
+  }
+
+  function getAssignedAgentBadge(task) {
+    const pri = parseInt(task.priority, 10);
+    const model = task.model || getDefaultModelForPriority(pri);
+    const agent = task.assignedAgent || getAssignedAgent(pri, task.id, model);
+
+    if (agent.startsWith('argon-agent')) {
+      return `
+        <div class="agent-badge agent-argon" title="Dedicated Gemini 4 Argon Agent for Task #${task.id}">
+          <i class="fa-solid fa-atom"></i>
+          <span>Dedicated Argon Agent</span>
+          <code class="agent-tag-code">${escapeHtml(agent)}</code>
+        </div>
+      `;
+    } else if (agent.startsWith('flash-high-agent')) {
+      return `
+        <div class="agent-badge agent-flash-high" title="Dedicated Gemini 3.8 Flash (High) Agent for Task #${task.id}">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Dedicated Flash High Agent</span>
+          <code class="agent-tag-code">${escapeHtml(agent)}</code>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="agent-badge agent-flash-med" title="Shared Gemini 3.8 Flash (Medium) Coordinator Agent">
+          <i class="fa-solid fa-network-wired"></i>
+          <span>Shared Flash Medium Agent</span>
+          <code class="agent-tag-code">shared-flash-medium-coordinator</code>
+        </div>
+      `;
+    }
+  }
+
   function changeTaskPriority(taskId, newPriority) {
     newPriority = parseInt(newPriority, 10);
     const task = tasksState.find(t => t.id === taskId);
     if (!task) return;
     task.priority = newPriority;
+    // Policy:
+    // P8-10: Gemini 4 Argon by default, dedicated agent each (argon-agent-<id>)
+    // P5-7:  Gemini 3.8 Flash (High) by default, dedicated agent each (flash-high-agent-<id>)
+    // P1-4:  Gemini 3.8 Flash (Medium) by default, single shared agent (shared-flash-medium-coordinator)
+    task.model = getDefaultModelForPriority(newPriority);
+    task.assignedAgent = getAssignedAgent(newPriority, taskId, task.model);
     saveTasksState();
     updateStatCards();
     renderTasksTable();
@@ -1203,7 +1331,42 @@
     const task = tasksState.find(t => t.id === taskId);
     if (!task) return;
     task.model = newModel;
+    // Dynamic model changes update the assigned agent automatically
+    task.assignedAgent = getAssignedAgent(task.priority, taskId, newModel);
     saveTasksState();
+    renderTasksTable();
+  }
+
+  function deleteTask(taskId) {
+    taskId = parseInt(taskId, 10);
+    const task = tasksState.find(t => t.id === taskId);
+    const title = task ? task.title : `#${taskId}`;
+    if (!confirm(`Are you sure you want to permanently delete task #${taskId} "${title}" from the dashboard queue?`)) {
+      return;
+    }
+    
+    // Reactive UI removal: animate row out smoothly before updating state
+    const rowEl = document.querySelector(`tr[data-task-id="${taskId}"]`);
+    if (rowEl) {
+      rowEl.style.transition = 'opacity 0.25s ease, transform 0.25s ease, background-color 0.25s ease';
+      rowEl.style.opacity = '0';
+      rowEl.style.transform = 'translateX(25px)';
+      rowEl.style.backgroundColor = 'rgba(239, 68, 68, 0.25)';
+    }
+
+    setTimeout(() => {
+      tasksState = tasksState.filter(t => t.id !== taskId);
+      saveTasksState();
+      updateStatCards();
+      renderTasksTable();
+    }, 250);
+  }
+
+  function handleNewTaskPriorityChange(newPriority) {
+    const modelSelect = document.getElementById('newTaskModel');
+    if (modelSelect) {
+      modelSelect.value = getDefaultModelForPriority(newPriority);
+    }
   }
 
   function setSortColumn(col) {
@@ -1355,7 +1518,7 @@
     if (filteredTasks.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" style="text-align: center; padding: 36px 16px; color: var(--text-muted);">
+          <td colspan="7" style="text-align: center; padding: 36px 16px; color: var(--text-muted);">
             <i class="fa-solid fa-filter-circle-xmark" style="font-size: 28px; margin-bottom: 10px; display: block; opacity: 0.6;"></i>
             No tasks match the active filters or search criteria.
             <div style="margin-top: 10px;">
@@ -1402,6 +1565,7 @@
               <option ${task.model === 'Gemini 3.8 Flash (High)' ? 'selected' : ''}>Gemini 3.8 Flash (High)</option>
               <option ${task.model === 'Gemini 3.8 Flash (Medium)' ? 'selected' : ''}>Gemini 3.8 Flash (Medium)</option>
             </select>
+            ${getAssignedAgentBadge(task)}
           </td>
           <td>
             <div style="display: flex; justify-content: space-between; font-size: 11.5px; font-weight: 600;">
@@ -1415,6 +1579,11 @@
             <span style="color: ${task.statusColor || 'var(--accent-cyan)'}; font-weight: 600;">
               <i class="${task.statusIcon || 'fa-solid fa-circle'}"></i> ${escapeHtml(task.status)}
             </span>
+          </td>
+          <td style="text-align: center;">
+            <button class="btn-delete" onclick="deleteTask(${task.id})" title="Delete task #${task.id} from dashboard queue">
+              <i class="fa-solid fa-trash-can"></i> Delete
+            </button>
           </td>
         </tr>
       `;
@@ -1472,21 +1641,22 @@
       return;
     }
 
-    // Policy: All tasks submitted locally from this machine have immediate admin status P=10
-    const priority = 10;
-    const model = modelInput?.value || 'Gemini 4 Argon';
+    const priority = parseInt(priInput?.value || '10', 10);
+    const model = modelInput?.value || getDefaultModelForPriority(priority);
     const progressVal = parseInt(progInput?.value || '0', 10);
     const scope = (scopeInput?.value || '').trim() || 'Automated task submitted locally with immediate admin status.';
 
     const newId = tasksState.length > 0 ? (Math.max(...tasksState.map(t => t.id)) + 1) : 1;
+    const assignedAgent = getAssignedAgent(priority, newId, model);
 
     const newTask = {
       id: newId,
-      priority: 10,
+      priority: priority,
       title: title,
       scope: scope,
       model: model,
-      progress: progressVal > 0 ? `${progressVal}%` : "Active (P10)",
+      assignedAgent: assignedAgent,
+      progress: progressVal > 0 ? `${progressVal}%` : `Active (P${priority})`,
       progressPercent: progressVal > 0 ? progressVal : 10,
       status: "Active / Admin",
       statusIcon: "fa-solid fa-bolt",
@@ -1503,7 +1673,7 @@
     updateStatCards();
     renderTasksTable();
 
-    alert(`Task #${newId} "${title}" submitted locally with immediate admin status (P=10).`);
+    alert(`Task #${newId} "${title}" created successfully!\nPriority: P${priority}\nModel: ${model}\nAssigned Agent: ${assignedAgent}`);
   }
 
   function evaluateAuth() {
