@@ -737,7 +737,8 @@ def build_html_page(feed_items):
       </div>
       <div class="header-actions">
         <button class="hdr-btn" id="soundBtn" onclick="toggleAudio()" title="Toggle Sound">🔊</button>
-        <a href="https://rannbar-on.com/needle" class="hdr-btn btn-needle">⚡ Needle</a>
+        <a href="https://rannbar-on.com/needle" class="hdr-btn btn-needle">🎯 Needle</a>
+        <a href="https://rannbar-on.com/both" class="hdr-btn" style="background: linear-gradient(135deg, #7c3aed, #4f46e5); color: #fff; border: none;">⚡ Both</a>
       </div>
     </div>
   </header>
@@ -777,20 +778,20 @@ def build_html_page(feed_items):
   <!-- Mobile Fixed Bottom Navigation -->
   <nav class="bottom-nav">
     <a href="#" class="nav-item active">
-      <span class="nav-icon">⚡</span>
-      <span>Live Feed</span>
+      <span class="nav-icon">📱</span>
+      <span>Feed</span>
     </a>
     <a href="https://rannbar-on.com/needle" class="nav-item">
       <span class="nav-icon">🎯</span>
       <span>Needle</span>
     </a>
+    <a href="https://rannbar-on.com/both" class="nav-item">
+      <span class="nav-icon">⚡</span>
+      <span>Both (Split)</span>
+    </a>
     <a href="https://rannbar-on.com/prediction" class="nav-item">
       <span class="nav-icon">📊</span>
       <span>Forecast</span>
-    </a>
-    <a href="https://rannbar-on.com/early_voting_turnout_map.html" class="nav-item">
-      <span class="nav-icon">🗺️</span>
-      <span>Precinct Map</span>
     </a>
     <a href="https://rannbar-on.com/vote" class="nav-item">
       <span class="nav-icon">🗳️</span>

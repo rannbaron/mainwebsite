@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NC Decision Desk Dual View | Live Needle & Socials Feed</title>
+  <meta name="description" content="Side-by-side split screen view of the NC Election Needle and the NC Politics Continuous Live Feed.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --header-bg: #0f172a;
+      --border: #1e293b;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --blue: #3b82f6;
+      --purple: #8b5cf6;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      background-color: var(--bg);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text);
+    }
+    
+    /* Top Navigation / Split Control Bar */
+    header.dual-header {
+      height: 52px;
+      background: var(--header-bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 100;
+      position: relative;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .live-dot {
+      width: 9px;
+      height: 9px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.7; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.1); }
+      100% { opacity: 0.7; transform: scale(0.95); }
+    }
+    .brand-title {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+    .brand-title span {
+      color: var(--blue);
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .view-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: #cbd5e1;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.15s;
+    }
+    .view-btn:hover, .view-btn.active {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: #60a5fa;
+    }
+    .pop-link {
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 5px 8px;
+    }
+    .pop-link:hover {
+      color: #ffffff;
+    }
+
+    /* Split Screen Grid */
+    .dual-workspace {
+      display: flex;
+      height: calc(100% - 52px);
+      width: 100%;
+      position: relative;
+    }
+    .pane {
+      height: 100%;
+      position: relative;
+      transition: width 0.2s ease;
+    }
+    .pane-needle {
+      width: 60%;
+      border-right: 2px solid var(--border);
+    }
+    .pane-socials {
+      width: 40%;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #090d16;
+    }
+
+    /* Mobile Responsive View Toggle */
+    .mobile-switcher {
+      display: none;
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 3px;
+    }
+    .switch-tab {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .switch-tab.active {
+      background: var(--blue);
+      color: #ffffff;
+    }
+
+    @media (max-width: 960px) {
+      .dual-workspace {
+        flex-direction: column;
+      }
+      .mobile-switcher {
+        display: flex;
+      }
+      .split-controls {
+        display: none;
+      }
+      .pane-needle, .pane-socials {
+        width: 100% !important;
+        height: 100% !important;
+      }
+      .pane-socials {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Dual View Header -->
+  <header class="dual-header">
+    <div class="brand">
+      <div class="live-dot"></div>
+      <div class="brand-title">NC Decision Desk <span>Dual View</span></div>
+    </div>
+
+    <!-- Mobile Switcher (shown on phone displays) -->
+    <div class="mobile-switcher">
+      <button class="switch-tab active" onclick="setMobilePane('needle', this)">🎯 Needle</button>
+      <button class="switch-tab" onclick="setMobilePane('socials', this)">📱 Socials Feed</button>
+    </div>
+
+    <!-- Desktop Split Controls -->
+    <div class="controls split-controls">
+      <span style="font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase;">Split Ratio:</span>
+      <button class="view-btn" onclick="setSplit(50, 50, this)">50 / 50</button>
+      <button class="view-btn active" onclick="setSplit(60, 40, this)">60 / 40</button>
+      <button class="view-btn" onclick="setSplit(40, 60, this)">40 / 60</button>
+      <button class="view-btn" onclick="reloadFrames()" title="Reload both frames">🔄 Sync</button>
+    </div>
+
+    <div class="controls">
+      <a href="/needle" target="_blank" class="pop-link" title="Open needle in new tab">🎯 Needle ↗</a>
+      <a href="/ncpoliticssocials" target="_blank" class="pop-link" title="Open socials feed in new tab">📱 Feed ↗</a>
+    </div>
+  </header>
+
+  <!-- Side-by-Side Dual Workspace -->
+  <div class="dual-workspace" id="workspace">
+    <!-- Left Pane: Live Needle Dials -->
+    <div class="pane pane-needle" id="paneNeedle">
+      <iframe src="/needle" id="needleFrame" title="NC Live Election Needle"></iframe>
+    </div>
+
+    <!-- Right Pane: Live Phone Socials Feed -->
+    <div class="pane pane-socials" id="paneSocials">
+      <iframe src="/ncpoliticssocials" id="socialsFrame" title="NC Politics Live Continuous Socials Feed"></iframe>
+    </div>
+  </div>
+
+  <script>
+    function setSplit(needlePct, socialsPct, btn) {
+      document.getElementById('paneNeedle').style.width = needlePct + '%';
+      document.getElementById('paneSocials').style.width = socialsPct + '%';
+      document.querySelectorAll('.split-controls .view-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+
+    function reloadFrames() {
+      document.getElementById('needleFrame').contentWindow.location.reload();
+      document.getElementById('socialsFrame').contentWindow.location.reload();
+    }
+
+    function setMobilePane(pane, btn) {
+      const pN = document.getElementById('paneNeedle');
+      const pS = document.getElementById('paneSocials');
+      if (pane === 'needle') {
+        pN.style.display = 'block';
+        pS.style.display = 'none';
+      } else {
+        pN.style.display = 'none';
+        pS.style.display = 'block';
+      }
+      document.querySelectorAll('.mobile-switcher .switch-tab').forEach(t => t.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
