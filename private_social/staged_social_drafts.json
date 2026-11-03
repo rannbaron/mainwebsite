@@ -1,0 +1,43 @@
+{
+  "batch_id": "batch_20261103_124356",
+  "slot_label": "12:43 PM EST",
+  "generated_at": "2026-11-03T12:43:56.147629",
+  "status": "PENDING_RANN_APPROVAL",
+  "lock_notice": "STRICT RULE GUARD: ZERO posts are dispatched until Rann clicks approve.",
+  "metrics_snapshot": {
+    "total_turnout": 2828131,
+    "dem_share": 38.37,
+    "rep_share": 26.12,
+    "una_share": 35.2,
+    "senate_margin": 9.46,
+    "gov_margin": 9.7,
+    "house_exp_dem": 54.2,
+    "senate_exp_dem": 21.1
+  },
+  "drafts": {
+    "twitter": {
+      "platform": "X / Twitter",
+      "character_count": 307,
+      "text": "\ud83d\udea8 NC ELECTION UPDATE (12:43 PM EST)\n\n\ud83d\uddf3\ufe0f Turnout: 2,828,131 ballots\n\u2022 Unaffiliated: 35.2%\n\u2022 Dem: 38.4% | Rep: 26.1%\n\n\ud83c\udfaf Live Needle Projections:\n\u2022 #NCSen Cooper (D): +9.5% (Likely D)\n\u2022 #NCGA Supermajority: BROKEN (House 54.2 D, Sen 21.1 D)\n\nLive dials: rannbar-on.com/needle\n#NCpol #NCSen #NCGov #VoteNC #NCGA",
+      "status": "PENDING_APPROVAL"
+    },
+    "threads": {
+      "platform": "Threads",
+      "character_count": 794,
+      "text": "North Carolina Turnout & Needle Pulse \u2014 12:43 PM EST\n\nMidday voter returns across all 100 NC counties show Unaffiliated voters remaining the decisive swing voting bloc at 35.2% of total check-ins (995,378 ballots), tracking ahead of registered Republicans (26.1%).\n\n\ud83d\udcca Key Model Highlights:\n1. US Senate: Roy Cooper holds an estimated +9.46 pp advantage (54.73% Dem) powered by strong suburban crossover in Wake and Mecklenburg.\n2. Governor: Josh Stein projected at +9.70 pp margin.\n3. Legislative Supermajority: Both chambers continue tracking in supermajority-breaker territory. NC House models at 54.2 D seats (threshold: 49); NC Senate models at 21.1 D seats (threshold: 20).\n\nExplore the interactive precinct maps and live dials at rannbar-on.com/needle.\n\n#NCpol #NCSen #NCGov #VoteNC #NCGA",
+      "status": "PENDING_APPROVAL"
+    },
+    "instagram": {
+      "platform": "Instagram (@carolina_turnout_pulse / @nc_election_live)",
+      "character_count": 990,
+      "text": "\ud83d\uddf3\ufe0f NORTH CAROLINA ELECTION DAY LIVE UPDATE [12:43 PM EST]\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\nSwipe for county precinct shifts, turnout breakdown, and General Assembly needle dials \u27a1\ufe0f\n\n\ud83d\udccd STATEWIDE TURNOUT SNAPSHOT (All 100 Counties):\n\u2022 Total Ballots Processed: 2,828,131\n\u2022 Unaffiliated (UNA): 995,378 (35.2%)\n\u2022 Registered Democrats (DEM): 1,085,262 (38.4%)\n\u2022 Registered Republicans (REP): 738,717 (26.1%)\n\n\u2696\ufe0f MARQUEE RACE PROJECTIONS:\n\ud83d\udd35 US Senate: Roy Cooper (D) leading by +9.46 pp [Likely D]\n\ud83d\udd35 NC Supreme Court (Seat 1): Anita Earls (D) leading by +5.46 pp [Lean D]\n\ud83c\udfdb\ufe0f NC General Assembly Supermajority Breaker: House 54.2/120 D seats (Breaks supermajority at 49); Senate 21.1/50 D seats (Breaks supermajority at 20).\n\n\ud83d\udd17 Tap link in bio (@carolina_turnout_pulse / @nc_election_live) or visit rannbar-on.com/needle for real-time dial movements!\n\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n#NCpol #NCSen #NCGov #VoteNC #NCGA #NorthCarolina #ElectionDay2026 #TurnoutMatters #WakeCounty #Mecklenburg #CharlotteVotes #RaleighVotes",
+      "status": "PENDING_APPROVAL"
+    },
+    "bluesky": {
+      "platform": "Bluesky",
+      "character_count": 552,
+      "text": "NC 2026 Turnout & Bayesian Forecast Update (12:43 PM EST):\n\nTurnout at 2,828,131 accepted ballots. Electorate composition: UNA 35.2%, DEM 38.4%, REP 26.1%.\n\nUnder our dual-regime empirical bounds and Partisan Crossover Matrix:\n\u2022 US Senate: Cooper (D) projected at 54.73% (+9.46 pp) [Likely D, 99.5% Dem win prob]\n\u2022 Supreme Court Seat 1: Earls (D) 52.73% (+5.46 pp)\n\u2022 NC House Supermajority: Expected D seats at 54.2 (GOP supermajority broken with 96.2% statistical confidence)\n\nFull methodology & needle dials: rannbar-on.com/needle\n#NCpol #NCSen #NCGA",
+      "status": "PENDING_APPROVAL"
+    }
+  }
+}

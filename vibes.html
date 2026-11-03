@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Company Vibes Check · Internal Only</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              900: '#4c1d95',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #8b5cf6;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen antialiased selection:bg-purple-600 selection:text-white">
+  <!-- Confidential Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/60 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+          CONFIDENTIAL · INTERNAL
+        </span>
+        <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+          <span>✨</span> Company Vibes Check
+        </h1>
+      </div>
+      <div class="flex items-center space-x-3 text-xs text-slate-400">
+        <span id="liveClock" class="font-mono text-purple-300 font-semibold"></span>
+        <span class="px-2 py-1 rounded bg-slate-800/80 border border-slate-700/60 text-emerald-400 font-medium">● Systems Nominal</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 py-8 space-y-8">
+    <!-- Top Hero / Overall Vibe Meter -->
+    <section class="glass rounded-2xl p-6 md:p-8 relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
+        <div>
+          <span class="text-xs uppercase font-mono tracking-wider text-purple-400 font-semibold">Organizational Pulse</span>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white mt-1">Current Company Frequency: <span id="vibeHeadline" class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-300">High Velocity & Flow State</span></h2>
+          <p class="text-slate-400 text-sm mt-2 max-w-2xl leading-relaxed">
+            Anonymous pulse monitoring for teams, admins, and instructional staff. No micromanagement, just real-time sentiment, cognitive bandwidth, and cultural resonance.
+          </p>
+        </div>
+        <div class="flex items-center gap-4 bg-slate-900/90 border border-slate-800 rounded-xl px-5 py-4">
+          <div class="text-center">
+            <div id="vibeScoreNum" class="text-4xl font-extrabold text-purple-400 font-mono">8.8</div>
+            <div class="text-[11px] font-semibold tracking-wider uppercase text-slate-400 mt-0.5">Vibe Index / 10</div>
+          </div>
+          <div class="w-px h-10 bg-slate-800"></div>
+          <div class="text-3xl" id="vibeEmojiDisplay">🚀</div>
+        </div>
+      </div>
+
+      <!-- Quick Metrics Grid -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-800/80 text-xs">
+        <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+          <span class="text-slate-400">Team Energy</span>
+          <div class="text-lg font-bold text-slate-100 font-mono mt-0.5">8.9 <span class="text-emerald-400 text-xs">▲ +0.4</span></div>
+        </div>
+        <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+          <span class="text-slate-400">Cognitive Clarity</span>
+          <div class="text-lg font-bold text-slate-100 font-mono mt-0.5">8.4 <span class="text-emerald-400 text-xs">▲ +0.7</span></div>
+        </div>
+        <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+          <span class="text-slate-400">Autonomy & Friction</span>
+          <div class="text-lg font-bold text-slate-100 font-mono mt-0.5">9.1 <span class="text-emerald-400 text-xs">▲ +1.2</span></div>
+        </div>
+        <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
+          <span class="text-slate-400">Check-ins Today</span>
+          <div class="text-lg font-bold text-slate-100 font-mono mt-0.5" id="checkInCount">42</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Vibe Check-In Form & Voice Memo -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <!-- Left Column: Submit Your Vibe -->
+      <section class="lg:col-span-7 glass rounded-2xl p-6 md:p-8 space-y-6">
+        <div>
+          <h3 class="text-lg font-bold text-white flex items-center gap-2">
+            <span>⚡</span> Quick Vibe Check-In
+          </h3>
+          <p class="text-slate-400 text-xs mt-1">100% anonymous or authenticated. Feeds directly into Rann's daily operations brief.</p>
+        </div>
+
+        <!-- Emotion Selector -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">Pick Today's Vibe State</label>
+          <div class="grid grid-cols-4 sm:grid-cols-8 gap-2" id="emojiSelector">
+            <button type="button" class="vibe-emoji-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-purple-500 hover:bg-purple-500/10 text-2xl transition active:scale-95" data-emoji="🚀" data-label="Hyper-Drive">🚀</button>
+            <button type="button" class="vibe-emoji-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-purple-500 hover:bg-purple-500/10 text-2xl transition active:scale-95" data-emoji="🔥" data-label="Cooking">🔥</button>
+            <button type="button" class="vibe-emoji-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-purple-500 hover:bg-purple-500/10 text-2xl transition active:scale-95" data-emoji="🧘" data-label="Zen Flow">🧘</button>
+            <button type="button" class="vibe-emoji-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-purple-500 hover:bg-purple-500/10 text-2xl transition active:scale-95" data-emoji="⚡" data-label="High Voltage">⚡</button>
+            <button type="button" class="vibe-emoji-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-purple-500 hover:bg-purple-500/10 text-2xl transition active:scale-95" data-emoji="☕" data-label="Refueling">☕</button>
+            <button type="button" class="vibe-emoji-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-purple-500 hover:bg-purple-500/10 text-2xl transition active:scale-95" data-emoji="🎯" data-label="Locked In">🎯</button>
+            <button type="button" class="vibe-emoji-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-purple-500 hover:bg-purple-500/10 text-2xl transition active:scale-95" data-emoji="🎉" data-label="Celebrating">🎉</button>
+            <button type="button" class="vibe-emoji-btn p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-purple-500 hover:bg-purple-500/10 text-2xl transition active:scale-95" data-emoji="😵‍💫" data-label="Overloaded">😵‍💫</button>
+          </div>
+          <div class="mt-2 text-xs text-purple-400 font-mono" id="selectedEmojiText">Selected: 🚀 Hyper-Drive</div>
+        </div>
+
+        <!-- Sliders -->
+        <div class="space-y-4 pt-2">
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-slate-300">Energy & Motivation</span>
+              <span class="text-purple-400 font-mono" id="valEnergy">9 / 10</span>
+            </div>
+            <input type="range" min="1" max="10" value="9" class="slider w-full bg-slate-800 h-2 rounded-lg appearance-none cursor-pointer" id="sliderEnergy">
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-slate-300">Clarity & Direction</span>
+              <span class="text-purple-400 font-mono" id="valClarity">8 / 10</span>
+            </div>
+            <input type="range" min="1" max="10" value="8" class="slider w-full bg-slate-800 h-2 rounded-lg appearance-none cursor-pointer" id="sliderClarity">
+          </div>
+          <div>
+            <div class="flex justify-between text-xs font-semibold mb-1">
+              <span class="text-slate-300">System Velocity (Less Red Tape / Fast Tooling)</span>
+              <span class="text-purple-400 font-mono" id="valVelocity">10 / 10</span>
+            </div>
+            <input type="range" min="1" max="10" value="10" class="slider w-full bg-slate-800 h-2 rounded-lg appearance-none cursor-pointer" id="sliderVelocity">
+          </div>
+        </div>
+
+        <!-- Text / Sentiment Input -->
+        <div class="space-y-3 pt-2">
+          <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider">Quick Note or Wins (Optional)</label>
+          <textarea id="vibeNote" rows="3" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition" placeholder="e.g. Asking permission far less today made everything 10x faster. Loving the flow."></textarea>
+        </div>
+
+        <!-- One-Tap Voice Memo Feature -->
+        <div class="p-4 rounded-xl bg-purple-950/20 border border-purple-800/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div class="flex items-center space-x-3">
+            <button type="button" id="voiceMemoBtn" class="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 flex items-center justify-center text-white shadow-lg shadow-purple-600/30 active:scale-95 transition">
+              <svg id="micIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 02-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+            </button>
+            <div>
+              <div class="text-xs font-bold text-purple-300">One-Tap Voice Memo</div>
+              <div class="text-[11px] text-slate-400" id="voiceStatus">Press to speak a memo (auto-transcribed to bug tracker & summary)</div>
+            </div>
+          </div>
+          <div id="voiceTimer" class="font-mono text-xs text-purple-400 font-semibold hidden">00:00</div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="button" id="submitVibeBtn" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-sm shadow-lg shadow-purple-600/25 transition active:scale-[0.98]">
+          Log My Vibe & Update Pulse ✨
+        </button>
+        <div id="submitSuccess" class="hidden text-center text-xs font-semibold text-emerald-400 bg-emerald-950/40 border border-emerald-800/60 p-2.5 rounded-lg">
+          ✓ Vibe recorded anonymously! Seeded into organizational telemetry.
+        </div>
+      </section>
+
+      <!-- Right Column: Live Feed & Insights -->
+      <section class="lg:col-span-5 space-y-6">
+        <!-- Live Vibes Feed -->
+        <div class="glass rounded-2xl p-6 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800/80 pb-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <span>💬</span> Recent Anonymous Pulses
+            </h3>
+            <span class="text-[10px] font-mono text-purple-400 uppercase tracking-wider">Live Feed</span>
+          </div>
+
+          <div class="space-y-3" id="vibeFeed">
+            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800/80 text-xs space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-purple-300 flex items-center gap-1.5"><span>🚀</span> Flow State</span>
+                <span class="text-[10px] text-slate-500 font-mono">12m ago</span>
+              </div>
+              <p class="text-slate-300 leading-relaxed">"Today has been way better. Asked for permission far less and the system just feels better."</p>
+            </div>
+
+            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800/80 text-xs space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-emerald-300 flex items-center gap-1.5"><span>🔥</span> Election Day Rush</span>
+                <span class="text-[10px] text-slate-500 font-mono">34m ago</span>
+              </div>
+              <p class="text-slate-300 leading-relaxed">"100 county turnout ingestion running smooth. Senate race model needle looks gorgeous."</p>
+            </div>
+
+            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800/80 text-xs space-y-1.5">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-indigo-300 flex items-center gap-1.5"><span>🎯</span> Laser Focused</span>
+                <span class="text-[10px] text-slate-500 font-mono">1h ago</span>
+              </div>
+              <p class="text-slate-300 leading-relaxed">"Quiz 7 retake auto-scoring with the 5-minute wait buffer is seamless. Students got their scores immediately."</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cultural Health Scorecard -->
+        <div class="glass rounded-2xl p-6 space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Cultural Health Scorecard</h4>
+          <div class="space-y-2 text-xs">
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Autonomous Execution Ratio</span>
+                <span class="text-emerald-400 font-mono font-bold">96.4%</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full rounded-full" style="width: 96.4%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Zero-Friction Approvals</span>
+                <span class="text-purple-400 font-mono font-bold">94.8%</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-purple-500 h-full rounded-full" style="width: 94.8%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-slate-300 mb-1">
+                <span>Feedback Loop Speed (P95)</span>
+                <span class="text-indigo-400 font-mono font-bold">< 2 mins</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div class="bg-indigo-500 h-full rounded-full" style="width: 98%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500 font-mono">
+    Company Vibes Check · Hosted privately at rannbar-on.com/internal/vibes.html · Disallowed in robots.txt
+  </footer>
+
+  <script>
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('liveClock').textContent = now.toLocaleTimeString('en-US', { timeZone: 'America/New_York', hour12: true }) + ' EST';
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Sliders dynamic display
+    const sE = document.getElementById('sliderEnergy');
+    const sC = document.getElementById('sliderClarity');
+    const sV = document.getElementById('sliderVelocity');
+    sE.oninput = () => document.getElementById('valEnergy').textContent = sE.value + ' / 10';
+    sC.oninput = () => document.getElementById('valClarity').textContent = sC.value + ' / 10';
+    sV.oninput = () => document.getElementById('valVelocity').textContent = sV.value + ' / 10';
+
+    // Emoji Selection
+    let chosenEmoji = '🚀';
+    let chosenLabel = 'Hyper-Drive';
+    document.querySelectorAll('.vibe-emoji-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('.vibe-emoji-btn').forEach(b => b.classList.remove('border-purple-500', 'bg-purple-500/20'));
+        btn.classList.add('border-purple-500', 'bg-purple-500/20');
+        chosenEmoji = btn.dataset.emoji;
+        chosenLabel = btn.dataset.label;
+        document.getElementById('selectedEmojiText').textContent = 'Selected: ' + chosenEmoji + ' ' + chosenLabel;
+        document.getElementById('vibeEmojiDisplay').textContent = chosenEmoji;
+      };
+    });
+
+    // Voice memo simulation / recorder
+    let recording = false;
+    let timerInterval = null;
+    let seconds = 0;
+    const voiceBtn = document.getElementById('voiceMemoBtn');
+    const voiceStatus = document.getElementById('voiceStatus');
+    const voiceTimer = document.getElementById('voiceTimer');
+
+    voiceBtn.onclick = () => {
+      if (!recording) {
+        recording = true;
+        seconds = 0;
+        voiceTimer.classList.remove('hidden');
+        voiceBtn.classList.add('animate-pulse', 'from-red-600', 'to-pink-600');
+        voiceStatus.textContent = 'Listening... Speak your pulse, bug, or thought.';
+        timerInterval = setInterval(() => {
+          seconds++;
+          const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+          const s = String(seconds % 60).padStart(2, '0');
+          voiceTimer.textContent = m + ':' + s;
+        }, 1000);
+      } else {
+        recording = false;
+        clearInterval(timerInterval);
+        voiceTimer.classList.add('hidden');
+        voiceBtn.classList.remove('animate-pulse', 'from-red-600', 'to-pink-600');
+        voiceStatus.textContent = 'Voice memo recorded (' + seconds + 's). Attached to your vibe!';
+        document.getElementById('vibeNote').value = '[Voice Memo Captured - ' + seconds + 's Audio]: "System responsiveness is top tier today."';
+      }
+    };
+
+    // Submit Action
+    document.getElementById('submitVibeBtn').onclick = () => {
+      const note = document.getElementById('vibeNote').value.trim();
+      const avg = ((Number(sE.value) + Number(sC.value) + Number(sV.value)) / 3).toFixed(1);
+      document.getElementById('vibeScoreNum').textContent = avg;
+      
+      if (note) {
+        const feed = document.getElementById('vibeFeed');
+        const card = document.createElement('div');
+        card.className = 'bg-slate-900/90 p-3.5 rounded-xl border border-purple-500/40 text-xs space-y-1.5 animate-fade-in';
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-purple-300 flex items-center gap-1.5"><span>${chosenEmoji}</span> ${chosenLabel}</span>
+            <span class="text-[10px] text-emerald-400 font-mono font-semibold">Just now</span>
+          </div>
+          <p class="text-slate-200 leading-relaxed">"${note}"</p>
+        `;
+        feed.prepend(card);
+      }
+
+      const countEl = document.getElementById('checkInCount');
+      countEl.textContent = Number(countEl.textContent) + 1;
+
+      const success = document.getElementById('submitSuccess');
+      success.classList.remove('hidden');
+      setTimeout(() => success.classList.add('hidden'), 4000);
+    };
+  </script>
+</body>
+</html>

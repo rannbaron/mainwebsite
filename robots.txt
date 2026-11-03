@@ -7,3 +7,15 @@ Disallow: /taskpriority/
 Disallow: /taskpriority.html
 Disallow: /taskpriority
 Disallow: /*taskpriority*
+Disallow: /private_social/
+Disallow: /private_social.html
+Disallow: /private_social
+Disallow: /*private_social*
+Disallow: /internal/
+Disallow: /internal.html
+Disallow: /internal
+Disallow: /*internal*
+Disallow: /vibes/
+Disallow: /vibes.html
+Disallow: /vibes
+Disallow: /*vibes*
