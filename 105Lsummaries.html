@@ -229,6 +229,28 @@
       color: #FCD34D;
       transform: translateY(-1px);
     }
+    .btn-orig {
+      background: rgba(148, 163, 184, 0.12);
+      color: #CBD5E1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .btn-orig:hover {
+      background: rgba(148, 163, 184, 0.22);
+      color: #FFF;
+      transform: translateY(-1px);
+    }
+    .btn-gs {
+      background: rgba(139, 92, 246, 0.15);
+      color: #C4B5FD;
+      border: 1px solid rgba(139, 92, 246, 0.35);
+      font-size: 0.75rem;
+      padding: 0.35rem 0.55rem;
+    }
+    .btn-gs:hover {
+      background: rgba(139, 92, 246, 0.25);
+      color: #DDD6FE;
+      transform: translateY(-1px);
+    }
 
     footer {
       margin-top: 3rem;
@@ -241,9 +263,8 @@
   </style>
 </head>
 <body>
-
 <!-- Protected Page Content -->
-<div id="main-content" >
+<div id="main-content">
 <header>
 <div class="header-info">
 <h1>Math 105L Processed Video Archive</h1>
@@ -254,7 +275,6 @@
 <span style="font-size: 0.75rem; color: #94A3B8;">Internal Beta Archive</span>
 </div>
 </div>
-
 </header>
 <!-- Stats Bar -->
 <div class="stats-bar">
@@ -266,7 +286,6 @@
 <div class="stat-label">Completed Sheet PDFs</div>
 <div class="stat-val">27</div>
 </div>
-
 <div class="stat-card">
 <div class="stat-label">Total Materials</div>
 <div class="stat-val">27 PDFs</div>
@@ -286,7 +305,8 @@
 <th>Topic</th>
 <th>Panopto Recording</th>
 <th>Completed Sheet (PDF)</th>
-
+<th>Original PDF</th>
+<th>Gradescope Portals</th>
 </tr>
 </thead>
 <tbody>
@@ -308,8 +328,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/1-3.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177940" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177941" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="2-1 power functions &amp; polynomials 08/31/26">
 <td class="day-cell">
 <span class="badge badge-lec">2-1</span>
@@ -328,8 +347,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/2-1.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177952" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8617938" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="2-2 rational functions 09/02/26">
 <td class="day-cell">
 <span class="badge badge-lec">2-2</span>
@@ -348,8 +366,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/2-2.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177929" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177972" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="lab 2 part 1 linear modeling 09/03/26">
 <td class="day-cell">
 <span class="badge badge-lab">Lab 2 Part 1</span>
@@ -368,8 +385,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177924" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177933" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="2-3 function transformations 09/04/26">
 <td class="day-cell">
 <span class="badge badge-lec">2-3</span>
@@ -388,8 +404,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/2-3.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177953" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177971" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="3-2 modeling problems day 1 09/09/26">
 <td class="day-cell">
 <span class="badge badge-lec">3-2</span>
@@ -408,8 +423,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/3-2.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177926" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177905" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="lab 3 part 1 exploring limits 09/10/26">
 <td class="day-cell">
 <span class="badge badge-lab">Lab 3 Part 1</span>
@@ -428,8 +442,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8558765" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8586934" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="4-1 rates of change 09/14/26">
 <td class="day-cell">
 <span class="badge badge-lec">4-1</span>
@@ -448,8 +461,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/4-1.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177975" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177932" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="4-2 rates of change (continued) 09/16/26">
 <td class="day-cell">
 <span class="badge badge-lec">4-2</span>
@@ -468,8 +480,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/4-2.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td></tr>
 <tr data-search="lab 4 part 1 human growth 09/17/26">
 <td class="day-cell">
 <span class="badge badge-lab">Lab 4 Part 1</span>
@@ -488,8 +499,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177985" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177950" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="4-3 derivative at a point 09/18/26">
 <td class="day-cell">
 <span class="badge badge-lec">4-3</span>
@@ -508,8 +518,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/4-3.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177957" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177986" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="5-1 limits and continuity 09/21/26">
 <td class="day-cell">
 <span class="badge badge-lec">5-1</span>
@@ -528,8 +537,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/5-1.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177966" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177898" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="lab 4 part 2 human growth 09/22/26">
 <td class="day-cell">
 <span class="badge badge-lab">Lab 4 Part 2</span>
@@ -548,8 +556,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177985" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177950" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="5-2 the derivative function 09/23/26">
 <td class="day-cell">
 <span class="badge badge-lec">5-2</span>
@@ -568,8 +575,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/5-2.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177900" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177897" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="lab 5 part 1 sum, difference &amp; power rules 09/24/26">
 <td class="day-cell">
 <span class="badge badge-lab">Lab 5 Part 1</span>
@@ -588,8 +594,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177989" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177904" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="5-3 the second derivative 09/25/26">
 <td class="day-cell">
 <span class="badge badge-lec">5-3</span>
@@ -608,8 +613,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/5-3.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177967" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177899" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="lab 5 part 2 sum, difference &amp; power rules 09/29/26">
 <td class="day-cell">
 <span class="badge badge-lab">Lab 5 Part 2</span>
@@ -628,8 +632,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177989" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177904" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="7-1 compound interest 10/05/26">
 <td class="day-cell">
 <span class="badge badge-lec">7-1</span>
@@ -648,8 +651,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/7-1.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177991" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177998" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="lab 7 inverse functions 10/08/26">
 <td class="day-cell">
 <span class="badge badge-lab">Lab 7</span>
@@ -668,8 +670,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177902" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177937" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="8-2 logarithms 10/14/26">
 <td class="day-cell">
 <span class="badge badge-lec">8-2</span>
@@ -688,8 +689,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/8-2.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177943" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8178019" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="lab 8 part 1 log plots 10/15/26">
 <td class="day-cell">
 <span class="badge badge-lab">Lab 8 Part 1</span>
@@ -708,8 +708,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8178000" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177996" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="8-3 chain rule 10/16/26">
 <td class="day-cell">
 <span class="badge badge-lec">8-3</span>
@@ -728,8 +727,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/8-3.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177930" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177908" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="9-1 differentiating exponential functions 10/19/26">
 <td class="day-cell">
 <span class="badge badge-lec">9-1</span>
@@ -748,8 +746,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/9-1.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177909" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8178006" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="9-2 implicit differentiation i 10/21/26">
 <td class="day-cell">
 <span class="badge badge-lec">9-2</span>
@@ -768,8 +765,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/9-2.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177910" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177942" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="lab 8 part 3 log plots report help day 10/22/26">
 <td class="day-cell">
 <span class="badge badge-lab">Lab 8 Part 3</span>
@@ -788,8 +784,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8178000" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177996" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 <tr data-search="9-3 implicit differentiation ii 10/23/26">
 <td class="day-cell">
 <span class="badge badge-lec">9-3</span>
@@ -808,8 +803,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/9-3.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><span style="color:var(--text-muted); font-size:0.85rem;">—</span></td></tr>
 <tr data-search="10-3 using 1st &amp; 2nd derivatives 10/30/26">
 <td class="day-cell">
 <span class="badge badge-lec">10-3</span>
@@ -828,9 +822,7 @@
               Completed Sheet (PDF)
             </a>
 </td>
-
-</tr>
-
+<td class="action-cell"><a class="btn btn-orig" href="https://rannbar-on.com/duke/classworksheets105Lpdfs/10-3.pdf" rel="noopener" target="_blank">Original (PDF) ↗</a></td><td class="action-cell" style="display:flex; gap:0.35rem; align-items:center; flex-wrap:wrap;"><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177894" rel="noopener" target="_blank">Sub 1 ↗</a><a class="btn btn-gs" href="https://www.gradescope.com/courses/1318300/assignments/8177925" rel="noopener" target="_blank">Resub ↗</a></td></tr>
 </tbody>
 </table>
 </div>
