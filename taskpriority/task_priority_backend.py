@@ -169,7 +169,9 @@ def log_audit_event(event_type, user_id=None, username=None, details=None, ip_ad
 # EMAIL NOTIFICATION SYSTEM
 # ==============================================================================
 def dispatch_admin_notification(subject, html_body):
-    """Sends notification to Rann Bar-On via Duke Graph API or records in audit."""
+    """Sends notification to Rann Bar-On via Duke Graph API or records in audit.
+    STRICT POLICY: All task dashboard emails must go exclusively to rann@rannbar-on.com, never to rb6.
+    """
     print(f"[NOTIFICATION TO {ADMIN_EMAIL}] Subject: {subject}")
     sys.path.insert(0, '/home/rann/src/gradescopetools')
     try:
@@ -180,7 +182,7 @@ def dispatch_admin_notification(subject, html_body):
             content=html_body,
             is_html=True,
             dry_run=False,
-            cc_recipients=['rb6@duke.edu']
+            cc_recipients=[]  # STRICT: All task dashboard emails go to rann@rannbar-on.com, not rb6
         )
         return success
     except Exception as e:
@@ -525,7 +527,7 @@ def seed_default_tasks(admin_user_id):
         ("Panopto Video Auto-Editing & Executive Summary Pipeline", "Automated OCR & audio transcription pipeline generating structured LaTeX executive summaries for lecture videos.", 8, "Gemini 4 Argon", 50),
         ("Constitutional Amendments Forecast Model & Dials", "Live interactive SVG prediction dials for NC Constitutional Amendments (State Board of Elections & Judicial Vacancies).", 8, "Gemini 4 Argon", 100),
         ("Cauchy Math CUPS Printer Suite & CLI", "Multiplexed SSH raw CUPS printing suite (cauchy_print.sh) with duplex, punch, staple, and slip sheet support.", 8, "Gemini 4 Argon", 100),
-        ("Worksheet 10-1 & 10-2 Extension Summary Dispatch", "Automated cron scheduled for 8:00 PM to audit Gradescope NP status and dispatch summary to rb6@duke.edu.", 7, "Gemini 3.8 Flash (High)", 70),
+        ("Worksheet 10-1 & 10-2 Extension Summary Dispatch", "Automated cron scheduled for 8:00 PM to audit Gradescope NP status and dispatch summary to rann@rannbar-on.com.", 7, "Gemini 3.8 Flash (High)", 70),
         ("Isaiah Nwoko Re-enrollment & Dynamic Quiz Windows", "Nightly cron (00:00) maintaining 24-hour staggered quiz release and submission windows for re-enrolled student.", 7, "Gemini 3.8 Flash (High)", 60),
         ("Friday Office Hours Shift & Schedule Update", "Public schedule updated across course sites reflecting new Friday office hours (1:45 PM – 3:45 PM).", 7, "Gemini 3.8 Flash (High)", 100),
         ("24-Hour Three-Model Comparative Evaluation Protocol", "Structured cross-model trial logging (Flash Medium vs Flash High vs Argon) with automated dispatch concluding Nov 2 at 12:00 PM.", 6, "Gemini 3.8 Flash (High)", 85),
@@ -721,7 +723,11 @@ def create_task(title, description="", priority=10, model=None, completion_perce
                 user = dict(cursor.fetchone())
 
     # Priority resolution & Rule: All tasks submitted locally from this machine have immediate admin status P=10
-    if is_local_machine:
+    # Rule: Completed sheet review loops and instructor feedback tasks automatically get priority 10
+    is_review_loop = any(kw in title.lower() or kw in description.lower() for kw in [
+        'completed sheet', 'review loop', 'lecture sheet review', 'draft sample', 'lecture 11-1', 'topic summary'
+    ])
+    if is_local_machine or is_review_loop:
         priority = 10
     elif priority is None:
         priority = 10
