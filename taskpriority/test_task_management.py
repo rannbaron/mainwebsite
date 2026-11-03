@@ -90,10 +90,10 @@ class TestTaskManagement(unittest.TestCase):
 
     def test_model_defaults_by_priority(self):
         """Verify priorities 8-10 default to Argon, 5-7 to Flash High, 1-4 to Flash Medium."""
-        self.assertIn("if (newPriority >= 8) {", self.index_html)
-        self.assertIn("task.model = 'Gemini 4 Argon';", self.index_html)
-        self.assertIn("task.model = 'Gemini 3.8 Flash (High)';", self.index_html)
-        self.assertIn("task.model = 'Gemini 3.8 Flash (Medium)';", self.index_html)
+        self.assertIn("function getDefaultModelForPriority(", self.index_html)
+        self.assertIn("if (p >= 8) return 'Gemini 4 Argon';", self.index_html)
+        self.assertIn("if (p >= 5) return 'Gemini 3.8 Flash (High)';", self.index_html)
+        self.assertIn("return 'Gemini 3.8 Flash (Medium)';", self.index_html)
 
 if __name__ == "__main__":
     unittest.main()

@@ -1234,6 +1234,12 @@
       tasksState = JSON.parse(JSON.stringify(DEFAULT_TASKS));
       saveTasksState();
     }
+    // Ensure all tasks have assignedAgent populated
+    tasksState.forEach(task => {
+      if (!task.assignedAgent) {
+        task.assignedAgent = getAssignedAgent(task.priority, task.id, task.model);
+      }
+    });
   }
 
   function saveTasksState() {
@@ -1250,14 +1256,58 @@
     return 'pri-1-4';
   }
 
+  function getDefaultModelForPriority(priority) {
+    const p = parseInt(priority, 10);
+    if (p >= 8) return 'Gemini 4 Argon';
+    if (p >= 5) return 'Gemini 3.8 Flash (High)';
+    return 'Gemini 3.8 Flash (Medium)';
+  }
+
+  function getAssignedAgent(priority, taskId, model) {
+    const p = parseInt(priority, 10);
+    const idStr = taskId != null ? `-${taskId}` : '';
+    if (model === 'Gemini 4 Argon' || (p >= 8 && (!model || model.includes('Argon')))) {
+      return `argon-agent${idStr}`;
+    } else if (model === 'Gemini 3.8 Flash (High)' || (p >= 5 && p <= 7 && (!model || model.includes('High')))) {
+      return `flash-high-agent${idStr}`;
+    } else if (model === 'Gemini 3.8 Flash (Medium)' || p < 5) {
+      return 'shared-flash-medium-coordinator';
+    } else {
+      if (p >= 8) return `argon-agent${idStr}`;
+      if (p >= 5) return `flash-high-agent${idStr}`;
+      return 'shared-flash-medium-coordinator';
+    }
+  }
+
   function getAssignedAgentBadge(task) {
     const pri = parseInt(task.priority, 10);
-    if (pri >= 8) {
-      return `<div class="agent-badge agent-argon" title="Dedicated subagent instance powered by Gemini 4 Argon"><i class="fa-solid fa-robot"></i> Dedicated Argon Agent #${task.id}</div>`;
-    } else if (pri >= 5) {
-      return `<div class="agent-badge agent-flash-high" title="Dedicated subagent instance powered by Gemini 3.8 Flash (High)"><i class="fa-solid fa-bolt"></i> Dedicated Flash High Agent #${task.id}</div>`;
+    const model = task.model || getDefaultModelForPriority(pri);
+    const agent = task.assignedAgent || getAssignedAgent(pri, task.id, model);
+
+    if (agent.startsWith('argon-agent')) {
+      return `
+        <div class="agent-badge agent-argon" title="Dedicated Gemini 4 Argon Agent for Task #${task.id}">
+          <i class="fa-solid fa-atom"></i>
+          <span>Dedicated Argon Agent</span>
+          <code class="agent-tag-code">${escapeHtml(agent)}</code>
+        </div>
+      `;
+    } else if (agent.startsWith('flash-high-agent')) {
+      return `
+        <div class="agent-badge agent-flash-high" title="Dedicated Gemini 3.8 Flash (High) Agent for Task #${task.id}">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Dedicated Flash High Agent</span>
+          <code class="agent-tag-code">${escapeHtml(agent)}</code>
+        </div>
+      `;
     } else {
-      return `<div class="agent-badge agent-flash-med" title="Shared background coordinator agent powered by Gemini 3.8 Flash (Medium)"><i class="fa-solid fa-users"></i> Shared Flash Medium Agent</div>`;
+      return `
+        <div class="agent-badge agent-flash-med" title="Shared Gemini 3.8 Flash (Medium) Coordinator Agent">
+          <i class="fa-solid fa-network-wired"></i>
+          <span>Shared Flash Medium Agent</span>
+          <code class="agent-tag-code">shared-flash-medium-coordinator</code>
+        </div>
+      `;
     }
   }
 
@@ -1267,18 +1317,23 @@
     if (!task) return;
     task.priority = newPriority;
     // Policy:
-    // P8-10: Gemini 4 Argon by default, dedicated agent each
-    // P5-7: Gemini 3.8 Flash (High) by default, dedicated agent each
-    // P1-4: Gemini 3.8 Flash (Medium) by default, single shared agent
-    if (newPriority >= 8) {
-      task.model = 'Gemini 4 Argon';
-    } else if (newPriority >= 5) {
-      task.model = 'Gemini 3.8 Flash (High)';
-    } else {
-      task.model = 'Gemini 3.8 Flash (Medium)';
-    }
+    // P8-10: Gemini 4 Argon by default, dedicated agent each (argon-agent-<id>)
+    // P5-7:  Gemini 3.8 Flash (High) by default, dedicated agent each (flash-high-agent-<id>)
+    // P1-4:  Gemini 3.8 Flash (Medium) by default, single shared agent (shared-flash-medium-coordinator)
+    task.model = getDefaultModelForPriority(newPriority);
+    task.assignedAgent = getAssignedAgent(newPriority, taskId, task.model);
     saveTasksState();
     updateStatCards();
+    renderTasksTable();
+  }
+
+  function changeTaskModel(taskId, newModel) {
+    const task = tasksState.find(t => t.id === taskId);
+    if (!task) return;
+    task.model = newModel;
+    // Dynamic model changes update the assigned agent automatically
+    task.assignedAgent = getAssignedAgent(task.priority, taskId, newModel);
+    saveTasksState();
     renderTasksTable();
   }
 
@@ -1289,17 +1344,29 @@
     if (!confirm(`Are you sure you want to permanently delete task #${taskId} "${title}" from the dashboard queue?`)) {
       return;
     }
-    tasksState = tasksState.filter(t => t.id !== taskId);
-    saveTasksState();
-    updateStatCards();
-    renderTasksTable();
+    
+    // Reactive UI removal: animate row out smoothly before updating state
+    const rowEl = document.querySelector(`tr[data-task-id="${taskId}"]`);
+    if (rowEl) {
+      rowEl.style.transition = 'opacity 0.25s ease, transform 0.25s ease, background-color 0.25s ease';
+      rowEl.style.opacity = '0';
+      rowEl.style.transform = 'translateX(25px)';
+      rowEl.style.backgroundColor = 'rgba(239, 68, 68, 0.25)';
+    }
+
+    setTimeout(() => {
+      tasksState = tasksState.filter(t => t.id !== taskId);
+      saveTasksState();
+      updateStatCards();
+      renderTasksTable();
+    }, 250);
   }
 
-  function changeTaskModel(taskId, newModel) {
-    const task = tasksState.find(t => t.id === taskId);
-    if (!task) return;
-    task.model = newModel;
-    saveTasksState();
+  function handleNewTaskPriorityChange(newPriority) {
+    const modelSelect = document.getElementById('newTaskModel');
+    if (modelSelect) {
+      modelSelect.value = getDefaultModelForPriority(newPriority);
+    }
   }
 
   function setSortColumn(col) {
@@ -1514,8 +1581,8 @@
             </span>
           </td>
           <td style="text-align: center;">
-            <button class="btn-delete" onclick="deleteTask(${task.id})" title="Delete task #${task.id} from queue">
-              <i class="fa-solid fa-trash-can"></i>
+            <button class="btn-delete" onclick="deleteTask(${task.id})" title="Delete task #${task.id} from dashboard queue">
+              <i class="fa-solid fa-trash-can"></i> Delete
             </button>
           </td>
         </tr>
@@ -1574,21 +1641,22 @@
       return;
     }
 
-    // Policy: All tasks submitted locally from this machine have immediate admin status P=10
-    const priority = 10;
-    const model = modelInput?.value || 'Gemini 4 Argon';
+    const priority = parseInt(priInput?.value || '10', 10);
+    const model = modelInput?.value || getDefaultModelForPriority(priority);
     const progressVal = parseInt(progInput?.value || '0', 10);
     const scope = (scopeInput?.value || '').trim() || 'Automated task submitted locally with immediate admin status.';
 
     const newId = tasksState.length > 0 ? (Math.max(...tasksState.map(t => t.id)) + 1) : 1;
+    const assignedAgent = getAssignedAgent(priority, newId, model);
 
     const newTask = {
       id: newId,
-      priority: 10,
+      priority: priority,
       title: title,
       scope: scope,
       model: model,
-      progress: progressVal > 0 ? `${progressVal}%` : "Active (P10)",
+      assignedAgent: assignedAgent,
+      progress: progressVal > 0 ? `${progressVal}%` : `Active (P${priority})`,
       progressPercent: progressVal > 0 ? progressVal : 10,
       status: "Active / Admin",
       statusIcon: "fa-solid fa-bolt",
@@ -1605,7 +1673,7 @@
     updateStatCards();
     renderTasksTable();
 
-    alert(`Task #${newId} "${title}" submitted locally with immediate admin status (P=10).`);
+    alert(`Task #${newId} "${title}" created successfully!\nPriority: P${priority}\nModel: ${model}\nAssigned Agent: ${assignedAgent}`);
   }
 
   function evaluateAuth() {

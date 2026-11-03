@@ -1581,8 +1581,8 @@
             </span>
           </td>
           <td style="text-align: center;">
-            <button class="btn-delete" onclick="deleteTask(${task.id})" title="Delete task #${task.id} from queue">
-              <i class="fa-solid fa-trash-can"></i>
+            <button class="btn-delete" onclick="deleteTask(${task.id})" title="Delete task #${task.id} from dashboard queue">
+              <i class="fa-solid fa-trash-can"></i> Delete
             </button>
           </td>
         </tr>
@@ -1641,21 +1641,22 @@
       return;
     }
 
-    // Policy: All tasks submitted locally from this machine have immediate admin status P=10
-    const priority = 10;
-    const model = modelInput?.value || 'Gemini 4 Argon';
+    const priority = parseInt(priInput?.value || '10', 10);
+    const model = modelInput?.value || getDefaultModelForPriority(priority);
     const progressVal = parseInt(progInput?.value || '0', 10);
     const scope = (scopeInput?.value || '').trim() || 'Automated task submitted locally with immediate admin status.';
 
     const newId = tasksState.length > 0 ? (Math.max(...tasksState.map(t => t.id)) + 1) : 1;
+    const assignedAgent = getAssignedAgent(priority, newId, model);
 
     const newTask = {
       id: newId,
-      priority: 10,
+      priority: priority,
       title: title,
       scope: scope,
       model: model,
-      progress: progressVal > 0 ? `${progressVal}%` : "Active (P10)",
+      assignedAgent: assignedAgent,
+      progress: progressVal > 0 ? `${progressVal}%` : `Active (P${priority})`,
       progressPercent: progressVal > 0 ? progressVal : 10,
       status: "Active / Admin",
       statusIcon: "fa-solid fa-bolt",
@@ -1672,7 +1673,7 @@
     updateStatCards();
     renderTasksTable();
 
-    alert(`Task #${newId} "${title}" submitted locally with immediate admin status (P=10).`);
+    alert(`Task #${newId} "${title}" created successfully!\nPriority: P${priority}\nModel: ${model}\nAssigned Agent: ${assignedAgent}`);
   }
 
   function evaluateAuth() {
