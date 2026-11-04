@@ -28,8 +28,51 @@ OUTPUT_DIR = os.path.join(BASE_DIR, 'needle')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def build_needle_dataset():
+    out_json = os.path.join(OUTPUT_DIR, 'needle_data.json')
+    senate_json = os.path.join(BASE_DIR, 'nc_senate_data.json')
+
+    # If raw legislative metadata is not found but compiled needle_data.json exists, load and refresh it
+    if not os.path.exists(senate_json) and os.path.exists(out_json):
+        print(f"Loading existing compiled dataset from {out_json} and refreshing forecasts...")
+        with open(out_json, 'r') as f:
+            output = json.load(f)
+
+        from datetime import datetime
+        output["generated_at"] = datetime.now().strftime("%Y-%m-%dT%H:%M:%S-05:00")
+
+        # Refresh statewide races from nc_map_base.json if available
+        map_base_path = os.path.join(BASE_DIR, 'nc_map_base.json')
+        if os.path.exists(map_base_path):
+            try:
+                with open(map_base_path, 'r') as mf:
+                    mb = json.load(mf)
+                st_fc = mb.get('state', {}).get('forecast', {})
+                if st_fc and 'US-SENATE' in output.get('statewide', {}):
+                    us_fc = st_fc.get('races', {}).get('us_senate', st_fc)
+                    output['statewide']['US-SENATE']['pred_margin'] = us_fc.get('pred_margin', output['statewide']['US-SENATE']['pred_margin'])
+                    output['statewide']['US-SENATE']['p_dem'] = us_fc.get('p_dem', output['statewide']['US-SENATE']['p_dem'])
+                    output['statewide']['US-SENATE']['p_rep'] = us_fc.get('p_rep', output['statewide']['US-SENATE']['p_rep'])
+                    output['statewide']['US-SENATE']['rating'] = us_fc.get('rating', output['statewide']['US-SENATE']['rating'])
+                if st_fc and 'NC-SC' in output.get('statewide', {}):
+                    sc_fc = st_fc.get('races', {}).get('supreme_court', {})
+                    if sc_fc:
+                        output['statewide']['NC-SC']['pred_margin'] = sc_fc.get('pred_margin', output['statewide']['NC-SC']['pred_margin'])
+                        output['statewide']['NC-SC']['p_dem'] = sc_fc.get('p_dem', output['statewide']['NC-SC']['p_dem'])
+                        output['statewide']['NC-SC']['p_rep'] = sc_fc.get('p_rep', output['statewide']['NC-SC']['p_rep'])
+                        output['statewide']['NC-SC']['rating'] = sc_fc.get('rating', output['statewide']['NC-SC']['rating'])
+            except Exception as e:
+                print(f"Warning: Could not refresh statewide forecasts from nc_map_base: {e}")
+
+        try:
+            with open(out_json, 'w') as f:
+                json.dump(output, f, separators=(',', ':'))
+            print(f"Successfully refreshed {out_json} (size: {os.path.getsize(out_json)/1024:.1f} KB).")
+        except OSError as e:
+            print(f"Notice: {out_json} is read-only in this environment ({e}), using existing dataset.")
+        return output
+
     print("1. Loading legislative models & base geometries...")
-    with open(os.path.join(BASE_DIR, 'nc_senate_data.json')) as f:
+    with open(senate_json) as f:
         senate_meta = json.load(f)
     with open(os.path.join(BASE_DIR, 'nc_house_data.json')) as f:
         house_meta = json.load(f)
@@ -574,10 +617,18 @@ def update_needle_html_files():
     suffix = orig_html[js_marker:] if js_marker != -1 else orig_html[m2:]
 
     full_html = prefix + "window.NEEDLE_DATA = " + data_json + ";\n  </script>\n\n  " + suffix
-    with open(index_path, 'w') as f:
-        f.write(full_html)
-    shutil.copyfile(index_path, needle_root)
-    print(f"Successfully updated {index_path} and {needle_root} ({os.path.getsize(index_path)/1024:.1f} KB).")
+    try:
+        with open(index_path, 'w') as f:
+            f.write(full_html)
+        print(f"Successfully updated {index_path} ({os.path.getsize(index_path)/1024:.1f} KB).")
+    except OSError as e:
+        print(f"Notice: Could not write {index_path}: {e}")
+
+    try:
+        shutil.copyfile(index_path, needle_root)
+        print(f"Successfully updated {needle_root} ({os.path.getsize(needle_root)/1024:.1f} KB).")
+    except OSError as e:
+        print(f"Notice: {needle_root} is read-only ({e}), updated {index_path}.")
 
 if __name__ == '__main__':
     build_needle_dataset()

@@ -450,6 +450,487 @@
       font-size: 11px;
       font-weight: 800;
     }
+
+    /* Phone Shell Container */
+    .phone-container {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 0 14px;
+    }
+
+    /* Sticky Mobile Header */
+    header.mobile-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--safe-top) + 64px);
+      padding-top: var(--safe-top);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+    .header-inner {
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #10b981;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 4px #10b981; }
+      50% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 14px #10b981; }
+      100% { transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 4px #10b981; }
+    }
+    .brand-title {
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+    }
+    .brand-sub {
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hdr-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    .hdr-btn:active {
+      background: var(--blue);
+      color: #fff;
+    }
+    .btn-needle {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff;
+      border: none;
+      box-shadow: 0 2px 8px var(--blue-glow);
+    }
+
+    /* Live Update Banner Pill */
+    .new-updates-banner {
+      position: sticky;
+      top: calc(var(--safe-top) + 72px);
+      z-index: 900;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.5);
+      animation: slideDown 0.3s ease-out;
+    }
+    @keyframes slideDown {
+      from { transform: translateY(-15px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Horizontal Category Scroller */
+    .filters-wrapper {
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 10px 0 14px 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      display: flex;
+      gap: 8px;
+    }
+    .filters-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #131d31;
+      border: 1px solid #1e293b;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }
+    .chip.active {
+      background: #3b82f6;
+      color: #ffffff;
+      border-color: #60a5fa;
+      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+    }
+
+    /* Feed Card Component */
+    .feed-stream {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .feed-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .feed-card:active {
+      background: var(--card-hover);
+    }
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .source-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .source-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: #60a5fa;
+      border: 1px solid #334155;
+    }
+    .source-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .source-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.2;
+    }
+    .source-handle {
+      font-size: 11px;
+      color: #64748b;
+    }
+    .card-badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+    .card-text {
+      font-size: 13.5px;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.5;
+    }
+    .card-text a {
+      color: #60a5fa;
+      text-decoration: none;
+    }
+
+    /* Metrics Grid inside Card */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 12px;
+      background: #090e1a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 8px 10px;
+    }
+    .metric-cell {
+      text-align: center;
+    }
+    .metric-lbl {
+      font-size: 10px;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 700;
+      display: block;
+    }
+    .metric-val {
+      font-size: 13px;
+      font-weight: 800;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Card Action Bar */
+    .card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .action-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .act-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+    }
+    .act-btn:active {
+      color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+    }
+    .link-btn {
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Mobile Fixed Bottom Nav */
+    nav.bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--safe-bottom) + 60px);
+      padding-bottom: var(--safe-bottom);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+    .nav-item.active {
+      color: #3b82f6;
+    }
+    .nav-icon {
+      font-size: 18px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: calc(var(--safe-bottom) + 75px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid #3b82f6;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      z-index: 2000;
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, 10px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    /* Hero Quick Ticker */
+    .quick-ticker {
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.5), rgba(17, 24, 39, 0.8));
+      border: 1px solid #1e3a8a;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .ticker-left {
+      display: flex;
+      flex-direction: column;
+    }
+    .ticker-lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #60a5fa;
+      letter-spacing: 0.5px;
+    }
+    .ticker-val {
+      font-size: 16px;
+      font-weight: 900;
+      color: #ffffff;
+    }
+    .ticker-badge {
+      background: #10b981;
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    /* Official Social Accounts Grid */
+    .social-accounts-panel {
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
+    .social-panel-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .live-pill {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 9px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-weight: 800;
+    }
+    .social-accounts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #111827;
+      border: 1px solid #1f2937;
+      padding: 8px 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .social-btn:hover {
+      transform: translateY(-1px);
+      border-color: #3b82f6;
+    }
+    .soc-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    .x-btn .soc-icon { color: #ffffff; }
+    .threads-btn .soc-icon { color: #f3f4f6; }
+    .ig-btn .soc-icon { color: #ec4899; }
+    .bsky-btn .soc-icon { color: #0285ff; }
+    .soc-info {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .soc-name {
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #f8fafc;
+      line-height: 1.2;
+    }
+    .soc-handle {
+      font-size: 10px;
+      color: #64748b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
   </style>
 </head>
 <body>
@@ -487,6 +968,44 @@
         <span class="ticker-val">Cooper +9.5%</span>
       </div>
       <div class="ticker-badge">99.5% PROB</div>
+    </div>
+
+    <!-- Official Social Accounts Bar -->
+    <div class="social-accounts-panel">
+      <div class="social-panel-hdr">
+        <span>Official Social Accounts & Feeds</span>
+        <span class="live-pill">DIRECT LINKS</span>
+      </div>
+      <div class="social-accounts-grid">
+        <a href="https://twitter.com/NC_Election_Live" target="_blank" rel="noopener" class="social-btn x-btn">
+          <svg class="soc-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <div class="soc-info">
+            <span class="soc-name">X (Twitter)</span>
+            <span class="soc-handle">@NC_Election_Live</span>
+          </div>
+        </a>
+        <a href="https://www.threads.net/@carolina_turnout_pulse" target="_blank" rel="noopener" class="social-btn threads-btn">
+          <svg class="soc-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 5.08 3.79 9.27 8.68 9.91v-2.02C6.98 19.27 4.1 15.97 4.1 12c0-4.36 3.54-7.9 7.9-7.9s7.9 3.54 7.9 7.9c0 2.45-1.12 4.67-2.9 6.13-1.4 1.15-3.23 1.77-5 1.77-2.8 0-5.1-1.8-5.8-4.5h2.1c.6 1.6 2.1 2.6 3.7 2.6 1.3 0 2.6-.5 3.6-1.3 1.3-1.1 2.1-2.7 2.1-4.7 0-3.3-2.7-5.9-5.9-5.9-3.3 0-5.9 2.6-5.9 5.9 0 2.2 1.2 4.1 3 5.1v2.1C5.8 20.7 4 18.1 4 15c0-4.4 3.6-8 8-8s8 3.6 8 8c0 3.2-1.8 6-4.5 7.4-1.1.6-2.3.9-3.5.9-2.2 0-4.3-.8-5.9-2.3C4.4 19.3 3.5 17.2 3.5 15c0-4.7 3.8-8.5 8.5-8.5s8.5 3.8 8.5 8.5c0 2.6-1.1 4.9-2.9 6.5"/></svg>
+          <div class="soc-info">
+            <span class="soc-name">Threads</span>
+            <span class="soc-handle">@carolina_turnout_pulse</span>
+          </div>
+        </a>
+        <a href="https://instagram.com/carolina_turnout_pulse" target="_blank" rel="noopener" class="social-btn ig-btn">
+          <svg class="soc-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          <div class="soc-info">
+            <span class="soc-name">Instagram</span>
+            <span class="soc-handle">@carolina_turnout_pulse</span>
+          </div>
+        </a>
+        <a href="https://bsky.app/profile/carolinapulse.bsky.social" target="_blank" rel="noopener" class="social-btn bsky-btn">
+          <svg class="soc-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566 1.01 1.25 1.958 1.25 4.385c0 1.782.793 8.358 1.24 9.873.918 3.109 4.195 3.864 6.837 3.33-4.66 1.01-6.143 3.826-3.468 6.57 3.23 3.313 5.485-.758 6.141-2.958.656 2.2 2.911 6.271 6.141 2.958 2.675-2.744 1.192-5.56-3.468-6.57 2.642.534 5.919-.221 6.837-3.33.447-1.515 1.24-8.091 1.24-9.873 0-2.427-1.316-3.375-3.952-1.58C16.046 4.747 13.087 8.686 12 10.8z"/></svg>
+          <div class="soc-info">
+            <span class="soc-name">Bluesky</span>
+            <span class="soc-handle">@carolinapulse.bsky.social</span>
+          </div>
+        </a>
+      </div>
     </div>
 
     <!-- Horizontal Category Filter Chips -->
@@ -533,7 +1052,7 @@
 
   <script>
     // Initial baked feed items
-    let feedItems = [{"id": "post_live_needle_alert", "type": "needle_dial", "category": "\u26a1 Needle Dials", "badge_color": "#3b82f6", "source": "Bayesian Needle Engine", "source_handle": "@NC_DecisionDesk", "timestamp": "Just now", "exact_time": "05:59 PM EST", "created_at": "2026-11-03T17:59:55.650946", "title": "US SENATE NEEDLE: Cooper Advantage Expands to +9.5%", "content": "\u26a1 Real-time Bayesian 3-mode decomposition shows Roy Cooper (D) commanding a +9.46 pp projected margin (54.73% Dem vs 45.27% Rep). Win probability stands at 99.5% [Safe D]. Substantial independent crossover in Cabarrus and Union counties continues to outpace 2022 midterm baselines.", "metrics": [{"label": "Proj Margin", "val": "DEM +9.5%", "color": "#3b82f6"}, {"label": "Win Prob", "val": "99.5%", "color": "#10b981"}, {"label": "Model Rating", "val": "Safe D", "color": "#3b82f6"}], "action_link": "https://rannbar-on.com/needle", "action_text": "Live Needle Dial \u27a1\ufe0f"}, {"id": "post_house_supermajority", "type": "needle_dial", "category": "\u26a1 Needle Dials", "badge_color": "#10b981", "source": "Legislative Decision Desk", "source_handle": "@NC_DecisionDesk", "timestamp": "4m ago", "exact_time": "04:36 PM EST", "created_at": "2026-11-03T16:36:00", "title": "NC HOUSE SUPERMAJORITY: 96.2% Confidence Broken", "content": "\ud83c\udfdb\ufe0f The live legislative needle estimates Democrats will capture 54.2 seats in the North Carolina House of Representatives (95% CI: [48, 61] seats). With the threshold for breaking the supermajority set at 49 seats, statistical confidence of breaking the Republican supermajority is modeled at 96.2%.", "metrics": [{"label": "Exp D Seats", "val": "54.2 / 120", "color": "#3b82f6"}, {"label": "Break Supermajority", "val": "96.2%", "color": "#10b981"}, {"label": "Threshold", "val": "49 Seats", "color": "#94a3b8"}], "action_link": "https://rannbar-on.com/needle", "action_text": "Legislative Needle \u27a1\ufe0f"}, {"id": "post_social_twitter_pulse", "type": "social_post", "category": "\ud83d\udce2 Our Posts", "badge_color": "#1d9bf0", "source": "Official Post (X / Twitter)", "source_handle": "@NC_Election_Live", "timestamp": "12m ago", "exact_time": "04:28 PM EST", "created_at": "2026-11-03T16:28:00", "title": "\ud83d\udea8 TURNOUT UPDATE: 2.83M+ Ballots In", "content": "\ud83d\udea8 NORTH CAROLINA TURNOUT ALERT:\n\n2.83M+ votes in across all 100 counties. Unaffiliated voters SURGE to 35.2%, outpacing GOP (26.1%).\n\n\u26a1 Needle: Cooper +9.5%\n\ud83c\udfdb\ufe0f Supermajority: 96.2% BROKEN\n\nDrop your county wait time below! \ud83d\udc47\n#NCpol #NCSen #SwingState #VoteNC", "metrics": [{"label": "Total Turnout", "val": "2,828,131", "color": "#f8fafc"}, {"label": "Unaffiliated", "val": "35.2%", "color": "#f59e0b"}, {"label": "Dem / Rep", "val": "38.4% / 26.1%", "color": "#3b82f6"}], "action_link": "https://rannbar-on.com/needle", "action_text": "View Live Model \u27a1\ufe0f"}, {"id": "post_turnout_surge_unaffiliated", "type": "turnout_alert", "category": "\ud83d\uddf3\ufe0f Turnout", "badge_color": "#f59e0b", "source": "NC State Board of Elections Ingestion", "source_handle": "@NCSBE", "timestamp": "18m ago", "exact_time": "04:22 PM EST", "created_at": "2026-11-03T16:22:00", "title": "SEISMIC INDEPENDENT TURNOUT: Unaffiliated Surpasses GOP Statewide", "content": "\ud83d\uddf3\ufe0f Ballot ingestion across all 100 counties confirms a historic voter realignment: Unaffiliated voters have cast 995,378 ballots (35.20% of the electorate), compared to 738,717 registered Republicans (26.12%) and 1,085,262 registered Democrats (38.37%). Suburban perimeter battlegrounds are showing the highest independent surge.", "metrics": [{"label": "Unaffiliated Ballots", "val": "995,378", "color": "#f59e0b"}, {"label": "Democratic Ballots", "val": "1,085,262", "color": "#3b82f6"}, {"label": "Republican Ballots", "val": "738,717", "color": "#ef4444"}], "action_link": "https://rannbar-on.com/prediction", "action_text": "County Turnout Map \u27a1\ufe0f"}, {"id": "post_news_wake_meck_boe", "type": "news_update", "category": "\ud83d\udcf0 NC News", "badge_color": "#8b5cf6", "source": "County Boards of Elections", "source_handle": "@WakeElections", "timestamp": "25m ago", "exact_time": "04:15 PM EST", "created_at": "2026-11-03T16:15:00", "title": "Wake & Mecklenburg BOE Report Peak Midday Precinct Volumes", "content": "\ud83d\udcf0 Turnout across all 212 Wake County precincts and 195 Mecklenburg precincts is operating at peak midterm velocity. Average wait times remain brisk at under 12 minutes, with poll workers managing heavy afternoon queues smoothly. Suburban precincts in Cary, Apex, and Huntersville report steady lines.", "metrics": [], "action_link": "https://rannbar-on.com/vote", "action_text": "Precinct Directory \u27a1\ufe0f"}, {"id": "post_social_threads_deepdive", "type": "social_post", "category": "\ud83d\udce2 Our Posts", "badge_color": "#000000", "source": "Official Post (Threads)", "source_handle": "@carolina_turnout_pulse", "timestamp": "32m ago", "exact_time": "04:08 PM EST", "created_at": "2026-11-03T16:08:00", "title": "\u26a1 THE INDEPENDENT EXPLOSION: Comprehensive Midday Analysis", "content": "Over 2.82 MILLION ballots are already in across all 100 counties\u2014and North Carolina is the ultimate national battleground tonight. Here is the high-stakes breakdown from our live Bayesian model:\n\n\ud83d\udd25 THE INDEPENDENT EXPLOSION:\nUnaffiliated voters have officially overtaken registered Republicans, accounting for 35.2% of all check-ins. In suburban perimeter battlegrounds like Cabarrus and Union, independent crossover is breaking standard midterm baselines.\n\n\u26a1 HIGH STAKES ON THE NEEDLE:\n\u2022 US Senate: Roy Cooper holds an estimated +9.46 pp advantage [Likely D]\n\u2022 Supermajority Breaker: With 54.2 projected D seats in the House, the GOP supermajority is modeled as BROKEN at 96.2% confidence.\n\n#NCpol #NCSen #NCGov #Elections2026 #DecisionDesk #SwingState #VoteNC #NCGA", "metrics": [], "action_link": "https://rannbar-on.com/needle", "action_text": "Live Dials \u27a1\ufe0f"}, {"id": "post_supreme_court_earls", "type": "needle_dial", "category": "\u26a1 Needle Dials", "badge_color": "#3b82f6", "source": "Judicial Forecast Engine", "source_handle": "@NC_DecisionDesk", "timestamp": "40m ago", "exact_time": "04:00 PM EST", "created_at": "2026-11-03T16:00:00", "title": "NC SUPREME COURT SEAT 1: Anita Earls Leads by +5.5%", "content": "\u2696\ufe0f In the marquee statewide judicial contest, incumbent Justice Anita Earls (D) is projected at 52.73% (a +5.46 pp advantage over Republican challenger Sarah Stevens). Downballot voter retention in urban and suburban precincts remains exceptionally robust.", "metrics": [{"label": "Projected Dem", "val": "52.73%", "color": "#3b82f6"}, {"label": "Projected Margin", "val": "DEM +5.5%", "color": "#3b82f6"}, {"label": "Rating", "val": "Lean D", "color": "#3b82f6"}], "action_link": "https://rannbar-on.com/prediction", "action_text": "Judicial Breakdown \u27a1\ufe0f"}, {"id": "post_news_student_campus_turnout", "type": "news_update", "category": "\ud83d\udcf0 NC News", "badge_color": "#8b5cf6", "source": "NC Student Voting Hub", "source_handle": "@NCStudentVote", "timestamp": "50m ago", "exact_time": "03:50 PM EST", "created_at": "2026-11-03T15:50:00", "title": "UNC, Duke, NCSU & NCCU Campus Precincts Report Heavy Midday Flow", "content": "\ud83c\udf93 Campus voting stations across the Triangle and Triad are reporting strong Election Day youth mobilization. Polling locations at UNC Chapel Hill (Morehead Planetarium), Duke University (Karsh Alumni Center), NC State (Talley Student Union), and NC Central report steady student queues following intensive student body mobilization.", "metrics": [], "action_link": "https://rannbar-on.com/vote", "action_text": "Campus Voting Guides \u27a1\ufe0f"}, {"id": "post_needle_flipped_counties", "type": "turnout_alert", "category": "\ud83d\uddf3\ufe0f Turnout", "badge_color": "#3b82f6", "source": "County Baseline Model", "source_handle": "@NC_DecisionDesk", "timestamp": "1h ago", "exact_time": "03:40 PM EST", "created_at": "2026-11-03T15:40:00", "title": "COUNTY FLIP RADAR: 13 Counties Shifted Toward Democratic Column", "content": "\ud83d\uddfa\ufe0f Comparing 2026 ballot returns against 2022 midterms, the model tracks 13 North Carolina counties currently projecting a Democratic flip: Alamance, Anson, Cabarrus, Franklin, Gaston, Harnett, Johnston, Lee, Nash, New Hanover, Scotland, Washington, and Wilson.", "metrics": [{"label": "Total Flipped", "val": "13 Counties", "color": "#3b82f6"}, {"label": "Key Flip", "val": "Cabarrus", "color": "#10b981"}, {"label": "Key Flip", "val": "New Hanover", "color": "#10b981"}], "action_link": "https://rannbar-on.com/early_voting_turnout_map.html", "action_text": "Precinct Swing Map \u27a1\ufe0f"}, {"id": "post_amendments_update", "type": "needle_dial", "category": "\u26a1 Needle Dials", "badge_color": "#ec4899", "source": "Constitutional Amendments Monitor", "source_handle": "@NC_DecisionDesk", "timestamp": "1h 15m ago", "exact_time": "03:25 PM EST", "created_at": "2026-11-03T15:25:00", "title": "CONSTITUTIONAL AMENDMENTS: Photo ID & Tax Cap Status", "content": "\ud83d\udcdc Three constitutional amendments on today's ballot:\n\u2022 Amend 1 (Photo ID for All Voters): 56.85% For (99.9% probability passes)\n\u2022 Amend 2 (3.5% Income Tax Cap): 53.45% For (94.8% probability passes)\n\u2022 Amend 3 (Property Tax Levy Limits): 51.45% Against (68.4% probability rejected)", "metrics": [{"label": "Photo ID", "val": "Passes (56.9%)", "color": "#ef4444"}, {"label": "Tax Cap", "val": "Passes (53.5%)", "color": "#ef4444"}, {"label": "Property Tax", "val": "Lean Reject", "color": "#3b82f6"}], "action_link": "https://rannbar-on.com/needle", "action_text": "Amendment Dials \u27a1\ufe0f"}, {"id": "post_social_bluesky_pulse", "type": "social_post", "category": "\ud83d\udce2 Our Posts", "badge_color": "#0285ff", "source": "Official Post (Bluesky)", "source_handle": "@carolinapulse.bsky.social", "timestamp": "1h 30m ago", "exact_time": "03:10 PM EST", "created_at": "2026-11-03T15:10:00", "title": "\ud83d\udea8 BLUE SKY LIVE PULSE: Breaking Turnout & Dials", "content": "\ud83d\udea8 NC TURNOUT ALERT:\n2.82M+ votes. Unaffiliated surge to 35.2%, outpacing GOP (26.1%).\n\n\ud83d\udcca Live Needle:\n\u2022 #NCSen Cooper: +9.5% (Likely D)\n\u2022 #NCGA Supermajority: 96.2% BROKEN\n\nDrop your county & wait time below! \ud83d\udc47\n#NCpol #NCSen #SwingState #VoteNC", "metrics": [], "action_link": "https://rannbar-on.com/needle", "action_text": "Live Needle \u27a1\ufe0f"}];
+    let feedItems = [{"id": "post_live_needle_alert", "type": "needle_dial", "category": "\u26a1 Needle Dials", "badge_color": "#3b82f6", "source": "Bayesian Needle Engine", "source_handle": "@NC_DecisionDesk", "timestamp": "Just now", "exact_time": "08:06 PM EST", "created_at": "2026-11-03T20:06:39.975870", "title": "US SENATE NEEDLE: Cooper Advantage Expands to +9.5%", "content": "\u26a1 Real-time Bayesian 3-mode decomposition shows Roy Cooper (D) commanding a +9.46 pp projected margin (54.73% Dem vs 45.27% Rep). Win probability stands at 99.5% [Safe D]. Substantial independent crossover in Cabarrus and Union counties continues to outpace 2022 midterm baselines.", "metrics": [{"label": "Proj Margin", "val": "DEM +9.5%", "color": "#3b82f6"}, {"label": "Win Prob", "val": "99.5%", "color": "#10b981"}, {"label": "Model Rating", "val": "Safe D", "color": "#3b82f6"}], "action_link": "https://rannbar-on.com/needle", "action_text": "Live Needle Dial \u27a1\ufe0f"}, {"id": "post_house_supermajority", "type": "needle_dial", "category": "\u26a1 Needle Dials", "badge_color": "#10b981", "source": "Legislative Decision Desk", "source_handle": "@NC_DecisionDesk", "timestamp": "4m ago", "exact_time": "04:36 PM EST", "created_at": "2026-11-03T16:36:00", "title": "NC HOUSE SUPERMAJORITY: 96.2% Confidence Broken", "content": "\ud83c\udfdb\ufe0f The live legislative needle estimates Democrats will capture 54.2 seats in the North Carolina House of Representatives (95% CI: [48, 61] seats). With the threshold for breaking the supermajority set at 49 seats, statistical confidence of breaking the Republican supermajority is modeled at 96.2%.", "metrics": [{"label": "Exp D Seats", "val": "54.2 / 120", "color": "#3b82f6"}, {"label": "Break Supermajority", "val": "96.2%", "color": "#10b981"}, {"label": "Threshold", "val": "49 Seats", "color": "#94a3b8"}], "action_link": "https://rannbar-on.com/needle", "action_text": "Legislative Needle \u27a1\ufe0f"}, {"id": "post_social_twitter_pulse", "type": "social_post", "category": "\ud83d\udce2 Our Posts", "badge_color": "#1d9bf0", "source": "Official Post (X / Twitter)", "source_handle": "@NC_Election_Live", "timestamp": "12m ago", "exact_time": "04:28 PM EST", "created_at": "2026-11-03T16:28:00", "title": "\ud83d\udea8 TURNOUT UPDATE: 2.83M+ Ballots In", "content": "\ud83d\udea8 NORTH CAROLINA TURNOUT ALERT:\n\n2.83M+ votes in across all 100 counties. Unaffiliated voters SURGE to 35.2%, outpacing GOP (26.1%).\n\n\u26a1 Needle: Cooper +9.5%\n\ud83c\udfdb\ufe0f Supermajority: 96.2% BROKEN\n\nDrop your county wait time below! \ud83d\udc47\n#NCpol #NCSen #SwingState #VoteNC", "metrics": [{"label": "Total Turnout", "val": "2,828,131", "color": "#f8fafc"}, {"label": "Unaffiliated", "val": "35.2%", "color": "#f59e0b"}, {"label": "Dem / Rep", "val": "38.4% / 26.1%", "color": "#3b82f6"}], "action_link": "https://rannbar-on.com/needle", "action_text": "View Live Model \u27a1\ufe0f"}, {"id": "post_turnout_surge_unaffiliated", "type": "turnout_alert", "category": "\ud83d\uddf3\ufe0f Turnout", "badge_color": "#f59e0b", "source": "NC State Board of Elections Ingestion", "source_handle": "@NCSBE", "timestamp": "18m ago", "exact_time": "04:22 PM EST", "created_at": "2026-11-03T16:22:00", "title": "SEISMIC INDEPENDENT TURNOUT: Unaffiliated Surpasses GOP Statewide", "content": "\ud83d\uddf3\ufe0f Ballot ingestion across all 100 counties confirms a historic voter realignment: Unaffiliated voters have cast 995,378 ballots (35.20% of the electorate), compared to 738,717 registered Republicans (26.12%) and 1,085,262 registered Democrats (38.37%). Suburban perimeter battlegrounds are showing the highest independent surge.", "metrics": [{"label": "Unaffiliated Ballots", "val": "995,378", "color": "#f59e0b"}, {"label": "Democratic Ballots", "val": "1,085,262", "color": "#3b82f6"}, {"label": "Republican Ballots", "val": "738,717", "color": "#ef4444"}], "action_link": "https://rannbar-on.com/prediction", "action_text": "County Turnout Map \u27a1\ufe0f"}, {"id": "post_news_wake_meck_boe", "type": "news_update", "category": "\ud83d\udcf0 NC News", "badge_color": "#8b5cf6", "source": "County Boards of Elections", "source_handle": "@WakeElections", "timestamp": "25m ago", "exact_time": "04:15 PM EST", "created_at": "2026-11-03T16:15:00", "title": "Wake & Mecklenburg BOE Report Peak Midday Precinct Volumes", "content": "\ud83d\udcf0 Turnout across all 212 Wake County precincts and 195 Mecklenburg precincts is operating at peak midterm velocity. Average wait times remain brisk at under 12 minutes, with poll workers managing heavy afternoon queues smoothly. Suburban precincts in Cary, Apex, and Huntersville report steady lines.", "metrics": [], "action_link": "https://rannbar-on.com/vote", "action_text": "Precinct Directory \u27a1\ufe0f"}, {"id": "post_social_threads_deepdive", "type": "social_post", "category": "\ud83d\udce2 Our Posts", "badge_color": "#000000", "source": "Official Post (Threads)", "source_handle": "@carolina_turnout_pulse", "timestamp": "32m ago", "exact_time": "04:08 PM EST", "created_at": "2026-11-03T16:08:00", "title": "\u26a1 THE INDEPENDENT EXPLOSION: Comprehensive Midday Analysis", "content": "Over 2.82 MILLION ballots are already in across all 100 counties\u2014and North Carolina is the ultimate national battleground tonight. Here is the high-stakes breakdown from our live Bayesian model:\n\n\ud83d\udd25 THE INDEPENDENT EXPLOSION:\nUnaffiliated voters have officially overtaken registered Republicans, accounting for 35.2% of all check-ins. In suburban perimeter battlegrounds like Cabarrus and Union, independent crossover is breaking standard midterm baselines.\n\n\u26a1 HIGH STAKES ON THE NEEDLE:\n\u2022 US Senate: Roy Cooper holds an estimated +9.46 pp advantage [Likely D]\n\u2022 Supermajority Breaker: With 54.2 projected D seats in the House, the GOP supermajority is modeled as BROKEN at 96.2% confidence.\n\n#NCpol #NCSen #NCGov #Elections2026 #DecisionDesk #SwingState #VoteNC #NCGA", "metrics": [], "action_link": "https://rannbar-on.com/needle", "action_text": "Live Dials \u27a1\ufe0f"}, {"id": "post_supreme_court_earls", "type": "needle_dial", "category": "\u26a1 Needle Dials", "badge_color": "#3b82f6", "source": "Judicial Forecast Engine", "source_handle": "@NC_DecisionDesk", "timestamp": "40m ago", "exact_time": "04:00 PM EST", "created_at": "2026-11-03T16:00:00", "title": "NC SUPREME COURT SEAT 1: Anita Earls Leads by +5.5%", "content": "\u2696\ufe0f In the marquee statewide judicial contest, incumbent Justice Anita Earls (D) is projected at 52.73% (a +5.46 pp advantage over Republican challenger Sarah Stevens). Downballot voter retention in urban and suburban precincts remains exceptionally robust.", "metrics": [{"label": "Projected Dem", "val": "52.73%", "color": "#3b82f6"}, {"label": "Projected Margin", "val": "DEM +5.5%", "color": "#3b82f6"}, {"label": "Rating", "val": "Lean D", "color": "#3b82f6"}], "action_link": "https://rannbar-on.com/prediction", "action_text": "Judicial Breakdown \u27a1\ufe0f"}, {"id": "post_news_student_campus_turnout", "type": "news_update", "category": "\ud83d\udcf0 NC News", "badge_color": "#8b5cf6", "source": "NC Student Voting Hub", "source_handle": "@NCStudentVote", "timestamp": "50m ago", "exact_time": "03:50 PM EST", "created_at": "2026-11-03T15:50:00", "title": "UNC, Duke, NCSU & NCCU Campus Precincts Report Heavy Midday Flow", "content": "\ud83c\udf93 Campus voting stations across the Triangle and Triad are reporting strong Election Day youth mobilization. Polling locations at UNC Chapel Hill (Morehead Planetarium), Duke University (Karsh Alumni Center), NC State (Talley Student Union), and NC Central report steady student queues following intensive student body mobilization.", "metrics": [], "action_link": "https://rannbar-on.com/vote", "action_text": "Campus Voting Guides \u27a1\ufe0f"}, {"id": "post_needle_flipped_counties", "type": "turnout_alert", "category": "\ud83d\uddf3\ufe0f Turnout", "badge_color": "#3b82f6", "source": "County Baseline Model", "source_handle": "@NC_DecisionDesk", "timestamp": "1h ago", "exact_time": "03:40 PM EST", "created_at": "2026-11-03T15:40:00", "title": "COUNTY FLIP RADAR: 13 Counties Shifted Toward Democratic Column", "content": "\ud83d\uddfa\ufe0f Comparing 2026 ballot returns against 2022 midterms, the model tracks 13 North Carolina counties currently projecting a Democratic flip: Alamance, Anson, Cabarrus, Franklin, Gaston, Harnett, Johnston, Lee, Nash, New Hanover, Scotland, Washington, and Wilson.", "metrics": [{"label": "Total Flipped", "val": "13 Counties", "color": "#3b82f6"}, {"label": "Key Flip", "val": "Cabarrus", "color": "#10b981"}, {"label": "Key Flip", "val": "New Hanover", "color": "#10b981"}], "action_link": "https://rannbar-on.com/early_voting_turnout_map.html", "action_text": "Precinct Swing Map \u27a1\ufe0f"}, {"id": "post_amendments_update", "type": "needle_dial", "category": "\u26a1 Needle Dials", "badge_color": "#ec4899", "source": "Constitutional Amendments Monitor", "source_handle": "@NC_DecisionDesk", "timestamp": "1h 15m ago", "exact_time": "03:25 PM EST", "created_at": "2026-11-03T15:25:00", "title": "CONSTITUTIONAL AMENDMENTS: Photo ID & Tax Cap Status", "content": "\ud83d\udcdc Three constitutional amendments on today's ballot:\n\u2022 Amend 1 (Photo ID for All Voters): 56.85% For (99.9% probability passes)\n\u2022 Amend 2 (3.5% Income Tax Cap): 53.45% For (94.8% probability passes)\n\u2022 Amend 3 (Property Tax Levy Limits): 51.45% Against (68.4% probability rejected)", "metrics": [{"label": "Photo ID", "val": "Passes (56.9%)", "color": "#ef4444"}, {"label": "Tax Cap", "val": "Passes (53.5%)", "color": "#ef4444"}, {"label": "Property Tax", "val": "Lean Reject", "color": "#3b82f6"}], "action_link": "https://rannbar-on.com/needle", "action_text": "Amendment Dials \u27a1\ufe0f"}, {"id": "post_social_bluesky_pulse", "type": "social_post", "category": "\ud83d\udce2 Our Posts", "badge_color": "#0285ff", "source": "Official Post (Bluesky)", "source_handle": "@carolinapulse.bsky.social", "timestamp": "1h 30m ago", "exact_time": "03:10 PM EST", "created_at": "2026-11-03T15:10:00", "title": "\ud83d\udea8 BLUE SKY LIVE PULSE: Breaking Turnout & Dials", "content": "\ud83d\udea8 NC TURNOUT ALERT:\n2.82M+ votes. Unaffiliated surge to 35.2%, outpacing GOP (26.1%).\n\n\ud83d\udcca Live Needle:\n\u2022 #NCSen Cooper: +9.5% (Likely D)\n\u2022 #NCGA Supermajority: 96.2% BROKEN\n\nDrop your county & wait time below! \ud83d\udc47\n#NCpol #NCSen #SwingState #VoteNC", "metrics": [], "action_link": "https://rannbar-on.com/needle", "action_text": "Live Needle \u27a1\ufe0f"}];
     let currentFilter = 'all';
     let audioEnabled = false;
 

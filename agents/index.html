@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script id="internalGateScript" src="/internal_gate.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
-  <title>Agent Command Center | Fully Private Operational Dashboard</title>
+  <title>Agent Command Center & Task DAG | Fully Private Operational Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -21,6 +22,7 @@
       --green: #10b981;
       --red: #ef4444;
       --amber: #f59e0b;
+      --purple: #8b5cf6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -65,7 +67,7 @@
       padding: 28px 24px;
     }
     .header-inner {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -88,7 +90,8 @@
     }
     .stats-summary-bar {
       display: flex;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
     }
     .stat-pill {
       background: rgba(255, 255, 255, 0.06);
@@ -106,9 +109,121 @@
 
     /* Main Container */
     .container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 28px auto 0 auto;
       padding: 0 20px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* TASK DEPENDENCY GRAPH (DAG) STYLES */
+    .dag-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .dag-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+      overflow-x: auto;
+    }
+    .dag-tier-column {
+      background: #090e1a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .dag-tier-header {
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #94a3b8;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 8px;
+      margin-bottom: 4px;
+    }
+    .dag-tier-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .dag-node-card {
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+    .dag-node-card:hover {
+      border-color: var(--blue);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+    }
+    .dag-node-card.highlighted {
+      border-color: #10b981;
+      background: #06231b;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+    }
+    .dag-node-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .dag-node-title {
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #ffffff;
+      flex: 1;
+    }
+    .dag-node-agent {
+      font-size: 11px;
+      color: #60a5fa;
+      margin-bottom: 4px;
+    }
+    .dag-node-deps {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    .dag-node-deps code {
+      font-size: 10.5px;
+      color: #cbd5e1;
+    }
+    .dag-node-hazard {
+      font-size: 10.5px;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+      padding: 3px 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .dag-node-io {
+      font-size: 10px;
+      color: #64748b;
+      border-top: 1px dashed rgba(255, 255, 255, 0.05);
+      padding-top: 4px;
     }
 
     /* Controls Bar */
@@ -302,6 +417,7 @@
     }
     @media (max-width: 768px) {
       .detail-columns { grid-template-columns: 1fr; }
+      .dag-container { grid-template-columns: 1fr; }
     }
     .col strong {
       font-size: 11px;
@@ -344,7 +460,7 @@
       <span>INTERNAL USE ONLY &bull; RANN BAR-ON PRIVATE SYSTEM TELEMETRY</span>
     </div>
     <div style="color: #cbd5e1; font-size: 12px;">
-      Last sync: November 03, 2026 at 05:53 PM EST
+      Last sync: November 03, 2026 at 08:04 PM EST
     </div>
   </div>
 
@@ -352,25 +468,25 @@
   <header class="dash-header">
     <div class="header-inner">
       <div class="dash-title">
-        <h1>⚡ Agent Command Center</h1>
+        <h1>⚡ Agent Command Center & Task DAG</h1>
         <p>Real-time operational topology, active workloads, and execution contracts across all 8 agent domains</p>
       </div>
       <div class="stats-summary-bar">
         <div class="stat-pill">
           <strong>8</strong>
-          <span>Total Agents</span>
+          <span>Total Tasks</span>
         </div>
         <div class="stat-pill">
           <strong style="color: #10b981;">4</strong>
-          <span>Active / Running</span>
+          <span>Active Agents</span>
+        </div>
+        <div class="stat-pill">
+          <strong style="color: #60a5fa;">2</strong>
+          <span>Parallel Roots</span>
         </div>
         <div class="stat-pill">
           <strong style="color: #f59e0b;">1</strong>
-          <span>Queued</span>
-        </div>
-        <div class="stat-pill">
-          <strong style="color: #60a5fa;">1</strong>
-          <span>Completed</span>
+          <span>Queued Task</span>
         </div>
       </div>
     </div>
@@ -378,6 +494,168 @@
 
   <!-- Main Container -->
   <main class="container">
+
+    <!-- TASK DEPENDENCY GRAPH (DAG) SECTION -->
+    <div class="dag-section">
+      <div class="section-title">
+        <span>📊 Live Task Dependency Graph (DAG Architecture)</span>
+        <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">Bernstein Hazard Invariant: J_dep &rarr; Agent(J_anc)</span>
+      </div>
+      <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 12px;">
+        Visual topological frontier computed by <code>AgentDAG</code>. Independent tasks spawn parallel worker agents; dependent tasks are affinity-forwarded directly to the agent executing prerequisite commands:
+      </p>
+
+      <div class="dag-container">
+        
+        <div class="dag-tier-column">
+          <div class="dag-tier-header">Tier 1: Parallel Data Ingestion (Roots)</div>
+          <div class="dag-tier-cards">
+            
+            <div class="dag-node-card" id="node_T1_TURNOUT" onclick="highlightNode('T1_TURNOUT')">
+              <div class="dag-node-top">
+                <span class="status-indicator" style="background-color: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                <span class="dag-node-title">Ingest County Turnout</span>
+                <span class="badge-priority">P8</span>
+              </div>
+              <div class="dag-node-agent">Allocated: <strong>Agent-21ce25 (Worker)</strong></div>
+              <div class="dag-node-deps">Pre-reqs: <code>None (Independent)</code></div>
+              <div class="dag-node-hazard">Root Independent (Spawned in Parallel)</div>
+              <div class="dag-node-io">
+                <span>In: NCSBE S3 absentee_county_20261103.zip</span> &bull; <span>Out: county_turnout.json</span>
+              </div>
+            </div>
+            
+            <div class="dag-node-card" id="node_T2_POLLS" onclick="highlightNode('T2_POLLS')">
+              <div class="dag-node-top">
+                <span class="status-indicator" style="background-color: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                <span class="dag-node-title">Synthesize Statewide Polls</span>
+                <span class="badge-priority">P8</span>
+              </div>
+              <div class="dag-node-agent">Allocated: <strong>Agent-0b5013 (Worker)</strong></div>
+              <div class="dag-node-deps">Pre-reqs: <code>None (Independent)</code></div>
+              <div class="dag-node-hazard">Root Independent (Spawned in Parallel)</div>
+              <div class="dag-node-io">
+                <span>In: ECU Poll,  YouGov, Elon Poll</span> &bull; <span>Out: poll_synth.json</span>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="dag-tier-column">
+          <div class="dag-tier-header">Tier 2: Baseline Modeling & Synthesis</div>
+          <div class="dag-tier-cards">
+            
+            <div class="dag-node-card" id="node_T3_BASELINES" onclick="highlightNode('T3_BASELINES')">
+              <div class="dag-node-top">
+                <span class="status-indicator" style="background-color: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                <span class="dag-node-title">Compute County Swing Baselines</span>
+                <span class="badge-priority">P7</span>
+              </div>
+              <div class="dag-node-agent">Allocated: <strong>Agent-84da88 (Affinity)</strong></div>
+              <div class="dag-node-deps">Pre-reqs: <code>T1_TURNOUT</code></div>
+              <div class="dag-node-hazard">RAW (Read-After-Write) on /tmp/county_turnout.json -> Affinity Forwarded</div>
+              <div class="dag-node-io">
+                <span>In: county_turnout.json, 2018 baselines</span> &bull; <span>Out: baselines.json</span>
+              </div>
+            </div>
+            
+            <div class="dag-node-card" id="node_T4_NEEDLE" onclick="highlightNode('T4_NEEDLE')">
+              <div class="dag-node-top">
+                <span class="status-indicator" style="background-color: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                <span class="dag-node-title">Run Bayesian Needle Aggregator</span>
+                <span class="badge-priority">P9</span>
+              </div>
+              <div class="dag-node-agent">Allocated: <strong>Agent-6c81b3 (Synchronized)</strong></div>
+              <div class="dag-node-deps">Pre-reqs: <code>T2_POLLS, T3_BASELINES</code></div>
+              <div class="dag-node-hazard">Multi-parent barrier synchronization across parallel pipelines</div>
+              <div class="dag-node-io">
+                <span>In: poll_synth.json, baselines.json</span> &bull; <span>Out: needle_data.json</span>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="dag-tier-column">
+          <div class="dag-tier-header">Tier 3: Race Calls & Live Stream Ingestion</div>
+          <div class="dag-tier-cards">
+            
+            <div class="dag-node-card" id="node_T5_CALLER" onclick="highlightNode('T5_CALLER')">
+              <div class="dag-node-top">
+                <span class="status-indicator" style="background-color: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                <span class="dag-node-title">Election Night Race Caller</span>
+                <span class="badge-priority">P9</span>
+              </div>
+              <div class="dag-node-agent">Allocated: <strong>election-specialist</strong></div>
+              <div class="dag-node-deps">Pre-reqs: <code>T4_NEEDLE</code></div>
+              <div class="dag-node-hazard">RAW on needle_data.json -> 95% Bayesian Confidence trigger</div>
+              <div class="dag-node-io">
+                <span>In: needle_data.json</span> &bull; <span>Out: called_races.json</span>
+              </div>
+            </div>
+            
+            <div class="dag-node-card" id="node_T6_FEED" onclick="highlightNode('T6_FEED')">
+              <div class="dag-node-top">
+                <span class="status-indicator" style="background-color: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                <span class="dag-node-title">Continuous Feed Live Streamer</span>
+                <span class="badge-priority">P8</span>
+              </div>
+              <div class="dag-node-agent">Allocated: <strong>continuous-feed-streamer</strong></div>
+              <div class="dag-node-deps">Pre-reqs: <code>T4_NEEDLE, T5_CALLER</code></div>
+              <div class="dag-node-hazard">Real-time auto-publish to rannbar-on.com/ncpoliticssocials</div>
+              <div class="dag-node-io">
+                <span>In: called_races.json, nc_map_base.json</span> &bull; <span>Out: feed.json</span>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+        <div class="dag-tier-column">
+          <div class="dag-tier-header">Tier 4: Automated Dispatches & Stakeholder Queues</div>
+          <div class="dag-tier-cards">
+            
+            <div class="dag-node-card" id="node_T7_SOCIALS" onclick="highlightNode('T7_SOCIALS')">
+              <div class="dag-node-top">
+                <span class="status-indicator" style="background-color: #10b981; box-shadow: 0 0 8px #10b981;"></span>
+                <span class="dag-node-title">30-Min Social Pulse Daemon</span>
+                <span class="badge-priority">P8</span>
+              </div>
+              <div class="dag-node-agent">Allocated: <strong>social-pulse-agent</strong></div>
+              <div class="dag-node-deps">Pre-reqs: <code>T6_FEED</code></div>
+              <div class="dag-node-hazard">Bio link priority + 1-click approval emails to Rann every 30m</div>
+              <div class="dag-node-io">
+                <span>In: feed.json</span> &bull; <span>Out: staged_social_drafts.json</span>
+              </div>
+            </div>
+            
+            <div class="dag-node-card" id="node_T8_STUDENTS" onclick="highlightNode('T8_STUDENTS')">
+              <div class="dag-node-top">
+                <span class="status-indicator" style="background-color: #f59e0b; box-shadow: 0 0 8px #f59e0b;"></span>
+                <span class="dag-node-title">Student Morning Briefing Queue</span>
+                <span class="badge-priority">P7</span>
+              </div>
+              <div class="dag-node-agent">Allocated: <strong>student-ta-comms-specialist</strong></div>
+              <div class="dag-node-deps">Pre-reqs: <code>T5_CALLER</code></div>
+              <div class="dag-node-hazard">Guarded by Duke Election Firewall; scheduled for tomorrow 10:10 AM</div>
+              <div class="dag-node-io">
+                <span>In: called_races.json, *.csv</span> &bull; <span>Out: sample_student_email.html (Awaiting Approval)</span>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
+    <!-- AGENTS DIRECTORY SECTION -->
+    <div class="section-title">
+      <span>🤖 Agent Directory & Workload Telemetry</span>
+      <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">8 Registered Agents</span>
+    </div>
+
     <div class="controls-bar">
       <div>
         <span style="font-size: 13px; color: #94a3b8;">Click any agent card to expand full execution details, commands, and guardrails.</span>
@@ -1001,6 +1279,15 @@
     function collapseAll() {
       document.querySelectorAll('.card-details').forEach(d => d.style.display = 'none');
       document.querySelectorAll('.expand-btn').forEach(b => b.innerText = 'Details ▼');
+    }
+
+    function highlightNode(id) {
+      const card = document.getElementById('node_' + id);
+      const isHigh = card.classList.contains('highlighted');
+      document.querySelectorAll('.dag-node-card').forEach(c => c.classList.remove('highlighted'));
+      if (!isHigh) {
+        card.classList.add('highlighted');
+      }
     }
   </script>
 </body>

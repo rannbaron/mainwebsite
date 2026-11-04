@@ -721,6 +721,487 @@ def build_html_page(feed_items):
       font-size: 11px;
       font-weight: 800;
     }}
+
+    /* Phone Shell Container */
+    .phone-container {{
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 0 14px;
+    }}
+
+    /* Sticky Mobile Header */
+    header.mobile-header {{
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--safe-top) + 64px);
+      padding-top: var(--safe-top);
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 16px;
+      padding-right: 16px;
+    }}
+    .header-inner {{
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }}
+    .brand {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }}
+    .live-dot {{
+      width: 10px;
+      height: 10px;
+      background-color: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #10b981;
+      animation: pulse 1.5s infinite;
+    }}
+    @keyframes pulse {{
+      0% {{ transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 4px #10b981; }}
+      50% {{ transform: scale(1.15); opacity: 1; box-shadow: 0 0 14px #10b981; }}
+      100% {{ transform: scale(0.95); opacity: 0.8; box-shadow: 0 0 4px #10b981; }}
+    }}
+    .brand-title {{
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+    }}
+    .brand-sub {{
+      font-size: 10px;
+      font-weight: 600;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }}
+    .header-actions {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+    .hdr-btn {{
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #cbd5e1;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }}
+    .hdr-btn:active {{
+      background: var(--blue);
+      color: #fff;
+    }}
+    .btn-needle {{
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff;
+      border: none;
+      box-shadow: 0 2px 8px var(--blue-glow);
+    }}
+
+    /* Live Update Banner Pill */
+    .new-updates-banner {{
+      position: sticky;
+      top: calc(var(--safe-top) + 72px);
+      z-index: 900;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.5);
+      animation: slideDown 0.3s ease-out;
+    }}
+    @keyframes slideDown {{
+      from {{ transform: translateY(-15px); opacity: 0; }}
+      to {{ transform: translateY(0); opacity: 1; }}
+    }}
+
+    /* Horizontal Category Scroller */
+    .filters-wrapper {{
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 10px 0 14px 0;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      display: flex;
+      gap: 8px;
+    }}
+    .filters-wrapper::-webkit-scrollbar {{
+      display: none;
+    }}
+    .chip {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #131d31;
+      border: 1px solid #1e293b;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.15s ease;
+    }}
+    .chip.active {{
+      background: #3b82f6;
+      color: #ffffff;
+      border-color: #60a5fa;
+      box-shadow: 0 2px 10px rgba(59, 130, 246, 0.4);
+    }}
+
+    /* Feed Card Component */
+    .feed-stream {{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }}
+    .feed-card {{
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      position: relative;
+      transition: transform 0.15s, border-color 0.15s;
+    }}
+    .feed-card:active {{
+      background: var(--card-hover);
+    }}
+    .card-meta {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }}
+    .source-group {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }}
+    .source-avatar {{
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: #60a5fa;
+      border: 1px solid #334155;
+    }}
+    .source-info {{
+      display: flex;
+      flex-direction: column;
+    }}
+    .source-name {{
+      font-size: 13px;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.2;
+    }}
+    .source-handle {{
+      font-size: 11px;
+      color: #64748b;
+    }}
+    .card-badge {{
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #94a3b8;
+    }}
+    .card-title {{
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }}
+    .card-text {{
+      font-size: 13.5px;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.5;
+    }}
+    .card-text a {{
+      color: #60a5fa;
+      text-decoration: none;
+    }}
+
+    /* Metrics Grid inside Card */
+    .metrics-grid {{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 12px;
+      background: #090e1a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 8px 10px;
+    }}
+    .metric-cell {{
+      text-align: center;
+    }}
+    .metric-lbl {{
+      font-size: 10px;
+      color: #64748b;
+      text-transform: uppercase;
+      font-weight: 700;
+      display: block;
+    }}
+    .metric-val {{
+      font-size: 13px;
+      font-weight: 800;
+      display: block;
+      margin-top: 2px;
+    }}
+
+    /* Card Action Bar */
+    .card-actions {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }}
+    .action-left {{
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }}
+    .act-btn {{
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 6px;
+    }}
+    .act-btn:active {{
+      color: #3b82f6;
+      background: rgba(59, 130, 246, 0.1);
+    }}
+    .link-btn {{
+      color: #60a5fa;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }}
+
+    /* Mobile Fixed Bottom Nav */
+    nav.bottom-nav {{
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: calc(var(--safe-bottom) + 60px);
+      padding-bottom: var(--safe-bottom);
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+    }}
+    .nav-item {{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }}
+    .nav-item.active {{
+      color: #3b82f6;
+    }}
+    .nav-icon {{
+      font-size: 18px;
+    }}
+
+    /* Toast Notification */
+    .toast {{
+      position: fixed;
+      bottom: calc(var(--safe-bottom) + 75px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e293b;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 700;
+      border: 1px solid #3b82f6;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      z-index: 2000;
+      display: none;
+      animation: fadeIn 0.2s ease-out;
+    }}
+    @keyframes fadeIn {{
+      from {{ opacity: 0; transform: translate(-50%, 10px); }}
+      to {{ opacity: 1; transform: translate(-50%, 0); }}
+    }}
+
+    /* Hero Quick Ticker */
+    .quick-ticker {{
+      background: linear-gradient(135deg, rgba(30, 58, 138, 0.5), rgba(17, 24, 39, 0.8));
+      border: 1px solid #1e3a8a;
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }}
+    .ticker-left {{
+      display: flex;
+      flex-direction: column;
+    }}
+    .ticker-lbl {{
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #60a5fa;
+      letter-spacing: 0.5px;
+    }}
+    .ticker-val {{
+      font-size: 16px;
+      font-weight: 900;
+      color: #ffffff;
+    }}
+    .ticker-badge {{
+      background: #10b981;
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 800;
+    }}
+
+    /* Official Social Accounts Grid */
+    .social-accounts-panel {{
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }}
+    .social-panel-hdr {{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }}
+    .live-pill {{
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 9px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      font-weight: 800;
+    }}
+    .social-accounts-grid {{
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }}
+    .social-btn {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #111827;
+      border: 1px solid #1f2937;
+      padding: 8px 10px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }}
+    .social-btn:hover {{
+      transform: translateY(-1px);
+      border-color: #3b82f6;
+    }}
+    .soc-icon {{
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }}
+    .x-btn .soc-icon {{ color: #ffffff; }}
+    .threads-btn .soc-icon {{ color: #f3f4f6; }}
+    .ig-btn .soc-icon {{ color: #ec4899; }}
+    .bsky-btn .soc-icon {{ color: #0285ff; }}
+    .soc-info {{
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }}
+    .soc-name {{
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #f8fafc;
+      line-height: 1.2;
+    }}
+    .soc-handle {{
+      font-size: 10px;
+      color: #64748b;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }}
+
   </style>
 </head>
 <body>
@@ -758,6 +1239,44 @@ def build_html_page(feed_items):
         <span class="ticker-val">Cooper +9.5%</span>
       </div>
       <div class="ticker-badge">99.5% PROB</div>
+    </div>
+
+    <!-- Official Social Accounts Bar -->
+    <div class="social-accounts-panel">
+      <div class="social-panel-hdr">
+        <span>Official Social Accounts & Feeds</span>
+        <span class="live-pill">DIRECT LINKS</span>
+      </div>
+      <div class="social-accounts-grid">
+        <a href="https://twitter.com/NC_Election_Live" target="_blank" rel="noopener" class="social-btn x-btn">
+          <svg class="soc-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <div class="soc-info">
+            <span class="soc-name">X (Twitter)</span>
+            <span class="soc-handle">@NC_Election_Live</span>
+          </div>
+        </a>
+        <a href="https://www.threads.net/@carolina_turnout_pulse" target="_blank" rel="noopener" class="social-btn threads-btn">
+          <svg class="soc-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 5.08 3.79 9.27 8.68 9.91v-2.02C6.98 19.27 4.1 15.97 4.1 12c0-4.36 3.54-7.9 7.9-7.9s7.9 3.54 7.9 7.9c0 2.45-1.12 4.67-2.9 6.13-1.4 1.15-3.23 1.77-5 1.77-2.8 0-5.1-1.8-5.8-4.5h2.1c.6 1.6 2.1 2.6 3.7 2.6 1.3 0 2.6-.5 3.6-1.3 1.3-1.1 2.1-2.7 2.1-4.7 0-3.3-2.7-5.9-5.9-5.9-3.3 0-5.9 2.6-5.9 5.9 0 2.2 1.2 4.1 3 5.1v2.1C5.8 20.7 4 18.1 4 15c0-4.4 3.6-8 8-8s8 3.6 8 8c0 3.2-1.8 6-4.5 7.4-1.1.6-2.3.9-3.5.9-2.2 0-4.3-.8-5.9-2.3C4.4 19.3 3.5 17.2 3.5 15c0-4.7 3.8-8.5 8.5-8.5s8.5 3.8 8.5 8.5c0 2.6-1.1 4.9-2.9 6.5"/></svg>
+          <div class="soc-info">
+            <span class="soc-name">Threads</span>
+            <span class="soc-handle">@carolina_turnout_pulse</span>
+          </div>
+        </a>
+        <a href="https://instagram.com/carolina_turnout_pulse" target="_blank" rel="noopener" class="social-btn ig-btn">
+          <svg class="soc-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          <div class="soc-info">
+            <span class="soc-name">Instagram</span>
+            <span class="soc-handle">@carolina_turnout_pulse</span>
+          </div>
+        </a>
+        <a href="https://bsky.app/profile/carolinapulse.bsky.social" target="_blank" rel="noopener" class="social-btn bsky-btn">
+          <svg class="soc-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 10.8c-1.087-2.114-4.046-6.053-6.798-7.995C2.566 1.01 1.25 1.958 1.25 4.385c0 1.782.793 8.358 1.24 9.873.918 3.109 4.195 3.864 6.837 3.33-4.66 1.01-6.143 3.826-3.468 6.57 3.23 3.313 5.485-.758 6.141-2.958.656 2.2 2.911 6.271 6.141 2.958 2.675-2.744 1.192-5.56-3.468-6.57 2.642.534 5.919-.221 6.837-3.33.447-1.515 1.24-8.091 1.24-9.873 0-2.427-1.316-3.375-3.952-1.58C16.046 4.747 13.087 8.686 12 10.8z"/></svg>
+          <div class="soc-info">
+            <span class="soc-name">Bluesky</span>
+            <span class="soc-handle">@carolinapulse.bsky.social</span>
+          </div>
+        </a>
+      </div>
     </div>
 
     <!-- Horizontal Category Filter Chips -->

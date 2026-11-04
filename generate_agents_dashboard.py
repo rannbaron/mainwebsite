@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Agent Command Center Dashboard Generator: rannbar-on.com/agents
-==============================================================
-Generates a fully private, interactive dashboard displaying all active and
-specialized agents, what they are currently doing, with default summaries
-and click-to-expand details.
+Agent Command Center & Task Dependency Graph Generator: rannbar-on.com/agents
+=============================================================================
+Generates a fully private dashboard with:
+1. Interactive Visual Task Dependency Graph (DAG) with Bernstein hazard analysis
+2. Complete Agent Registry with default summaries and click-to-expand details
 """
 
 import json
@@ -19,6 +19,121 @@ AGENTS_DIR.mkdir(parents=True, exist_ok=True)
 INDEX_PATH = AGENTS_DIR / "index.html"
 ROOT_PATH = BASE_DIR / "agents.html"
 DATA_PATH = AGENTS_DIR / "agents_data.json"
+
+TASK_DAG_REGISTRY = [
+    {
+        "id": "T1_TURNOUT",
+        "title": "Ingest County Turnout",
+        "agent": "Agent-21ce25 (Worker)",
+        "agent_type": "Parallel Worker",
+        "tier": 1,
+        "priority": 8,
+        "status": "SUCCEEDED",
+        "status_color": "#10b981",
+        "deps": [],
+        "inputs": ["NCSBE S3 absentee_county_20261103.zip"],
+        "outputs": ["/tmp/county_turnout.json"],
+        "hazard": "Root Independent (Spawned in Parallel)"
+    },
+    {
+        "id": "T2_POLLS",
+        "title": "Synthesize Statewide Polls",
+        "agent": "Agent-0b5013 (Worker)",
+        "agent_type": "Parallel Worker",
+        "tier": 1,
+        "priority": 8,
+        "status": "SUCCEEDED",
+        "status_color": "#10b981",
+        "deps": [],
+        "inputs": ["ECU Poll", "High Point / YouGov", "Elon Poll"],
+        "outputs": ["/tmp/poll_synth.json"],
+        "hazard": "Root Independent (Spawned in Parallel)"
+    },
+    {
+        "id": "T3_BASELINES",
+        "title": "Compute County Swing Baselines",
+        "agent": "Agent-84da88 (Affinity)",
+        "agent_type": "Affinity Chained",
+        "tier": 2,
+        "priority": 7,
+        "status": "SUCCEEDED",
+        "status_color": "#10b981",
+        "deps": ["T1_TURNOUT"],
+        "inputs": ["/tmp/county_turnout.json", "2022/2018 baselines"],
+        "outputs": ["/tmp/baselines.json"],
+        "hazard": "RAW (Read-After-Write) on /tmp/county_turnout.json -> Affinity Forwarded"
+    },
+    {
+        "id": "T4_NEEDLE",
+        "title": "Run Bayesian Needle Aggregator",
+        "agent": "Agent-6c81b3 (Synchronized)",
+        "agent_type": "Synchronized Frontier",
+        "tier": 2,
+        "priority": 9,
+        "status": "SUCCEEDED",
+        "status_color": "#10b981",
+        "deps": ["T2_POLLS", "T3_BASELINES"],
+        "inputs": ["/tmp/poll_synth.json", "/tmp/baselines.json"],
+        "outputs": ["needle/needle_data.json"],
+        "hazard": "Multi-parent barrier synchronization across parallel pipelines"
+    },
+    {
+        "id": "T5_CALLER",
+        "title": "Election Night Race Caller",
+        "agent": "election-specialist",
+        "agent_type": "Domain Specialist",
+        "tier": 3,
+        "priority": 9,
+        "status": "ACTIVE",
+        "status_color": "#10b981",
+        "deps": ["T4_NEEDLE"],
+        "inputs": ["needle/needle_data.json"],
+        "outputs": ["needle/called_races.json"],
+        "hazard": "RAW on needle_data.json -> 95% Bayesian Confidence trigger"
+    },
+    {
+        "id": "T6_FEED",
+        "title": "Continuous Feed Live Streamer",
+        "agent": "continuous-feed-streamer",
+        "agent_type": "Web Engine",
+        "tier": 3,
+        "priority": 8,
+        "status": "ACTIVE",
+        "status_color": "#10b981",
+        "deps": ["T4_NEEDLE", "T5_CALLER"],
+        "inputs": ["needle/called_races.json", "nc_map_base.json"],
+        "outputs": ["ncpoliticssocials/feed.json"],
+        "hazard": "Real-time auto-publish to rannbar-on.com/ncpoliticssocials"
+    },
+    {
+        "id": "T7_SOCIALS",
+        "title": "30-Min Social Pulse Daemon",
+        "agent": "social-pulse-agent",
+        "agent_type": "Autonomous Daemon",
+        "tier": 4,
+        "priority": 8,
+        "status": "ACTIVE",
+        "status_color": "#10b981",
+        "deps": ["T6_FEED"],
+        "inputs": ["ncpoliticssocials/feed.json"],
+        "outputs": ["private_social/staged_social_drafts.json"],
+        "hazard": "Bio link priority + 1-click approval emails to Rann every 30m"
+    },
+    {
+        "id": "T8_STUDENTS",
+        "title": "Student Morning Briefing Queue",
+        "agent": "student-ta-comms-specialist",
+        "agent_type": "Domain Specialist",
+        "tier": 4,
+        "priority": 7,
+        "status": "QUEUED",
+        "status_color": "#f59e0b",
+        "deps": ["T5_CALLER"],
+        "inputs": ["needle/called_races.json", "rosters/*.csv"],
+        "outputs": ["sample_student_email.html (Awaiting Approval)"],
+        "hazard": "Guarded by Duke Election Firewall; scheduled for tomorrow 10:10 AM"
+    }
+]
 
 AGENTS_REGISTRY = [
     {
@@ -277,14 +392,64 @@ AGENTS_REGISTRY = [
 ]
 
 def generate_dashboard():
-    # 1. Write agents_data.json
+    # 1. Write agents_data.json with full DAG topology
+    full_payload = {
+        "agents": AGENTS_REGISTRY,
+        "dag_nodes": TASK_DAG_REGISTRY,
+        "generated_at": datetime.now().isoformat()
+    }
     with open(DATA_PATH, "w", encoding="utf-8") as f:
-        json.dump(AGENTS_REGISTRY, f, indent=2)
-    print(f"[Agents] Wrote data to {DATA_PATH}")
+        json.dump(full_payload, f, indent=2)
+    print(f"[Agents] Wrote data with DAG to {DATA_PATH}")
 
     now_str = datetime.now().strftime("%B %d, %Y at %I:%M %p EST")
 
-    # Generate HTML cards
+    # Build DAG HTML representation
+    tiers = {1: [], 2: [], 3: [], 4: []}
+    for t in TASK_DAG_REGISTRY:
+        tiers[t["tier"]].append(t)
+
+    dag_tiers_html = ""
+    tier_labels = {
+        1: "Tier 1: Parallel Data Ingestion (Roots)",
+        2: "Tier 2: Baseline Modeling & Synthesis",
+        3: "Tier 3: Race Calls & Live Stream Ingestion",
+        4: "Tier 4: Automated Dispatches & Stakeholder Queues"
+    }
+
+    for tier_num, tasks in tiers.items():
+        cards_in_tier = ""
+        for t in tasks:
+            deps_str = ", ".join(t["deps"]) if t["deps"] else "None (Independent)"
+            outs_str = ", ".join([Path(o).name for o in t["outputs"]])
+            inps_str = ", ".join([Path(i).name for i in t["inputs"]])
+
+            cards_in_tier += f"""
+            <div class="dag-node-card" id="node_{t['id']}" onclick="highlightNode('{t['id']}')">
+              <div class="dag-node-top">
+                <span class="status-indicator" style="background-color: {t['status_color']}; box-shadow: 0 0 8px {t['status_color']};"></span>
+                <span class="dag-node-title">{t['title']}</span>
+                <span class="badge-priority">P{t['priority']}</span>
+              </div>
+              <div class="dag-node-agent">Allocated: <strong>{t['agent']}</strong></div>
+              <div class="dag-node-deps">Pre-reqs: <code>{deps_str}</code></div>
+              <div class="dag-node-hazard">{t['hazard']}</div>
+              <div class="dag-node-io">
+                <span>In: {inps_str}</span> &bull; <span>Out: {outs_str}</span>
+              </div>
+            </div>
+            """
+
+        dag_tiers_html += f"""
+        <div class="dag-tier-column">
+          <div class="dag-tier-header">{tier_labels[tier_num]}</div>
+          <div class="dag-tier-cards">
+            {cards_in_tier}
+          </div>
+        </div>
+        """
+
+    # Generate HTML cards for Agents
     cards_html = ""
     for a in AGENTS_REGISTRY:
         d = a["details"]
@@ -359,11 +524,12 @@ def generate_dashboard():
     html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
+  <script id="internalGateScript" src="/internal_gate.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
-  <title>Agent Command Center | Fully Private Operational Dashboard</title>
+  <title>Agent Command Center & Task DAG | Fully Private Operational Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
@@ -379,6 +545,7 @@ def generate_dashboard():
       --green: #10b981;
       --red: #ef4444;
       --amber: #f59e0b;
+      --purple: #8b5cf6;
     }}
     * {{ box-sizing: border-box; margin: 0; padding: 0; }}
     body {{
@@ -423,7 +590,7 @@ def generate_dashboard():
       padding: 28px 24px;
     }}
     .header-inner {{
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -446,7 +613,8 @@ def generate_dashboard():
     }}
     .stats-summary-bar {{
       display: flex;
-      gap: 12px;
+      gap: 10px;
+      flex-wrap: wrap;
     }}
     .stat-pill {{
       background: rgba(255, 255, 255, 0.06);
@@ -464,9 +632,121 @@ def generate_dashboard():
 
     /* Main Container */
     .container {{
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 28px auto 0 auto;
       padding: 0 20px;
+    }}
+
+    .section-title {{
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.3px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }}
+
+    /* TASK DEPENDENCY GRAPH (DAG) STYLES */
+    .dag-section {{
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }}
+    .dag-container {{
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 16px;
+      overflow-x: auto;
+    }}
+    .dag-tier-column {{
+      background: #090e1a;
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }}
+    .dag-tier-header {{
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #94a3b8;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 8px;
+      margin-bottom: 4px;
+    }}
+    .dag-tier-cards {{
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }}
+    .dag-node-card {{
+      background: #111827;
+      border: 1px solid #1f2937;
+      border-radius: 8px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }}
+    .dag-node-card:hover {{
+      border-color: var(--blue);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(59, 130, 246, 0.25);
+    }}
+    .dag-node-card.highlighted {{
+      border-color: #10b981;
+      background: #06231b;
+      box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+    }}
+    .dag-node-top {{
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }}
+    .dag-node-title {{
+      font-size: 13.5px;
+      font-weight: 800;
+      color: #ffffff;
+      flex: 1;
+    }}
+    .dag-node-agent {{
+      font-size: 11px;
+      color: #60a5fa;
+      margin-bottom: 4px;
+    }}
+    .dag-node-deps {{
+      font-size: 11px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }}
+    .dag-node-deps code {{
+      font-size: 10.5px;
+      color: #cbd5e1;
+    }}
+    .dag-node-hazard {{
+      font-size: 10.5px;
+      color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+      padding: 3px 6px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }}
+    .dag-node-io {{
+      font-size: 10px;
+      color: #64748b;
+      border-top: 1px dashed rgba(255, 255, 255, 0.05);
+      padding-top: 4px;
     }}
 
     /* Controls Bar */
@@ -660,6 +940,7 @@ def generate_dashboard():
     }}
     @media (max-width: 768px) {{
       .detail-columns {{ grid-template-columns: 1fr; }}
+      .dag-container {{ grid-template-columns: 1fr; }}
     }}
     .col strong {{
       font-size: 11px;
@@ -710,25 +991,25 @@ def generate_dashboard():
   <header class="dash-header">
     <div class="header-inner">
       <div class="dash-title">
-        <h1>⚡ Agent Command Center</h1>
+        <h1>⚡ Agent Command Center & Task DAG</h1>
         <p>Real-time operational topology, active workloads, and execution contracts across all 8 agent domains</p>
       </div>
       <div class="stats-summary-bar">
         <div class="stat-pill">
           <strong>8</strong>
-          <span>Total Agents</span>
+          <span>Total Tasks</span>
         </div>
         <div class="stat-pill">
           <strong style="color: #10b981;">4</strong>
-          <span>Active / Running</span>
+          <span>Active Agents</span>
+        </div>
+        <div class="stat-pill">
+          <strong style="color: #60a5fa;">2</strong>
+          <span>Parallel Roots</span>
         </div>
         <div class="stat-pill">
           <strong style="color: #f59e0b;">1</strong>
-          <span>Queued</span>
-        </div>
-        <div class="stat-pill">
-          <strong style="color: #60a5fa;">1</strong>
-          <span>Completed</span>
+          <span>Queued Task</span>
         </div>
       </div>
     </div>
@@ -736,6 +1017,28 @@ def generate_dashboard():
 
   <!-- Main Container -->
   <main class="container">
+
+    <!-- TASK DEPENDENCY GRAPH (DAG) SECTION -->
+    <div class="dag-section">
+      <div class="section-title">
+        <span>📊 Live Task Dependency Graph (DAG Architecture)</span>
+        <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">Bernstein Hazard Invariant: J_dep &rarr; Agent(J_anc)</span>
+      </div>
+      <p style="font-size: 13px; color: #cbd5e1; margin-bottom: 12px;">
+        Visual topological frontier computed by <code>AgentDAG</code>. Independent tasks spawn parallel worker agents; dependent tasks are affinity-forwarded directly to the agent executing prerequisite commands:
+      </p>
+
+      <div class="dag-container">
+        {dag_tiers_html}
+      </div>
+    </div>
+
+    <!-- AGENTS DIRECTORY SECTION -->
+    <div class="section-title">
+      <span>🤖 Agent Directory & Workload Telemetry</span>
+      <span style="font-size: 12px; color: #94a3b8; font-weight: 600;">8 Registered Agents</span>
+    </div>
+
     <div class="controls-bar">
       <div>
         <span style="font-size: 13px; color: #94a3b8;">Click any agent card to expand full execution details, commands, and guardrails.</span>
@@ -777,6 +1080,15 @@ def generate_dashboard():
     function collapseAll() {{
       document.querySelectorAll('.card-details').forEach(d => d.style.display = 'none');
       document.querySelectorAll('.expand-btn').forEach(b => b.innerText = 'Details ▼');
+    }}
+
+    function highlightNode(id) {{
+      const card = document.getElementById('node_' + id);
+      const isHigh = card.classList.contains('highlighted');
+      document.querySelectorAll('.dag-node-card').forEach(c => c.classList.remove('highlighted'));
+      if (!isHigh) {{
+        card.classList.add('highlighted');
+      }}
     }}
   </script>
 </body>
