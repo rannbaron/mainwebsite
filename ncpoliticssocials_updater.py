@@ -60,6 +60,40 @@ def get_initial_feed():
 
     items = [
         {
+            "id": "post_social_live_prime_pulse",
+            "type": "social_post",
+            "category": "📢 Our Posts",
+            "badge_color": "#1d9bf0",
+            "source": "Official Post (X / Threads / Bluesky)",
+            "source_handle": "@NC_Election_Live",
+            "timestamp": "Just now",
+            "exact_time": now_str,
+            "created_at": now_iso,
+            "title": "🚨 ELECTION NIGHT LIVE: Tabulation Underway Statewide",
+            "content": """🚨 NORTH CAROLINA LIVE REPORT:
+
+Polls are closed across all 100 NC counties! First tranches of early voting & absentee mail ballots are tabulating.
+
+📊 Real-Time Benchmark Update:
+• US Senate: Roy Cooper (D) commanding +9.5% projected margin [99.5% Safe D]
+• NC House: 54.2 Exp D seats — GOP Supermajority modeled BROKEN (96.2%)
+• NC Senate: 21.1 Exp D seats — Supermajority 65.7% broken
+• Turnout Record: 2.83M+ early/absentee votes with Independents at historic 35.2%
+
+Follow live precinct-level needles, dials, and county flip watches: ⬇️
+🎯 Needle: https://rannbar-on.com/needle
+⚡ Dual View: https://rannbar-on.com/both
+
+#NCpol #NCSen #Elections2026 #DecisionDesk #SwingState #VoteNC""",
+            "metrics": [
+                {"label": "Senate Lead", "val": "Cooper +9.5%", "color": "#3b82f6"},
+                {"label": "NC House", "val": "54.2 D (Broken)", "color": "#10b981"},
+                {"label": "Unaffiliated", "val": "35.2% Surge", "color": "#f59e0b"}
+            ],
+            "action_link": "https://rannbar-on.com/needle",
+            "action_text": "Live Model Needle ➡️"
+        },
+        {
             "id": "post_live_needle_alert",
             "type": "needle_dial",
             "category": "⚡ Needle Dials",
