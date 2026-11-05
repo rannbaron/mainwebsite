@@ -1197,8 +1197,21 @@
       const lastActive = parseInt(localStorage.getItem(SHARED_ACTIVE_KEY) || '0', 10);
       const now = Date.now();
       
-      // Condition 1: 15-minute inactivity check
-      if (sessionAuth && (now - lastActive <= INACTIVITY_TIMEOUT_MS)) {
+      // Check user permissions for /durhampolitics
+      let storedUser = null;
+      try { storedUser = JSON.parse(localStorage.getItem("rann_auth_user")); } catch(e) {}
+      
+      let isAllowed = true;
+      if (storedUser) {
+        const isMaster = (storedUser.username === "rann") || (storedUser.privilegeLevel === 10) || 
+                         (storedUser.privilegeName && storedUser.privilegeName.toLowerCase().includes("master"));
+        const pages = storedUser.allowedPages || storedUser.allowed_pages || [];
+        if (!isMaster && !pages.includes("*") && !pages.includes("/durhampolitics") && storedUser.username !== "durhampol") {
+          isAllowed = false;
+        }
+      }
+
+      if (sessionAuth && (now - lastActive <= INACTIVITY_TIMEOUT_MS) && isAllowed) {
         touchActivity();
         unlockApp();
       } else {
@@ -1206,6 +1219,13 @@
         sessionStorage.removeItem("durham_pol_auth");
         document.getElementById("authOverlay").style.display = "flex";
         document.getElementById("appWrapper").style.display = "none";
+        if (!isAllowed && storedUser) {
+          const err = document.getElementById("authErrorMsg");
+          if (err) {
+            err.style.display = "block";
+            err.innerText = "Access Denied: Your account does not have permission to view Durham Politics Tracker. Contact an administrator to request access.";
+          }
+        }
       }
     }
 

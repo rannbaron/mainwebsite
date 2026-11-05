@@ -353,10 +353,9 @@
               <label for="password">Password <span class="req">*</span></label>
               <div class="input-wrapper">
                 <i class="fa-solid fa-lock input-icon"></i>
-                <input type="password" id="password" placeholder="Min. 8 characters" required autocomplete="new-password">
+                <input type="password" id="password" placeholder="Min. 20 chars (letters, numbers, symbols)" required autocomplete="new-password" oninput="updatePasswordStrength()">
               </div>
-              <span class="field-hint">Must contain at least 8 characters.</span>
-              <div id="passwordError" class="field-error">Password must be at least 8 characters long.</div>
+              <div id="passwordError" class="field-error">Password must satisfy all complexity criteria below.</div>
             </div>
 
             <div class="form-group">
@@ -369,16 +368,46 @@
             </div>
           </div>
 
-          <div class="privilege-box">
-            <h4><i class="fa-solid fa-layer-group"></i> Privilege &amp; Access Tier System</h4>
-            <div class="privilege-tiers">
-              <div class="tier-item"><span class="tier-badge default">Level 1</span> <span>Public pages only (Default)</span></div>
-              <div class="tier-item"><span class="tier-badge">Level 2–4</span> <span>Research briefs &amp; community notes</span></div>
-              <div class="tier-item"><span class="tier-badge">Level 5–9</span> <span>Internal pipelines &amp; models</span></div>
-              <div class="tier-item"><span class="tier-badge admin">Level 10</span> <span>Full Master Admin Control</span></div>
+          <!-- Password Policy & Real-Time Checklist -->
+          <div style="background: #0d131f; border: 1px solid #1f2937; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+              <span style="font-size: 11.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">
+                <i class="fa-solid fa-shield-halved" style="color: var(--accent-indigo);"></i> Password Security Requirements
+              </span>
+              <span id="pwdLengthCount" style="font-size: 11px; font-family: monospace; color: #64748b;">0 / 20 chars</span>
             </div>
-            <div style="margin-top: 10px; font-size: 11.5px; color: var(--text-muted); line-height: 1.4;">
-              <i class="fa-solid fa-circle-info"></i> All newly registered accounts default to <strong>Privilege Level 1</strong> with status <strong>PENDING_APPROVAL</strong>.
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;" id="pwdChecklist">
+              <div id="reqLength" style="color: #64748b; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-regular fa-circle" id="iconLength"></i> At least 20 characters
+              </div>
+              <div id="reqLetters" style="color: #64748b; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-regular fa-circle" id="iconLetters"></i> Letters (A-Z, a-z)
+              </div>
+              <div id="reqNumbers" style="color: #64748b; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-regular fa-circle" id="iconNumbers"></i> Numbers (0-9)
+              </div>
+              <div id="reqSymbols" style="color: #64748b; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-regular fa-circle" id="iconSymbols"></i> Special symbols (!@#$%^&*...)
+              </div>
+            </div>
+          </div>
+
+          <div class="privilege-box">
+            <h4><i class="fa-solid fa-layer-group"></i> Named Privilege Roles &amp; Access Tiers</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-top: 8px;">
+              <div class="tier-item"><span class="tier-badge default">Guest</span> <span>Public access only (Default)</span></div>
+              <div class="tier-item"><span class="tier-badge">Standard Member</span> <span>Basic community access</span></div>
+              <div class="tier-item"><span class="tier-badge">Verified Member</span> <span>Verified research data</span></div>
+              <div class="tier-item"><span class="tier-badge">Research Associate</span> <span>Specialized analyses</span></div>
+              <div class="tier-item"><span class="tier-badge">Community Contributor</span> <span>Community models</span></div>
+              <div class="tier-item"><span class="tier-badge">Policy Analyst</span> <span>Policy dashboards</span></div>
+              <div class="tier-item"><span class="tier-badge">Senior Reviewer</span> <span>Audit &amp; review tools</span></div>
+              <div class="tier-item"><span class="tier-badge">Operations Lead</span> <span>Pipeline operations</span></div>
+              <div class="tier-item"><span class="tier-badge">System Administrator</span> <span>System controls</span></div>
+              <div class="tier-item"><span class="tier-badge admin">Master Administrator</span> <span>Full admin control (Rann)</span></div>
+            </div>
+            <div style="margin-top: 12px; font-size: 11.5px; color: var(--text-muted); line-height: 1.4;">
+              <i class="fa-solid fa-circle-info"></i> All newly registered accounts default to the <strong>Guest</strong> role (Level 1) with status <strong>PENDING_APPROVAL</strong>. An administrator will review your account and grant granular permissions.
             </div>
           </div>
 
@@ -464,6 +493,40 @@
   </div>
 
   <script>
+    function updatePasswordStrength() {
+      const pwd = document.getElementById("password").value;
+      const countEl = document.getElementById("pwdLengthCount");
+      if (countEl) countEl.innerText = pwd.length + " / 20 chars";
+
+      const hasLength = pwd.length >= 20;
+      const hasLetters = /[A-Za-z]/.test(pwd);
+      const hasNumbers = /[0-9]/.test(pwd);
+      const hasSymbols = /[^A-Za-z0-9]/.test(pwd);
+
+      setReqStatus("reqLength", "iconLength", hasLength);
+      setReqStatus("reqLetters", "iconLetters", hasLetters);
+      setReqStatus("reqNumbers", "iconNumbers", hasNumbers);
+      setReqStatus("reqSymbols", "iconSymbols", hasSymbols);
+    }
+
+    function setReqStatus(rowId, iconId, isMet) {
+      const row = document.getElementById(rowId);
+      const icon = document.getElementById(iconId);
+      if (!row || !icon) return;
+
+      if (isMet) {
+        row.style.color = "#34d399";
+        row.style.fontWeight = "600";
+        icon.className = "fa-solid fa-circle-check";
+        icon.style.color = "#10b981";
+      } else {
+        row.style.color = "#64748b";
+        row.style.fontWeight = "normal";
+        icon.className = "fa-regular fa-circle";
+        icon.style.color = "#64748b";
+      }
+    }
+
     let activeChallenge = null;
     let mainTimerInterval = null;
     let graceTimerInterval = null;
@@ -492,7 +555,17 @@
       if (!fullName) { document.getElementById("fullNameError").style.display = "block"; hasErrors = true; }
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById("emailError").style.display = "block"; hasErrors = true; }
       if (!username || username.length < 3) { document.getElementById("usernameError").style.display = "block"; hasErrors = true; }
-      if (!password || password.length < 8) { document.getElementById("passwordError").style.display = "block"; hasErrors = true; }
+      const hasLength = password && password.length >= 20;
+      const hasLetters = /[A-Za-z]/.test(password);
+      const hasNumbers = /[0-9]/.test(password);
+      const hasSymbols = /[^A-Za-z0-9]/.test(password);
+
+      if (!hasLength || !hasLetters || !hasNumbers || !hasSymbols) {
+        const pErr = document.getElementById("passwordError");
+        pErr.innerText = "Password must meet all 4 criteria: at least 20 characters, with letters, numbers, and symbols.";
+        pErr.style.display = "block";
+        hasErrors = true;
+      }
       if (password !== confirmPassword) { document.getElementById("confirmPasswordError").style.display = "block"; hasErrors = true; }
       if (hasErrors) return;
 

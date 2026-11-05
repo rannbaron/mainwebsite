@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-05T17:28:52.627162+00:00",
+  "updated_at": "2026-11-05T17:43:00.106837+00:00",
   "total": 1,
   "accounts": [
     {
@@ -8,9 +8,51 @@
       "full_name": "Rann Bar-On",
       "email": "rann@rannbar-on.com",
       "privilege_level": 10,
+      "privilege_name": "Master Administrator",
+      "allowed_pages": [
+        "*"
+      ],
       "status": "APPROVED",
       "created_at": "2026-11-05T17:09:46.920856+00:00",
       "last_login": null
+    }
+  ],
+  "role_tiers": {
+    "1": "Guest",
+    "2": "Standard Member",
+    "3": "Verified Member",
+    "4": "Research Associate",
+    "5": "Community Contributor",
+    "6": "Policy Analyst",
+    "7": "Senior Reviewer",
+    "8": "Operations Lead",
+    "9": "System Administrator",
+    "10": "Master Administrator"
+  },
+  "catalog": [
+    {
+      "route": "/durhampolitics",
+      "title": "Durham Politics Tracker"
+    },
+    {
+      "route": "/agents",
+      "title": "Agent Command Center"
+    },
+    {
+      "route": "/taskpriority",
+      "title": "Decision Desk Approvals"
+    },
+    {
+      "route": "/internal/vibes.html",
+      "title": "Real-Time Vibes Monitor"
+    },
+    {
+      "route": "/voice",
+      "title": "Voice Dictation Bridge"
+    },
+    {
+      "route": "/dashboard/accounts",
+      "title": "User Administration Console"
     }
   ]
 }

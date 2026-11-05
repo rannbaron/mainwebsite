@@ -2,19 +2,27 @@
 """
 RannBar-On.com User Account Management & 2FA Authentication Server
 ================================================================
-Handles user registration, two-factor email authentication (2FA),
-privilege authorization, and admin review workflows for rannbar-on.com.
+Named Privilege Levels & Page-by-Page Granular Access Control System.
 
-Features:
-- SQLite persistent storage in /home/rann/src/website/mainwebsite/accounts.db
-- Secure salted PBKDF2/SHA-256 password hashing (100,000 iterations)
-- Immediate notification emails to rann@rannbar-on.com
-- 2FA One-Time Passcodes (6 digits, valid 5 minutes)
-- Live 5:00 countdown timer & strict 30-second error correction timer
-- Automatic invalidation on second failed attempt, 30s timer expiry, or 5m timer expiry
-- Privilege levels 1-10 (Level 1: Public only, Level 10: Full Admin Control)
-- Seeded admin account for 'rann' (Level 10, APPROVED)
-- REST API with full CORS support and fallback sync
+Role Tiers:
+- Level 1: Guest (Public access only)
+- Level 2: Standard Member
+- Level 3: Verified Member
+- Level 4: Research Associate
+- Level 5: Community Contributor
+- Level 6: Policy Analyst
+- Level 7: Senior Reviewer
+- Level 8: Operations Lead
+- Level 9: System Administrator
+- Level 10: Master Administrator (Rann)
+
+Catalog of Private Pages:
+- /durhampolitics (Durham Politics Tracker)
+- /agents (Agent Command Center)
+- /taskpriority (Decision Desk Approvals)
+- /internal/vibes.html (Real-Time Vibes Monitor)
+- /voice (Voice Dictation Bridge)
+- /dashboard/accounts (User Administration Console)
 """
 
 import os
@@ -37,8 +45,29 @@ JSON_CACHE_PATH = BASE_DIR / "accounts.json"
 MASTER_PASSWORD = "AS2cYGy9GD7qRt@XV&gf$yUX!pD@"
 DEFAULT_PORT = 8086
 
-# In-memory store for active 2FA challenges
-# Format: { challenge_id: { "type": "login"|"signup", "code": "123456", "expires_at": float, "attempts": int, "grace_expires_at": float|None, "user_data": dict, "payload": dict } }
+ROLE_TIERS = {
+    1: "Guest",
+    2: "Standard Member",
+    3: "Verified Member",
+    4: "Research Associate",
+    5: "Community Contributor",
+    6: "Policy Analyst",
+    7: "Senior Reviewer",
+    8: "Operations Lead",
+    9: "System Administrator",
+    10: "Master Administrator"
+}
+ROLE_TO_LEVEL = {v.lower(): k for k, v in ROLE_TIERS.items()}
+
+PRIVATE_PAGES_CATALOG = [
+    {"route": "/durhampolitics", "title": "Durham Politics Tracker"},
+    {"route": "/agents", "title": "Agent Command Center"},
+    {"route": "/taskpriority", "title": "Decision Desk Approvals"},
+    {"route": "/internal/vibes.html", "title": "Real-Time Vibes Monitor"},
+    {"route": "/voice", "title": "Voice Dictation Bridge"},
+    {"route": "/dashboard/accounts", "title": "User Administration Console"}
+]
+
 ACTIVE_2FA_CHALLENGES = {}
 
 # Try importing send_duke_email from gradescope_tasks
@@ -49,7 +78,6 @@ except ImportError:
     send_duke_email = None
 
 def hash_password(password: str, salt: str = None) -> tuple[str, str]:
-    """Generates a salt and hashes password using PBKDF2-HMAC-SHA256."""
     if not salt:
         salt = secrets.token_hex(16)
     pwd_bytes = password.encode("utf-8")
@@ -58,14 +86,12 @@ def hash_password(password: str, salt: str = None) -> tuple[str, str]:
     return hashed, salt
 
 def verify_password(password: str, stored_hash: str, salt: str) -> bool:
-    """Verifies a password against the stored PBKDF2 hash."""
     pwd_bytes = password.encode("utf-8")
     salt_bytes = salt.encode("utf-8")
     computed = hashlib.pbkdf2_hmac("sha256", pwd_bytes, salt_bytes, 100000).hex()
     return secrets.compare_digest(computed, stored_hash)
 
 def mask_email(email: str) -> str:
-    """Masks an email for safe client display, e.g. j***e@domain.com."""
     if "@" not in email:
         return email
     local, domain = email.split("@", 1)
@@ -76,13 +102,11 @@ def mask_email(email: str) -> str:
     return f"{masked_local}@{domain}"
 
 def get_db():
-    """Returns a SQLite database connection with row factory."""
     conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row
     return conn
 
 def init_db():
-    """Initializes the database schema and seeds the administrator account."""
     with get_db() as conn:
         cursor = conn.cursor()
         cursor.execute("""
@@ -94,6 +118,8 @@ def init_db():
                 password_hash TEXT NOT NULL,
                 salt TEXT NOT NULL,
                 privilege_level INTEGER NOT NULL DEFAULT 1,
+                privilege_name TEXT NOT NULL DEFAULT 'Guest',
+                allowed_pages TEXT NOT NULL DEFAULT '[]',
                 status TEXT NOT NULL DEFAULT 'PENDING_APPROVAL',
                 created_at TEXT NOT NULL,
                 last_login TEXT,
@@ -110,56 +136,66 @@ def init_db():
                 notes TEXT
             )
         """)
-        
-        # Check if 'rann' admin account exists
+
+        # Migration: Ensure privilege_name and allowed_pages exist if table was previously created
+        cursor.execute("PRAGMA table_info(accounts)")
+        columns = [row["name"] for row in cursor.fetchall()]
+        if "privilege_name" not in columns:
+            cursor.execute("ALTER TABLE accounts ADD COLUMN privilege_name TEXT NOT NULL DEFAULT 'Guest'")
+        if "allowed_pages" not in columns:
+            cursor.execute("ALTER TABLE accounts ADD COLUMN allowed_pages TEXT NOT NULL DEFAULT '[]'")
+
+        # Ensure 'rann' admin account exists with Master Administrator role and full page access
         cursor.execute("SELECT id FROM accounts WHERE username = 'rann'")
         row = cursor.fetchone()
+        now_iso = datetime.now(timezone.utc).isoformat()
         if not row:
             hashed, salt = hash_password(MASTER_PASSWORD)
-            now_iso = datetime.now(timezone.utc).isoformat()
             cursor.execute("""
-                INSERT INTO accounts (username, full_name, email, password_hash, salt, privilege_level, status, created_at, notes)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, (
-                "rann",
-                "Rann Bar-On",
-                "rann@rannbar-on.com",
-                hashed,
-                salt,
-                10,
-                "APPROVED",
-                now_iso,
-                "Seeded Master Administrator"
-            ))
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Seeded administrator account 'rann' (Level 10, APPROVED).")
+                INSERT INTO accounts (username, full_name, email, password_hash, salt, privilege_level, privilege_name, allowed_pages, status, created_at, notes)
+                VALUES (?, ?, ?, ?, ?, 10, 'Master Administrator', '[\"*\"]', 'APPROVED', ?, 'Master Administrator Account')
+            """, ("rann", "Rann Bar-On", "rann@rannbar-on.com", hashed, salt, now_iso))
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Seeded Master Administrator 'rann'.")
+        else:
+            cursor.execute("""
+                UPDATE accounts 
+                SET privilege_level = 10, privilege_name = 'Master Administrator', allowed_pages = '[\"*\"]', status = 'APPROVED'
+                WHERE username = 'rann'
+            """)
         conn.commit()
     export_sanitized_accounts_json()
 
 def export_sanitized_accounts_json():
-    """Exports sanitized user accounts (excluding password hashes and salts) for static fallback."""
     try:
         with get_db() as conn:
             cursor = conn.cursor()
             cursor.execute("""
-                SELECT id, username, full_name, email, privilege_level, status, created_at, last_login
+                SELECT id, username, full_name, email, privilege_level, privilege_name, allowed_pages, status, created_at, last_login
                 FROM accounts ORDER BY id ASC
             """)
             rows = cursor.fetchall()
-            accounts = [dict(r) for r in rows]
+            accounts = []
+            for r in rows:
+                d = dict(r)
+                try:
+                    d["allowed_pages"] = json.loads(d.get("allowed_pages") or "[]")
+                except Exception:
+                    d["allowed_pages"] = []
+                accounts.append(d)
         
         with open(JSON_CACHE_PATH, "w") as f:
             json.dump({
                 "updated_at": datetime.now(timezone.utc).isoformat(),
                 "total": len(accounts),
-                "accounts": accounts
+                "accounts": accounts,
+                "role_tiers": ROLE_TIERS,
+                "catalog": PRIVATE_PAGES_CATALOG
             }, f, indent=2)
     except Exception as e:
         print(f"Error exporting sanitized JSON: {e}")
 
 def dispatch_2fa_email(email: str, code: str, purpose: str = "Authentication", user_name: str = "") -> bool:
-    """Dispatches a 6-digit 2FA passcode to the user's registered email address."""
     subject = f"[Security 2FA] Your Verification Passcode: {code}"
-    is_rann = (email.lower() == "rann@rannbar-on.com")
     
     html = f"""
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 540px; margin: 0 auto; color: #1e293b; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
@@ -198,14 +234,13 @@ def dispatch_2fa_email(email: str, code: str, purpose: str = "Authentication", u
     </div>
     """
 
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Dispatching 2FA passcode {code} to {email}...")
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Dispatching 2FA passcode {code} strictly to {email}...")
     sent = False
     if send_duke_email:
         try:
-            cc = None
             sent = send_duke_email(
                 recipient=email,
-                cc_recipients=cc,
+                cc_recipients=None,
                 subject=subject,
                 content=html,
                 is_html=True,
@@ -219,8 +254,7 @@ def dispatch_2fa_email(email: str, code: str, purpose: str = "Authentication", u
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Fallback logged 2FA code {code} for {email}.")
     return sent
 
-def notify_rann_new_signup(full_name: str, email: str, username: str, timestamp: str, level: int = 1):
-    """Sends notification email to Rann Bar-On about a new user account registration."""
+def notify_rann_new_signup(full_name: str, email: str, username: str, timestamp: str, role_name: str = "Guest"):
     subject = f"[Account Request] New User Registration: {full_name} ({username})"
     review_url = "https://rannbar-on.com/dashboard/accounts"
     
@@ -250,8 +284,8 @@ def notify_rann_new_signup(full_name: str, email: str, username: str, timestamp:
             <td style="padding: 10px 0; color: #0f172a;">{timestamp}</td>
           </tr>
           <tr style="border-bottom: 1px solid #f1f5f9;">
-            <td style="padding: 10px 0; font-weight: 600; color: #64748b;">Default Privilege</td>
-            <td style="padding: 10px 0; color: #0f172a;"><span style="background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 12px;">Level {level} (Public Only)</span></td>
+            <td style="padding: 10px 0; font-weight: 600; color: #64748b;">Default Role Tier</td>
+            <td style="padding: 10px 0; color: #0f172a;"><span style="background: #e2e8f0; color: #334155; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 12px;">{role_name} (Public Only)</span></td>
           </tr>
           <tr>
             <td style="padding: 10px 0; font-weight: 600; color: #64748b;">Status</td>
@@ -261,7 +295,7 @@ def notify_rann_new_signup(full_name: str, email: str, username: str, timestamp:
 
         <div style="background: #f8fafc; border-left: 4px solid #3b82f6; padding: 14px 18px; border-radius: 6px; margin-bottom: 24px;">
           <p style="margin: 0; font-size: 13.5px; color: #334155;">
-            <strong>Action Required:</strong> Please review and approve or adjust privilege levels (1–10) in the Admin Accounts Management Dashboard.
+            <strong>Action Required:</strong> Review role tiers and configure granular page permissions in the Admin Console.
           </p>
         </div>
 
@@ -274,7 +308,7 @@ def notify_rann_new_signup(full_name: str, email: str, username: str, timestamp:
     </div>
     """
 
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Dispatching new signup notification for {email} to rann@rannbar-on.com...")
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Dispatching new signup alert for {email} strictly to rann@rannbar-on.com...")
     if send_duke_email:
         try:
             send_duke_email(
@@ -312,7 +346,6 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def _is_admin_authenticated(self) -> bool:
-        """Verifies if request contains the admin master credentials."""
         admin_pwd = self.headers.get("X-Admin-Password")
         if admin_pwd == MASTER_PASSWORD:
             return True
@@ -345,16 +378,33 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
             with get_db() as conn:
                 cursor = conn.cursor()
                 cursor.execute("""
-                    SELECT id, username, full_name, email, privilege_level, status, created_at, last_login, notes
+                    SELECT id, username, full_name, email, privilege_level, privilege_name, allowed_pages, status, created_at, last_login, notes
                     FROM accounts ORDER BY id ASC
                 """)
                 rows = cursor.fetchall()
-                accounts = [dict(r) for r in rows]
+                accounts = []
+                for r in rows:
+                    item = dict(r)
+                    try:
+                        item["allowed_pages"] = json.loads(item.get("allowed_pages") or "[]")
+                    except Exception:
+                        item["allowed_pages"] = []
+                    accounts.append(item)
             
             self._send_json(200, {
                 "success": True,
                 "accounts": accounts,
-                "count": len(accounts)
+                "count": len(accounts),
+                "role_tiers": ROLE_TIERS,
+                "catalog": PRIVATE_PAGES_CATALOG
+            })
+            return
+
+        elif url_path == "/api/catalog":
+            self._send_json(200, {
+                "success": True,
+                "catalog": PRIVATE_PAGES_CATALOG,
+                "role_tiers": ROLE_TIERS
             })
             return
             
@@ -378,7 +428,7 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
         now_ts = time.time()
 
         # ----------------------------------------------------
-        # 1. POST /api/register (Step 1 of Signup: Validates & initiates 2FA)
+        # 1. POST /api/register (Signup step 1)
         # ----------------------------------------------------
         if url_path == "/api/register":
             full_name = payload.get("fullName", "").strip()
@@ -392,15 +442,24 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
             if not email or not re.match(r"^[^@]+@[^@]+\.[^@]+$", email):
                 self._send_json(400, {"success": False, "error": "A valid email address is required"})
                 return
-            if not password or len(password) < 8:
-                self._send_json(400, {"success": False, "error": "Password must be at least 8 characters"})
+            # Enforce 20+ chars and mix of letters, numbers, and symbols
+            if not password or len(password) < 20:
+                self._send_json(400, {"success": False, "error": "Password must be at least 20 characters in length."})
+                return
+            if not re.search(r"[A-Za-z]", password):
+                self._send_json(400, {"success": False, "error": "Password must include letters (A-Z, a-z)."})
+                return
+            if not re.search(r"[0-9]", password):
+                self._send_json(400, {"success": False, "error": "Password must include numbers (0-9)."})
+                return
+            if not re.search(r"[^A-Za-z0-9]", password):
+                self._send_json(400, {"success": False, "error": "Password must include special symbols (!@#$%^&*...)."})
                 return
             
             if not username:
                 username = email.split("@")[0]
                 username = re.sub(r"[^a-z0-9_]", "", username)
 
-            # Check for existing email/username
             with get_db() as conn:
                 cursor = conn.cursor()
                 cursor.execute("SELECT id FROM accounts WHERE username = ?", (username,))
@@ -412,7 +471,6 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                     self._send_json(409, {"success": False, "error": f"An account with email '{email}' already exists."})
                     return
 
-            # Generate 6-digit 2FA code (valid 5 minutes = 300 seconds)
             code = f"{secrets.randbelow(900000) + 100000}"
             challenge_id = secrets.token_hex(16)
             hashed, salt = hash_password(password)
@@ -432,6 +490,8 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                     "password_hash": hashed,
                     "salt": salt,
                     "privilege_level": 1,
+                    "privilege_name": "Guest",
+                    "allowed_pages": json.dumps([]),
                     "status": "PENDING_APPROVAL",
                     "created_at": datetime.now(timezone.utc).isoformat()
                 }
@@ -450,7 +510,7 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
             return
 
         # ----------------------------------------------------
-        # 2. POST /api/accounts/login (Step 1 of Login: Checks creds & dispatches 2FA)
+        # 2. POST /api/accounts/login (Login step 1)
         # ----------------------------------------------------
         elif url_path == "/api/accounts/login":
             username = payload.get("username", "").strip().lower()
@@ -462,13 +522,14 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
 
             user_record = None
 
-            # Check master admin credential
             if (username == "rann" and password == MASTER_PASSWORD) or password == MASTER_PASSWORD:
                 user_record = {
                     "username": "rann",
                     "fullName": "Rann Bar-On",
                     "email": "rann@rannbar-on.com",
                     "privilegeLevel": 10,
+                    "privilegeName": "Master Administrator",
+                    "allowedPages": ["*"],
                     "status": "APPROVED"
                 }
             elif username == "durhampol" and password == "durhampol":
@@ -477,13 +538,15 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                     "fullName": "Durham Politics Guest",
                     "email": "rann@rannbar-on.com",
                     "privilegeLevel": 2,
+                    "privilegeName": "Standard Member",
+                    "allowedPages": ["/durhampolitics"],
                     "status": "APPROVED"
                 }
             else:
                 with get_db() as conn:
                     cursor = conn.cursor()
                     cursor.execute("""
-                        SELECT id, username, full_name, email, password_hash, salt, privilege_level, status
+                        SELECT id, username, full_name, email, password_hash, salt, privilege_level, privilege_name, allowed_pages, status
                         FROM accounts WHERE username = ? OR email = ?
                     """, (username, username))
                     row = cursor.fetchone()
@@ -499,16 +562,22 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                         self._send_json(403, {"success": False, "error": "Account has been deactivated or rejected."})
                         return
 
+                    try:
+                        pages = json.loads(row["allowed_pages"] or "[]")
+                    except Exception:
+                        pages = []
+
                     user_record = {
                         "id": row["id"],
                         "username": row["username"],
                         "fullName": row["full_name"],
                         "email": row["email"],
                         "privilegeLevel": row["privilege_level"],
+                        "privilegeName": row["privilege_name"] or ROLE_TIERS.get(row["privilege_level"], "Guest"),
+                        "allowedPages": pages,
                         "status": row["status"]
                     }
 
-            # Generate 6-digit 2FA passcode
             code = f"{secrets.randbelow(900000) + 100000}"
             challenge_id = secrets.token_hex(16)
             dest_email = user_record["email"]
@@ -537,7 +606,7 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
             return
 
         # ----------------------------------------------------
-        # 3. POST /api/auth/verify_2fa (Step 2: Validates Passcode with strict timers)
+        # 3. POST /api/auth/verify_2fa (Step 2: 2FA verification)
         # ----------------------------------------------------
         elif url_path == "/api/auth/verify_2fa":
             challenge_id = payload.get("challenge_id", "").strip()
@@ -549,46 +618,26 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
 
             challenge = ACTIVE_2FA_CHALLENGES.get(challenge_id)
             if not challenge:
-                self._send_json(400, {
-                    "success": False,
-                    "error": "Session expired or invalid. Please sign in again.",
-                    "kicked": True
-                })
+                self._send_json(400, {"success": False, "error": "Session expired or invalid. Please sign in again.", "kicked": True})
                 return
 
-            # Check Main 5-Minute Timer Expiry
             if now_ts > challenge["expires_at"]:
                 ACTIVE_2FA_CHALLENGES.pop(challenge_id, None)
-                self._send_json(400, {
-                    "success": False,
-                    "error": "Passcode expired (5-minute limit exceeded). Session terminated.",
-                    "kicked": True
-                })
+                self._send_json(400, {"success": False, "error": "Passcode expired (5-minute limit exceeded). Session terminated.", "kicked": True})
                 return
 
-            # Check 30-Second Grace Correction Timer Expiry (if active)
             if challenge["grace_expires_at"] and now_ts > challenge["grace_expires_at"]:
                 ACTIVE_2FA_CHALLENGES.pop(challenge_id, None)
-                self._send_json(400, {
-                    "success": False,
-                    "error": "30-second error correction timer expired. Session terminated.",
-                    "kicked": True
-                })
+                self._send_json(400, {"success": False, "error": "30-second error correction timer expired. Session terminated.", "kicked": True})
                 return
 
-            # Validate Code
             if submitted_code != challenge["code"]:
                 challenge["attempts"] += 1
                 if challenge["attempts"] >= 2:
                     ACTIVE_2FA_CHALLENGES.pop(challenge_id, None)
-                    self._send_json(403, {
-                        "success": False,
-                        "error": "Incorrect code on second attempt. Session terminated for security.",
-                        "kicked": True
-                    })
+                    self._send_json(403, {"success": False, "error": "Incorrect code on second attempt. Session terminated for security.", "kicked": True})
                     return
                 else:
-                    # First wrong attempt: start 30-second timer
                     challenge["grace_expires_at"] = now_ts + 30.0
                     self._send_json(400, {
                         "success": False,
@@ -599,7 +648,6 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                     })
                     return
 
-            # CODE IS CORRECT!
             c_type = challenge["type"]
             if c_type == "login":
                 user = challenge["user_data"]
@@ -623,9 +671,9 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                     with get_db() as conn:
                         cursor = conn.cursor()
                         cursor.execute("""
-                            INSERT INTO accounts (username, full_name, email, password_hash, salt, privilege_level, status, created_at)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                        """, (p["username"], p["full_name"], p["email"], p["password_hash"], p["salt"], p["privilege_level"], p["status"], p["created_at"]))
+                            INSERT INTO accounts (username, full_name, email, password_hash, salt, privilege_level, privilege_name, allowed_pages, status, created_at)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """, (p["username"], p["full_name"], p["email"], p["password_hash"], p["salt"], p["privilege_level"], p["privilege_name"], p["allowed_pages"], p["status"], p["created_at"]))
                         conn.commit()
                 except sqlite3.IntegrityError:
                     ACTIVE_2FA_CHALLENGES.pop(challenge_id, None)
@@ -635,13 +683,12 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                 ACTIVE_2FA_CHALLENGES.pop(challenge_id, None)
                 export_sanitized_accounts_json()
 
-                # Dispatch administrator notification to Rann
                 notify_rann_new_signup(
                     full_name=p["full_name"],
                     email=p["email"],
                     username=p["username"],
                     timestamp=p["created_at"],
-                    level=1
+                    role_name=p["privilege_name"]
                 )
 
                 self._send_json(201, {
@@ -652,43 +699,153 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                         "fullName": p["full_name"],
                         "email": p["email"],
                         "privilegeLevel": 1,
+                        "privilegeName": "Guest",
+                        "allowedPages": [],
                         "status": "PENDING_APPROVAL"
                     }
                 })
                 return
 
         # ----------------------------------------------------
-        # Authenticated Admin Action Endpoints below
+        # Authenticated Admin Action Endpoints
         # ----------------------------------------------------
         if not self._is_admin_authenticated():
             self._send_json(401, {"success": False, "error": "Unauthorized: Administrator access required."})
             return
 
-        if url_path == "/api/accounts/approve":
+        # ----------------------------------------------------
+        # 4. POST /api/accounts/update_permissions (Granular role + pages update)
+        # ----------------------------------------------------
+        if url_path == "/api/accounts/update_permissions":
+            user_id = payload.get("id") or payload.get("user_id")
+            username = payload.get("username")
+            privilege_name = payload.get("privilege_name")
+            privilege_level = payload.get("privilege_level")
+            allowed_pages = payload.get("allowed_pages")
+
+            if not user_id and not username:
+                self._send_json(400, {"success": False, "error": "User ID or username is required"})
+                return
+
+            if privilege_name and not privilege_level:
+                privilege_level = ROLE_TO_LEVEL.get(privilege_name.lower().strip(), 1)
+            elif privilege_level and not privilege_name:
+                try:
+                    privilege_level = int(privilege_level)
+                    privilege_name = ROLE_TIERS.get(privilege_level, "Guest")
+                except ValueError:
+                    privilege_level = 1
+                    privilege_name = "Guest"
+
+            if allowed_pages is not None:
+                if isinstance(allowed_pages, list):
+                    pages_json = json.dumps(allowed_pages)
+                else:
+                    pages_json = json.dumps([str(allowed_pages)])
+            else:
+                pages_json = None
+
+            with get_db() as conn:
+                cursor = conn.cursor()
+                # Protect Master Admin 'rann'
+                if user_id:
+                    cursor.execute("SELECT username FROM accounts WHERE id = ?", (user_id,))
+                    u_row = cursor.fetchone()
+                    if u_row and u_row["username"] == "rann":
+                        privilege_level = 10
+                        privilege_name = "Master Administrator"
+                        pages_json = json.dumps(["*"])
+
+                    if pages_json is not None:
+                        cursor.execute("""
+                            UPDATE accounts 
+                            SET privilege_level = ?, privilege_name = ?, allowed_pages = ?
+                            WHERE id = ?
+                        """, (privilege_level, privilege_name, pages_json, user_id))
+                    else:
+                        cursor.execute("""
+                            UPDATE accounts 
+                            SET privilege_level = ?, privilege_name = ?
+                            WHERE id = ?
+                        """, (privilege_level, privilege_name, user_id))
+                else:
+                    if username == "rann":
+                        privilege_level = 10
+                        privilege_name = "Master Administrator"
+                        pages_json = json.dumps(["*"])
+
+                    if pages_json is not None:
+                        cursor.execute("""
+                            UPDATE accounts 
+                            SET privilege_level = ?, privilege_name = ?, allowed_pages = ?
+                            WHERE username = ?
+                        """, (privilege_level, privilege_name, pages_json, username))
+                    else:
+                        cursor.execute("""
+                            UPDATE accounts 
+                            SET privilege_level = ?, privilege_name = ?
+                            WHERE username = ?
+                        """, (privilege_level, privilege_name, username))
+                conn.commit()
+
+            export_sanitized_accounts_json()
+            self._send_json(200, {
+                "success": True,
+                "message": f"Permissions updated: Role set to '{privilege_name}', allowed pages saved.",
+                "privilege_name": privilege_name,
+                "privilege_level": privilege_level
+            })
+            return
+
+        elif url_path == "/api/accounts/approve":
             user_id = payload.get("id")
             email = payload.get("email")
+            role_name = payload.get("privilege_name")
             new_level = payload.get("privilege_level")
+            allowed_pages = payload.get("allowed_pages")
 
-            if not user_id and not email:
-                self._send_json(400, {"success": False, "error": "User ID or email is required"})
-                return
+            if new_level and not role_name:
+                role_name = ROLE_TIERS.get(int(new_level), "Guest")
+            elif role_name and not new_level:
+                new_level = ROLE_TO_LEVEL.get(role_name.lower().strip(), 2)
+            elif not new_level and not role_name:
+                new_level = 2
+                role_name = "Standard Member"
+
+            pages_json = json.dumps(allowed_pages) if allowed_pages is not None else None
 
             with get_db() as conn:
                 cursor = conn.cursor()
                 if user_id:
-                    if new_level is not None:
-                        cursor.execute("UPDATE accounts SET status = 'APPROVED', privilege_level = ? WHERE id = ?", (int(new_level), user_id))
+                    if pages_json is not None:
+                        cursor.execute("""
+                            UPDATE accounts 
+                            SET status = 'APPROVED', privilege_level = ?, privilege_name = ?, allowed_pages = ?
+                            WHERE id = ?
+                        """, (new_level, role_name, pages_json, user_id))
                     else:
-                        cursor.execute("UPDATE accounts SET status = 'APPROVED' WHERE id = ?", (user_id,))
+                        cursor.execute("""
+                            UPDATE accounts 
+                            SET status = 'APPROVED', privilege_level = ?, privilege_name = ?
+                            WHERE id = ?
+                        """, (new_level, role_name, user_id))
                 else:
-                    if new_level is not None:
-                        cursor.execute("UPDATE accounts SET status = 'APPROVED', privilege_level = ? WHERE email = ?", (int(new_level), email))
+                    if pages_json is not None:
+                        cursor.execute("""
+                            UPDATE accounts 
+                            SET status = 'APPROVED', privilege_level = ?, privilege_name = ?, allowed_pages = ?
+                            WHERE email = ?
+                        """, (new_level, role_name, pages_json, email))
                     else:
-                        cursor.execute("UPDATE accounts SET status = 'APPROVED' WHERE email = ?", (email,))
+                        cursor.execute("""
+                            UPDATE accounts 
+                            SET status = 'APPROVED', privilege_level = ?, privilege_name = ?
+                            WHERE email = ?
+                        """, (new_level, role_name, email))
                 conn.commit()
 
             export_sanitized_accounts_json()
-            self._send_json(200, {"success": True, "message": "User account approved successfully."})
+            self._send_json(200, {"success": True, "message": f"User account approved with role '{role_name}'."})
             return
 
         elif url_path == "/api/accounts/reject":
@@ -714,26 +871,30 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
         elif url_path == "/api/accounts/update_level":
             user_id = payload.get("id")
             new_level = payload.get("privilege_level")
+            role_name = payload.get("privilege_name")
 
-            if not user_id or new_level is None:
-                self._send_json(400, {"success": False, "error": "User ID and privilege_level are required"})
+            if not user_id or (new_level is None and role_name is None):
+                self._send_json(400, {"success": False, "error": "User ID and privilege_level or privilege_name are required"})
                 return
 
-            try:
+            if new_level is not None:
                 new_level = int(new_level)
-                if not (1 <= new_level <= 10):
-                    raise ValueError()
-            except ValueError:
-                self._send_json(400, {"success": False, "error": "privilege_level must be between 1 and 10"})
-                return
+                role_name = ROLE_TIERS.get(new_level, "Guest")
+            else:
+                role_name = str(role_name).strip()
+                new_level = ROLE_TO_LEVEL.get(role_name.lower(), 1)
 
             with get_db() as conn:
                 cursor = conn.cursor()
-                cursor.execute("UPDATE accounts SET privilege_level = ? WHERE id = ?", (new_level, user_id))
+                cursor.execute("""
+                    UPDATE accounts 
+                    SET privilege_level = ?, privilege_name = ? 
+                    WHERE id = ? AND username != 'rann'
+                """, (new_level, role_name, user_id))
                 conn.commit()
 
             export_sanitized_accounts_json()
-            self._send_json(200, {"success": True, "message": f"Privilege level updated to {new_level}."})
+            self._send_json(200, {"success": True, "message": f"Role tier updated to '{role_name}' (Level {new_level})."})
             return
 
         elif url_path == "/api/accounts/delete":

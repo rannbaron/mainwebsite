@@ -1,15 +1,17 @@
 /**
- * RannBar-On.com Unified Internal Security Gate & 2FA Session Management
+ * RannBar-On.com Unified Internal Security Gate & Granular Access Control
  * =======================================================================
- * Authentication & Privacy Policy:
+ * Authentication, 2FA & Granular Page Permissions Policy:
  * 1. Step 1: Username & Password Verification (No one-click unlock URLs).
  * 2. Step 2: Email-based 2FA Passcode Verification (6 digits):
- *    - Main 5-Minute Timer: Live 5:00 countdown. If expired, kicks back to login.
+ *    - Main 5-Minute Timer (live 05:00 countdown).
  *    - Incorrect Code Handling:
- *      * 1st wrong attempt: displays alert & starts strict 30-second countdown.
- *      * 2nd wrong attempt OR 30-second timer expires: immediately kicks back to login.
- *    - Correct code: Authenticates session, sets token, allows access.
- * 3. Seamless Persistence: Signed in users stay signed in across tabs and pages in the same session.
+ *      * 1st failure: alert & strict 30-second countdown timer.
+ *      * 2nd failure OR timer expiry: kicks back to Step 1.
+ * 3. Page-by-Page Granular Permission Enforcement:
+ *    - Checks if current page route is in user's `allowed_pages` (or if Master Administrator).
+ *    - If denied: displays customized lock screen stating:
+ *      "Access Denied: Your account does not have permission to view [Page Name]. Contact an administrator to request access."
  * 4. Automatic Logout Conditions:
  *    - Condition 1: 15-minute inactivity (tracks mousemove, keydown, click, scroll).
  *    - Condition 2: Browser close (sessionStorage 'rann_session_active' & session cookie).
@@ -19,14 +21,33 @@
 (function() {
   const MASTER_USER = "rann";
   const MASTER_PWD = "AS2cYGy9GD7qRt@XV&gf$yUX!pD@";
-  const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
-  const HEARTBEAT_DRIFT_THRESHOLD_MS = 5000;    // 5 seconds drift indicates system sleep/suspend
+  const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000;
+  const HEARTBEAT_DRIFT_THRESHOLD_MS = 5000;
 
   const STORAGE_KEYS = {
     SESSION_ACTIVE: "rann_session_active",
     AUTH_USER: "rann_auth_user",
     LAST_ACTIVE: "rann_auth_last_active"
   };
+
+  const PAGE_CATALOG = {
+    "/durhampolitics": "Durham Politics Tracker",
+    "/agents": "Agent Command Center",
+    "/taskpriority": "Decision Desk Approvals",
+    "/internal/vibes.html": "Real-Time Vibes Monitor",
+    "/voice": "Voice Dictation Bridge",
+    "/dashboard/accounts": "User Administration Console"
+  };
+
+  function getCurrentRouteInfo() {
+    const p = window.location.pathname;
+    for (const [route, title] of Object.entries(PAGE_CATALOG)) {
+      if (p.startsWith(route)) {
+        return { route, title };
+      }
+    }
+    return { route: p, title: "Protected Technical Page" };
+  }
 
   function getApiBase() {
     if (window.location.protocol === "file:") return "http://localhost:8086";
@@ -48,43 +69,32 @@
   }
 
   function recordActivity() {
-    try {
-      localStorage.setItem(STORAGE_KEYS.LAST_ACTIVE, Date.now().toString());
-    } catch(e) {}
+    try { localStorage.setItem(STORAGE_KEYS.LAST_ACTIVE, Date.now().toString()); } catch(e) {}
   }
 
   function getLastActive() {
     try {
       const val = localStorage.getItem(STORAGE_KEYS.LAST_ACTIVE);
       return val ? parseInt(val, 10) : 0;
-    } catch(e) {
-      return 0;
-    }
+    } catch(e) { return 0; }
   }
 
   function getStoredUser() {
     try {
       const val = localStorage.getItem(STORAGE_KEYS.AUTH_USER);
       return val ? JSON.parse(val) : null;
-    } catch(e) {
-      return null;
-    }
+    } catch(e) { return null; }
   }
 
   function setStoredUser(userObj) {
-    try {
-      localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(userObj));
-    } catch(e) {}
+    try { localStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(userObj)); } catch(e) {}
   }
 
   function isSessionValid() {
-    // Condition 2: Browser Close check
     const hasSessionStorage = sessionStorage.getItem(STORAGE_KEYS.SESSION_ACTIVE) === "true";
     const hasSessionCookie = getSessionCookie() === "true";
 
-    if (!hasSessionStorage && !hasSessionCookie) {
-      return false;
-    }
+    if (!hasSessionStorage && !hasSessionCookie) return false;
 
     if (!hasSessionStorage && hasSessionCookie) {
       sessionStorage.setItem(STORAGE_KEYS.SESSION_ACTIVE, "true");
@@ -93,13 +103,26 @@
     const user = getStoredUser();
     if (!user) return false;
 
-    // Condition 1: 15-Minute Inactivity check
     const lastActive = getLastActive();
-    if (!lastActive || (Date.now() - lastActive > INACTIVITY_TIMEOUT_MS)) {
-      return false;
-    }
+    if (!lastActive || (Date.now() - lastActive > INACTIVITY_TIMEOUT_MS)) return false;
 
     return true;
+  }
+
+  function userHasRoutePermission(user, route) {
+    if (!user) return false;
+    const isMaster = (user.username === MASTER_USER) || 
+                     (user.privilegeLevel === 10) || 
+                     (user.privilegeName && user.privilegeName.toLowerCase().includes("master"));
+    if (isMaster) return true;
+
+    if (route === "/durhampolitics" && user.username === "durhampol") return true;
+
+    const allowed = user.allowedPages || user.allowed_pages || [];
+    if (Array.isArray(allowed)) {
+      if (allowed.includes("*") || allowed.includes(route)) return true;
+    }
+    return false;
   }
 
   function performLogout(reason) {
@@ -113,12 +136,10 @@
       localStorage.removeItem(STORAGE_KEYS.LAST_ACTIVE);
     } catch(e) {}
 
-    if (!document.getElementById("argonLockOverlay")) {
-      renderLockScreen(reason ? `Session terminated: ${reason}` : "");
-    }
+    renderLockScreen(reason ? `Session terminated: ${reason}` : "");
   }
 
-  // Condition 3: System Suspend / Sleep Detection via Heartbeat Drift
+  // System sleep drift detection
   let lastHeartbeat = Date.now();
   setInterval(function() {
     const now = Date.now();
@@ -140,7 +161,7 @@
     }
   }, 1000);
 
-  // User Activity Listeners
+  // User activity listeners
   let lastActivityUpdate = 0;
   function handleUserActivity() {
     const now = Date.now();
@@ -159,37 +180,73 @@
     getUser: function() { return isSessionValid() ? getStoredUser() : null; },
     recordActivity: recordActivity,
     logout: function() { performLogout("Manual sign out"); },
-    requireLevel: function(minLevel) {
-      const user = this.getUser();
-      if (!user || (user.privilegeLevel || user.level || 0) < minLevel) {
-        performLogout(`Privilege Level ${minLevel} required`);
-        return false;
-      }
-      return true;
+    hasRouteAccess: function(route) {
+      const u = this.getUser();
+      return userHasRoutePermission(u, route);
     }
   };
 
-  // ----------------------------------------------------
-  // Interactive 2FA Modal Lock Screen
-  // ----------------------------------------------------
+  // Lock Screen & Access Denied Overlay
   let cachedOriginalContent = "";
   let activeChallenge = null;
   let mainTimerInterval = null;
   let graceTimerInterval = null;
 
-  function renderLockScreen(initialNotice) {
-    if (document.getElementById("argonLockOverlay")) return;
-
-    if (!cachedOriginalContent && document.body) {
-      cachedOriginalContent = document.body.innerHTML;
-    }
+  function renderAccessDeniedScreen(pageTitle, user) {
+    removeExistingOverlay();
 
     const overlay = document.createElement("div");
     overlay.id = "argonLockOverlay";
     overlay.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:#090d16;color:#f8fafc;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;z-index:9999999;padding:20px;box-sizing:border-box;";
 
-    const isAccountsDashboard = window.location.pathname.includes("accounts");
-    const requiredLevelText = isAccountsDashboard ? "Level 10 Master Admin" : "Authorized User Credentials";
+    const roleName = user.privilegeName || `Level ${user.privilegeLevel || 1}`;
+
+    overlay.innerHTML = `
+      <div style="background:#111827;border:1px solid #ef4444;border-radius:16px;max-width:460px;width:100%;padding:36px 32px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.8);text-align:center;box-sizing:border-box;">
+        <div style="display:inline-flex;padding:14px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);border-radius:50%;margin-bottom:16px;">
+          <svg style="width:36px;height:36px;color:#f87171;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+        </div>
+        <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#ef4444;text-transform:uppercase;margin-bottom:6px;">PAGE ACCESS RESTRICTED</div>
+        <h2 style="font-size:22px;font-weight:800;color:#ffffff;margin-bottom:10px;">Access Denied</h2>
+        
+        <p style="font-size:13.5px;color:#cbd5e1;line-height:1.6;margin-bottom:18px;">
+          Your account (<strong>${user.fullName || user.username}</strong> &bull; <span style="color:#f59e0b;font-weight:700;">${roleName}</span>) does not have permission to view <strong>${pageTitle}</strong>.
+        </p>
+
+        <div style="background:#0d131f;border:1px solid #1f2937;border-radius:8px;padding:12px 16px;font-size:12.5px;color:#94a3b8;margin-bottom:24px;text-align:left;">
+          <i style="font-style:normal;">🔒</i> <strong>Requesting Access:</strong> Contact an administrator at <a href="mailto:rann@rannbar-on.com" style="color:#38bdf8;text-decoration:none;">rann@rannbar-on.com</a> to grant you permission for this page in the User Administration Console.
+        </div>
+
+        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+          <button onclick="window.RannAuth.logout()" style="background:#374151;color:#ffffff;border:none;padding:10px 18px;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;">
+            Switch Account / Sign Out
+          </button>
+          <a href="/" style="background:#00539b;color:#ffffff;padding:10px 18px;border-radius:6px;font-size:13px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;">
+            &larr; Return to Public Site
+          </a>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+  }
+
+  function removeExistingOverlay() {
+    const existing = document.getElementById("argonLockOverlay");
+    if (existing) existing.remove();
+  }
+
+  function renderLockScreen(initialNotice) {
+    removeExistingOverlay();
+
+    if (!cachedOriginalContent && document.body) {
+      cachedOriginalContent = document.body.innerHTML;
+    }
+
+    const { route, title: pageTitle } = getCurrentRouteInfo();
+    const overlay = document.createElement("div");
+    overlay.id = "argonLockOverlay";
+    overlay.style.cssText = "position:fixed;top:0;left:0;width:100vw;height:100vh;background:#090d16;color:#f8fafc;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;z-index:9999999;padding:20px;box-sizing:border-box;";
 
     overlay.innerHTML = `
       <div style="background:#111827;border:1px solid #374151;border-radius:16px;max-width:440px;width:100%;padding:32px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.8);text-align:center;box-sizing:border-box;">
@@ -199,9 +256,9 @@
           <div style="display:inline-flex;padding:12px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);border-radius:50%;margin-bottom:14px;">
             <svg style="width:30px;height:30px;color:#818cf8;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
           </div>
-          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#ef4444;text-transform:uppercase;margin-bottom:6px;">RESTRICTED ACCESS &bull; ${requiredLevelText}</div>
+          <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#ef4444;text-transform:uppercase;margin-bottom:6px;">RESTRICTED &bull; ${pageTitle}</div>
           <h2 style="font-size:20px;font-weight:800;color:#ffffff;margin-bottom:6px;">Step 1: Sign In</h2>
-          <p style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:18px;">Enter your username and password. A one-time 2FA passcode will be dispatched to your registered email.</p>
+          <p style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:18px;">Enter your credentials. A one-time 2FA passcode will be dispatched to your registered email.</p>
           
           ${initialNotice ? `<div id="loginNotice" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;padding:8px 12px;border-radius:6px;font-size:12px;margin-bottom:14px;text-align:left;">${initialNotice}</div>` : '<div id="loginNotice" style="display:none;"></div>'}
 
@@ -226,15 +283,13 @@
           </div>
           <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#34d399;text-transform:uppercase;margin-bottom:6px;">Step 2: Two-Factor Verification</div>
           <h2 style="font-size:20px;font-weight:800;color:#ffffff;margin-bottom:6px;">Enter Security Passcode</h2>
-          <p style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:14px;">A 6-digit passcode was sent to <strong id="step2Email" style="color:#38bdf8;"></strong>. Please enter it below.</p>
+          <p style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:14px;">A 6-digit passcode was sent to <strong id="step2Email" style="color:#38bdf8;"></strong>.</p>
 
-          <!-- Main 5-Minute Countdown Timer Banner -->
           <div style="background:#0d131f;border:1px solid #1f2937;border-radius:8px;padding:8px 12px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;">
-            <span style="color:#94a3b8;"><i style="font-style:normal;">⏳</i> Code Expiration:</span>
+            <span style="color:#94a3b8;">⏳ Code Expiration:</span>
             <span id="mainTimerDisplay" style="font-family:monospace;font-weight:800;color:#f59e0b;font-size:14px;">05:00</span>
           </div>
 
-          <!-- Strict 30-Second Grace Correction Timer Banner (Hidden by default) -->
           <div id="graceTimerBanner" style="display:none;background:rgba(239,68,68,0.18);border:1px solid #ef4444;border-radius:8px;padding:8px 12px;margin-bottom:14px;font-size:12px;color:#fca5a5;text-align:center;">
             <strong>Incorrect Code!</strong> You have <span id="graceTimerDisplay" style="font-weight:800;font-family:monospace;font-size:13px;">30s</span> to correct it before session cancellation.
           </div>
@@ -299,7 +354,6 @@
       resetToStep1("2FA session cancelled.");
     });
 
-    // STEP 1 SUBMIT
     form1.addEventListener("submit", async function(e) {
       e.preventDefault();
       err1.style.display = "none";
@@ -343,7 +397,6 @@
           pwdInput.focus();
         }
       } catch (fetchErr) {
-        // Fallback for pure offline static testing
         if (u === MASTER_USER && p === MASTER_PWD) {
           activeChallenge = {
             id: "local_offline_challenge",
@@ -351,7 +404,15 @@
             expiresAt: Date.now() + 300 * 1000,
             attempts: 0,
             graceExpiresAt: null,
-            offlineUser: { username: "rann", fullName: "Rann Bar-On", email: "rann@rannbar-on.com", privilegeLevel: 10, status: "APPROVED" }
+            offlineUser: {
+              username: "rann",
+              fullName: "Rann Bar-On",
+              email: "rann@rannbar-on.com",
+              privilegeLevel: 10,
+              privilegeName: "Master Administrator",
+              allowedPages: ["*"],
+              status: "APPROVED"
+            }
           };
           transitionToStep2("r***@rannbar-on.com (Offline Demo Code: 888888)");
         } else {
@@ -372,7 +433,6 @@
       graceTimerBanner.style.display = "none";
       codeInput.focus();
 
-      // Start Main 5-Minute Countdown Timer
       if (mainTimerInterval) clearInterval(mainTimerInterval);
       mainTimerInterval = setInterval(function() {
         if (!activeChallenge) return;
@@ -389,7 +449,6 @@
       }, 500);
     }
 
-    // STEP 2 SUBMIT (2FA Verification)
     form2.addEventListener("submit", async function(e) {
       e.preventDefault();
       err2.style.display = "none";
@@ -404,7 +463,6 @@
       btn2.innerText = "Validating...";
       btn2.disabled = true;
 
-      // Check Offline Challenge Fallback
       if (activeChallenge && activeChallenge.id === "local_offline_challenge") {
         if (code === activeChallenge.localCode) {
           completeAuth(activeChallenge.offlineUser);
@@ -454,7 +512,6 @@
         return;
       }
 
-      // First failure: start strict 30-second grace timer
       activeChallenge.graceExpiresAt = Date.now() + 30 * 1000;
       graceTimerBanner.style.display = "block";
       err2.innerText = errorMsg;
@@ -480,14 +537,6 @@
       if (mainTimerInterval) clearInterval(mainTimerInterval);
       if (graceTimerInterval) clearInterval(graceTimerInterval);
 
-      if (isAccountsDashboard && (user.privilegeLevel || user.level || 0) < 10) {
-        err2.innerText = "Access denied: Master Administrator (Level 10) required.";
-        err2.style.display = "block";
-        btn2.innerText = "Verify & Enter \u2192";
-        btn2.disabled = false;
-        return;
-      }
-
       sessionStorage.setItem(STORAGE_KEYS.SESSION_ACTIVE, "true");
       setSessionCookie("true");
       setStoredUser(user);
@@ -495,6 +544,13 @@
 
       sessionStorage.setItem("nc_internal_argon_auth", "valid");
       sessionStorage.setItem("durham_pol_auth", "granted");
+
+      // Verify page-by-page granular access
+      const { route: currentRoute, title: currentTitle } = getCurrentRouteInfo();
+      if (!userHasRoutePermission(user, currentRoute)) {
+        renderAccessDeniedScreen(currentTitle, user);
+        return;
+      }
 
       overlay.remove();
 
@@ -511,6 +567,11 @@
       renderLockScreen();
     } else {
       recordActivity();
+      const user = getStoredUser();
+      const { route: currentRoute, title: currentTitle } = getCurrentRouteInfo();
+      if (!userHasRoutePermission(user, currentRoute)) {
+        renderAccessDeniedScreen(currentTitle, user);
+      }
     }
   }
 

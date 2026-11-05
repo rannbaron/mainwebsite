@@ -5,7 +5,7 @@
   <script id="internalGateScript" src="/internal_gate.js"></script>
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Accounts Management Dashboard | Rann Bar-On</title>
+  <title>Admin Accounts &amp; Access Control Console | Rann Bar-On</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
@@ -37,11 +37,10 @@
     }
 
     .container {
-      max-width: 1280px;
+      max-width: 1320px;
       margin: 0 auto;
     }
 
-    /* Top Navigation Header */
     header {
       display: flex;
       justify-content: space-between;
@@ -111,10 +110,8 @@
       gap: 6px;
       transition: all 0.2s;
     }
-    .btn-logout:hover {
-      background: #ef4444;
-      color: #fff;
-    }
+    .btn-logout:hover { background: #ef4444; color: #fff; }
+    
     .btn-refresh {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -129,10 +126,7 @@
       gap: 6px;
       transition: all 0.2s;
     }
-    .btn-refresh:hover {
-      background: #1f2937;
-      border-color: #374151;
-    }
+    .btn-refresh:hover { background: #1f2937; }
 
     /* KPI Summary Cards */
     .stats-grid {
@@ -176,7 +170,7 @@
       color: #fff;
     }
 
-    /* Pending Approvals Queue */
+    /* Pending Section */
     .section-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -209,10 +203,9 @@
       border-radius: 10px;
     }
 
-    /* Pending Queue Items */
     .pending-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 16px;
     }
     .pending-item {
@@ -230,21 +223,9 @@
       justify-content: space-between;
       align-items: flex-start;
     }
-    .pending-user {
-      font-weight: 700;
-      font-size: 15px;
-      color: #fff;
-    }
-    .pending-email {
-      font-size: 12.5px;
-      color: var(--accent-cyan);
-    }
-    .pending-meta {
-      font-size: 11.5px;
-      color: var(--text-muted);
-      display: flex;
-      gap: 12px;
-    }
+    .pending-user { font-weight: 700; font-size: 15px; color: #fff; }
+    .pending-email { font-size: 12.5px; color: var(--accent-cyan); }
+    .pending-meta { font-size: 11.5px; color: var(--text-muted); display: flex; gap: 12px; }
     .pending-controls {
       display: flex;
       align-items: center;
@@ -252,53 +233,7 @@
       margin-top: 4px;
       padding-top: 10px;
       border-top: 1px solid #1f2937;
-    }
-
-    /* Buttons */
-    .btn-approve {
-      background: #059669;
-      color: #fff;
-      border: none;
-      padding: 7px 14px;
-      border-radius: 6px;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: background 0.2s;
-    }
-    .btn-approve:hover { background: #10b981; }
-
-    .btn-reject {
-      background: rgba(239, 68, 68, 0.2);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #f87171;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 12.5px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s;
-    }
-    .btn-reject:hover {
-      background: #ef4444;
-      color: #fff;
-    }
-
-    .level-select {
-      background: #1f2937;
-      border: 1px solid #4b5563;
-      color: #fff;
-      padding: 6px 8px;
-      border-radius: 6px;
-      font-size: 12px;
-      outline: none;
-      cursor: pointer;
+      flex-wrap: wrap;
     }
 
     /* Filters Bar */
@@ -331,9 +266,8 @@
       font-size: 13px;
       outline: none;
     }
-    .search-input:focus {
-      border-color: var(--accent-indigo);
-    }
+    .search-input:focus { border-color: var(--accent-indigo); }
+    
     .filter-select {
       background: #0d131f;
       border: 1px solid var(--card-border);
@@ -371,15 +305,69 @@
       border-bottom: 1px solid #1a2234;
       transition: background 0.15s;
     }
-    tbody tr:hover {
-      background: rgba(30, 41, 59, 0.4);
+    tbody tr:hover { background: rgba(30, 41, 59, 0.4); }
+    tbody td { padding: 12px 14px; vertical-align: middle; }
+
+    /* Role Badges */
+    .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      border: 1px solid transparent;
     }
-    tbody td {
-      padding: 12px 14px;
-      vertical-align: middle;
+    .role-master {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+    .role-sysadmin {
+      background: rgba(168, 85, 247, 0.2);
+      color: #d8b4fe;
+      border-color: rgba(168, 85, 247, 0.4);
+    }
+    .role-lead {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+      border-color: rgba(59, 130, 246, 0.4);
+    }
+    .role-member {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .role-guest {
+      background: rgba(148, 163, 184, 0.15);
+      color: #94a3b8;
+      border-color: rgba(148, 163, 184, 0.3);
     }
 
-    /* Badges */
+    /* Page Pills */
+    .page-pill-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      max-width: 320px;
+    }
+    .page-pill {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      font-size: 10.5px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+    .page-pill.all {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
     .status-pill {
       display: inline-flex;
       align-items: center;
@@ -408,31 +396,128 @@
       border: 1px solid rgba(239, 68, 68, 0.3);
     }
 
-    .level-badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
+    /* Buttons */
+    .btn-approve {
+      background: #059669;
+      color: #fff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
       font-weight: 700;
-      font-size: 11.5px;
-      background: #1e293b;
-      color: #cbd5e1;
-      border: 1px solid #334155;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
     }
-    .level-badge.level-10 {
+    .btn-approve:hover { background: #10b981; }
+
+    .btn-reject {
       background: rgba(239, 68, 68, 0.2);
-      color: #fca5a5;
-      border-color: rgba(239, 68, 68, 0.5);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #f87171;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
     }
-    .level-badge.level-public {
-      background: rgba(148, 163, 184, 0.15);
-      color: #94a3b8;
+    .btn-reject:hover { background: #ef4444; color: #fff; }
+
+    .btn-perms {
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #a5b4fc;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s;
     }
+    .btn-perms:hover {
+      background: #4f46e5;
+      color: #fff;
+    }
+
+    .role-select {
+      background: #1f2937;
+      border: 1px solid #4b5563;
+      color: #fff;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Permissions Modal */
+    #permsModal {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0, 0, 0, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .modal-content {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 14px;
+      max-width: 520px;
+      width: 100%;
+      padding: 24px 28px;
+      box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1f2937;
+    }
+    .modal-title { font-size: 17px; font-weight: 800; color: #fff; }
+    .close-modal { background: none; border: none; color: #64748b; font-size: 18px; cursor: pointer; }
+    .close-modal:hover { color: #fff; }
+
+    .checkbox-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 16px 0;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #0d131f;
+      border: 1px solid #1f2937;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #cbd5e1;
+      transition: border-color 0.2s;
+    }
+    .checkbox-label:hover { border-color: var(--accent-indigo); }
+    .checkbox-label input { width: 16px; height: 16px; accent-color: var(--accent-indigo); cursor: pointer; }
 
     /* Toast Notification */
     #toast {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 24px; right: 24px;
       background: #1e293b;
       border: 1px solid #475569;
       color: #fff;
@@ -447,31 +532,25 @@
       gap: 10px;
     }
 
-    .empty-state {
-      text-align: center;
-      padding: 32px 16px;
-      color: var(--text-muted);
-      font-size: 13.5px;
-    }
+    .empty-state { text-align: center; padding: 32px 16px; color: var(--text-muted); font-size: 13.5px; }
   </style>
 </head>
 <body>
 
   <div class="container">
-    <!-- Header -->
     <header>
       <div class="brand-group">
-        <i class="fa-solid fa-users-gear" style="font-size: 24px; color: var(--accent-indigo);"></i>
+        <i class="fa-solid fa-user-shield" style="font-size: 24px; color: var(--accent-indigo);"></i>
         <div>
-          <h1>User Accounts &amp; Privilege Management <span class="badge-admin">Level 10 Admin</span></h1>
-          <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">rannbar-on.com Access Control &bull; Privilege Tier Enforcement</p>
+          <h1>User Accounts &amp; Access Control Console <span class="badge-admin">Master Admin</span></h1>
+          <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 2px;">Named Role Tiers &bull; Granular Page-by-Page Permissions</p>
         </div>
       </div>
       <div class="header-actions">
         <div class="user-pill">
           <div class="online-dot"></div>
           <span id="adminName">Rann Bar-On</span>
-          <span style="font-size: 11px; background: rgba(239,68,68,0.25); color: #f87171; padding: 1px 6px; border-radius: 4px; font-weight: 700;">L10</span>
+          <span class="role-badge role-master" style="padding: 1px 7px; font-size: 11px;">Master Admin</span>
         </div>
         <button class="btn-refresh" onclick="fetchAccounts()">
           <i class="fa-solid fa-arrows-rotate"></i> Refresh
@@ -507,7 +586,7 @@
       </div>
       <div class="stat-card admin">
         <div class="stat-title">
-          <span>Administrators</span>
+          <span>Master Administrators</span>
           <i class="fa-solid fa-shield-halved" style="color: var(--accent-red);"></i>
         </div>
         <div class="stat-value" id="kpiAdmins" style="color: #f87171;">--</div>
@@ -522,24 +601,22 @@
           <span>Pending Approvals Queue</span>
           <span class="badge-count" id="pendingCountBadge">0</span>
         </div>
-        <span style="font-size: 12px; color: var(--text-muted);">Users awaiting review before platform access</span>
+        <span style="font-size: 12px; color: var(--text-muted);">Assign named role tier &amp; grant platform access</span>
       </div>
-      <div id="pendingContainer" class="pending-grid">
-        <!-- Rendered dynamically -->
-      </div>
+      <div id="pendingContainer" class="pending-grid"></div>
     </div>
 
-    <!-- Main User Directory -->
+    <!-- User Directory -->
     <div class="section-card">
       <div class="section-header">
         <div class="section-title">
           <i class="fa-solid fa-address-book" style="color: var(--accent-indigo);"></i>
-          <span>User Directory</span>
+          <span>User Directory &amp; Granular Permissions</span>
         </div>
         <span style="font-size: 12px; color: var(--text-muted);"><span id="filteredCount">0</span> users listed</span>
       </div>
 
-      <!-- Filter Controls -->
+      <!-- Filters Bar -->
       <div class="filter-bar">
         <div class="search-box">
           <i class="fa-solid fa-magnifying-glass"></i>
@@ -551,18 +628,18 @@
           <option value="APPROVED">Approved</option>
           <option value="REJECTED">Rejected / Deactivated</option>
         </select>
-        <select id="levelFilter" class="filter-select" onchange="applyFilters()">
-          <option value="ALL">All Privilege Levels</option>
-          <option value="1">Level 1 (Public Only)</option>
-          <option value="2">Level 2</option>
-          <option value="3">Level 3</option>
-          <option value="4">Level 4</option>
-          <option value="5">Level 5</option>
-          <option value="6">Level 6</option>
-          <option value="7">Level 7</option>
-          <option value="8">Level 8</option>
-          <option value="9">Level 9</option>
-          <option value="10">Level 10 (Admin)</option>
+        <select id="roleFilter" class="filter-select" onchange="applyFilters()">
+          <option value="ALL">All Role Tiers</option>
+          <option value="Guest">Guest (Level 1)</option>
+          <option value="Standard Member">Standard Member (Level 2)</option>
+          <option value="Verified Member">Verified Member (Level 3)</option>
+          <option value="Research Associate">Research Associate (Level 4)</option>
+          <option value="Community Contributor">Community Contributor (Level 5)</option>
+          <option value="Policy Analyst">Policy Analyst (Level 6)</option>
+          <option value="Senior Reviewer">Senior Reviewer (Level 7)</option>
+          <option value="Operations Lead">Operations Lead (Level 8)</option>
+          <option value="System Administrator">System Administrator (Level 9)</option>
+          <option value="Master Administrator">Master Administrator (Level 10)</option>
         </select>
       </div>
 
@@ -573,30 +650,145 @@
             <tr>
               <th>User</th>
               <th>Email</th>
-              <th>Privilege Level</th>
+              <th>Role Tier</th>
+              <th>Allowed Private Pages</th>
               <th>Status</th>
               <th>Registered</th>
-              <th>Last Login</th>
-              <th style="text-align: right;">Actions</th>
+              <th style="text-align: right;">Permissions &amp; Actions</th>
             </tr>
           </thead>
-          <tbody id="accountsTableBody">
-            <!-- Rendered dynamically -->
-          </tbody>
+          <tbody id="accountsTableBody"></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification -->
+  <!-- Permissions Modal -->
+  <div id="permsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">Configure Page Access</div>
+          <div id="modalUserSubtitle" style="font-size: 12.5px; color: var(--accent-cyan); margin-top: 2px;"></div>
+        </div>
+        <button class="close-modal" onclick="closePermsModal()">&times;</button>
+      </div>
+
+      <div style="margin-bottom: 16px;">
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 6px;">
+          Assigned Role Tier:
+        </label>
+        <select id="modalRoleSelect" class="filter-select" style="width: 100%;">
+          <option value="Guest">Guest (Public Only)</option>
+          <option value="Standard Member">Standard Member</option>
+          <option value="Verified Member">Verified Member</option>
+          <option value="Research Associate">Research Associate</option>
+          <option value="Community Contributor">Community Contributor</option>
+          <option value="Policy Analyst">Policy Analyst</option>
+          <option value="Senior Reviewer">Senior Reviewer</option>
+          <option value="Operations Lead">Operations Lead</option>
+          <option value="System Administrator">System Administrator</option>
+          <option value="Master Administrator">Master Administrator</option>
+        </select>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">
+          Permitted Private Pages:
+        </label>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" onclick="selectAllPages(true)" style="background: none; border: none; color: var(--accent-indigo); font-size: 11.5px; font-weight: 700; cursor: pointer;">
+            Grant All Pages
+          </button>
+          <span style="color: #4b5563;">&bull;</span>
+          <button type="button" onclick="selectAllPages(false)" style="background: none; border: none; color: #f87171; font-size: 11.5px; font-weight: 700; cursor: pointer;">
+            Clear All
+          </button>
+        </div>
+      </div>
+
+      <div class="checkbox-grid" id="pagesCheckboxContainer">
+        <label class="checkbox-label">
+          <input type="checkbox" value="/durhampolitics" class="page-checkbox">
+          <span><strong>Durham Politics Tracker</strong> <code style="font-size: 11px; color: #94a3b8;">/durhampolitics</code></span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" value="/agents" class="page-checkbox">
+          <span><strong>Agent Command Center</strong> <code style="font-size: 11px; color: #94a3b8;">/agents</code></span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" value="/taskpriority" class="page-checkbox">
+          <span><strong>Decision Desk Approvals</strong> <code style="font-size: 11px; color: #94a3b8;">/taskpriority</code></span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" value="/internal/vibes.html" class="page-checkbox">
+          <span><strong>Real-Time Vibes Monitor</strong> <code style="font-size: 11px; color: #94a3b8;">/internal/vibes.html</code></span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" value="/voice" class="page-checkbox">
+          <span><strong>Voice Dictation Bridge</strong> <code style="font-size: 11px; color: #94a3b8;">/voice</code></span>
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" value="/dashboard/accounts" class="page-checkbox">
+          <span><strong>User Administration Console</strong> <code style="font-size: 11px; color: #94a3b8;">/dashboard/accounts</code></span>
+        </label>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
+        <button onclick="closePermsModal()" style="background: #374151; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;">
+          Cancel
+        </button>
+        <button onclick="saveUserPermissions()" style="background: #4f46e5; color: #fff; border: none; padding: 8px 18px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer;">
+          Save Permissions
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast">
-    <i id="toastIcon" class="fa-solid fa-check-circle" style="color: var(--accent-green);"></i>
+    <i id="toastIcon" class="fa-solid fa-circle-check" style="color: var(--accent-green);"></i>
     <span id="toastMsg">Action completed successfully</span>
   </div>
 
   <script>
     const MASTER_PWD = "AS2cYGy9GD7qRt@XV&gf$yUX!pD@";
     let allAccounts = [];
+    let editingUserId = null;
+
+    const ROLE_TIERS = {
+      1: "Guest",
+      2: "Standard Member",
+      3: "Verified Member",
+      4: "Research Associate",
+      5: "Community Contributor",
+      6: "Policy Analyst",
+      7: "Senior Reviewer",
+      8: "Operations Lead",
+      9: "System Administrator",
+      10: "Master Administrator"
+    };
+
+    const ROLE_TO_LEVEL = {
+      "guest": 1,
+      "standard member": 2,
+      "verified member": 3,
+      "research associate": 4,
+      "community contributor": 5,
+      "policy analyst": 6,
+      "senior reviewer": 7,
+      "operations lead": 8,
+      "system administrator": 9,
+      "master administrator": 10
+    };
+
+    const PAGE_LABELS = {
+      "/durhampolitics": "Durham Politics",
+      "/agents": "Agents",
+      "/taskpriority": "Decision Desk",
+      "/internal/vibes.html": "Vibes",
+      "/voice": "Voice",
+      "/dashboard/accounts": "Admin Console"
+    };
 
     function getApiBase() {
       if (window.location.protocol === "file:") return "http://localhost:8086";
@@ -653,14 +845,13 @@
         console.warn("API server fetch failed, trying local fallback:", err);
       }
 
-      // Offline / Local File Fallback
+      // Offline / Static JSON Fallback
       try {
         const staticResp = await fetch("/accounts.json");
         const staticData = await staticResp.json();
         allAccounts = staticData.accounts || [];
         renderDashboard();
       } catch (e2) {
-        // Fallback default
         allAccounts = [
           {
             id: 1,
@@ -668,21 +859,30 @@
             full_name: "Rann Bar-On",
             email: "rann@rannbar-on.com",
             privilege_level: 10,
+            privilege_name: "Master Administrator",
+            allowed_pages: ["*"],
             status: "APPROVED",
-            created_at: new Date().toISOString(),
-            last_login: new Date().toISOString()
+            created_at: new Date().toISOString()
           }
         ];
         renderDashboard();
       }
     }
 
+    function getRoleBadgeClass(roleName) {
+      const r = (roleName || "").toLowerCase();
+      if (r.includes("master")) return "role-master";
+      if (r.includes("administrator")) return "role-sysadmin";
+      if (r.includes("lead") || r.includes("analyst") || r.includes("reviewer")) return "role-lead";
+      if (r.includes("member") || r.includes("associate") || r.includes("contributor")) return "role-member";
+      return "role-guest";
+    }
+
     function renderDashboard() {
-      // 1. Calculate KPIs
       const total = allAccounts.length;
       const pending = allAccounts.filter(a => a.status === "PENDING_APPROVAL").length;
       const approved = allAccounts.filter(a => a.status === "APPROVED").length;
-      const admins = allAccounts.filter(a => (a.privilege_level || a.privilegeLevel) === 10).length;
+      const admins = allAccounts.filter(a => (a.privilege_name || "").includes("Master") || (a.privilege_level === 10)).length;
 
       document.getElementById("kpiTotal").innerText = total;
       document.getElementById("kpiPending").innerText = pending;
@@ -690,9 +890,8 @@
       document.getElementById("kpiAdmins").innerText = admins;
       document.getElementById("pendingCountBadge").innerText = pending;
 
-      // 2. Render Pending Queue
+      // Pending Queue
       const pendingContainer = document.getElementById("pendingContainer");
-      const pendingSection = document.getElementById("pendingSection");
       const pendingList = allAccounts.filter(a => a.status === "PENDING_APPROVAL");
 
       if (pendingList.length === 0) {
@@ -712,9 +911,9 @@
               <span><i class="fa-solid fa-calendar"></i> ${formatDate(a.created_at || a.createdAt)}</span>
             </div>
             <div class="pending-controls">
-              <label style="font-size: 11px; margin-bottom: 0;">Level:</label>
-              <select id="pendingLevel_${a.id}" class="level-select">
-                ${[1,2,3,4,5,6,7,8,9,10].map(lvl => `<option value="${lvl}" ${lvl === 1 ? 'selected' : ''}>Level ${lvl}</option>`).join("")}
+              <label style="font-size: 11px; margin-bottom: 0;">Role Tier:</label>
+              <select id="pendingRole_${a.id}" class="role-select">
+                ${Object.values(ROLE_TIERS).map(r => `<option value="${r}" ${r === "Standard Member" ? 'selected' : ''}>${r}</option>`).join("")}
               </select>
               <div style="margin-left: auto; display: flex; gap: 8px;">
                 <button class="btn-approve" onclick="approveUser(${a.id})">
@@ -735,20 +934,20 @@
     function applyFilters() {
       const q = document.getElementById("searchInput").value.trim().toLowerCase();
       const statusF = document.getElementById("statusFilter").value;
-      const levelF = document.getElementById("levelFilter").value;
+      const roleF = document.getElementById("roleFilter").value;
 
       const filtered = allAccounts.filter(a => {
         const name = (a.full_name || a.fullName || "").toLowerCase();
         const email = (a.email || "").toLowerCase();
         const user = (a.username || "").toLowerCase();
         const status = (a.status || "").toUpperCase();
-        const lvl = (a.privilege_level || a.privilegeLevel || 1).toString();
+        const role = a.privilege_name || ROLE_TIERS[a.privilege_level] || "Guest";
 
         const matchesQuery = !q || name.includes(q) || email.includes(q) || user.includes(q);
         const matchesStatus = (statusF === "ALL") || (status === statusF);
-        const matchesLevel = (levelF === "ALL") || (lvl === levelF);
+        const matchesRole = (roleF === "ALL") || (role === roleF);
 
-        return matchesQuery && matchesStatus && matchesLevel;
+        return matchesQuery && matchesStatus && matchesRole;
       });
 
       document.getElementById("filteredCount").innerText = filtered.length;
@@ -760,9 +959,19 @@
       }
 
       tbody.innerHTML = filtered.map(a => {
-        const lvl = a.privilege_level || a.privilegeLevel || 1;
+        const roleName = a.privilege_name || ROLE_TIERS[a.privilege_level] || "Guest";
         const status = a.status || "PENDING_APPROVAL";
         const isMaster = a.username === "rann";
+        const pages = a.allowed_pages || [];
+
+        let pagesHtml = "";
+        if (isMaster || (Array.isArray(pages) && pages.includes("*"))) {
+          pagesHtml = `<span class="page-pill all"><i class="fa-solid fa-asterisk"></i> All Private Pages</span>`;
+        } else if (Array.isArray(pages) && pages.length > 0) {
+          pagesHtml = `<div class="page-pill-container">${pages.map(p => `<span class="page-pill">${PAGE_LABELS[p] || p}</span>`).join("")}</div>`;
+        } else {
+          pagesHtml = `<span style="color: #64748b; font-size: 11.5px;">Public Pages Only</span>`;
+        }
 
         return `
           <tr>
@@ -774,14 +983,10 @@
               <a href="mailto:${escapeHtml(a.email)}" style="color: var(--accent-cyan); text-decoration: none;">${escapeHtml(a.email)}</a>
             </td>
             <td>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="level-badge ${lvl === 10 ? 'level-10' : (lvl === 1 ? 'level-public' : '')}">Level ${lvl}</span>
-                ${!isMaster ? `
-                  <select class="level-select" onchange="changePrivilegeLevel(${a.id}, this.value)">
-                    ${[1,2,3,4,5,6,7,8,9,10].map(l => `<option value="${l}" ${l === lvl ? 'selected' : ''}>${l}</option>`).join("")}
-                  </select>
-                ` : '<span style="font-size: 11px; color: var(--text-muted);">(Fixed)</span>'}
-              </div>
+              <span class="role-badge ${getRoleBadgeClass(roleName)}">${roleName}</span>
+            </td>
+            <td>
+              ${pagesHtml}
             </td>
             <td>
               <span class="status-pill ${status.toLowerCase()}">${status.replace("_", " ")}</span>
@@ -789,32 +994,24 @@
             <td style="color: var(--text-muted); font-size: 12px;">
               ${formatDate(a.created_at || a.createdAt)}
             </td>
-            <td style="color: var(--text-muted); font-size: 12px;">
-              ${a.last_login || a.lastLogin ? formatDate(a.last_login || a.lastLogin) : '<span style="color: #64748b;">Never</span>'}
-            </td>
             <td style="text-align: right;">
-              <div style="display: inline-flex; gap: 6px;">
+              <div style="display: inline-flex; gap: 6px; align-items: center;">
+                <button class="btn-perms" onclick="openPermsModal(${a.id})">
+                  <i class="fa-solid fa-sliders"></i> Edit Permissions
+                </button>
                 ${status === 'PENDING_APPROVAL' ? `
-                  <button class="btn-approve" style="padding: 4px 8px; font-size: 11px;" onclick="approveUser(${a.id})">
-                    Approve
-                  </button>
-                  <button class="btn-reject" style="padding: 4px 8px; font-size: 11px;" onclick="rejectUser(${a.id})">
-                    Reject
-                  </button>
+                  <button class="btn-approve" onclick="approveUser(${a.id})">Approve</button>
+                  <button class="btn-reject" onclick="rejectUser(${a.id})">Reject</button>
                 ` : ''}
                 ${status === 'APPROVED' && !isMaster ? `
-                  <button class="btn-reject" style="padding: 4px 8px; font-size: 11px;" onclick="rejectUser(${a.id})">
-                    Deactivate
-                  </button>
+                  <button class="btn-reject" onclick="rejectUser(${a.id})">Deactivate</button>
                 ` : ''}
                 ${status === 'REJECTED' && !isMaster ? `
-                  <button class="btn-approve" style="padding: 4px 8px; font-size: 11px;" onclick="approveUser(${a.id})">
-                    Re-activate
-                  </button>
+                  <button class="btn-approve" onclick="approveUser(${a.id})">Re-activate</button>
                 ` : ''}
                 ${!isMaster ? `
                   <button onclick="deleteUser(${a.id})" title="Delete User" style="background: none; border: none; color: #64748b; cursor: pointer; padding: 4px 6px;">
-                    <i class="fa-solid fa-trash hover:color-red"></i>
+                    <i class="fa-solid fa-trash"></i>
                   </button>
                 ` : ''}
               </div>
@@ -824,9 +1021,88 @@
       }).join("");
     }
 
+    function openPermsModal(userId) {
+      editingUserId = userId;
+      const user = allAccounts.find(a => a.id === userId);
+      if (!user) return;
+
+      document.getElementById("modalUserSubtitle").innerText = `${user.full_name || user.username} (@${user.username})`;
+      
+      const currentRole = user.privilege_name || ROLE_TIERS[user.privilege_level] || "Guest";
+      document.getElementById("modalRoleSelect").value = currentRole;
+
+      const userPages = user.allowed_pages || [];
+      const isAll = (user.username === "rann") || (Array.isArray(userPages) && userPages.includes("*"));
+
+      document.querySelectorAll(".page-checkbox").forEach(cb => {
+        cb.checked = isAll || (Array.isArray(userPages) && userPages.includes(cb.value));
+      });
+
+      document.getElementById("permsModal").style.display = "flex";
+    }
+
+    function closePermsModal() {
+      document.getElementById("permsModal").style.display = "none";
+      editingUserId = null;
+    }
+
+    function selectAllPages(select) {
+      document.querySelectorAll(".page-checkbox").forEach(cb => {
+        cb.checked = select;
+      });
+    }
+
+    async function saveUserPermissions() {
+      if (!editingUserId) return;
+      const roleName = document.getElementById("modalRoleSelect").value;
+      const level = ROLE_TO_LEVEL[roleName.toLowerCase()] || 1;
+
+      const selectedPages = [];
+      document.querySelectorAll(".page-checkbox").forEach(cb => {
+        if (cb.checked) selectedPages.push(cb.value);
+      });
+
+      try {
+        const apiBase = getApiBase();
+        const resp = await fetch(apiBase + "/api/accounts/update_permissions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-Admin-Password": MASTER_PWD,
+            "Authorization": "Bearer " + MASTER_PWD
+          },
+          body: JSON.stringify({
+            id: editingUserId,
+            privilege_name: roleName,
+            privilege_level: level,
+            allowed_pages: selectedPages
+          })
+        });
+        const data = await resp.json();
+        if (resp.ok && data.success) {
+          showToast(`Permissions updated: ${roleName}`);
+          closePermsModal();
+          fetchAccounts();
+          return;
+        }
+      } catch(e) {}
+
+      // Local state fallback
+      const u = allAccounts.find(x => x.id === editingUserId);
+      if (u) {
+        u.privilege_name = roleName;
+        u.privilege_level = level;
+        u.allowed_pages = selectedPages;
+        showToast("Permissions updated (local session).");
+        closePermsModal();
+        renderDashboard();
+      }
+    }
+
     async function approveUser(id) {
-      const selectEl = document.getElementById("pendingLevel_" + id);
-      const lvl = selectEl ? parseInt(selectEl.value, 10) : undefined;
+      const selectEl = document.getElementById("pendingRole_" + id);
+      const roleName = selectEl ? selectEl.value : "Standard Member";
+      const lvl = ROLE_TO_LEVEL[roleName.toLowerCase()] || 2;
 
       try {
         const apiBase = getApiBase();
@@ -837,22 +1113,22 @@
             "X-Admin-Password": MASTER_PWD,
             "Authorization": "Bearer " + MASTER_PWD
           },
-          body: JSON.stringify({ id: id, privilege_level: lvl })
+          body: JSON.stringify({ id: id, privilege_name: roleName, privilege_level: lvl })
         });
         const data = await resp.json();
         if (resp.ok && data.success) {
-          showToast("User account approved successfully.");
+          showToast(`User approved as ${roleName}.`);
           fetchAccounts();
           return;
         }
       } catch(e) {}
 
-      // Local update fallback
       const u = allAccounts.find(x => x.id === id);
       if (u) {
         u.status = "APPROVED";
-        if (lvl) u.privilege_level = lvl;
-        showToast("User approved (local state).");
+        u.privilege_name = roleName;
+        u.privilege_level = lvl;
+        showToast(`User approved as ${roleName}.`);
         renderDashboard();
       }
     }
@@ -873,7 +1149,7 @@
         });
         const data = await resp.json();
         if (resp.ok && data.success) {
-          showToast("User rejected.");
+          showToast("User status set to REJECTED.");
           fetchAccounts();
           return;
         }
@@ -883,35 +1159,6 @@
       if (u) {
         u.status = "REJECTED";
         showToast("User status set to REJECTED.");
-        renderDashboard();
-      }
-    }
-
-    async function changePrivilegeLevel(id, newLevel) {
-      newLevel = parseInt(newLevel, 10);
-      try {
-        const apiBase = getApiBase();
-        const resp = await fetch(apiBase + "/api/accounts/update_level", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-Admin-Password": MASTER_PWD,
-            "Authorization": "Bearer " + MASTER_PWD
-          },
-          body: JSON.stringify({ id: id, privilege_level: newLevel })
-        });
-        const data = await resp.json();
-        if (resp.ok && data.success) {
-          showToast(`Privilege level updated to Level ${newLevel}.`);
-          fetchAccounts();
-          return;
-        }
-      } catch(e) {}
-
-      const u = allAccounts.find(x => x.id === id);
-      if (u) {
-        u.privilege_level = newLevel;
-        showToast(`Privilege level updated to Level ${newLevel}.`);
         renderDashboard();
       }
     }
@@ -960,16 +1207,14 @@
       }
     }
 
-    // Init on auth
     window.addEventListener("rannAuthSuccess", function(e) {
       fetchAccounts();
     });
 
     document.addEventListener("DOMContentLoaded", function() {
-      // If already authenticated via RannAuth
       if (window.RannAuth && window.RannAuth.isAuthenticated()) {
         const u = window.RannAuth.getUser();
-        if (u && (u.privilegeLevel || u.level || 0) >= 10) {
+        if (u && ((u.privilegeLevel || u.level || 0) >= 10 || (u.privilegeName && u.privilegeName.includes("Master")))) {
           fetchAccounts();
         }
       }
