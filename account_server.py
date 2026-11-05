@@ -89,6 +89,7 @@ PRIVATE_PAGES_CATALOG = [
     {"route": "/agents", "title": "Agent Command Center"},
     {"route": "/taskpriority", "title": "Decision Desk Approvals"},
     {"route": "/internal/vibes.html", "title": "Real-Time Vibes Monitor"},
+    {"route": "/internal/test_inbox.html", "title": "Test Mailbox (outputtest@rannbar-on.com)"},
     {"route": "/voice", "title": "Voice Dictation Bridge"},
     {"route": "/dashboard/accounts", "title": "User Administration Console"}
 ]
@@ -497,6 +498,22 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                 self._send_json(200, {"success": True, "code": challenge["code"]})
                 return
             self._send_json(404, {"success": False, "error": "Challenge not found or not a test account."})
+            return
+
+        elif url_path == "/api/test_inbox":
+            # Test inbox endpoint - returns captured messages from /home/rann/src/test_inbox/messages.json
+            try:
+                sys.path.insert(0, "/home/rann/src/test_inbox")
+                import inbox
+                messages = inbox.get_messages(limit=100)
+                self._send_json(200, {
+                    "success": True,
+                    "inbox": "outputtest@rannbar-on.com",
+                    "total": len(messages),
+                    "messages": messages
+                })
+            except Exception as e:
+                self._send_json(500, {"success": False, "error": str(e)})
             return
 
         self._send_json(404, {"success": False, "error": "Endpoint not found"})

@@ -35,6 +35,8 @@
     "/agents": "Agent Command Center",
     "/taskpriority": "Decision Desk Approvals",
     "/internal/vibes.html": "Real-Time Vibes Monitor",
+    "/internal/test_inbox.html": "Test Mailbox (outputtest@rannbar-on.com)",
+    "/internal/test_inbox": "Test Mailbox (outputtest@rannbar-on.com)",
     "/voice": "Voice Dictation Bridge",
     "/dashboard/accounts": "User Administration Console"
   };

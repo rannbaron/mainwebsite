@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-05T17:52:44.422306+00:00",
+  "updated_at": "2026-11-05T18:00:33.178485+00:00",
   "total": 1,
   "accounts": [
     {
@@ -45,6 +45,10 @@
     {
       "route": "/internal/vibes.html",
       "title": "Real-Time Vibes Monitor"
+    },
+    {
+      "route": "/internal/test_inbox.html",
+      "title": "Test Mailbox (outputtest@rannbar-on.com)"
     },
     {
       "route": "/voice",
