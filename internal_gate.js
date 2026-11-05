@@ -1,5 +1,5 @@
 // Argon2 Salted Cryptographic Gate for Internal Technical Pages
-// Label: PRIVATE INTERNAL priority 10 argon
+// Policy: Strict Password-Only Access. No one-click URL parameters allowed.
 (function() {
   const EXPECTED_HASH = "c03040e2f2de7ce235c9c2e9f8fef0a323efc03a3e153c983f82a96969fcf753";
   const SALT = "argon_salt_2026_nc_sec";
@@ -10,27 +10,13 @@
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  // Check URL parameters (auth, pwd, or token)
-  const urlParams = new URLSearchParams(window.location.search);
-  const paramAuth = urlParams.get('auth') || urlParams.get('pwd');
-  const hasValidToken = urlParams.get('token') && urlParams.get('action'); // 1-click approvals
-
-  async function checkAuth() {
-    if (sessionStorage.getItem(SESSION_KEY) === "valid" || hasValidToken) {
-      return true;
-    }
-    if (paramAuth) {
-      const h = await sha256(SALT + paramAuth);
-      if (h === EXPECTED_HASH) {
-        sessionStorage.setItem(SESSION_KEY, "valid");
-        return true;
-      }
-    }
-    return false;
+  function checkAuth() {
+    // STRICT PASSWORD-ONLY: only valid session stored in browser, never query params
+    return sessionStorage.getItem(SESSION_KEY) === "valid";
   }
 
-  document.addEventListener("DOMContentLoaded", async function() {
-    const isAuthed = await checkAuth();
+  document.addEventListener("DOMContentLoaded", function() {
+    const isAuthed = checkAuth();
     if (!isAuthed) {
       renderLockScreen();
     }
@@ -50,7 +36,7 @@
           
           <form id="argonForm" onsubmit="return false;" style="display:flex;flex-direction:column;gap:12px;">
             <input type="password" id="argonPassword" placeholder="Enter master password..." autocomplete="current-password" autofocus style="background:#1f2937;border:1px solid #4b5563;color:#ffffff;padding:12px 16px;border-radius:8px;font-size:14px;outline:none;width:100%;box-sizing:border-box;">
-            <button type="submit" id="argonSubmitBtn" style="background:#4f46e5;hover:background:#4338ca;color:#ffffff;border:none;padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;">Authenticate</button>
+            <button type="submit" id="argonSubmitBtn" style="background:#4f46e5;color:#ffffff;border:none;padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;">Authenticate</button>
           </form>
           <div id="argonError" style="display:none;color:#f87171;font-size:12.5px;font-weight:600;margin-top:14px;">Invalid credentials. Access rejected.</div>
           
@@ -74,7 +60,6 @@
       if (h === EXPECTED_HASH) {
         sessionStorage.setItem(SESSION_KEY, "valid");
         document.body.innerHTML = originalContent;
-        // Re-execute scripts in unlocked body if needed
         const scripts = document.body.querySelectorAll("script");
         scripts.forEach(s => {
           if (!s.src && s.id !== "internalGateScript") {

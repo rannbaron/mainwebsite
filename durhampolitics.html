@@ -1,0 +1,1634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Durham Politics Tracker | Confidential Deliberation & Voting Intelligence</title>
+  
+  <!-- Strict Privacy & Anti-Search Indexing Control -->
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
+
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-sidebar: #0f172a;
+      --card-bg: #111827;
+      --card-inner: #1a2234;
+      --card-border: #1f2937;
+      --border-focus: #3b82f6;
+      --text-main: #f9fafb;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+      --accent-purple: #8b5cf6;
+      --accent-cyan: #06b6d4;
+      --dps-color: #3b82f6;
+      --city-color: #10b981;
+      --bocc-color: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Password Protection Screen Overlay */
+    #authOverlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at center, #1e1b4b 0%, #090d16 100%);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: var(--card-bg);
+      border: 1px solid #312e81;
+      border-radius: 12px;
+      max-width: 440px;
+      width: 100%;
+      padding: 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      text-align: center;
+    }
+
+    .auth-badge {
+      display: inline-block;
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid #ef4444;
+      color: #fca5a5;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+    }
+
+    .auth-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .auth-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .auth-input {
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .auth-input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .auth-btn {
+      background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+      color: #fff;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .auth-btn:hover {
+      opacity: 0.95;
+    }
+
+    .auth-btn:active {
+      transform: scale(0.98);
+    }
+
+    .auth-error {
+      color: #f87171;
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+    }
+
+    /* Main App Layout */
+    #appWrapper {
+      display: none;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .brand-text h1 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .badge-confidential {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-box {
+      position: relative;
+      width: 280px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--card-inner);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 8px 12px 8px 32px;
+      color: #fff;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    .btn-lock {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .btn-lock:hover {
+      background: #334155;
+      color: #fff;
+    }
+
+    /* Navigation Bar */
+    nav.nav-tabs {
+      background: #0b1120;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .nav-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 12px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      color: #fff;
+      border-bottom-color: var(--accent-blue);
+    }
+
+    .tab-pill {
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 9999px;
+      background: #1e293b;
+      color: var(--text-muted);
+    }
+
+    .tab-btn.active .tab-pill {
+      background: rgba(59, 130, 246, 0.2);
+      color: #93c5fd;
+    }
+
+    /* Main Container */
+    main.container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* Tab Content Panes */
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* KPI Summary Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--accent-blue);
+    }
+
+    .kpi-card.kpi-dps::before { background: var(--dps-color); }
+    .kpi-card.kpi-city::before { background: var(--city-color); }
+    .kpi-card.kpi-bocc::before { background: var(--bocc-color); }
+
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .kpi-subtext {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Cards & Section Containers */
+    .section-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* Body Badge */
+    .badge-body {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-body.dps {
+      background: rgba(59, 130, 246, 0.15);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+    }
+
+    .badge-body.city {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #6ee7b7;
+    }
+
+    .badge-body.bocc {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      color: #fcd34d;
+    }
+
+    /* Member Cards Grid */
+    .members-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-top: 16px;
+    }
+
+    .member-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+
+    .member-card:hover {
+      transform: translateY(-2px);
+      border-color: #334155;
+    }
+
+    .member-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .member-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      background: #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 16px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .member-info h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .member-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .member-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+      background: var(--card-inner);
+      border-radius: 8px;
+      padding: 10px;
+      margin: 12px 0;
+      text-align: center;
+    }
+
+    .stat-box-num {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-box-lbl {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .tag-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      background: #1e293b;
+      color: #cbd5e1;
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .tag-ideology {
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: #c4b5fd;
+    }
+
+    .btn-view-record {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 8px;
+      width: 100%;
+      margin-top: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-view-record:hover {
+      background: #334155;
+    }
+
+    /* Meeting Timeline Feed */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .meeting-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+
+    .meeting-card:hover {
+      border-color: #334155;
+    }
+
+    .meeting-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .meeting-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .meeting-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .meeting-summary {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    /* Collapsible Sections inside Meeting */
+    .meeting-details-toggle {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      padding-top: 12px;
+      border-top: 1px solid var(--card-inner);
+    }
+
+    .btn-toggle-details {
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: #cbd5e1;
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-toggle-details:hover {
+      background: #334155;
+      color: #fff;
+    }
+
+    .details-pane {
+      display: none;
+      margin-top: 14px;
+      background: var(--card-inner);
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid #232d42;
+    }
+
+    /* Votes list */
+    .vote-item {
+      border-bottom: 1px solid #2a374f;
+      padding-bottom: 12px;
+      margin-bottom: 12px;
+    }
+
+    .vote-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    .vote-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .vote-badge-passed {
+      background: rgba(16, 185, 129, 0.2);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .vote-badge-failed {
+      background: rgba(239, 68, 68, 0.2);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .vote-breakdown {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .disagreement-box {
+      background: #131b2e;
+      border-left: 3px solid var(--accent-amber);
+      border-radius: 0 8px 8px 0;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .disagreement-box:last-child {
+      margin-bottom: 0;
+    }
+
+    .dis-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fcd34d;
+      margin-bottom: 6px;
+    }
+
+    .dis-side {
+      font-size: 12px;
+      color: #e2e8f0;
+      margin: 6px 0;
+    }
+
+    /* Pairwise Heatmap Grid */
+    .heatmap-wrapper {
+      overflow-x: auto;
+      margin-top: 16px;
+    }
+
+    .heatmap-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .heatmap-table th, .heatmap-table td {
+      padding: 8px;
+      border: 1px solid #1e293b;
+    }
+
+    .heatmap-table th {
+      background: #0f172a;
+      color: var(--text-muted);
+      font-weight: 600;
+      max-width: 110px;
+      word-wrap: break-word;
+    }
+
+    .heat-high { background: rgba(16, 185, 129, 0.25); color: #6ee7b7; font-weight: 700; }
+    .heat-med { background: rgba(245, 158, 11, 0.25); color: #fcd34d; }
+    .heat-low { background: rgba(239, 68, 68, 0.25); color: #fca5a5; font-weight: 700; }
+    .heat-self { background: #1e293b; color: var(--text-dim); }
+
+    /* Modal for Voting Record */
+    #recordModal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    /* Filter Controls Bar */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .filter-select {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-size: 13px;
+      border-radius: 8px;
+      padding: 8px 12px;
+      outline: none;
+    }
+
+    /* Toast Notification */
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1e293b;
+      border: 1px solid var(--accent-blue);
+      color: #fff;
+      font-size: 13px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
+      z-index: 999999;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================== -->
+  <!-- PASSWORD PROTECTION GATEWAY                             -->
+  <!-- ======================================================== -->
+  <div id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-badge">Confidential Document</div>
+      <div class="auth-title">Durham Politics Tracker</div>
+      <div class="auth-desc">Private research command center tracking DPS Board of Education, Durham City Council, and County Commissioners. Password protected.</div>
+      
+      <form class="auth-form" onsubmit="handleAuth(event)">
+        <input type="password" id="authPasswordInput" class="auth-input" placeholder="Enter Access Password" autofocus required autocomplete="current-password">
+        <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); cursor: pointer; text-align: left;">
+          <input type="checkbox" id="rememberAuthCheckbox" checked> Remember access on this browser
+        </label>
+        <button type="submit" class="auth-btn">Unlock Command Center &rarr;</button>
+        <div id="authErrorMsg" class="auth-error">Incorrect password. Please verify and retry.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- MAIN APPLICATION SHELL                                  -->
+  <!-- ======================================================== -->
+  <div id="appWrapper">
+    <!-- Header -->
+    <header>
+      <div class="header-inner">
+        <div class="brand-group">
+          <div class="brand-logo">DP</div>
+          <div class="brand-text">
+            <h1>Durham Politics Tracker <span class="badge-confidential">Private Access</span></h1>
+            <p>Nov 2024 – Nov 2026 Deliberation & Voting Intelligence | DPS, City Council & BOCC</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <div class="search-box">
+            <span class="search-icon">&#128269;</span>
+            <input type="text" id="globalSearchInput" class="search-input" placeholder="Search votes, topics, officials..." oninput="handleGlobalSearch(this.value)">
+          </div>
+          <button class="btn-lock" onclick="lockApp()">
+            <span>&#128274;</span> Lock Page
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <div class="nav-inner">
+        <button class="tab-btn active" onclick="switchTab('overview')">
+          <span>Overview & Macro Trends</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('dps')">
+          <span>DPS School Board</span>
+          <span class="tab-pill" id="pill_dps">7 Seats</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('city')">
+          <span>City Council</span>
+          <span class="tab-pill" id="pill_city">7 Seats</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('bocc')">
+          <span>County Commissioners</span>
+          <span class="tab-pill" id="pill_bocc">5 Seats</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('members')">
+          <span>Member Directory</span>
+          <span class="tab-pill" id="pill_members">22 Officials</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('alignments')">
+          <span>Voting Alignments & Heatmaps</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab('timeline')">
+          <span>Meeting Archives & Video</span>
+          <span class="tab-pill" id="pill_meetings">Timeline</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="container">
+      
+      <!-- ================= TAB 1: OVERVIEW ================= -->
+      <div id="tab_overview" class="tab-pane active">
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Tracked Meetings</div>
+            <div class="kpi-value" id="kpiTotalMeetings">0</div>
+            <div class="kpi-subtext">Nov 2024 – Nov 2026 public sessions</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Recorded Formal Votes</div>
+            <div class="kpi-value" id="kpiTotalVotes">0</div>
+            <div class="kpi-subtext" id="kpiUnanimousPct">0% Unanimous Consensual</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Contested Roll Calls</div>
+            <div class="kpi-value" id="kpiContestedVotes">0</div>
+            <div class="kpi-subtext">Divided roll calls & dissents</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Deliberation Issues</div>
+            <div class="kpi-value" id="kpiTotalDisagreements">0</div>
+            <div class="kpi-subtext">Sources of substantive debate</div>
+          </div>
+        </div>
+
+        <!-- Cross-Body Summary Cards -->
+        <div class="section-title">Major Governance Fault Lines & Running Alignments</div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px;">
+          <!-- DPS Summary -->
+          <div class="card" style="border-top: 3px solid var(--dps-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span class="badge-body dps">Durham Public Schools</span>
+              <span style="font-size: 12px; color: var(--text-dim);">Chaired by Joy Harrell-Goff</span>
+            </div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">Labor Stability, Fiscal Oversight & Facility Preservation</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+              Key tensions center on classified staff salary schedules and meet-and-confer frameworks with the Durham Association of Educators (DAE). Under Policy 8600, strict quarterly budget reporting was instituted. Board resisted outside consultant recommendations to consolidate/close elementary schools.
+            </p>
+            <div style="font-size: 12px; background: var(--card-inner); padding: 10px; border-radius: 6px;">
+              <strong>Key Faction Dynamic:</strong> Labor-allied progressives (Bir, Rogers, Rivero, Chávez) partnering with collaborative leadership (Harrell-Goff, Cason) to prioritize workforce retention.
+            </div>
+          </div>
+
+          <!-- City Council Summary -->
+          <div class="card" style="border-top: 3px solid var(--city-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span class="badge-body city">Durham City Council</span>
+              <span style="font-size: 12px; color: var(--text-dim);">Mayor Leonardo Williams</span>
+            </div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">Density Urbanism (SCAD) vs Neighborhood Preservation</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+              Persistent 4-3 and 5-2 ideological split on development rezonings and the SCAD housing code. Williams, Caballero, and Kopac advocate market supply abundance; Baker and Cook dissent frequently demanding deep binding affordability and environmental buffers. Universal support for HEART non-police crisis expansion.
+            </p>
+            <div style="font-size: 12px; background: var(--card-inner); padding: 10px; border-radius: 6px;">
+              <strong>Key Faction Dynamic:</strong> Pro-growth urbanists (Williams, Caballero, Kopac, Rist) vs Planning integrity/tenant defense progressives (Baker, Cook, Burris).
+            </div>
+          </div>
+
+          <!-- BOCC Summary -->
+          <div class="card" style="border-top: 3px solid var(--bocc-color);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <span class="badge-body bocc">County Commissioners</span>
+              <span style="font-size: 12px; color: var(--text-dim);">Chaired by Dr. Mike Lee</span>
+            </div>
+            <h3 style="font-size: 15px; margin-bottom: 8px;">Education Funding, Property Revaluation & Regional Transit</h3>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 12px;">
+              Steered major supplemental funding ($27M) to stabilize DPS classified salaries. Unanimous on dedicating county-owned downtown parcels (300 E. Main) to 100% affordable housing. High cohesion with isolated dissents on suburban property tax rate adjustments. Smooth leadership rotation from Allam to Lee in Dec 2025.
+            </p>
+            <div style="font-size: 12px; background: var(--card-inner); padding: 10px; border-radius: 6px;">
+              <strong>Key Faction Dynamic:</strong> High consensus body (Lee, Allam, Burton, Jacobs, Valentine) prioritizing countywide human services, public health, and transit right-of-way.
+            </div>
+          </div>
+        </div>
+
+        <!-- Latest High-Impact Motions -->
+        <div class="section-title" style="margin-top: 24px;">Recent Landmark Votes</div>
+        <div id="overviewLandmarkVotes" class="timeline"></div>
+      </div>
+
+      <!-- ================= TAB 2: DPS ================= -->
+      <div id="tab_dps" class="tab-pane">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Durham Public Schools Board of Education</h2>
+            <span class="badge-body dps">7 Total Seats</span>
+          </div>
+          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
+            Oversees Durham County's K-12 public school system, serving over 32,000 students across 56 schools. Responsibilities include superintendent supervision (Dr. Anthony S. Lewis), operational budget adoption, state class-size compliance, facility construction (2022 bond projects), and staff compensation supplements.
+          </p>
+        </div>
+        <div class="section-title">DPS Board Members</div>
+        <div id="dpsMembersGrid" class="members-grid"></div>
+
+        <div class="section-title" style="margin-top: 32px;">DPS Meeting Chronology & Roll Calls</div>
+        <div id="dpsMeetingsTimeline" class="timeline"></div>
+      </div>
+
+      <!-- ================= TAB 3: CITY COUNCIL ================= -->
+      <div id="tab_city" class="tab-pane">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Durham City Council</h2>
+            <span class="badge-body city">7 Total Seats (Mayor + 6 Council Members)</span>
+          </div>
+          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
+            The legislative and policy-making body of the City of Durham. Enacts municipal ordinances, sets city ad valorem property tax rates, adopts the annual capital and operating budget ($640M+), oversees development zoning and annexation requests, and guides public safety investments including the DPD and HEART non-police crisis program.
+          </p>
+        </div>
+        <div class="section-title">City Council Members</div>
+        <div id="cityMembersGrid" class="members-grid"></div>
+
+        <div class="section-title" style="margin-top: 32px;">City Council Meeting Chronology & Roll Calls</div>
+        <div id="cityMeetingsTimeline" class="timeline"></div>
+      </div>
+
+      <!-- ================= TAB 4: BOCC ================= -->
+      <div id="tab_bocc" class="tab-pane">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Durham Board of County Commissioners (BOCC)</h2>
+            <span class="badge-body bocc">5 County-wide Seats</span>
+          </div>
+          <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
+            The governing body of Durham County, managing public health, social services, property appraisals, county court administration, and local funding supplements for Durham Public Schools and Durham Technical Community College. Chaired by Dr. Mike Lee (elected Dec 2025; Vice Chair Nida Allam).
+          </p>
+        </div>
+        <div class="section-title">County Commissioners</div>
+        <div id="boccMembersGrid" class="members-grid"></div>
+
+        <div class="section-title" style="margin-top: 32px;">BOCC Meeting Chronology & Roll Calls</div>
+        <div id="boccMeetingsTimeline" class="timeline"></div>
+      </div>
+
+      <!-- ================= TAB 5: MEMBERS ================= -->
+      <div id="tab_members" class="tab-pane">
+        <div class="filter-bar">
+          <select id="memberFilterBody" class="filter-select" onchange="renderMembers()">
+            <option value="all">All Governing Bodies</option>
+            <option value="dps">DPS School Board</option>
+            <option value="city">Durham City Council</option>
+            <option value="bocc">County Commissioners (BOCC)</option>
+          </select>
+          <select id="memberFilterStatus" class="filter-select" onchange="renderMembers()">
+            <option value="current">Current Serving Officials</option>
+            <option value="all">All (Including Preceding Members)</option>
+            <option value="former">Preceding / Former Members Only</option>
+          </select>
+        </div>
+        <div id="allMembersGrid" class="members-grid"></div>
+      </div>
+
+      <!-- ================= TAB 6: ALIGNMENTS ================= -->
+      <div id="tab_alignments" class="tab-pane">
+        <div class="card">
+          <h2 style="font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 8px;">Pairwise Voting Agreement Heatmap</h2>
+          <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Calculates the percentage of contested votes where two members voted identically when both were present. Green cells indicate voting agreement &gt; 80%; amber indicates moderate divergence (60-79%); red indicates persistent policy disagreement (&lt; 60%).
+          </p>
+          <div class="filter-bar">
+            <select id="alignmentBodySelect" class="filter-select" onchange="renderPairwiseHeatmap(this.value)">
+              <option value="city">Durham City Council Agreement Grid</option>
+              <option value="dps">DPS Board of Education Agreement Grid</option>
+              <option value="bocc">Durham County Commissioners (BOCC) Grid</option>
+            </select>
+          </div>
+          <div id="heatmapContainer" class="heatmap-wrapper"></div>
+        </div>
+
+        <div class="card" style="margin-top: 20px;">
+          <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px;">Dissent Frequency Leaderboard</h3>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
+            Officials who cast the highest proportion of dissenting votes (NAY against a carried majority motion) on contested items:
+          </p>
+          <div id="dissentLeaderboard"></div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 7: TIMELINE ================= -->
+      <div id="tab_timeline" class="tab-pane">
+        <div class="filter-bar">
+          <select id="timelineFilterBody" class="filter-select" onchange="renderTimeline()">
+            <option value="all">All Bodies</option>
+            <option value="dps">DPS School Board</option>
+            <option value="city">City Council</option>
+            <option value="bocc">County Commissioners</option>
+          </select>
+          <select id="timelineFilterYear" class="filter-select" onchange="renderTimeline()">
+            <option value="all">All Years (2024–2026)</option>
+            <option value="2026">2026 Meetings</option>
+            <option value="2025">2025 Meetings</option>
+            <option value="2024">2024 Meetings</option>
+          </select>
+          <select id="timelineFilterContested" class="filter-select" onchange="renderTimeline()">
+            <option value="all">All Recorded Sessions</option>
+            <option value="contested">Contested Roll Calls Only</option>
+          </select>
+        </div>
+        <div id="masterTimelineList" class="timeline"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- VOTING RECORD MODAL                                     -->
+  <!-- ======================================================== -->
+  <div id="recordModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div id="modalMemberTitle" style="font-weight: 800; font-size: 18px; color: #fff;"></div>
+        <button class="btn-close-modal" onclick="closeRecordModal()">&times;</button>
+      </div>
+      <div id="modalMemberBody" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast"></div>
+
+  <!-- ======================================================== -->
+  <!-- CLIENT DATA & APPLICATION LOGIC                          -->
+  <!-- ======================================================== -->
+  <script>
+    const APP_DATA = {"metadata": {"app_title": "Durham Politics Tracker", "coverage": "November 2024 – November 2026 & Ongoing", "bodies": {"dps": {"id": "dps", "name": "Durham Public Schools Board of Education", "short_name": "DPS Board of Education", "acronym": "DPS", "badge_color": "#3b82f6", "text_color": "#93c5fd", "portal_url": "https://durhamnc.portal.civicclerk.com", "boarddocs_url": "https://go.boarddocs.com/nc/dpsnc/Board.nsf/Public", "youtube_channel": "https://www.youtube.com/@DurhamPublicSchoolsNC", "channel_id": "UC_dps_board_nc", "description": "Governs the public school system for Durham County, overseeing superintendent leadership, budget allocation, educational policy, and facilities.", "regular_schedule": "2nd & 4th Thursdays at 6:30 PM", "total_seats": 7}, "city": {"id": "city", "name": "Durham City Council", "short_name": "City Council", "acronym": "City", "badge_color": "#10b981", "text_color": "#6ee7b7", "portal_url": "https://durhamnc.gov/1321/City-Council-Meetings", "granicus_url": "https://durhamnc.granicus.com", "legistar_url": "https://durhamnc.legistar.com", "youtube_channel": "https://www.youtube.com/@CityofDurhamNC", "channel_id": "UC_city_of_durham", "description": "The legislative body for the City of Durham, enacting city ordinances, setting tax rates, adopting the city budget, and directing urban development and municipal services.", "regular_schedule": "1st & 3rd Mondays at 7:00 PM (Work Sessions on Thursdays)", "total_seats": 7}, "bocc": {"id": "bocc", "name": "Durham Board of County Commissioners", "short_name": "County Commissioners", "acronym": "BOCC", "badge_color": "#f59e0b", "text_color": "#fcd34d", "portal_url": "https://www.dconc.gov/county-departments/departments-a-e/board-of-commissioners/commissioners-meetings", "granicus_url": "https://durhamcounty.granicus.com", "legistar_url": "https://durhamcounty.legistar.com", "youtube_channel": "https://www.youtube.com/@DurhamCountyNC", "channel_id": "UC_durham_county", "description": "The governing board of Durham County, managing county-wide services, public health, social services, property tax valuation, and local funding appropriations for DPS and Durham Tech.", "regular_schedule": "2nd & 4th Mondays at 7:00 PM", "total_seats": 5}}, "generated_at": "2026-11-05T11:32:32.343655"}, "stats": {"overall": {"total_meetings": 19, "total_votes": 24, "contested_votes": 9, "unanimous_votes": 15, "unanimous_pct": 62.5, "total_disagreements": 9, "last_updated": "November 05, 2026"}, "bodies": {"dps": {"meetings_count": 7, "votes_count": 9, "contested_votes": 3, "unanimous_rate": 66.7}, "city": {"meetings_count": 6, "votes_count": 7, "contested_votes": 5, "unanimous_rate": 28.6}, "bocc": {"meetings_count": 6, "votes_count": 8, "contested_votes": 1, "unanimous_rate": 87.5}}, "members": [{"id": "mike_lee", "body_id": "bocc", "name": "Dr. Mike Lee", "title": "Chair", "district": "County-wide", "active_terms": ["2024-present (Chair since Dec 2025)"], "is_current": true, "avatar_initials": "DM", "bio": "Elected Chair of BOCC in December 2025. Former DPS School Board Chair. Brings deep K-12 operational expertise to county funding deliberations for schools.", "key_priorities": ["DPS Local Funding", "Tax Base Modernization", "Health Systems"], "ideology_tags": ["School System Veteran", "Consensus Leader", "County Chair"], "votes_cast": 8, "ayes": 8, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "michelle_burton", "body_id": "bocc", "name": "Michelle Burton", "title": "Commissioner", "district": "County-wide", "active_terms": ["2024-present"], "is_current": true, "avatar_initials": "MB", "bio": "Former President of the Durham Association of Educators (DAE) and school librarian. Unwavering voice for public school workers and union collective bargaining.", "key_priorities": ["Public School Worker Pay", "Union Rights", "Community Schools"], "ideology_tags": ["DAE Past President", "Labor Stalwart"], "votes_cast": 8, "ayes": 8, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "nida_allam", "body_id": "bocc", "name": "Nida Allam", "title": "Vice Chair", "district": "County-wide", "active_terms": ["2020-present (Chair 2024-2025, Vice Chair 2025-present)"], "is_current": true, "avatar_initials": "NA", "bio": "First Muslim woman elected to public office in NC. Served as BOCC Chair 2024-2025. Champions progressive labor standards, immigrant justice, and early childhood funding.", "key_priorities": ["Living Wages", "Universal Pre-K", "Environmental Justice"], "ideology_tags": ["Progressive Luminary", "Labor Champion", "Vice Chair"], "votes_cast": 8, "ayes": 8, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "stephen_valentine", "body_id": "bocc", "name": "Stephen Valentine", "title": "Commissioner", "district": "County-wide", "active_terms": ["2024-present"], "is_current": true, "avatar_initials": "SV", "bio": "Attorney and legal educator. Focuses on criminal justice diversion, county court system modernization, veterans affairs, and transparent property appraisals.", "key_priorities": ["Criminal Justice Diversion", "Veterans Services", "Property Reval Equity"], "ideology_tags": ["Legal Reformer", "Due Process Advocate"], "votes_cast": 8, "ayes": 7, "nays": 1, "abstains": 0, "aye_pct": 87.5, "nay_pct": 12.5, "dissent_rate": 100.0, "dissents_count": 1}, {"id": "wendy_jacobs", "body_id": "bocc", "name": "Wendy Jacobs", "title": "Commissioner", "district": "County-wide", "active_terms": ["2012-present"], "is_current": true, "avatar_initials": "WJ", "bio": "Longest-serving active County Commissioner (14 years). Dean of the board on climate action, farmland preservation, GoTriangle regional transit, and early childhood education.", "key_priorities": ["Transit Corridors", "Climate & Clean Energy", "Farmland Protection"], "ideology_tags": ["Environmental Dean", "Transit Champion", "Veteran Commissioner"], "votes_cast": 8, "ayes": 8, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "carl_rist", "body_id": "city", "name": "Carl Rist", "title": "Council Member", "district": "At-Large", "active_terms": ["2023-present"], "is_current": true, "avatar_initials": "CR", "bio": "Longtime economic justice researcher at Prosperity Now. Focuses on living wages, municipal worker equity, wealth inequality reduction, and worker cooperatives.", "key_priorities": ["Worker Pay & Step Plans", "Wealth Equity", "Economic Justice"], "ideology_tags": ["Labor Ally", "Economic Policy Expert"], "votes_cast": 7, "ayes": 7, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "chelsea_cook", "body_id": "city", "name": "Chelsea Cook", "title": "Council Member", "district": "Ward 3", "active_terms": ["2023-present"], "is_current": true, "avatar_initials": "CC", "bio": "Legal aid attorney and tenant rights advocate. Consistently questions police technology expansions and champions tenant protections and municipal labor demands.", "key_priorities": ["Tenant Protections", "Police Demilitarization", "HEART Program"], "ideology_tags": ["Civil Rights Champion", "Tenant Advocate", "Police Skeptic"], "votes_cast": 7, "ayes": 4, "nays": 3, "abstains": 0, "aye_pct": 57.1, "nay_pct": 42.9, "dissent_rate": 60.0, "dissents_count": 3}, {"id": "javiera_caballero", "body_id": "city", "name": "Javiera Caballero", "title": "Mayor Pro Tempore", "district": "At-Large", "active_terms": ["2018-present"], "is_current": true, "avatar_initials": "JC", "bio": "First Latina elected to Durham City Council. Mayor Pro Tem. Leading advocate for affordable housing density, immigrant inclusion, and sustainable infrastructure.", "key_priorities": ["Housing Density (SCAD)", "Language Access", "Equitable Development"], "ideology_tags": ["Urbanist Progressive", "Density Champion"], "votes_cast": 7, "ayes": 7, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "leonardo_williams", "body_id": "city", "name": "Leonardo Williams", "title": "Mayor", "district": "At-Large (Mayor)", "active_terms": ["2023-present"], "is_current": true, "avatar_initials": "LW", "bio": "Mayor of Durham, former school teacher and small business owner. Focuses on economic vibrancy, downtown revitalization, public safety partnerships, and regional transit.", "key_priorities": ["Economic Vitality", "Public Safety", "Regional Transit", "Small Business"], "ideology_tags": ["Pro-Growth Pragmatist", "Coalition Builder", "Downtown Revitalization"], "votes_cast": 7, "ayes": 7, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "matt_kopac", "body_id": "city", "name": "Matt Kopac", "title": "Council Member", "district": "Ward 1", "active_terms": ["2025-present"], "is_current": true, "avatar_initials": "MK", "bio": "Elected in 2025 representing Ward 1. Sustainability executive focusing on clean energy transitions, municipal carbon neutrality, and walkable urban design.", "key_priorities": ["Climate Resilience", "Urban Density", "Fiscal Prudence"], "ideology_tags": ["Green Urbanist", "Pragmatic Reformer"], "votes_cast": 7, "ayes": 7, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "nate_baker", "body_id": "city", "name": "Nate Baker", "title": "Council Member", "district": "At-Large", "active_terms": ["2023-present"], "is_current": true, "avatar_initials": "NB", "bio": "Professional urban planner elected in 2023. Frequent dissenting voice on developer rezonings that lack binding affordability, environmental protections, and transit integration.", "key_priorities": ["Planning Integrity", "Environmental Protection", "Anti-Gentrification", "Deep Affordability"], "ideology_tags": ["Independent Progressive", "Planning Purist", "Dissent Leader"], "votes_cast": 7, "ayes": 2, "nays": 5, "abstains": 0, "aye_pct": 28.6, "nay_pct": 71.4, "dissent_rate": 100.0, "dissents_count": 5}, {"id": "shanetta_burris", "body_id": "city", "name": "Shanetta Burris", "title": "Council Member", "district": "Ward 2", "active_terms": ["2025-present"], "is_current": true, "avatar_initials": "SB", "bio": "Elected in 2025 representing Ward 2 (East Durham). Community advocate centered on neighborhood preservation, anti-displacement, and youth enrichment programs.", "key_priorities": ["East Durham Investment", "Anti-Displacement", "Youth Opportunities"], "ideology_tags": ["Community Advocate", "Neighborhood Preservation"], "votes_cast": 7, "ayes": 5, "nays": 2, "abstains": 0, "aye_pct": 71.4, "nay_pct": 28.6, "dissent_rate": 40.0, "dissents_count": 2}, {"id": "bettina_umstead", "body_id": "dps", "name": "Bettina Umstead", "title": "Former Chair", "district": "District 2", "active_terms": ["2020-2026 (Chair)"], "is_current": false, "avatar_initials": "BU", "bio": "Served as Board Chair through the tumultuous classified salary crisis and superintendent transition. Steered board through post-pandemic recovery.", "key_priorities": ["Board Unity", "Strategic Plan 2027", "Superintendent Search"], "ideology_tags": ["Consensus Builder", "Institutional Leader"], "votes_cast": 6, "ayes": 6, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "emily_chavez", "body_id": "dps", "name": "Emily Chávez", "title": "Former Board Member", "district": "District 1", "active_terms": ["2022-2026"], "is_current": false, "avatar_initials": "EC", "bio": "Champion of Policy 8600 (Quarterly Budget Transparency). Deeply aligned with DAE educators and Spanish-speaking immigrant communities.", "key_priorities": ["Policy 8600", "Labor Solidarity", "Immigrant Rights"], "ideology_tags": ["DAE Champion", "Policy Architect"], "votes_cast": 6, "ayes": 5, "nays": 1, "abstains": 0, "aye_pct": 83.3, "nay_pct": 16.7, "dissent_rate": 50.0, "dissents_count": 1}, {"id": "gabby_rivero", "body_id": "dps", "name": "Gabrielle (Gabby) Rivero", "title": "Board Member", "district": "District 3", "active_terms": ["2026-present"], "is_current": true, "avatar_initials": "G(", "bio": "Elected in 2026 representing District 3. Community organizer advocating for equitable school facility modernization and student mental health.", "key_priorities": ["Mental Health", "Facility Equity", "Student Voice"], "ideology_tags": ["Progressive Organizer", "Student Well-Being"], "votes_cast": 3, "ayes": 3, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "joy_harrell_goff", "body_id": "dps", "name": "Joy Harrell-Goff", "title": "Chair", "district": "At-Large", "active_terms": ["2022-2026 (Vice Chair)", "2026-present (Chair)"], "is_current": true, "avatar_initials": "JH", "bio": "Elected Chair of the DPS Board in July 2026. Former Vice Chair. Focuses on budget transparency, equitable school resource distribution, and classified staff compensation stability.", "key_priorities": ["Budget Oversight", "Classified Staff Retention", "Early Literacy", "Public Accountability"], "ideology_tags": ["Collaborative Leadership", "Fiscal Transparency", "Equity-Focused"], "votes_cast": 9, "ayes": 9, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "millicent_rogers", "body_id": "dps", "name": "Millicent Rogers", "title": "Board Member", "district": "Consolidated District B", "active_terms": ["2022-present"], "is_current": true, "avatar_initials": "MR", "bio": "Former Durham PTA Council President and parent advocate. Prioritizes racial equity, student safety without criminalization, and transparent governance.", "key_priorities": ["Racial Equity", "PTA Collaboration", "Policy Rigor"], "ideology_tags": ["Parent Advocate", "Equity Independent"], "votes_cast": 9, "ayes": 8, "nays": 1, "abstains": 0, "aye_pct": 88.9, "nay_pct": 11.1, "dissent_rate": 33.3, "dissents_count": 1}, {"id": "nadeen_bir", "body_id": "dps", "name": "Nadeen Bir", "title": "Board Member", "district": "District 2", "active_terms": ["2026-present"], "is_current": true, "avatar_initials": "NB", "bio": "Elected in 2026 representing District 2. Longtime labor ally and public health advocate focused on worker dignity and healthcare accessibility in schools.", "key_priorities": ["Worker Rights", "Health Equity", "Mental Health Clinicians"], "ideology_tags": ["Labor Ally", "Grassroots Progressive"], "votes_cast": 3, "ayes": 3, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "natalie_bent_kitaif", "body_id": "dps", "name": "Natalie Bent Kitaif", "title": "Board Member", "district": "District 1", "active_terms": ["2026-present"], "is_current": true, "avatar_initials": "NB", "bio": "Sworn in July 2026 representing District 1. Advocate for parent engagement, multilingual family resources, and exceptional children programming.", "key_priorities": ["Exceptional Children", "Multilingual Support", "Parent Partnerships"], "ideology_tags": ["Special Education Advocate", "Bilingual Equity"], "votes_cast": 3, "ayes": 3, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "natalie_beyer", "body_id": "dps", "name": "Natalie Beyer", "title": "Former Board Member", "district": "District 4", "active_terms": ["2010-2026"], "is_current": false, "avatar_initials": "NB", "bio": "Served 16 years on the School Board. Consistent advocate for public school funding against state voucher expansions.", "key_priorities": ["Anti-Voucher Advocacy", "Public School Defense", "Capital Improvements"], "ideology_tags": ["Veteran Defender of Public Ed"], "votes_cast": 6, "ayes": 6, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}, {"id": "wendell_tabb", "body_id": "dps", "name": "Wendell Tabb", "title": "Board Member", "district": "Consolidated District A", "active_terms": ["2024-present"], "is_current": true, "avatar_initials": "WT", "bio": "Legendary Hillside High School theatre director, elected in 2024. Fierce defender of teacher retention, career and technical education, and performing arts.", "key_priorities": ["Career & Technical Ed", "Teacher Respect", "Cultural Arts"], "ideology_tags": ["Educator Voice", "Historic Durham Legacy"], "votes_cast": 9, "ayes": 7, "nays": 2, "abstains": 0, "aye_pct": 77.8, "nay_pct": 22.2, "dissent_rate": 66.7, "dissents_count": 2}, {"id": "xavier_cason", "body_id": "dps", "name": "Xavier Cason", "title": "Vice Chair", "district": "District 4", "active_terms": ["2026-present (Vice Chair)"], "is_current": true, "avatar_initials": "XC", "bio": "Vice Chair of the School Board. Educator, arts administrator, and community organizer emphasizing fine arts in public education and restorative discipline.", "key_priorities": ["Arts Education", "Restorative Practice", "Community Engagement"], "ideology_tags": ["Arts Champion", "Restorative Justice", "Youth Advocacy"], "votes_cast": 3, "ayes": 3, "nays": 0, "abstains": 0, "aye_pct": 100.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0}], "pairwise": {"dps": {"bettina_umstead": {"bettina_umstead": 100.0, "emily_chavez": 83.3, "gabby_rivero": null, "joy_harrell_goff": 100.0, "millicent_rogers": 83.3, "nadeen_bir": null, "natalie_bent_kitaif": null, "natalie_beyer": 100.0, "wendell_tabb": 83.3, "xavier_cason": null}, "emily_chavez": {"bettina_umstead": 83.3, "emily_chavez": 100.0, "gabby_rivero": null, "joy_harrell_goff": 83.3, "millicent_rogers": 100.0, "nadeen_bir": null, "natalie_bent_kitaif": null, "natalie_beyer": 83.3, "wendell_tabb": 66.7, "xavier_cason": null}, "gabby_rivero": {"bettina_umstead": null, "emily_chavez": null, "gabby_rivero": 100.0, "joy_harrell_goff": 100.0, "millicent_rogers": 100.0, "nadeen_bir": 100.0, "natalie_bent_kitaif": 100.0, "natalie_beyer": null, "wendell_tabb": 66.7, "xavier_cason": 100.0}, "joy_harrell_goff": {"bettina_umstead": 100.0, "emily_chavez": 83.3, "gabby_rivero": 100.0, "joy_harrell_goff": 100.0, "millicent_rogers": 88.9, "nadeen_bir": 100.0, "natalie_bent_kitaif": 100.0, "natalie_beyer": 100.0, "wendell_tabb": 77.8, "xavier_cason": 100.0}, "millicent_rogers": {"bettina_umstead": 83.3, "emily_chavez": 100.0, "gabby_rivero": 100.0, "joy_harrell_goff": 88.9, "millicent_rogers": 100.0, "nadeen_bir": 100.0, "natalie_bent_kitaif": 100.0, "natalie_beyer": 83.3, "wendell_tabb": 66.7, "xavier_cason": 100.0}, "nadeen_bir": {"bettina_umstead": null, "emily_chavez": null, "gabby_rivero": 100.0, "joy_harrell_goff": 100.0, "millicent_rogers": 100.0, "nadeen_bir": 100.0, "natalie_bent_kitaif": 100.0, "natalie_beyer": null, "wendell_tabb": 66.7, "xavier_cason": 100.0}, "natalie_bent_kitaif": {"bettina_umstead": null, "emily_chavez": null, "gabby_rivero": 100.0, "joy_harrell_goff": 100.0, "millicent_rogers": 100.0, "nadeen_bir": 100.0, "natalie_bent_kitaif": 100.0, "natalie_beyer": null, "wendell_tabb": 66.7, "xavier_cason": 100.0}, "natalie_beyer": {"bettina_umstead": 100.0, "emily_chavez": 83.3, "gabby_rivero": null, "joy_harrell_goff": 100.0, "millicent_rogers": 83.3, "nadeen_bir": null, "natalie_bent_kitaif": null, "natalie_beyer": 100.0, "wendell_tabb": 83.3, "xavier_cason": null}, "wendell_tabb": {"bettina_umstead": 83.3, "emily_chavez": 66.7, "gabby_rivero": 66.7, "joy_harrell_goff": 77.8, "millicent_rogers": 66.7, "nadeen_bir": 66.7, "natalie_bent_kitaif": 66.7, "natalie_beyer": 83.3, "wendell_tabb": 100.0, "xavier_cason": 66.7}, "xavier_cason": {"bettina_umstead": null, "emily_chavez": null, "gabby_rivero": 100.0, "joy_harrell_goff": 100.0, "millicent_rogers": 100.0, "nadeen_bir": 100.0, "natalie_bent_kitaif": 100.0, "natalie_beyer": null, "wendell_tabb": 66.7, "xavier_cason": 100.0}}, "city": {"carl_rist": {"carl_rist": 100.0, "chelsea_cook": 57.1, "javiera_caballero": 100.0, "leonardo_williams": 100.0, "matt_kopac": 100.0, "nate_baker": 28.6, "shanetta_burris": 71.4}, "chelsea_cook": {"carl_rist": 57.1, "chelsea_cook": 100.0, "javiera_caballero": 57.1, "leonardo_williams": 57.1, "matt_kopac": 57.1, "nate_baker": 71.4, "shanetta_burris": 85.7}, "javiera_caballero": {"carl_rist": 100.0, "chelsea_cook": 57.1, "javiera_caballero": 100.0, "leonardo_williams": 100.0, "matt_kopac": 100.0, "nate_baker": 28.6, "shanetta_burris": 71.4}, "leonardo_williams": {"carl_rist": 100.0, "chelsea_cook": 57.1, "javiera_caballero": 100.0, "leonardo_williams": 100.0, "matt_kopac": 100.0, "nate_baker": 28.6, "shanetta_burris": 71.4}, "matt_kopac": {"carl_rist": 100.0, "chelsea_cook": 57.1, "javiera_caballero": 100.0, "leonardo_williams": 100.0, "matt_kopac": 100.0, "nate_baker": 28.6, "shanetta_burris": 71.4}, "nate_baker": {"carl_rist": 28.6, "chelsea_cook": 71.4, "javiera_caballero": 28.6, "leonardo_williams": 28.6, "matt_kopac": 28.6, "nate_baker": 100.0, "shanetta_burris": 57.1}, "shanetta_burris": {"carl_rist": 71.4, "chelsea_cook": 85.7, "javiera_caballero": 71.4, "leonardo_williams": 71.4, "matt_kopac": 71.4, "nate_baker": 57.1, "shanetta_burris": 100.0}}, "bocc": {"mike_lee": {"mike_lee": 100.0, "michelle_burton": 100.0, "nida_allam": 100.0, "stephen_valentine": 87.5, "wendy_jacobs": 100.0}, "michelle_burton": {"mike_lee": 100.0, "michelle_burton": 100.0, "nida_allam": 100.0, "stephen_valentine": 87.5, "wendy_jacobs": 100.0}, "nida_allam": {"mike_lee": 100.0, "michelle_burton": 100.0, "nida_allam": 100.0, "stephen_valentine": 87.5, "wendy_jacobs": 100.0}, "stephen_valentine": {"mike_lee": 87.5, "michelle_burton": 87.5, "nida_allam": 87.5, "stephen_valentine": 100.0, "wendy_jacobs": 87.5}, "wendy_jacobs": {"mike_lee": 100.0, "michelle_burton": 100.0, "nida_allam": 100.0, "stephen_valentine": 87.5, "wendy_jacobs": 100.0}}}}, "meetings": [{"id": "dps_2026_10_22", "body_id": "dps", "title": "DPS Board Regular Meeting: DAE Meet-and-Confer Resolution", "meeting_type": "Regular Action Meeting", "date": "2026-10-22", "year": 2026, "month": 10, "presiding_chair": "Joy Harrell-Goff", "video_url": "https://www.youtube.com/watch?v=dps_2026_10_22", "video_topic_slug": "dps-dae-resolution-oct-2026", "agenda_url": "", "minutes_url": "", "duration": "2h 50m", "executive_summary": "Formal adoption of the expanded Meet-and-Confer framework with the Durham Association of Educators (DAE). Discussion of 2026-27 quarterly financial dashboard under Policy 8600.", "tags": ["Staff Compensation & Labor", "Governance & Transparency"], "votes": [{"id": "v_dps_2026_10_01", "item_title": "Formal Meet-and-Confer Policy Agreement with Durham Association of Educators (DAE)", "motion_type": "Action Item", "mover": "Nadeen Bir", "seconder": "Millicent Rogers", "vote_format": "Roll Call", "outcome": "Passed", "tally": "6-1", "is_contested": true, "ayes": ["Joy Harrell-Goff", "Xavier Cason", "Natalie Bent Kitaif", "Nadeen Bir", "Gabby Rivero", "Millicent Rogers"], "nays": ["Wendell Tabb"], "abstentions": [], "amendments": [], "notes": "Tabb noted support for educators but expressed concern over procedural constraints on building administrators.", "category": "Staff Compensation & Labor"}], "disagreements": [{"id": "dis_dps_2026_10_01", "issue": "Scope of Formal Meet-and-Confer Framework with DAE", "category": "Staff Compensation & Labor", "summary": "Debate over whether the policy created an unmanageable grievance load for school principals or established a necessary worker voice.", "side_a": {"position": "Worker Empowerment & Retention", "arguments": ["Staff retention requires predictable voice in working conditions", "Prevents recurring compensation miscalculations"], "members": ["Nadeen Bir", "Millicent Rogers", "Gabby Rivero", "Joy Harrell-Goff"]}, "side_b": {"position": "Principal Autonomy & Operational Flexibility", "arguments": ["Principals need managerial flexibility during staffing shortages"], "members": ["Wendell Tabb"]}, "resolution": "Approved 6-1 with an annual review clause."}]}, {"id": "bocc_2026_09_14", "body_id": "bocc", "title": "Durham BOCC Regular Meeting: Farmland Preservation & Transit Corridor Land Dedication", "meeting_type": "Regular Action Session", "date": "2026-09-14", "year": 2026, "month": 9, "presiding_chair": "Dr. Mike Lee", "video_url": "https://www.youtube.com/watch?v=bocc_2026_09_14", "video_topic_slug": "bocc-farmland-transit-sep-2026", "agenda_url": "", "minutes_url": "", "duration": "2h 45m", "executive_summary": "Authorization of agricultural conservation easements in northern Durham County and easement acquisitions along the NC 147 Bus Rapid Transit corridor.", "tags": ["Transit & Public Works", "Governance & Transparency"], "votes": [{"id": "v_bocc_2026_09_01", "item_title": "Northern Durham Agricultural Conservation Easements Purchase (420 Acres)", "motion_type": "Action Item", "mover": "Wendy Jacobs", "seconder": "Stephen Valentine", "vote_format": "Roll Call", "outcome": "Passed", "tally": "5-0", "is_contested": false, "ayes": ["Dr. Mike Lee", "Nida Allam", "Michelle Burton", "Stephen Valentine", "Wendy Jacobs"], "nays": [], "abstentions": [], "amendments": [], "notes": "Preserves critical water basin watershed buffers.", "category": "Transit & Public Works"}], "disagreements": []}, {"id": "dps_2026_07_09", "body_id": "dps", "title": "DPS Board Annual Organizational Meeting & Officer Elections", "meeting_type": "Special Action Meeting", "date": "2026-07-09", "year": 2026, "month": 7, "presiding_chair": "Joy Harrell-Goff", "video_url": "https://www.youtube.com/watch?v=dps_2026_07_09", "video_topic_slug": "dps-organizational-jul-2026", "agenda_url": "", "minutes_url": "", "duration": "1h 55m", "executive_summary": "Swearing in of new board members Natalie Bent Kitaif, Nadeen Bir, and Gabby Rivero. Election of Joy Harrell-Goff as Board Chair and Xavier Cason as Vice Chair.", "tags": ["Governance & Transparency"], "votes": [{"id": "v_dps_2026_07_01", "item_title": "Election of Board Chair: Joy Harrell-Goff", "motion_type": "Nomination", "mover": "Millicent Rogers", "seconder": "Wendell Tabb", "vote_format": "Roll Call", "outcome": "Passed / Elected Chair", "tally": "7-0", "is_contested": false, "ayes": ["Joy Harrell-Goff", "Xavier Cason", "Natalie Bent Kitaif", "Nadeen Bir", "Gabby Rivero", "Wendell Tabb", "Millicent Rogers"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimously elected. Joy Harrell-Goff assumes the gavel as Board Chair.", "category": "Governance & Transparency"}, {"id": "v_dps_2026_07_02", "item_title": "Election of Vice Chair: Xavier Cason", "motion_type": "Nomination", "mover": "Joy Harrell-Goff", "seconder": "Nadeen Bir", "vote_format": "Roll Call", "outcome": "Passed / Elected Vice Chair", "tally": "7-0", "is_contested": false, "ayes": ["Joy Harrell-Goff", "Xavier Cason", "Natalie Bent Kitaif", "Nadeen Bir", "Gabby Rivero", "Wendell Tabb", "Millicent Rogers"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimous election for District 4 representative.", "category": "Governance & Transparency"}], "disagreements": []}, {"id": "city_2026_06_15", "body_id": "city", "title": "Durham City Council Meeting: FY 2026-27 Budget & Rate Relief Fund ($682M)", "meeting_type": "Regular Business Meeting", "date": "2026-06-15", "year": 2026, "month": 6, "presiding_chair": "Leonardo Williams", "video_url": "https://www.youtube.com/watch?v=city_2026_06_15", "video_topic_slug": "durham-city-budget-jun-2026", "agenda_url": "", "minutes_url": "", "duration": "3h 50m", "executive_summary": "Council approved the FY 2026-27 Municipal Budget, establishing a dedicated $4M utility rate assistance fund for low-income seniors and expanding sidewalk network paving in East Durham.", "tags": ["Budget & Taxes", "Transit & Public Works"], "votes": [{"id": "v_city_2026_06_01", "item_title": "Adoption of FY 2026-27 City Operating Budget ($682M)", "motion_type": "Budget Ordinance", "mover": "Carl Rist", "seconder": "Leonardo Williams", "vote_format": "Roll Call", "outcome": "Passed", "tally": "6-1", "is_contested": true, "ayes": ["Leonardo Williams", "Javiera Caballero", "Carl Rist", "Matt Kopac", "Shanetta Burris", "Chelsea Cook"], "nays": ["Nate Baker"], "abstentions": [], "amendments": [], "notes": "Baker dissented noting unaddressed funding gaps for dedicated bike corridors.", "category": "Budget & Taxes"}], "disagreements": []}, {"id": "bocc_2026_06_08", "body_id": "bocc", "title": "Durham BOCC Budget Adoption: FY 2026-27 County Budget ($910M)", "meeting_type": "Budget Adoption Session", "date": "2026-06-08", "year": 2026, "month": 6, "presiding_chair": "Dr. Mike Lee", "video_url": "https://www.youtube.com/watch?v=bocc_2026_06_08", "video_topic_slug": "bocc-county-budget-jun-2026", "agenda_url": "", "minutes_url": "", "duration": "3h 15m", "executive_summary": "Commissioners adopted the FY 2026-27 County Operating Budget with a 1.2-cent tax rate reduction, fully maintaining increased funding for public schools and public health nurses.", "tags": ["Budget & Taxes"], "votes": [{"id": "v_bocc_2026_06_01", "item_title": "Adoption of FY 2026-27 Durham County Budget ($910M) with 1.2-Cent Tax Rate Reduction", "motion_type": "Budget Ordinance", "mover": "Dr. Mike Lee", "seconder": "Wendy Jacobs", "vote_format": "Roll Call", "outcome": "Passed", "tally": "5-0", "is_contested": false, "ayes": ["Dr. Mike Lee", "Nida Allam", "Michelle Burton", "Stephen Valentine", "Wendy Jacobs"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimously enacted under Chair Dr. Mike Lee.", "category": "Budget & Taxes"}], "disagreements": []}, {"id": "dps_2026_05_14", "body_id": "dps", "title": "DPS Board Meeting: Rejection of School Closure Recommendations", "meeting_type": "Regular Action Meeting", "date": "2026-05-14", "year": 2026, "month": 5, "presiding_chair": "Bettina Umstead", "video_url": "https://www.youtube.com/watch?v=dps_2026_05_14", "video_topic_slug": "dps-facility-closure-rejection-may-2026", "agenda_url": "", "minutes_url": "", "duration": "3h 40m", "executive_summary": "Following impassioned public hearings, the Board officially rejected consultant options recommending the closure or consolidation of elementary schools for the upcoming academic year.", "tags": ["School Facilities & Closures"], "votes": [{"id": "v_dps_2026_05_01", "item_title": "Resolution Directing Administration to Maintain All Active Elementary Facilities for 2026-27", "motion_type": "Resolution", "mover": "Joy Harrell-Goff", "seconder": "Millicent Rogers", "vote_format": "Roll Call", "outcome": "Passed", "tally": "7-0", "is_contested": false, "ayes": ["Bettina Umstead", "Joy Harrell-Goff", "Emily Chávez", "Natalie Beyer", "Millicent Rogers", "Wendell Tabb", "Alexandra Valladares"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimous vote protecting neighborhood elementary facilities from immediate closure.", "category": "School Facilities & Closures"}], "disagreements": []}, {"id": "city_2026_04_20", "body_id": "city", "title": "Durham City Council Meeting: Surveillance Tech & Automated License Plate Readers", "meeting_type": "Regular Business Meeting", "date": "2026-04-20", "year": 2026, "month": 4, "presiding_chair": "Leonardo Williams", "video_url": "https://www.youtube.com/watch?v=city_2026_04_20", "video_topic_slug": "durham-council-alpr-apr-2026", "agenda_url": "", "minutes_url": "", "duration": "3h 25m", "executive_summary": "Intense public hearing and vote on continuing contract for Automated License Plate Readers (ALPR) and acoustic gunshot detection pilot renewal.", "tags": ["Community Safety & HEART"], "votes": [{"id": "v_city_2026_04_01", "item_title": "Renewal of Durham Police Dept License Plate Reader (ALPR) Inter-Agency Data Sharing", "motion_type": "Contract Renewal", "mover": "Leonardo Williams", "seconder": "Matt Kopac", "vote_format": "Roll Call", "outcome": "Passed", "tally": "4-3", "is_contested": true, "ayes": ["Leonardo Williams", "Javiera Caballero", "Matt Kopac", "Carl Rist"], "nays": ["Nate Baker", "Chelsea Cook", "Shanetta Burris"], "abstentions": [], "amendments": [], "notes": "Sharp dissent from Cook and Baker concerning surveillance privacy, ICE data access vulnerabilities, and lack of proven crime deterrence.", "category": "Community Safety & HEART"}], "disagreements": [{"id": "dis_city_2026_04_01", "issue": "Police Surveillance Technology (ALPR) vs Civil Liberties & Immigrant Protection", "category": "Community Safety & HEART", "summary": "Debate on whether automated license plate readers assist in violent crime clearance or expose marginalized residents to unlawful surveillance.", "side_a": {"position": "Investigative Tools for Violent Crime Clearance", "arguments": ["Police department is 20% understaffed and needs technological force multipliers", "Audits showed zero unauthorized data leaks"], "members": ["Leonardo Williams", "Matt Kopac", "DPD Chief"]}, "side_b": {"position": "Civil Liberties & Risk to Immigrant Communities", "arguments": ["Third-party data can be subpoenaed by out-of-state anti-abortion or federal immigration agencies", "Disproportionate deployment in East Durham"], "members": ["Chelsea Cook", "Nate Baker", "Shanetta Burris"]}, "resolution": "Passed 4-3 with new mandatory quarterly privacy audit requirements."}]}, {"id": "bocc_2025_12_01", "body_id": "bocc", "title": "Durham BOCC Annual Reorganization & Chair Election", "meeting_type": "Special Action Session", "date": "2025-12-01", "year": 2025, "month": 12, "presiding_chair": "Dr. Mike Lee", "video_url": "https://www.youtube.com/watch?v=bocc_2025_12_01", "video_topic_slug": "bocc-reorganization-dec-2025", "agenda_url": "", "minutes_url": "", "duration": "1h 40m", "executive_summary": "Commissioners conducted their annual leadership rotation. Dr. Mike Lee was nominated and elected Chair; outgoing Chair Nida Allam was elected Vice Chair.", "tags": ["Governance & Transparency"], "votes": [{"id": "v_bocc_2025_12_01", "item_title": "Election of BOCC Chair: Dr. Mike Lee", "motion_type": "Nomination", "mover": "Wendy Jacobs", "seconder": "Michelle Burton", "vote_format": "Roll Call", "outcome": "Passed / Elected Chair", "tally": "5-0", "is_contested": false, "ayes": ["Dr. Mike Lee", "Nida Allam", "Michelle Burton", "Stephen Valentine", "Wendy Jacobs"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimously elected. Dr. Mike Lee assumes Chairmanship.", "category": "Governance & Transparency"}, {"id": "v_bocc_2025_12_02", "item_title": "Election of BOCC Vice Chair: Nida Allam", "motion_type": "Nomination", "mover": "Dr. Mike Lee", "seconder": "Stephen Valentine", "vote_format": "Roll Call", "outcome": "Passed / Elected Vice Chair", "tally": "5-0", "is_contested": false, "ayes": ["Dr. Mike Lee", "Nida Allam", "Michelle Burton", "Stephen Valentine", "Wendy Jacobs"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimously elected.", "category": "Governance & Transparency"}], "disagreements": []}, {"id": "city_2025_09_02", "body_id": "city", "title": "Durham City Council Meeting: Municipal Contractor Living Wage ($19.50/hr)", "meeting_type": "Regular Business Meeting", "date": "2025-09-02", "year": 2025, "month": 9, "presiding_chair": "Leonardo Williams", "video_url": "https://www.youtube.com/watch?v=city_2025_09_02", "video_topic_slug": "durham-council-living-wage-sep-2025", "agenda_url": "", "minutes_url": "", "duration": "2h 30m", "executive_summary": "Council voted unanimously to raise the mandatory living wage threshold for all city contractors and service vendors to $19.50 per hour.", "tags": ["Staff Compensation & Labor"], "votes": [{"id": "v_city_2025_09_01", "item_title": "City Contractor Living Wage Ordinance Indexation to $19.50/hr", "motion_type": "Ordinance Amendment", "mover": "Carl Rist", "seconder": "Chelsea Cook", "vote_format": "Roll Call", "outcome": "Passed", "tally": "7-0", "is_contested": false, "ayes": ["Leonardo Williams", "Javiera Caballero", "Nate Baker", "Carl Rist", "Matt Kopac", "Shanetta Burris", "Chelsea Cook"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimously adopted with support from local labor coalitions.", "category": "Staff Compensation & Labor"}], "disagreements": []}, {"id": "city_2025_06_16", "body_id": "city", "title": "Durham City Council Meeting: FY 2025-26 Budget & HEART Expansion", "meeting_type": "Regular Business Meeting", "date": "2025-06-16", "year": 2025, "month": 6, "presiding_chair": "Leonardo Williams", "video_url": "https://www.youtube.com/watch?v=city_2025_06_16", "video_topic_slug": "durham-city-budget-heart-jun-2025", "agenda_url": "", "minutes_url": "", "duration": "3h 40m", "executive_summary": "Council adopted the $640M FY 2025-26 City Budget, funding round-the-clock 24/7 citywide expansion of the HEART non-police crisis response program, alongside step increases for AFSCME municipal workers.", "tags": ["Budget & Taxes", "Community Safety & HEART", "Staff Compensation & Labor"], "votes": [{"id": "v_city_2025_06_01", "item_title": "FY 2025-26 City Operating Budget & 24/7 HEART Program Funding ($640M)", "motion_type": "Budget Ordinance", "mover": "Carl Rist", "seconder": "Javiera Caballero", "vote_format": "Roll Call", "outcome": "Passed", "tally": "6-1", "is_contested": true, "ayes": ["Leonardo Williams", "Javiera Caballero", "Carl Rist", "Matt Kopac", "Chelsea Cook", "Shanetta Burris"], "nays": ["Nate Baker"], "abstentions": [], "amendments": [], "notes": "Baker dissented citing an inadequate allocation for transit frequency along non-arterial bus routes.", "category": "Budget & Taxes"}, {"id": "v_city_2025_06_02", "item_title": "AFSCME Local 77 Municipal Worker Pay Plan & Experience Step Progression", "motion_type": "Action Item", "mover": "Carl Rist", "seconder": "Chelsea Cook", "vote_format": "Roll Call", "outcome": "Passed", "tally": "7-0", "is_contested": false, "ayes": ["Leonardo Williams", "Javiera Caballero", "Nate Baker", "Carl Rist", "Matt Kopac", "Shanetta Burris", "Chelsea Cook"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimously enacted after strong mobilization from sanitation and public works employees.", "category": "Staff Compensation & Labor"}], "disagreements": [{"id": "dis_city_2025_06_01", "issue": "Transit Frequency & Sidewalk Prioritization in Capital Budget", "category": "Transit & Public Works", "summary": "Debate over whether capital dollars were tilted too heavily toward downtown parking deck maintenance rather than neighborhood sidewalk gaps and evening bus headways.", "side_a": {"position": "Balanced Infrastructure Delivery", "arguments": ["Downtown assets require deferred maintenance investments to support sales tax revenue"], "members": ["Leonardo Williams", "Matt Kopac"]}, "side_b": {"position": "Transit Justice & Pedestrian Safety", "arguments": ["Transit-dependent residents are left waiting 45 minutes after 8 PM"], "members": ["Nate Baker"]}, "resolution": "Council committed to a mid-year budget amendment for GoDurham route frequency."}]}, {"id": "bocc_2025_06_09", "body_id": "bocc", "title": "Durham BOCC Budget Adoption: DPS Supplemental Appropriation ($27M)", "meeting_type": "Budget Adoption Session", "date": "2025-06-09", "year": 2025, "month": 6, "presiding_chair": "Nida Allam", "video_url": "https://www.youtube.com/watch?v=bocc_2025_06_09", "video_topic_slug": "bocc-dps-budget-jun-2025", "agenda_url": "", "minutes_url": "", "duration": "3h 50m", "executive_summary": "Commissioners adopted the FY 2025-26 County Budget, approving a historic $27M supplemental appropriation for Durham Public Schools to guarantee living wages for classified school staff.", "tags": ["Budget & Taxes", "Staff Compensation & Labor"], "votes": [{"id": "v_bocc_2025_06_01", "item_title": "FY 2025-26 County Budget Adoption & $27M DPS Local Supplemental Appropriation", "motion_type": "Budget Ordinance", "mover": "Michelle Burton", "seconder": "Nida Allam", "vote_format": "Roll Call", "outcome": "Passed", "tally": "5-0", "is_contested": false, "ayes": ["Nida Allam", "Dr. Mike Lee", "Michelle Burton", "Stephen Valentine", "Wendy Jacobs"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimous vote demonstrating county solidarity with school workers following the compensation crisis.", "category": "Budget & Taxes"}, {"id": "v_bocc_2025_06_02", "item_title": "Property Tax Rate Setting: 2.25-Cent Rate Adjustment to Support School Bond Debt", "motion_type": "Tax Ordinance", "mover": "Wendy Jacobs", "seconder": "Dr. Mike Lee", "vote_format": "Roll Call", "outcome": "Passed", "tally": "4-1", "is_contested": true, "ayes": ["Nida Allam", "Dr. Mike Lee", "Michelle Burton", "Wendy Jacobs"], "nays": ["Stephen Valentine"], "abstentions": [], "amendments": [], "notes": "Valentine dissented on grounds of cumulative property tax burden on fixed-income elderly homeowners in suburban tracts.", "category": "Budget & Taxes"}], "disagreements": [{"id": "dis_bocc_2025_06_01", "issue": "Property Tax Rate Adjustment vs Homeowner Burden Post-Revaluation", "category": "Budget & Taxes", "summary": "Debate regarding the size of the ad valorem tax rate adjustment needed to service voter-approved 2022 school bonds.", "side_a": {"position": "Fulfilling Bond Commitments & School Construction", "arguments": ["Voters overwhelmingly approved bonds for Northern High and DSA", "County credit rating depends on structured debt reserves"], "members": ["Nida Allam", "Dr. Mike Lee", "Wendy Jacobs", "Michelle Burton"]}, "side_b": {"position": "Tax Relief for Seniors on Fixed Incomes", "arguments": ["Low-income seniors are being taxed out of long-held family homes"], "members": ["Stephen Valentine"]}, "resolution": "Adopted 4-1 with an expansion of the county property tax relief circuit breaker grant."}]}, {"id": "dps_2025_05_22", "body_id": "dps", "title": "DPS Board Meeting: Student Code of Conduct & Restorative Justice", "meeting_type": "Regular Action Meeting", "date": "2025-05-22", "year": 2025, "month": 5, "presiding_chair": "Bettina Umstead", "video_url": "https://www.youtube.com/watch?v=dps_2025_05_22", "video_topic_slug": "dps-restorative-justice-may-2025", "agenda_url": "", "minutes_url": "", "duration": "3h 05m", "executive_summary": "Major policy debate on eliminating out-of-school suspensions for minor discretionary infractions and expanding campus restorative justice coordinators.", "tags": ["Community Safety & HEART", "Governance & Transparency"], "votes": [{"id": "v_dps_2025_05_01", "item_title": "Policy 4300 Revision: Elimination of Short-Term Suspensions for Discretionary Non-Violent Offenses", "motion_type": "Policy Revision", "mover": "Millicent Rogers", "seconder": "Emily Chávez", "vote_format": "Roll Call", "outcome": "Passed", "tally": "6-1", "is_contested": true, "ayes": ["Bettina Umstead", "Joy Harrell-Goff", "Emily Chávez", "Natalie Beyer", "Millicent Rogers", "Alexandra Valladares"], "nays": ["Wendell Tabb"], "abstentions": [], "amendments": [], "notes": "Tabb voiced caution that removing suspension tools without fully staffed restorative personnel puts too much burden on classroom teachers.", "category": "Governance & Transparency"}], "disagreements": [{"id": "dis_dps_2025_05_01", "issue": "Discretionary Suspensions: Direct Class Removal vs Support Staff Readiness", "category": "Governance & Transparency", "summary": "Debate on whether reducing disciplinary suspensions can succeed without first funding full-time behavioral specialists in all middle schools.", "side_a": {"position": "Ending School-to-Prison Pipeline", "arguments": ["Black and Brown students are suspended at 4x the rate of white peers for identical subjective infractions", "Out-of-school suspension accelerates disengagement"], "members": ["Millicent Rogers", "Emily Chávez", "Joy Harrell-Goff"]}, "side_b": {"position": "Classroom Order & Support Staff Capacity", "arguments": ["Teachers need tools to protect classroom instructional continuity"], "members": ["Wendell Tabb"]}, "resolution": "Approved 6-1 with phased implementation starting with K-5 schools."}]}, {"id": "bocc_2025_03_24", "body_id": "bocc", "title": "Durham BOCC Regular Meeting: Transit Plan & Dedicated Bus Rapid Transit", "meeting_type": "Regular Action Session", "date": "2025-03-24", "year": 2025, "month": 3, "presiding_chair": "Nida Allam", "video_url": "https://www.youtube.com/watch?v=bocc_2025_03_24", "video_topic_slug": "bocc-transit-plan-mar-2025", "agenda_url": "", "minutes_url": "", "duration": "2h 40m", "executive_summary": "Commissioners authorized dedicated funding agreements with GoTriangle and NCDOT to advance engineering for the Durham-to-Chapel Hill bus rapid transit corridor.", "tags": ["Transit & Public Works"], "votes": [{"id": "v_bocc_2025_03_01", "item_title": "Durham County Half-Cent Transit Tax Allocation for BRT Engineering & Right-of-Way", "motion_type": "Action Item", "mover": "Wendy Jacobs", "seconder": "Michelle Burton", "vote_format": "Roll Call", "outcome": "Passed", "tally": "5-0", "is_contested": false, "ayes": ["Nida Allam", "Dr. Mike Lee", "Michelle Burton", "Stephen Valentine", "Wendy Jacobs"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimously approved.", "category": "Transit & Public Works"}], "disagreements": []}, {"id": "dps_2025_03_13", "body_id": "dps", "title": "DPS Board Work Session & FY 2025-26 Budget Deliberations", "meeting_type": "Work Session", "date": "2025-03-13", "year": 2025, "month": 3, "presiding_chair": "Bettina Umstead", "video_url": "https://www.youtube.com/watch?v=dps_2025_03_13", "video_topic_slug": "dps-work-session-mar-2025", "agenda_url": "", "minutes_url": "", "duration": "2h 45m", "executive_summary": "Superintendent Dr. Anthony S. Lewis presented the preliminary operating budget request totaling $215M from county commissioners. Heated discussion on consultant contract for school consolidation study.", "tags": ["Budget & Taxes", "School Facilities & Closures"], "votes": [{"id": "v_dps_2025_03_01", "item_title": "Consultant Authorization: District-Wide Facility Utilization & Consolidation Study ($485,000)", "motion_type": "Action Item", "mover": "Joy Harrell-Goff", "seconder": "Wendell Tabb", "vote_format": "Roll Call", "outcome": "Passed", "tally": "5-2", "is_contested": true, "ayes": ["Bettina Umstead", "Joy Harrell-Goff", "Wendell Tabb", "Natalie Beyer", "Alexandra Valladares"], "nays": ["Emily Chávez", "Millicent Rogers"], "abstentions": [], "amendments": [], "notes": "Chávez and Rogers voted Nay, arguing outside consultants frequently recommend closing neighborhood schools in historically Black and Latino communities without proper community input.", "category": "School Facilities & Closures"}], "disagreements": [{"id": "dis_dps_2025_03_01", "issue": "School Closure/Consolidation Study: Outside Consultant Scope vs. Community Harm", "category": "School Facilities & Closures", "summary": "Debate over hiring an outside planning consultant to identify under-enrolled facilities for consolidation.", "side_a": {"position": "Objective Demographics & Long-Term Facility Stewardship", "arguments": ["Operating half-empty aging buildings drains instructional dollars", "Independent data is necessary to withstand political scrutiny"], "members": ["Bettina Umstead", "Joy Harrell-Goff", "Superintendent Lewis"]}, "side_b": {"position": "Community Trauma & Disproportionate Equity Harm", "arguments": ["Closures historically hollow out Black and Brown neighborhoods", "The $485k should be spent directly on classroom paraprofessionals"], "members": ["Emily Chávez", "Millicent Rogers"]}, "resolution": "Motion passed 5-2 with conditions requiring public hearings in every affected high school feeder cluster."}]}, {"id": "city_2025_02_03", "body_id": "city", "title": "Durham City Council Meeting: Downtown Transit Center RFP Award", "meeting_type": "Regular Business Meeting", "date": "2025-02-03", "year": 2025, "month": 2, "presiding_chair": "Leonardo Williams", "video_url": "https://www.youtube.com/watch?v=city_2025_02_03", "video_topic_slug": "durham-council-transit-rfp-feb-2025", "agenda_url": "", "minutes_url": "", "duration": "2h 55m", "executive_summary": "Council voted to award the Downtown Transit Center mixed-use redevelopment RFP, incorporating a multistory bus depot, retail plaza, and 180 affordable housing units.", "tags": ["Transit & Public Works", "Affordable Housing"], "votes": [{"id": "v_city_2025_02_01", "item_title": "Award of Downtown Durham Multi-Modal Transit Center & Mixed-Use RFP", "motion_type": "Contract Award", "mover": "Leonardo Williams", "seconder": "Javiera Caballero", "vote_format": "Roll Call", "outcome": "Passed", "tally": "5-2", "is_contested": true, "ayes": ["Leonardo Williams", "Javiera Caballero", "Carl Rist", "Matt Kopac", "Shanetta Burris"], "nays": ["Nate Baker", "Chelsea Cook"], "abstentions": [], "amendments": [], "notes": "Baker and Cook voted against due to private development partner having control over upper-floor market units without prevailing wage mandates.", "category": "Transit & Public Works"}], "disagreements": [{"id": "dis_city_2025_02_01", "issue": "Public Transit Land: Public-Private Partnership vs 100% Municipal Construction", "category": "Transit & Public Works", "summary": "Debate over whether partnering with private developers for downtown bus terminals sacrifices long-term public control.", "side_a": {"position": "Leveraging Private Capital for Modern Bus Facilities", "arguments": ["City saves $45M in capital bond indebtedness", "Provides guaranteed 180 affordable housing units steps from bus bays"], "members": ["Leonardo Williams", "Javiera Caballero", "Matt Kopac"]}, "side_b": {"position": "Public Asset Ownership & Union Construction Labor", "arguments": ["Developer retains commercial leases for 75 years", "Lack of enforceable prevailing wage for construction trades"], "members": ["Nate Baker", "Chelsea Cook"]}, "resolution": "Passed 5-2 with conditions requiring annual public progress audits."}]}, {"id": "bocc_2025_01_13", "body_id": "bocc", "title": "Durham BOCC Regular Session: 300 E. Main St Affordable Housing", "meeting_type": "Regular Action Session", "date": "2025-01-13", "year": 2025, "month": 1, "presiding_chair": "Nida Allam", "video_url": "https://www.youtube.com/watch?v=bocc_2025_01_13", "video_topic_slug": "bocc-300-e-main-jan-2025", "agenda_url": "", "minutes_url": "", "duration": "2h 30m", "executive_summary": "Commissioners approved master development agreement for 300 E. Main Street, reserving 300+ units of county-owned land strictly for households earning under 60% and 30% Area Median Income (AMI).", "tags": ["Affordable Housing", "Governance & Transparency"], "votes": [{"id": "v_bocc_2025_01_01", "item_title": "300 East Main Street County Land Affordable Housing Master Development Agreement", "motion_type": "Master Agreement", "mover": "Nida Allam", "seconder": "Wendy Jacobs", "vote_format": "Roll Call", "outcome": "Passed", "tally": "5-0", "is_contested": false, "ayes": ["Nida Allam", "Dr. Mike Lee", "Michelle Burton", "Stephen Valentine", "Wendy Jacobs"], "nays": [], "abstentions": [], "amendments": [], "notes": "Unanimously passed. Hailed as a model for public land utilization for deeply affordable downtown housing.", "category": "Affordable Housing"}], "disagreements": []}, {"id": "dps_2024_12_12", "body_id": "dps", "title": "DPS Board Regular Meeting: Superintendent Search Finalists", "meeting_type": "Regular Action Meeting", "date": "2024-12-12", "year": 2024, "month": 12, "presiding_chair": "Bettina Umstead", "video_url": "https://www.youtube.com/watch?v=dps_2024_12_12", "video_topic_slug": "dps-superintendent-search-dec-2024", "agenda_url": "", "minutes_url": "", "duration": "2h 15m", "executive_summary": "Board reviewed community stakeholder survey data and finalized candidate profile criteria for the permanent superintendent selection process.", "tags": ["Governance & Transparency"], "votes": [{"id": "v_dps_2024_12_01", "item_title": "Adoption of Superintendent Selection Criteria & Stakeholder Matrix", "motion_type": "Action Item", "mover": "Joy Harrell-Goff", "seconder": "Emily Chávez", "vote_format": "Roll Call", "outcome": "Passed", "tally": "7-0", "is_contested": false, "ayes": ["Bettina Umstead", "Joy Harrell-Goff", "Emily Chávez", "Natalie Beyer", "Millicent Rogers", "Wendell Tabb", "Alexandra Valladares"], "nays": [], "abstentions": [], "amendments": [], "notes": "Emphasized proven record of labor collaboration and urban district financial acumen.", "category": "Governance & Transparency"}], "disagreements": []}, {"id": "city_2024_12_02", "body_id": "city", "title": "Durham City Council Business Meeting: SCAD Text Amendments", "meeting_type": "Regular Business Meeting", "date": "2024-12-02", "year": 2024, "month": 12, "presiding_chair": "Leonardo Williams", "video_url": "https://www.youtube.com/watch?v=city_2024_12_02", "video_topic_slug": "durham-city-council-scad-dec-2024", "agenda_url": "", "minutes_url": "", "duration": "4h 15m", "executive_summary": "Major vote on Phase 2 of the Simplified Community Assessment (SCAD) zoning amendments regarding accessory dwelling units, duplex infill, and parking minimum eliminations.", "tags": ["Zoning & Development (SCAD)", "Affordable Housing"], "votes": [{"id": "v_city_2024_12_01", "item_title": "SCAD Phase 2 Zoning Code Amendments: Infill Housing & Parking Minimum Reductions", "motion_type": "Ordinance Adoption", "mover": "Javiera Caballero", "seconder": "Leonardo Williams", "vote_format": "Roll Call", "outcome": "Passed", "tally": "4-3", "is_contested": true, "ayes": ["Leonardo Williams", "Javiera Caballero", "Carl Rist", "Matt Kopac"], "nays": ["Nate Baker", "Chelsea Cook", "Shanetta Burris"], "abstentions": [], "amendments": [], "notes": "Key ideological divide. Baker, Cook, and Burris argued the amendments enrich private developers without requiring binding 30% AMI affordability.", "category": "Zoning & Development (SCAD)"}], "disagreements": [{"id": "dis_city_2024_12_01", "issue": "Market Density Infill vs Mandated Deep Affordability (SCAD)", "category": "Zoning & Development (SCAD)", "summary": "High-stakes debate pitting supply-side urbanists who argue removing parking minimums and allowing duplexes lowers overall rent vs planning progressives who argue market-rate infill accelerates displacement in historic neighborhoods.", "side_a": {"position": "Supply-Side Abundance & Climate Density", "arguments": ["Restricting supply is the #1 driver of escalating housing prices in Durham", "Eliminating parking mandates reduces car dependency and carbon emissions"], "members": ["Leonardo Williams", "Javiera Caballero", "Matt Kopac"]}, "side_b": {"position": "Mandatory Affordability & Anti-Gentrification", "arguments": ["Private capital targets vulnerable working-class neighborhoods first", "Without deed-restricted 30% AMI housing, developers extract windfall profits"], "members": ["Nate Baker", "Chelsea Cook", "Shanetta Burris"]}, "resolution": "Adopted 4-3 along core council factions."}]}, {"id": "dps_2024_11_21", "body_id": "dps", "title": "DPS Board Regular Monthly Action Meeting", "meeting_type": "Regular Action Meeting", "date": "2024-11-21", "year": 2024, "month": 11, "presiding_chair": "Bettina Umstead", "video_url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "video_topic_slug": "dps-board-meeting-nov-2024", "agenda_url": "https://durhamnc.portal.civicclerk.com/event/dps-2024-11-21", "minutes_url": "", "duration": "3h 12m", "executive_summary": "Intense deliberation regarding classified staff compensation adjustments following the comptroller audit. Board adopted interim salary supplement table and approved Policy 8600 on first reading.", "tags": ["Budget & Taxes", "Staff Compensation & Labor", "Governance & Transparency"], "votes": [{"id": "v_dps_2024_11_01", "item_title": "Policy 8600 (Quarterly Budget Transparency) — Approval on First Reading", "motion_type": "Main Motion as Amended", "mover": "Emily Chávez", "seconder": "Joy Harrell-Goff", "vote_format": "Voice Vote", "outcome": "Passed / Approved on First Reading", "tally": "7-0", "is_contested": false, "ayes": ["Bettina Umstead", "Joy Harrell-Goff", "Emily Chávez", "Natalie Beyer", "Millicent Rogers", "Wendell Tabb", "Alexandra Valladares"], "nays": [], "abstentions": [], "amendments": ["Section 4A amended to mandate quarterly indicators publication 'within 30 days' of quarter close."], "notes": "Unanimous approval following spirited debate regarding finance department compliance bandwidth.", "category": "Governance & Transparency"}, {"id": "v_dps_2024_11_02", "item_title": "Classified Staff Retention Supplement Allocation ($4.2M)", "motion_type": "Action Item", "mover": "Millicent Rogers", "seconder": "Wendell Tabb", "vote_format": "Roll Call", "outcome": "Passed", "tally": "7-0", "is_contested": false, "ayes": ["Bettina Umstead", "Joy Harrell-Goff", "Emily Chávez", "Natalie Beyer", "Millicent Rogers", "Wendell Tabb", "Alexandra Valladares"], "nays": [], "abstentions": [], "amendments": [], "notes": "Emergency stabilization funds for transportation and cafeteria staff.", "category": "Staff Compensation & Labor"}], "disagreements": [{"id": "dis_dps_2024_11_01", "issue": "Reporting Deadlines & Finance Staff Compliance Burden vs. Public Transparency", "category": "Governance & Transparency", "summary": "Deliberation over whether requiring publication strictly 'within 30 days' placed an unrealistic burden on staff during audits versus public accountability.", "side_a": {"position": "Advocating Flexibility & Acknowledging Staff Capacity", "arguments": ["Staff turnover in finance makes tight 30-day deadlines risky", "Could trigger default notices during end-of-year reconciliations"], "members": ["Bettina Umstead", "District Finance Staff"]}, "side_b": {"position": "Advocating Strict Accountability & Clarified 30-Day Window", "arguments": ["Community lost trust during salary crisis and requires hard deadlines", "Vagueness of '30 days after' leads to endless slippage"], "members": ["Natalie Beyer", "Emily Chávez", "Joy Harrell-Goff"]}, "resolution": "Amended by consensus to specify 'within 30 days' and approved unanimously on first reading."}]}]};
+    const VALID_PASSWORDS = ["durhampol", "AS2cYGy9GD7qRt@XV&gf$yUX!pD@"];
+
+    // ----------------------------------------------------
+    // Authentication & Privacy Control
+    // ----------------------------------------------------
+    function checkAuth() {
+      const sessionAuth = sessionStorage.getItem("durham_pol_auth");
+      const localAuth = localStorage.getItem("durham_pol_auth");
+      
+      if (sessionAuth === "granted" || localAuth === "granted") {
+        unlockApp();
+      } else {
+        document.getElementById("authOverlay").style.display = "flex";
+        document.getElementById("appWrapper").style.display = "none";
+      }
+    }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      const pwd = document.getElementById("authPasswordInput").value.trim();
+      const remember = document.getElementById("rememberAuthCheckbox").checked;
+
+      if (VALID_PASSWORDS.includes(pwd)) {
+        sessionStorage.setItem("durham_pol_auth", "granted");
+        if (remember) {
+          localStorage.setItem("durham_pol_auth", "granted");
+        }
+        unlockApp();
+      } else {
+        const err = document.getElementById("authErrorMsg");
+        err.style.display = "block";
+        err.innerText = "Invalid password. Access denied.";
+        document.getElementById("authPasswordInput").focus();
+      }
+    }
+
+    function unlockApp() {
+      document.getElementById("authOverlay").style.display = "none";
+      document.getElementById("appWrapper").style.display = "flex";
+      initApplication();
+    }
+
+    function lockApp() {
+      sessionStorage.removeItem("durham_pol_auth");
+      localStorage.removeItem("durham_pol_auth");
+      document.getElementById("appWrapper").style.display = "none";
+      document.getElementById("authOverlay").style.display = "flex";
+      document.getElementById("authPasswordInput").value = "";
+      document.getElementById("authErrorMsg").style.display = "none";
+      showToast("🔒 Confidential dashboard locked.");
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.innerText = msg;
+      t.style.display = "block";
+      setTimeout(() => { t.style.display = "none"; }, 3000);
+    }
+
+    // ----------------------------------------------------
+    // Tab Navigation
+    // ----------------------------------------------------
+    function switchTab(tabId) {
+      const panes = document.querySelectorAll(".tab-pane");
+      panes.forEach(p => p.classList.remove("active"));
+      
+      const btns = document.querySelectorAll(".tab-btn");
+      btns.forEach(b => b.classList.remove("active"));
+
+      const targetPane = document.getElementById(`tab_${tabId}`);
+      if (targetPane) targetPane.classList.add("active");
+
+      // Set active button
+      event.currentTarget.classList.add("active");
+
+      if (tabId === "alignments") {
+        const bodySelect = document.getElementById("alignmentBodySelect").value;
+        renderPairwiseHeatmap(bodySelect);
+      }
+    }
+
+    // ----------------------------------------------------
+    // App Initialization
+    // ----------------------------------------------------
+    function initApplication() {
+      applyStatsKPIs();
+      renderOverviewLandmarks();
+      renderMembers();
+      renderBodyTabs();
+      renderPairwiseHeatmap("city");
+      renderDissentLeaderboard();
+      renderTimeline();
+    }
+
+    function applyStatsKPIs() {
+      const s = APP_DATA.stats.overall;
+      document.getElementById("kpiTotalMeetings").innerText = s.total_meetings;
+      document.getElementById("kpiTotalVotes").innerText = s.total_votes;
+      document.getElementById("kpiContestedVotes").innerText = s.contested_votes;
+      document.getElementById("kpiUnanimousPct").innerText = `${s.unanimous_pct}% Unanimous Consensus`;
+      document.getElementById("kpiTotalDisagreements").innerText = s.total_disagreements;
+    }
+
+    function renderOverviewLandmarks() {
+      const container = document.getElementById("overviewLandmarkVotes");
+      container.innerHTML = "";
+
+      // Gather contested or key landmark votes
+      const landmarkMeetings = APP_DATA.meetings.filter(m => m.votes.some(v => v.is_contested || v.item_title.includes("Budget")));
+      landmarkMeetings.slice(0, 5).forEach(m => {
+        container.appendChild(createMeetingElement(m));
+      });
+    }
+
+    function renderBodyTabs() {
+      // DPS
+      const dpsMembers = APP_DATA.stats.members.filter(m => m.body_id === "dps");
+      document.getElementById("dpsMembersGrid").innerHTML = dpsMembers.map(createMemberCardHTML).join("");
+      const dpsMeetings = APP_DATA.meetings.filter(m => m.body_id === "dps");
+      const dpsTimeline = document.getElementById("dpsMeetingsTimeline");
+      dpsTimeline.innerHTML = "";
+      dpsMeetings.forEach(m => dpsTimeline.appendChild(createMeetingElement(m)));
+
+      // City Council
+      const cityMembers = APP_DATA.stats.members.filter(m => m.body_id === "city");
+      document.getElementById("cityMembersGrid").innerHTML = cityMembers.map(createMemberCardHTML).join("");
+      const cityMeetings = APP_DATA.meetings.filter(m => m.body_id === "city");
+      const cityTimeline = document.getElementById("cityMeetingsTimeline");
+      cityTimeline.innerHTML = "";
+      cityMeetings.forEach(m => cityTimeline.appendChild(createMeetingElement(m)));
+
+      // BOCC
+      const boccMembers = APP_DATA.stats.members.filter(m => m.body_id === "bocc");
+      document.getElementById("boccMembersGrid").innerHTML = boccMembers.map(createMemberCardHTML).join("");
+      const boccMeetings = APP_DATA.meetings.filter(m => m.body_id === "bocc");
+      const boccTimeline = document.getElementById("boccMeetingsTimeline");
+      boccTimeline.innerHTML = "";
+      boccMeetings.forEach(m => boccTimeline.appendChild(createMeetingElement(m)));
+    }
+
+    function renderMembers() {
+      const bodyFilter = document.getElementById("memberFilterBody").value;
+      const statusFilter = document.getElementById("memberFilterStatus").value;
+
+      let list = APP_DATA.stats.members;
+      if (bodyFilter !== "all") {
+        list = list.filter(m => m.body_id === bodyFilter);
+      }
+      if (statusFilter === "current") {
+        list = list.filter(m => m.is_current);
+      } else if (statusFilter === "former") {
+        list = list.filter(m => !m.is_current);
+      }
+
+      document.getElementById("allMembersGrid").innerHTML = list.map(createMemberCardHTML).join("");
+    }
+
+    function createMemberCardHTML(m) {
+      const bColor = m.body_id === "dps" ? "var(--dps-color)" : m.body_id === "city" ? "var(--city-color)" : "var(--bocc-color)";
+      const bName = m.body_id === "dps" ? "DPS Board" : m.body_id === "city" ? "City Council" : "BOCC";
+
+      const termStr = m.active_terms ? m.active_terms.join(", ") : "";
+
+      const tagsHTML = (m.ideology_tags || []).map(t => `<span class="tag tag-ideology">${t}</span>`).join("");
+      const priorityHTML = (m.key_priorities || []).map(p => `<span class="tag">${p}</span>`).join("");
+
+      return `
+        <div class="member-card">
+          <div>
+            <div class="member-header">
+              <div class="member-avatar" style="border: 2px solid ${bColor};">${m.avatar_initials}</div>
+              <div class="member-info">
+                <h3>${m.name}</h3>
+                <p style="color: ${bColor}; font-weight: 600;">${m.title} &bull; ${m.district}</p>
+                <p style="font-size: 11px;">${termStr}</p>
+              </div>
+            </div>
+
+            <div class="member-stats">
+              <div>
+                <div class="stat-box-num">${m.votes_cast}</div>
+                <div class="stat-box-lbl">Votes Cast</div>
+              </div>
+              <div>
+                <div class="stat-box-num" style="color: #6ee7b7;">${m.aye_pct}%</div>
+                <div class="stat-box-lbl">Aye Rate</div>
+              </div>
+              <div>
+                <div class="stat-box-num" style="color: #fca5a5;">${m.dissent_rate}%</div>
+                <div class="stat-box-lbl">Dissent Rate</div>
+              </div>
+            </div>
+
+            <p style="font-size: 12px; color: var(--text-muted); line-height: 1.5; margin-bottom: 8px;">${m.bio || ""}</p>
+
+            <div class="tag-container">${tagsHTML}</div>
+            <div class="tag-container" style="margin-top: 4px;">${priorityHTML}</div>
+          </div>
+
+          <button class="btn-view-record" onclick="openMemberRecord('${m.id}')">
+            Inspect Full Voting Record &rarr;
+          </button>
+        </div>
+      `;
+    }
+
+    function openMemberRecord(memberId) {
+      const member = APP_DATA.stats.members.find(m => m.id === memberId);
+      if (!member) return;
+
+      document.getElementById("modalMemberTitle").innerText = `${member.name} — Complete Voting History`;
+
+      // Find all votes where this member cast a vote
+      let votesHTML = "";
+      APP_DATA.meetings.forEach(m => {
+        m.votes.forEach(v => {
+          const isAye = (v.ayes || []).some(name => name.toLowerCase().includes(member.name.toLowerCase().split(" ")[0]));
+          const isNay = (v.nays || []).some(name => name.toLowerCase().includes(member.name.toLowerCase().split(" ")[0]));
+          const isAbstain = (v.abstentions || []).some(name => name.toLowerCase().includes(member.name.toLowerCase().split(" ")[0]));
+
+          if (isAye || isNay || isAbstain) {
+            const badgeClass = isAye ? "vote-badge-passed" : isNay ? "vote-badge-failed" : "tag";
+            const castText = isAye ? "AYE (IN FAVOR)" : isNay ? "NAY (DISSENT)" : "ABSTAIN";
+
+            votesHTML += `
+              <div class="vote-item">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                  <span style="font-size: 11px; color: var(--text-dim);">${m.date} &bull; ${m.title}</span>
+                  <span class="${badgeClass}">${castText}</span>
+                </div>
+                <div class="vote-title">${v.item_title}</div>
+                <div class="vote-breakdown">
+                  Outcome: <strong>${v.outcome}</strong> (${v.tally}) | Mover: ${v.mover || 'N/A'} | Seconder: ${v.seconder || 'N/A'}
+                </div>
+                ${v.notes ? `<div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">${v.notes}</div>` : ''}
+              </div>
+            `;
+          }
+        });
+      });
+
+      if (!votesHTML) {
+        votesHTML = `<div style="color: var(--text-muted); font-size: 13px;">No recorded roll call votes on file for this session window.</div>`;
+      }
+
+      document.getElementById("modalMemberBody").innerHTML = votesHTML;
+      document.getElementById("recordModal").style.display = "flex";
+    }
+
+    function closeRecordModal() {
+      document.getElementById("recordModal").style.display = "none";
+    }
+
+    // Close modal on click outside
+    window.onclick = function(e) {
+      const m = document.getElementById("recordModal");
+      if (e.target === m) {
+        m.style.display = "none";
+      }
+    };
+
+    // ----------------------------------------------------
+    // Meeting Elements & Timeline
+    // ----------------------------------------------------
+    function createMeetingElement(m) {
+      const el = document.createElement("div");
+      el.className = "meeting-card";
+
+      const bColor = m.body_id === "dps" ? "dps" : m.body_id === "city" ? "city" : "bocc";
+      const bLabel = m.body_id === "dps" ? "DPS Board" : m.body_id === "city" ? "City Council" : "BOCC";
+
+      const contestedCount = m.votes.filter(v => v.is_contested).length;
+
+      let votesListHTML = m.votes.map(v => `
+        <div class="vote-item">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <span class="${v.outcome.toLowerCase().includes('pass') ? 'vote-badge-passed' : 'vote-badge-failed'}">
+              ${v.outcome} (${v.tally})
+            </span>
+            <span style="font-size: 11px; color: var(--text-dim);">${v.category || 'General'}</span>
+          </div>
+          <div class="vote-title">${v.item_title}</div>
+          <div class="vote-breakdown">
+            <strong>Mover:</strong> ${v.mover || 'N/A'} | <strong>Seconder:</strong> ${v.seconder || 'N/A'} | <strong>Format:</strong> ${v.vote_format}
+          </div>
+          <div class="vote-breakdown">
+            <strong>Ayes:</strong> ${v.ayes.join(', ') || 'None'}
+          </div>
+          ${v.nays && v.nays.length ? `<div class="vote-breakdown" style="color: #fca5a5;"><strong>Nays:</strong> ${v.nays.join(', ')}</div>` : ''}
+          ${v.amendments && v.amendments.length ? `<div class="vote-breakdown" style="color: #93c5fd;"><strong>Amendments:</strong> ${v.amendments.join('; ')}</div>` : ''}
+          ${v.notes ? `<div style="font-size: 11px; color: var(--text-dim); margin-top: 4px;">${v.notes}</div>` : ''}
+        </div>
+      `).join("");
+
+      let disagreementsListHTML = (m.disagreements || []).map(d => `
+        <div class="disagreement-box">
+          <div class="dis-title">&#9888; Deliberation Contention: ${d.issue}</div>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">${d.summary}</p>
+          <div class="dis-side">
+            <strong style="color: #93c5fd;">Side A (${d.side_a.position}):</strong>
+            ${(d.side_a.arguments || []).join(' &bull; ')}
+            <div style="font-size: 11px; color: var(--text-dim);">Members: ${d.side_a.members.join(', ')}</div>
+          </div>
+          <div class="dis-side" style="margin-top: 6px;">
+            <strong style="color: #fca5a5;">Side B (${d.side_b.position}):</strong>
+            ${(d.side_b.arguments || []).join(' &bull; ')}
+            <div style="font-size: 11px; color: var(--text-dim);">Members: ${d.side_b.members.join(', ')}</div>
+          </div>
+          <div style="font-size: 11px; color: #a7f3d0; margin-top: 6px;">
+            <strong>Resolution:</strong> ${d.resolution}
+          </div>
+        </div>
+      `).join("");
+
+      el.innerHTML = `
+        <div class="meeting-header">
+          <div>
+            <span class="badge-body ${bColor}">${bLabel}</span>
+            <span style="font-size: 12px; color: var(--text-muted); margin-left: 8px;">${m.date}</span>
+            <span style="font-size: 12px; color: var(--text-dim); margin-left: 8px;">&bull; Duration: ${m.duration || '2h+'}</span>
+            ${m.presiding_chair ? `<span style="font-size: 12px; color: var(--text-dim); margin-left: 8px;">&bull; Presided by ${m.presiding_chair}</span>` : ''}
+          </div>
+          <div>
+            ${contestedCount > 0 ? `<span class="vote-badge-failed">${contestedCount} Contested Roll Calls</span>` : `<span class="vote-badge-passed">Consensual</span>`}
+          </div>
+        </div>
+
+        <div class="meeting-title">${m.title}</div>
+        <div class="meeting-summary">${m.executive_summary || ''}</div>
+
+        <div class="meeting-details-toggle">
+          <button class="btn-toggle-details" onclick="toggleDetailsPane('${m.id}_votes', this)">
+            <span>&#9745;</span> Roll Call Votes (${m.votes.length})
+          </button>
+          ${m.disagreements && m.disagreements.length ? `
+            <button class="btn-toggle-details" onclick="toggleDetailsPane('${m.id}_dis', this)">
+              <span>&#9878;</span> Debates & Disagreements (${m.disagreements.length})
+            </button>
+          ` : ''}
+          ${m.video_url ? `
+            <a href="${m.video_url}" target="_blank" rel="noopener noreferrer" class="btn-toggle-details" style="text-decoration: none;">
+              <span>&#9658;</span> Watch Video Recording
+            </a>
+          ` : ''}
+        </div>
+
+        <div id="${m.id}_votes" class="details-pane">
+          ${votesListHTML || '<div style="font-size: 12px; color: var(--text-muted);">No formal roll-call votes recorded.</div>'}
+        </div>
+
+        <div id="${m.id}_dis" class="details-pane">
+          ${disagreementsListHTML}
+        </div>
+      `;
+
+      return el;
+    }
+
+    function toggleDetailsPane(paneId, btn) {
+      const pane = document.getElementById(paneId);
+      if (!pane) return;
+      if (pane.style.display === "block") {
+        pane.style.display = "none";
+        btn.style.background = "#1e293b";
+      } else {
+        pane.style.display = "block";
+        btn.style.background = "#334155";
+      }
+    }
+
+    function renderTimeline() {
+      const bodyFilter = document.getElementById("timelineFilterBody").value;
+      const yearFilter = document.getElementById("timelineFilterYear").value;
+      const contestedFilter = document.getElementById("timelineFilterContested").value;
+
+      let list = APP_DATA.meetings;
+      if (bodyFilter !== "all") {
+        list = list.filter(m => m.body_id === bodyFilter);
+      }
+      if (yearFilter !== "all") {
+        list = list.filter(m => m.date.startsWith(yearFilter));
+      }
+      if (contestedFilter === "contested") {
+        list = list.filter(m => m.votes.some(v => v.is_contested));
+      }
+
+      const container = document.getElementById("masterTimelineList");
+      container.innerHTML = "";
+      list.forEach(m => container.appendChild(createMeetingElement(m)));
+    }
+
+    // ----------------------------------------------------
+    // Heatmaps & Alignment Grids
+    // ----------------------------------------------------
+    function renderPairwiseHeatmap(bodyId) {
+      const matrix = APP_DATA.stats.pairwise[bodyId];
+      if (!matrix) return;
+
+      const members = APP_DATA.stats.members.filter(m => m.body_id === bodyId && m.is_current);
+      const memberIds = members.map(m => m.id);
+
+      let html = `<table class="heatmap-table"><thead><tr><th>Official</th>`;
+      members.forEach(m => {
+        html += `<th>${m.name.split(" ")[0]}</th>`;
+      });
+      html += `</tr></thead><tbody>`;
+
+      members.forEach(m1 => {
+        html += `<tr><th>${m1.name}</th>`;
+        members.forEach(m2 => {
+          if (m1.id === m2.id) {
+            html += `<td class="heat-self">100%</td>`;
+          } else {
+            const score = (matrix[m1.id] && matrix[m1.id][m2.id] !== undefined) ? matrix[m1.id][m2.id] : null;
+            if (score === null) {
+              html += `<td class="heat-self">&mdash;</td>`;
+            } else {
+              const cls = score >= 80 ? "heat-high" : score >= 60 ? "heat-med" : "heat-low";
+              html += `<td class="${cls}">${score}%</td>`;
+            }
+          }
+        });
+        html += `</tr>`;
+      });
+
+      html += `</tbody></table>`;
+      document.getElementById("heatmapContainer").innerHTML = html;
+    }
+
+    function renderDissentLeaderboard() {
+      const sorted = [...APP_DATA.stats.members].sort((a, b) => b.dissent_rate - a.dissent_rate);
+      const topDissents = sorted.filter(m => m.votes_cast > 0).slice(0, 6);
+
+      let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">`;
+      topDissents.forEach(m => {
+        const bLabel = m.body_id === "dps" ? "DPS Board" : m.body_id === "city" ? "City Council" : "BOCC";
+        html += `
+          <div style="background: var(--card-inner); padding: 12px 16px; border-radius: 8px; border: 1px solid #232d42;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <strong style="color: #fff; font-size: 14px;">${m.name}</strong>
+                <div style="font-size: 11px; color: var(--text-dim);">${bLabel} &bull; ${m.title}</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 18px; font-weight: 800; color: #fca5a5;">${m.dissent_rate}%</div>
+                <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase;">Dissent Rate</div>
+              </div>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+              Primary areas of dissent: ${m.key_priorities.slice(0, 2).join(', ')}
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      document.getElementById("dissentLeaderboard").innerHTML = html;
+    }
+
+    // Global Search Function
+    function handleGlobalSearch(query) {
+      const q = query.toLowerCase().trim();
+      if (!q) {
+        renderTimeline();
+        renderMembers();
+        return;
+      }
+
+      // Switch to timeline tab automatically if search entered
+      const matchingMeetings = APP_DATA.meetings.filter(m => 
+        m.title.toLowerCase().includes(q) ||
+        m.executive_summary.toLowerCase().includes(q) ||
+        m.votes.some(v => v.item_title.toLowerCase().includes(q) || v.notes.toLowerCase().includes(q)) ||
+        (m.disagreements || []).some(d => d.issue.toLowerCase().includes(q) || d.summary.toLowerCase().includes(q))
+      );
+
+      const container = document.getElementById("masterTimelineList");
+      container.innerHTML = `<div style="font-size: 13px; color: var(--accent-blue); margin-bottom: 12px;">Found ${matchingMeetings.length} matching meeting records for "${query}":</div>`;
+      matchingMeetings.forEach(m => container.appendChild(createMeetingElement(m)));
+
+      // Switch to timeline tab
+      const panes = document.querySelectorAll(".tab-pane");
+      panes.forEach(p => p.classList.remove("active"));
+      document.getElementById("tab_timeline").classList.add("active");
+    }
+
+    // Check auth on load
+    window.addEventListener("DOMContentLoaded", checkAuth);
+  </script>
+</body>
+</html>
