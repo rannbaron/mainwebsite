@@ -19,3 +19,7 @@ Disallow: /vibes/
 Disallow: /vibes.html
 Disallow: /vibes
 Disallow: /*vibes*
+Disallow: /durhampolitics/
+Disallow: /durhampolitics.html
+Disallow: /durhampolitics
+Disallow: /*durhampolitics*
