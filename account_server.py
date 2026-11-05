@@ -44,6 +44,31 @@ DB_PATH = BASE_DIR / "accounts.db"
 JSON_CACHE_PATH = BASE_DIR / "accounts.json"
 MASTER_PASSWORD = "AS2cYGy9GD7qRt@XV&gf$yUX!pD@"
 DEFAULT_PORT = 8086
+DEFAULT_TEST_EMAIL = "outputtest@rannbar-on.com"
+
+# Prevent sending to non-existent / dummy addresses or third parties during testing
+DISALLOWED_TEST_PATTERNS = [
+    r"@example\.(com|org|net)",
+    r"@test\.(com|org|net)",
+    r"@fake\.(com|org|net)",
+    r"@nonexistent\.(com|org|net)",
+    r"^test@",
+    r"nida\.allam@",
+    r"nallam@",
+    r"nidaallam@"
+]
+
+def resolve_email_recipient(email: str, is_test: bool = False) -> str:
+    """Enforce user rule: Never send emails to fake or non-existent addresses.
+    Always route test emails or dummy domains to outputtest@rannbar-on.com."""
+    if is_test or not email:
+        return DEFAULT_TEST_EMAIL
+    email_clean = email.strip()
+    for pattern in DISALLOWED_TEST_PATTERNS:
+        if re.search(pattern, email_clean, re.IGNORECASE):
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Rerouting non-existent/test address '{email_clean}' to '{DEFAULT_TEST_EMAIL}'")
+            return DEFAULT_TEST_EMAIL
+    return email_clean
 
 ROLE_TIERS = {
     1: "Guest",
@@ -283,24 +308,25 @@ def dispatch_2fa_email(email: str, code: str, purpose: str = "Authentication", u
     </div>
     """
 
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Dispatching 2FA passcode {code} strictly to {email}...")
+    target_email = resolve_email_recipient(email)
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Dispatching 2FA passcode {code} to {target_email}...")
     sent = False
     if send_duke_email:
         try:
             sent = send_duke_email(
-                recipient=email,
+                recipient=target_email,
                 cc_recipients=None,
                 subject=subject,
                 content=html,
                 is_html=True,
                 allow_dropped=True
             )
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] 2FA email dispatched via send_duke_email.")
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] 2FA email dispatched via send_duke_email to {target_email}.")
         except Exception as ex:
             print(f"[{datetime.now().strftime('%H:%M:%S')}] Warning: 2FA send_duke_email failed: {ex}")
     
     if not sent:
-        print(f"[{datetime.now().strftime('%H:%M:%S')}] Fallback logged 2FA code {code} for {email}.")
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Fallback logged 2FA code {code} for {target_email}.")
     return sent
 
 def notify_rann_new_signup(full_name: str, email: str, username: str, timestamp: str, role_name: str = "Guest"):
@@ -459,6 +485,18 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
             
         elif url_path == "/api/health":
             self._send_json(200, {"status": "ok", "service": "accounts-api", "timestamp": datetime.now(timezone.utc).isoformat()})
+            return
+
+        elif url_path == "/api/test/2fa_code":
+            # Strictly for outputtest@rannbar-on.com automated verification tests
+            import urllib.parse
+            parsed_query = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            cid = parsed_query.get("challenge_id", [""])[0]
+            challenge = ACTIVE_2FA_CHALLENGES.get(cid)
+            if challenge and challenge.get("email") == DEFAULT_TEST_EMAIL:
+                self._send_json(200, {"success": True, "code": challenge["code"]})
+                return
+            self._send_json(404, {"success": False, "error": "Challenge not found or not a test account."})
             return
 
         self._send_json(404, {"success": False, "error": "Endpoint not found"})
@@ -992,6 +1030,120 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
 
         self._send_json(404, {"success": False, "error": "Endpoint not found"})
 
+def send_test_email(email=DEFAULT_TEST_EMAIL):
+    code = f"{secrets.randbelow(900000) + 100000}"
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Sending test 2FA verification email to {email}...")
+    sent = dispatch_2fa_email(email=email, code=code, purpose="Test Verification", user_name="Test Operator")
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Test email dispatched: success={sent}")
+    return sent
+
+def run_self_tests(port=DEFAULT_PORT) -> bool:
+    import urllib.request
+    import urllib.error
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] === RUNNING ACCOUNT SERVER SELF-TESTS ===")
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Safe test recipient configured: {DEFAULT_TEST_EMAIL}")
+    
+    # 1. Test Email Sanitization & Guardrails
+    print("Test 1: Testing email recipient resolution & safeguards...")
+    assert resolve_email_recipient("test@example.com") == DEFAULT_TEST_EMAIL
+    assert resolve_email_recipient("nida.allam@dconc.gov") == DEFAULT_TEST_EMAIL
+    assert resolve_email_recipient("fakeuser@test.org") == DEFAULT_TEST_EMAIL
+    assert resolve_email_recipient("outputtest@rannbar-on.com") == DEFAULT_TEST_EMAIL
+    assert resolve_email_recipient("rann@rannbar-on.com") == "rann@rannbar-on.com"
+    print("  -> PASSED: All synthetic/dummy/third-party emails correctly rerouted to outputtest@rannbar-on.com")
+
+    # 2. Test Password Policy Rejections via API
+    base_url = f"http://127.0.0.1:{port}"
+    print("Test 2: Testing password strength requirements...")
+    
+    def post_json(path, data):
+        req = urllib.request.Request(
+            f"{base_url}{path}",
+            data=json.dumps(data).encode("utf-8"),
+            headers={"Content-Type": "application/json"}
+        )
+        try:
+            with urllib.request.urlopen(req) as resp:
+                return resp.status, json.loads(resp.read().decode("utf-8"))
+        except urllib.error.HTTPError as err:
+            return err.code, json.loads(err.read().decode("utf-8"))
+
+    # Password too short (<20 chars)
+    status, res = post_json("/api/register", {
+        "fullName": "Test User",
+        "email": DEFAULT_TEST_EMAIL,
+        "password": "Short!1"
+    })
+    assert status == 400 and "20 characters" in res.get("error", "")
+    print("  -> PASSED: Short password (<20 chars) rejected.")
+
+    # Password missing numbers
+    status, res = post_json("/api/register", {
+        "fullName": "Test User",
+        "email": DEFAULT_TEST_EMAIL,
+        "password": "ThisPasswordHasNoNumbersAtAll!"
+    })
+    assert status == 400 and "numbers" in res.get("error", "")
+    print("  -> PASSED: Password missing numbers rejected.")
+
+    # Password missing symbols
+    status, res = post_json("/api/register", {
+        "fullName": "Test User",
+        "email": DEFAULT_TEST_EMAIL,
+        "password": "ThisPasswordHasNoSymbols12345678"
+    })
+    assert status == 400 and "symbols" in res.get("error", "")
+    print("  -> PASSED: Password missing symbols rejected.")
+
+    # 3. Test Full Registration & 2FA Flow with outputtest@rannbar-on.com
+    print(f"Test 3: Testing registration and 2FA flow strictly using {DEFAULT_TEST_EMAIL}...")
+    valid_test_password = "SecureVerificationTestPass!2026@"
+    test_uname = f"testuser_{int(time.time())}"
+    
+    status, res = post_json("/api/register", {
+        "fullName": "Synthetic Test User",
+        "username": test_uname,
+        "email": DEFAULT_TEST_EMAIL,
+        "password": valid_test_password
+    })
+    assert status == 200 and res.get("two_factor_required") is True, f"Registration failed: {res}"
+    challenge_id = res.get("challenge_id")
+    print(f"  -> PASSED: 2FA challenge generated: {challenge_id}")
+
+    # Retrieve test code via /api/test/2fa_code (available only for outputtest@rannbar-on.com)
+    code_req = urllib.request.urlopen(f"{base_url}/api/test/2fa_code?challenge_id={challenge_id}")
+    code_data = json.loads(code_req.read().decode("utf-8"))
+    code = code_data.get("code")
+    assert code is not None, "Failed to retrieve test 2FA code"
+    print(f"  -> Challenge code verified for {DEFAULT_TEST_EMAIL}: {code}")
+
+    # Verify 2FA
+    status, res = post_json("/api/auth/verify_2fa", {
+        "challenge_id": challenge_id,
+        "code": code
+    })
+    assert status == 201, f"2FA verification failed: {res}"
+    print("  -> PASSED: 2FA verification succeeded.")
+
+    # Verify user created in DB
+    with get_db() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, username, email, privilege_name, status FROM accounts WHERE username = ?", (test_uname,))
+        row = cursor.fetchone()
+        assert row is not None, "User not found in accounts DB"
+        assert row["email"] == DEFAULT_TEST_EMAIL
+        user_id = row["id"]
+        print(f"  -> PASSED: User '{test_uname}' found in DB (ID: {user_id}, Status: {row['status']}).")
+
+        # Clean up test user
+        cursor.execute("DELETE FROM accounts WHERE id = ?", (user_id,))
+        conn.commit()
+    export_sanitized_accounts_json()
+    print(f"  -> Cleaned up test user '{test_uname}' from accounts DB.")
+
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] === ALL SELF-TESTS PASSED SUCCESSFULLY ===")
+    return True
+
 def run_server(port=DEFAULT_PORT):
     init_db()
     server_address = ("0.0.0.0", port)
@@ -1007,10 +1159,16 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Account Management & 2FA Server")
     parser.add_argument("--port", type=int, default=DEFAULT_PORT, help=f"Server port (default: {DEFAULT_PORT})")
     parser.add_argument("--init-only", action="store_true", help="Initialize database and exit")
+    parser.add_argument("--test-email", action="store_true", help=f"Send a test verification email to {DEFAULT_TEST_EMAIL}")
+    parser.add_argument("--run-tests", action="store_true", help=f"Run automated registration and 2FA self-tests using {DEFAULT_TEST_EMAIL}")
     args = parser.parse_args()
 
     if args.init_only:
         init_db()
         print("Database initialized successfully.")
+    elif args.test_email:
+        send_test_email()
+    elif args.run_tests:
+        run_self_tests(args.port)
     else:
         run_server(args.port)
