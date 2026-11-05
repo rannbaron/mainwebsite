@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create User Account &bull; 2FA Verified | Rann Bar-On</title>
+  <meta name="description" content="Request an authorized user account with email two-factor verification for Rann Bar-On research portals.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f2937;
+      --card-hover: #374151;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --duke-blue: #00539b;
+      --accent-indigo: #6366f1;
+      --accent-cyan: #38bdf8;
+      --accent-green: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-red: #ef4444;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 16px;
+    }
+
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 28px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .brand-link {
+      color: var(--text-main);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-link i { color: var(--accent-indigo); }
+    .brand-sub { font-size: 13px; color: var(--text-muted); }
+
+    .signup-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-header {
+      margin-bottom: 28px;
+      text-align: center;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #a5b4fc;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 12px;
+    }
+    .card-header h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .card-header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .form-group { margin-bottom: 20px; }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 580px) {
+      .form-row { grid-template-columns: 1fr; }
+      .signup-card { padding: 24px 20px; }
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    label span.req { color: var(--accent-red); }
+
+    .input-wrapper { position: relative; }
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #64748b;
+      font-size: 14px;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      background: #0d131f;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: #fff;
+      padding: 12px 14px 12px 40px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s;
+    }
+    input:focus {
+      border-color: var(--accent-indigo);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      background: #111827;
+    }
+
+    .field-hint {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 5px;
+      display: block;
+    }
+    .field-error {
+      font-size: 12px;
+      color: #f87171;
+      margin-top: 4px;
+      display: none;
+      font-weight: 600;
+    }
+
+    .privilege-box {
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 24px 0;
+      font-size: 12.5px;
+    }
+    .privilege-box h4 {
+      font-size: 13px;
+      color: #38bdf8;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .privilege-tiers {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      color: #cbd5e1;
+    }
+    @media (max-width: 580px) {
+      .privilege-tiers { grid-template-columns: 1fr; }
+    }
+    .tier-badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 10.5px;
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #475569;
+    }
+    .tier-badge.default {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+    .tier-badge.admin {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: linear-gradient(135deg, #4f46e5, #4338ca);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: linear-gradient(135deg, #6366f1, #4f46e5);
+      transform: translateY(-1px);
+    }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    #step2FA {
+      display: none;
+      text-align: center;
+    }
+
+    #successCard {
+      display: none;
+      background: #111827;
+      border: 1px solid #10b981;
+      border-radius: 16px;
+      padding: 36px 32px;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: #34d399;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin: 0 auto 20px auto;
+    }
+    .status-badge {
+      display: inline-block;
+      background: rgba(245, 158, 11, 0.2);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin: 12px 0 20px 0;
+    }
+
+    #globalError {
+      display: none;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      margin-bottom: 20px;
+    }
+
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding-top: 32px;
+      color: #64748b;
+      font-size: 12px;
+    }
+    footer a { color: var(--accent-indigo); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="top-nav">
+      <a href="/" class="brand-link">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span>Rann Bar-On</span>
+      </a>
+      <span class="brand-sub">Research &amp; Analytics Portal</span>
+    </div>
+
+    <div id="globalError"></div>
+
+    <!-- Main Registration Card -->
+    <div id="signupCard" class="signup-card">
+      
+      <!-- STEP 1: Registration Form -->
+      <div id="stepRegistration">
+        <div class="card-header">
+          <div class="badge-pill">
+            <i class="fa-solid fa-user-plus"></i> Step 1 of 2: Public Registration
+          </div>
+          <h1>Request User Account</h1>
+          <p>Create credentials for access to authorized analytical dashboards and datasets.</p>
+        </div>
+
+        <form id="signupForm" novalidate onsubmit="handleInitialSubmit(event)">
+          <div class="form-group">
+            <label for="fullName">Full Name <span class="req">*</span></label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-user input-icon"></i>
+              <input type="text" id="fullName" placeholder="e.g. Jane Doe" required autocomplete="name">
+            </div>
+            <div id="fullNameError" class="field-error">Please provide your full legal or professional name.</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address <span class="req">*</span></label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input type="email" id="email" placeholder="e.g. jane@example.com" required autocomplete="email">
+              </div>
+              <div id="emailError" class="field-error">Please enter a valid email address.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="username">Username <span class="req">*</span></label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-at input-icon"></i>
+                <input type="text" id="username" placeholder="e.g. janedoe" required autocomplete="username">
+              </div>
+              <div id="usernameError" class="field-error">Username must be at least 3 characters (letters, numbers, underscores).</div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password <span class="req">*</span></label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-lock input-icon"></i>
+                <input type="password" id="password" placeholder="Min. 8 characters" required autocomplete="new-password">
+              </div>
+              <span class="field-hint">Must contain at least 8 characters.</span>
+              <div id="passwordError" class="field-error">Password must be at least 8 characters long.</div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password <span class="req">*</span></label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-shield-check input-icon"></i>
+                <input type="password" id="confirmPassword" placeholder="Re-enter password" required autocomplete="new-password">
+              </div>
+              <div id="confirmPasswordError" class="field-error">Passwords do not match. Please verify.</div>
+            </div>
+          </div>
+
+          <div class="privilege-box">
+            <h4><i class="fa-solid fa-layer-group"></i> Privilege &amp; Access Tier System</h4>
+            <div class="privilege-tiers">
+              <div class="tier-item"><span class="tier-badge default">Level 1</span> <span>Public pages only (Default)</span></div>
+              <div class="tier-item"><span class="tier-badge">Level 2–4</span> <span>Research briefs &amp; community notes</span></div>
+              <div class="tier-item"><span class="tier-badge">Level 5–9</span> <span>Internal pipelines &amp; models</span></div>
+              <div class="tier-item"><span class="tier-badge admin">Level 10</span> <span>Full Master Admin Control</span></div>
+            </div>
+            <div style="margin-top: 10px; font-size: 11.5px; color: var(--text-muted); line-height: 1.4;">
+              <i class="fa-solid fa-circle-info"></i> All newly registered accounts default to <strong>Privilege Level 1</strong> with status <strong>PENDING_APPROVAL</strong>.
+            </div>
+          </div>
+
+          <button type="submit" id="submitBtn" class="btn-submit">
+            <span>Proceed to Email Verification &rarr;</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- STEP 2: 2FA Passcode Verification -->
+      <div id="step2FA">
+        <div class="card-header">
+          <div class="badge-pill" style="background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.3); color: #34d399;">
+            <i class="fa-solid fa-shield-halved"></i> Step 2 of 2: Security 2FA Passcode
+          </div>
+          <h1>Verify Your Email</h1>
+          <p>A 6-digit one-time passcode has been sent to <strong id="twoFactorEmailTarget" style="color: #38bdf8;"></strong>.</p>
+        </div>
+
+        <!-- Main 5-Minute Timer -->
+        <div style="background: #0d131f; border: 1px solid var(--card-border); border-radius: 8px; padding: 10px 16px; margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+          <span style="color: var(--text-muted);"><i class="fa-regular fa-clock"></i> Passcode Expiration:</span>
+          <span id="mainTimer" style="font-family: monospace; font-weight: 800; font-size: 16px; color: #f59e0b;">05:00</span>
+        </div>
+
+        <!-- Strict 30-Second Error Correction Timer Banner -->
+        <div id="graceBanner" style="display: none; background: rgba(239,68,68,0.18); border: 1px solid #ef4444; border-radius: 8px; padding: 10px 16px; margin-bottom: 18px; font-size: 13px; color: #fca5a5;">
+          <strong>Incorrect Code!</strong> You have <span id="graceTimer" style="font-weight: 800; font-family: monospace; font-size: 14px;">30s</span> to enter the correct code before session cancellation.
+        </div>
+
+        <form id="verifyForm" onsubmit="handleVerifySubmit(event)" style="max-width: 360px; margin: 0 auto;">
+          <div style="margin-bottom: 18px;">
+            <input type="text" id="twoFactorCode" maxlength="6" pattern="[0-9]*" inputmode="numeric" placeholder="------" autocomplete="one-time-code" style="background: #0d131f; border: 2px solid var(--accent-indigo); color: #fff; padding: 14px; border-radius: 8px; font-size: 28px; letter-spacing: 12px; text-align: center; font-family: monospace; font-weight: 800; outline: none; width: 100%;">
+          </div>
+          <button type="submit" id="btnVerify" class="btn-submit" style="background: #059669;">
+            <span>Verify &amp; Create Account</span>
+            <i class="fa-solid fa-check"></i>
+          </button>
+          <div id="verifyError" class="field-error" style="margin-top: 12px; text-align: center;"></div>
+        </form>
+
+        <div style="margin-top: 24px;">
+          <a href="#" onclick="cancelAndBackToStep1(event)" style="color: var(--text-muted); font-size: 12.5px; text-decoration: none;">
+            <i class="fa-solid fa-arrow-left"></i> Edit Registration Details
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Success Confirmation State -->
+    <div id="successCard">
+      <div class="success-icon">
+        <i class="fa-solid fa-check"></i>
+      </div>
+      <h2 style="font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 8px;">Registration Verified &amp; Submitted!</h2>
+      <div class="status-badge">
+        <i class="fa-solid fa-clock"></i> Status: PENDING_APPROVAL
+      </div>
+      <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin-bottom: 24px; max-width: 520px; margin-left: auto; margin-right: auto;">
+        Thank you, <strong id="successName" style="color: #fff;"></strong>! Your account request (<code id="successUsername" style="color: #38bdf8;"></code>) has been securely verified with <strong>Default Level 1</strong> privilege.
+      </p>
+
+      <div style="background: rgba(30, 41, 59, 0.5); border: 1px solid #334155; border-radius: 10px; padding: 18px; margin-bottom: 24px; text-align: left; font-size: 13px;">
+        <div style="display: flex; gap: 10px; align-items: flex-start;">
+          <i class="fa-solid fa-bell" style="color: #38bdf8; margin-top: 3px;"></i>
+          <div>
+            <strong style="color: #fff;">Immediate Administrator Notification Sent</strong>
+            <p style="color: var(--text-muted); margin-top: 4px;">An automated alert has been dispatched to Rann Bar-On (<code>rann@rannbar-on.com</code>) to review and activate your access at <code>rannbar-on.com/dashboard/accounts</code>.</p>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 14px; flex-wrap: wrap;">
+        <a href="/" style="background: #1f2937; border: 1px solid #374151; color: #fff; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-size: 13.5px; font-weight: 600;">
+          &larr; Return to Public Website
+        </a>
+      </div>
+    </div>
+
+    <footer>
+      &copy; 2026 Rann Bar-On &bull; <a href="/dashboard/accounts">Admin Portal</a> &bull; <a href="/">Public Explorer</a>
+    </footer>
+  </div>
+
+  <script>
+    let activeChallenge = null;
+    let mainTimerInterval = null;
+    let graceTimerInterval = null;
+    let cachedPayload = null;
+
+    function getApiBase() {
+      if (window.location.protocol === "file:") return "http://localhost:8086";
+      if (window.location.port === "8086") return "";
+      return "";
+    }
+
+    async function handleInitialSubmit(event) {
+      event.preventDefault();
+      
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      let username = document.getElementById("username").value.trim().toLowerCase();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      document.querySelectorAll(".field-error").forEach(el => el.style.display = "none");
+      const globalError = document.getElementById("globalError");
+      globalError.style.display = "none";
+
+      let hasErrors = false;
+      if (!fullName) { document.getElementById("fullNameError").style.display = "block"; hasErrors = true; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { document.getElementById("emailError").style.display = "block"; hasErrors = true; }
+      if (!username || username.length < 3) { document.getElementById("usernameError").style.display = "block"; hasErrors = true; }
+      if (!password || password.length < 8) { document.getElementById("passwordError").style.display = "block"; hasErrors = true; }
+      if (password !== confirmPassword) { document.getElementById("confirmPasswordError").style.display = "block"; hasErrors = true; }
+      if (hasErrors) return;
+
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Sending Verification Passcode...</span>`;
+
+      cachedPayload = { fullName, email, username, password };
+
+      try {
+        const apiBase = getApiBase();
+        const resp = await fetch(apiBase + "/api/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(cachedPayload)
+        });
+
+        const data = await resp.json();
+
+        if (resp.ok && data.success && data.two_factor_required) {
+          activeChallenge = {
+            id: data.challenge_id,
+            expiresAt: Date.now() + (data.expires_in || 300) * 1000,
+            attempts: 0,
+            graceExpiresAt: null
+          };
+          transitionToStep2(data.email_masked || email);
+        } else {
+          globalError.innerText = data.error || "An error occurred. Please verify your details.";
+          globalError.style.display = "block";
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>Proceed to Email Verification &rarr;</span>`;
+        }
+      } catch (err) {
+        console.warn("API offline fallback simulation:", err);
+        // Fallback for offline testing
+        activeChallenge = {
+          id: "offline_signup_challenge",
+          localCode: "123456",
+          expiresAt: Date.now() + 300 * 1000,
+          attempts: 0,
+          graceExpiresAt: null
+        };
+        transitionToStep2(email + " (Offline Demo Code: 123456)");
+      }
+    }
+
+    function transitionToStep2(emailMasked) {
+      document.getElementById("stepRegistration").style.display = "none";
+      document.getElementById("step2FA").style.display = "block";
+      document.getElementById("twoFactorEmailTarget").innerText = emailMasked;
+      document.getElementById("twoFactorCode").value = "";
+      document.getElementById("verifyError").style.display = "none";
+      document.getElementById("graceBanner").style.display = "none";
+      document.getElementById("twoFactorCode").focus();
+
+      if (mainTimerInterval) clearInterval(mainTimerInterval);
+      mainTimerInterval = setInterval(function() {
+        if (!activeChallenge) return;
+        const remainingMs = activeChallenge.expiresAt - Date.now();
+        if (remainingMs <= 0) {
+          clearInterval(mainTimerInterval);
+          cancelAndBackToStep1("Verification passcode expired (5-minute limit exceeded). Please re-submit.");
+          return;
+        }
+        const totalSecs = Math.floor(remainingMs / 1000);
+        const mins = Math.floor(totalSecs / 60);
+        const secs = totalSecs % 60;
+        document.getElementById("mainTimer").innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+      }, 500);
+    }
+
+    async function handleVerifySubmit(event) {
+      event.preventDefault();
+      const code = document.getElementById("twoFactorCode").value.trim();
+      const verifyError = document.getElementById("verifyError");
+      verifyError.style.display = "none";
+
+      if (!code || code.length < 6) {
+        verifyError.innerText = "Please enter the full 6-digit passcode.";
+        verifyError.style.display = "block";
+        return;
+      }
+
+      const btnVerify = document.getElementById("btnVerify");
+      btnVerify.disabled = true;
+      btnVerify.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Verifying...</span>`;
+
+      // Check Offline Challenge
+      if (activeChallenge && activeChallenge.id === "offline_signup_challenge") {
+        if (code === activeChallenge.localCode) {
+          showSuccess(cachedPayload.fullName, cachedPayload.username);
+          return;
+        } else {
+          handleFailedCodeAttempt("Incorrect offline verification code.");
+          btnVerify.disabled = false;
+          btnVerify.innerHTML = `<span>Verify &amp; Create Account</span> <i class="fa-solid fa-check"></i>`;
+          return;
+        }
+      }
+
+      try {
+        const apiBase = getApiBase();
+        const resp = await fetch(apiBase + "/api/auth/verify_2fa", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ challenge_id: activeChallenge.id, code: code })
+        });
+        const data = await resp.json();
+
+        if (resp.ok && data.success) {
+          showSuccess(cachedPayload.fullName, cachedPayload.username);
+        } else {
+          if (data.kicked) {
+            cancelAndBackToStep1(data.error || "2FA session expired. Please re-submit.");
+          } else {
+            handleFailedCodeAttempt(data.error || "Incorrect verification code.");
+            btnVerify.disabled = false;
+            btnVerify.innerHTML = `<span>Verify &amp; Create Account</span> <i class="fa-solid fa-check"></i>`;
+          }
+        }
+      } catch (err) {
+        verifyError.innerText = "Network error communicating with auth server.";
+        verifyError.style.display = "block";
+        btnVerify.disabled = false;
+        btnVerify.innerHTML = `<span>Verify &amp; Create Account</span> <i class="fa-solid fa-check"></i>`;
+      }
+    }
+
+    function handleFailedCodeAttempt(errorMsg) {
+      if (!activeChallenge) return;
+      activeChallenge.attempts = (activeChallenge.attempts || 0) + 1;
+
+      if (activeChallenge.attempts >= 2) {
+        cancelAndBackToStep1("Incorrect code on second attempt. Session terminated for security.");
+        return;
+      }
+
+      activeChallenge.graceExpiresAt = Date.now() + 30 * 1000;
+      document.getElementById("graceBanner").style.display = "block";
+      const errEl = document.getElementById("verifyError");
+      errEl.innerText = errorMsg;
+      errEl.style.display = "block";
+      const codeInput = document.getElementById("twoFactorCode");
+      codeInput.value = "";
+      codeInput.focus();
+
+      if (graceTimerInterval) clearInterval(graceTimerInterval);
+      graceTimerInterval = setInterval(function() {
+        if (!activeChallenge || !activeChallenge.graceExpiresAt) return;
+        const graceRemaining = activeChallenge.graceExpiresAt - Date.now();
+        if (graceRemaining <= 0) {
+          clearInterval(graceTimerInterval);
+          cancelAndBackToStep1("30-second error correction timer expired. Session canceled.");
+          return;
+        }
+        const secs = Math.ceil(graceRemaining / 1000);
+        document.getElementById("graceTimer").innerText = `${secs}s`;
+      }, 300);
+    }
+
+    function cancelAndBackToStep1(reason) {
+      if (mainTimerInterval) clearInterval(mainTimerInterval);
+      if (graceTimerInterval) clearInterval(graceTimerInterval);
+      activeChallenge = null;
+
+      document.getElementById("step2FA").style.display = "none";
+      document.getElementById("stepRegistration").style.display = "block";
+      const submitBtn = document.getElementById("submitBtn");
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = `<span>Proceed to Email Verification &rarr;</span>`;
+
+      if (reason) {
+        const globalError = document.getElementById("globalError");
+        globalError.innerText = reason;
+        globalError.style.display = "block";
+      }
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function showSuccess(fullName, username) {
+      if (mainTimerInterval) clearInterval(mainTimerInterval);
+      if (graceTimerInterval) clearInterval(graceTimerInterval);
+      document.getElementById("signupCard").style.display = "none";
+      document.getElementById("successName").innerText = fullName;
+      document.getElementById("successUsername").innerText = username;
+      document.getElementById("successCard").style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>

@@ -50,5 +50,3 @@ venv/
 .nc_voting_cache/
 
 # Removed local dashboard and task priority from public web deployment
-dashboard/
-dashboard.html
