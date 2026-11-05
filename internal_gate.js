@@ -1,9 +1,10 @@
-// Argon2 Salted Cryptographic Gate for Internal Technical Pages
-// Policy: Strict Password-Only Access. No one-click URL parameters allowed.
+// Argon2/SHA-256 Salted Cryptographic Gate for Internal Technical Pages
+// Policy: Strict Username & Password Authentication. No one-click URL parameters.
 (function() {
   const EXPECTED_HASH = "c03040e2f2de7ce235c9c2e9f8fef0a323efc03a3e153c983f82a96969fcf753";
   const SALT = "argon_salt_2026_nc_sec";
   const SESSION_KEY = "nc_internal_argon_auth";
+  const USER_KEY = "nc_authenticated_user";
 
   async function sha256(str) {
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
@@ -11,7 +12,6 @@
   }
 
   function checkAuth() {
-    // STRICT PASSWORD-ONLY: only valid session stored in browser, never query params
     return sessionStorage.getItem(SESSION_KEY) === "valid";
   }
 
@@ -32,33 +32,54 @@
           </div>
           <div style="font-size:11px;font-weight:800;letter-spacing:1px;color:#ef4444;text-transform:uppercase;margin-bottom:6px;">PRIVATE INTERNAL priority 10 argon</div>
           <h2 style="font-size:20px;font-weight:800;color:#ffffff;margin-bottom:8px;">Restricted Access</h2>
-          <p style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:24px;">This system dashboard is restricted to authorized operators. Please enter the master access key.</p>
+          <p style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:20px;">Please enter your authorized username and password to proceed.</p>
           
-          <form id="argonForm" onsubmit="return false;" style="display:flex;flex-direction:column;gap:12px;">
-            <input type="password" id="argonPassword" placeholder="Enter master password..." autocomplete="current-password" autofocus style="background:#1f2937;border:1px solid #4b5563;color:#ffffff;padding:12px 16px;border-radius:8px;font-size:14px;outline:none;width:100%;box-sizing:border-box;">
-            <button type="submit" id="argonSubmitBtn" style="background:#4f46e5;color:#ffffff;border:none;padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;">Authenticate</button>
+          <form id="argonForm" onsubmit="return false;" style="display:flex;flex-direction:column;gap:12px;text-align:left;">
+            <div>
+              <label style="font-size:11.5px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Username</label>
+              <input type="text" id="argonUsername" placeholder="e.g. rann" autocomplete="username" autofocus style="background:#1f2937;border:1px solid #4b5563;color:#ffffff;padding:10px 14px;border-radius:8px;font-size:14px;outline:none;width:100%;box-sizing:border-box;">
+            </div>
+            <div>
+              <label style="font-size:11.5px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Password</label>
+              <input type="password" id="argonPassword" placeholder="Enter password..." autocomplete="current-password" style="background:#1f2937;border:1px solid #4b5563;color:#ffffff;padding:10px 14px;border-radius:8px;font-size:14px;outline:none;width:100%;box-sizing:border-box;">
+            </div>
+            <button type="submit" id="argonSubmitBtn" style="background:#4f46e5;color:#ffffff;border:none;padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.2s;margin-top:6px;">Authenticate</button>
           </form>
-          <div id="argonError" style="display:none;color:#f87171;font-size:12.5px;font-weight:600;margin-top:14px;">Invalid credentials. Access rejected.</div>
+          <div id="argonError" style="display:none;color:#f87171;font-size:12.5px;font-weight:600;margin-top:14px;text-align:center;">Invalid username or password. Access rejected.</div>
           
-          <div style="margin-top:24px;border-top:1px solid #1f2937;padding-top:16px;">
-            <a href="/" style="color:#64748b;font-size:12px;text-decoration:none;">&larr; Return to Public Site</a>
+          <div style="margin-top:20px;border-top:1px solid #1f2937;padding-top:14px;display:flex;justify-content:space-between;font-size:12px;">
+            <a href="/newaccount" style="color:#818cf8;text-decoration:none;">Request Account</a>
+            <a href="/" style="color:#64748b;text-decoration:none;">&larr; Public Site</a>
           </div>
         </div>
       </div>
     `;
 
     const form = document.getElementById("argonForm");
-    const input = document.getElementById("argonPassword");
+    const userInput = document.getElementById("argonUsername");
+    const pwdInput = document.getElementById("argonPassword");
     const err = document.getElementById("argonError");
     const btn = document.getElementById("argonSubmitBtn");
 
     form.addEventListener("submit", async function(e) {
       e.preventDefault();
       btn.innerText = "Verifying...";
-      const pwd = input.value.trim();
-      const h = await sha256(SALT + pwd);
-      if (h === EXPECTED_HASH) {
+      const u = userInput.value.trim().toLowerCase();
+      const p = pwdInput.value.trim();
+
+      // Check admin account: user 'rann' with master password
+      const h = await sha256(SALT + p);
+      let isValid = false;
+      let userLevel = 1;
+
+      if (u === "rann" && h === EXPECTED_HASH) {
+        isValid = true;
+        userLevel = 10;
+      }
+
+      if (isValid) {
         sessionStorage.setItem(SESSION_KEY, "valid");
+        sessionStorage.setItem(USER_KEY, JSON.stringify({ username: "rann", name: "Rann Bar-On", level: userLevel }));
         document.body.innerHTML = originalContent;
         const scripts = document.body.querySelectorAll("script");
         scripts.forEach(s => {
@@ -69,8 +90,8 @@
       } else {
         err.style.display = "block";
         btn.innerText = "Authenticate";
-        input.value = "";
-        input.focus();
+        pwdInput.value = "";
+        pwdInput.focus();
       }
     });
   }

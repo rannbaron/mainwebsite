@@ -844,12 +844,19 @@
       <div class="auth-desc">Private research command center tracking DPS Board of Education, Durham City Council, and County Commissioners. Password protected.</div>
       
       <form class="auth-form" onsubmit="handleAuth(event)">
-        <input type="password" id="authPasswordInput" class="auth-input" placeholder="Enter Access Password" autofocus required autocomplete="current-password">
+        <div style="text-align: left;">
+          <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">Username</label>
+          <input type="text" id="authUsernameInput" class="auth-input" placeholder="e.g. rann" autofocus required autocomplete="username" style="width: 100%;">
+        </div>
+        <div style="text-align: left;">
+          <label style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px;">Password</label>
+          <input type="password" id="authPasswordInput" class="auth-input" placeholder="Enter Password" required autocomplete="current-password" style="width: 100%;">
+        </div>
         <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); cursor: pointer; text-align: left;">
           <input type="checkbox" id="rememberAuthCheckbox" checked> Remember access on this browser
         </label>
         <button type="submit" class="auth-btn">Unlock Command Center &rarr;</button>
-        <div id="authErrorMsg" class="auth-error">Incorrect password. Please verify and retry.</div>
+        <div id="authErrorMsg" class="auth-error">Invalid username or password. Please verify and retry.</div>
       </form>
     </div>
   </div>
@@ -1161,10 +1168,14 @@
 
     function handleAuth(e) {
       e.preventDefault();
+      const user = (document.getElementById("authUsernameInput") ? document.getElementById("authUsernameInput").value.trim().toLowerCase() : "");
       const pwd = document.getElementById("authPasswordInput").value.trim();
       const remember = document.getElementById("rememberAuthCheckbox").checked;
 
-      if (VALID_PASSWORDS.includes(pwd)) {
+      const isValidUser = (user === "rann" && pwd === "AS2cYGy9GD7qRt@XV&gf$yUX!pD@") ||
+                          (user === "durhampol" && pwd === "durhampol");
+
+      if (isValidUser) {
         sessionStorage.setItem("durham_pol_auth", "granted");
         if (remember) {
           localStorage.setItem("durham_pol_auth", "granted");
