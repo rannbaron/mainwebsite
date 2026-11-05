@@ -91,6 +91,55 @@ def verify_password(password: str, stored_hash: str, salt: str) -> bool:
     computed = hashlib.pbkdf2_hmac("sha256", pwd_bytes, salt_bytes, 100000).hex()
     return secrets.compare_digest(computed, stored_hash)
 
+def is_nida_allam(full_name: str, email: str, username: str) -> bool:
+    """Detects if user is Commissioner Nida Allam."""
+    fn = (full_name or "").lower().strip()
+    em = (email or "").lower().strip()
+    un = (username or "").lower().strip()
+    if "nida" in fn and "allam" in fn:
+        return True
+    if un in ["nida", "nidaallam", "nallam"]:
+        return True
+    if em.startswith("nida.allam") or em.startswith("nallam") or em.startswith("nidaallam") or "nida" in em and "allam" in em:
+        return True
+    return False
+
+def notify_rann_nida_onboarding(full_name: str, email: str, username: str):
+    """Sends immediate notice to Rann when Commissioner Nida Allam registers."""
+    subject = "[Account Provisioned] Commissioner Nida Allam Onboarded to Durham Politics Tracker"
+    html = f"""
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 580px; margin: 0 auto; color: #1e293b; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow: hidden;">
+      <div style="background: linear-gradient(135deg, #001A57, #0A3282); padding: 20px; color: #ffffff;">
+        <h2 style="margin: 0; font-size: 19px;">Commissioner Nida Allam Onboarded</h2>
+        <p style="margin: 4px 0 0 0; opacity: 0.85; font-size: 13px;">Automatic Access Provisioning &bull; Durham Politics Tracker</p>
+      </div>
+      <div style="padding: 22px;">
+        <p style="font-size: 14px; margin-top: 0;">Notice: Commissioner Nida Allam has registered and was automatically provisioned with access and redirected to the Durham Politics Tracker.</p>
+        <ul style="font-size: 13.5px; line-height: 1.8; color: #334155;">
+          <li><strong>Full Name:</strong> {full_name}</li>
+          <li><strong>Email Address:</strong> {email}</li>
+          <li><strong>Username:</strong> {username}</li>
+          <li><strong>Role Tier:</strong> Policy Analyst (Level 6)</li>
+          <li><strong>Allowed Pages:</strong> /durhampolitics</li>
+          <li><strong>Status:</strong> APPROVED (Instant Active)</li>
+        </ul>
+      </div>
+    </div>
+    """
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Dispatching Nida Allam onboarding notification strictly to rann@rannbar-on.com...")
+    if send_duke_email:
+        try:
+            send_duke_email(
+                recipient="rann@rannbar-on.com",
+                cc_recipients=None,
+                subject=subject,
+                content=html,
+                is_html=True,
+                allow_dropped=True
+            )
+        except Exception as ex:
+            print(f"Warning: send_duke_email failed: {ex}")
+
 def mask_email(email: str) -> str:
     if "@" not in email:
         return email
@@ -475,10 +524,17 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
             challenge_id = secrets.token_hex(16)
             hashed, salt = hash_password(password)
 
+            is_nida = is_nida_allam(full_name, email, username)
+            default_role = "Policy Analyst" if is_nida else "Guest"
+            default_level = 6 if is_nida else 1
+            default_pages = json.dumps(["/durhampolitics"]) if is_nida else json.dumps([])
+            default_status = "APPROVED" if is_nida else "PENDING_APPROVAL"
+
             ACTIVE_2FA_CHALLENGES[challenge_id] = {
                 "type": "signup",
                 "code": code,
                 "email": email,
+                "is_nida": is_nida,
                 "created_at": now_ts,
                 "expires_at": now_ts + 300.0,
                 "attempts": 0,
@@ -489,10 +545,10 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                     "email": email,
                     "password_hash": hashed,
                     "salt": salt,
-                    "privilege_level": 1,
-                    "privilege_name": "Guest",
-                    "allowed_pages": json.dumps([]),
-                    "status": "PENDING_APPROVAL",
+                    "privilege_level": default_level,
+                    "privilege_name": default_role,
+                    "allowed_pages": default_pages,
+                    "status": default_status,
                     "created_at": datetime.now(timezone.utc).isoformat()
                 }
             }
@@ -680,31 +736,53 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                     self._send_json(409, {"success": False, "error": "Account already exists.", "kicked": True})
                     return
 
+                is_nida = challenge.get("is_nida", False) or is_nida_allam(p["full_name"], p["email"], p["username"])
                 ACTIVE_2FA_CHALLENGES.pop(challenge_id, None)
                 export_sanitized_accounts_json()
 
-                notify_rann_new_signup(
-                    full_name=p["full_name"],
-                    email=p["email"],
-                    username=p["username"],
-                    timestamp=p["created_at"],
-                    role_name=p["privilege_name"]
-                )
-
-                self._send_json(201, {
-                    "success": True,
-                    "message": "Registration verified! Account is pending administrator approval.",
-                    "user": {
-                        "username": p["username"],
-                        "fullName": p["full_name"],
-                        "email": p["email"],
-                        "privilegeLevel": 1,
-                        "privilegeName": "Guest",
-                        "allowedPages": [],
-                        "status": "PENDING_APPROVAL"
-                    }
-                })
-                return
+                if is_nida:
+                    notify_rann_nida_onboarding(
+                        full_name=p["full_name"],
+                        email=p["email"],
+                        username=p["username"]
+                    )
+                    self._send_json(201, {
+                        "success": True,
+                        "redirect": "/durhampolitics",
+                        "message": "Welcome Commissioner Nida Allam! Your account is active and you are being redirected to the Durham Politics Tracker.",
+                        "user": {
+                            "username": p["username"],
+                            "fullName": p["full_name"],
+                            "email": p["email"],
+                            "privilegeLevel": p["privilege_level"],
+                            "privilegeName": p["privilege_name"],
+                            "allowedPages": json.loads(p["allowed_pages"]),
+                            "status": "APPROVED"
+                        }
+                    })
+                    return
+                else:
+                    notify_rann_new_signup(
+                        full_name=p["full_name"],
+                        email=p["email"],
+                        username=p["username"],
+                        timestamp=p["created_at"],
+                        role_name=p["privilege_name"]
+                    )
+                    self._send_json(201, {
+                        "success": True,
+                        "message": "Registration verified! Account is pending administrator approval.",
+                        "user": {
+                            "username": p["username"],
+                            "fullName": p["full_name"],
+                            "email": p["email"],
+                            "privilegeLevel": p["privilege_level"],
+                            "privilegeName": p["privilege_name"],
+                            "allowedPages": json.loads(p["allowed_pages"]),
+                            "status": p["status"]
+                        }
+                    })
+                    return
 
         # ----------------------------------------------------
         # Authenticated Admin Action Endpoints

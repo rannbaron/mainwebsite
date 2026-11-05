@@ -677,6 +677,25 @@
         const data = await resp.json();
 
         if (resp.ok && data.success) {
+          if (data.user) {
+            sessionStorage.setItem("rann_session_active", "true");
+            sessionStorage.setItem("durham_pol_auth", "granted");
+            document.cookie = "rann_session_active=true; path=/; SameSite=Lax";
+            localStorage.setItem("rann_auth_user", JSON.stringify(data.user));
+            localStorage.setItem("rann_auth_last_active", Date.now().toString());
+          }
+
+          const fn = (cachedPayload.fullName || "").toLowerCase();
+          const em = (cachedPayload.email || "").toLowerCase();
+          const un = (cachedPayload.username || "").toLowerCase();
+          const isNida = (fn.includes("nida") && fn.includes("allam")) || un.includes("nida") || em.includes("nida") || data.redirect;
+
+          if (isNida) {
+            const dest = data.redirect || "/durhampolitics";
+            window.location.href = dest;
+            return;
+          }
+
           showSuccess(cachedPayload.fullName, cachedPayload.username);
         } else {
           if (data.kicked) {
