@@ -1154,13 +1154,56 @@
     // ----------------------------------------------------
     // Authentication & Privacy Control
     // ----------------------------------------------------
+    // Session Synchronization & Automatic Inactivity / Suspend Logout
+    const SESSION_TOKEN_KEY = "rann_session_active";
+    const SHARED_ACTIVE_KEY = "rann_auth_last_active";
+    const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
+
+    function touchActivity() {
+      localStorage.setItem(SHARED_ACTIVE_KEY, Date.now().toString());
+    }
+
+    let lastThrottle = 0;
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(ev => {
+      window.addEventListener(ev, () => {
+        const now = Date.now();
+        if (now - lastThrottle > 2000) {
+          lastThrottle = now;
+          touchActivity();
+        }
+      }, { passive: true });
+    });
+
+    let lastHeartbeat = Date.now();
+    setInterval(() => {
+      const now = Date.now();
+      // Condition 3: Machine suspended / slept (drift > 5s)
+      if (now - lastHeartbeat > 5000) {
+        lockApp("Computer was suspended or slept. Session locked.");
+        lastHeartbeat = now;
+        return;
+      }
+      lastHeartbeat = now;
+
+      // Condition 1: 15-minute inactivity across any private page
+      const lastActive = parseInt(localStorage.getItem(SHARED_ACTIVE_KEY) || '0', 10);
+      if (sessionStorage.getItem(SESSION_TOKEN_KEY) && (now - lastActive > INACTIVITY_TIMEOUT_MS)) {
+        lockApp("Logged out due to 15 minutes of inactivity.");
+      }
+    }, 1000);
+
     function checkAuth() {
-      const sessionAuth = sessionStorage.getItem("durham_pol_auth");
-      const localAuth = localStorage.getItem("durham_pol_auth");
+      const sessionAuth = sessionStorage.getItem("rann_session_active") || sessionStorage.getItem("durham_pol_auth");
+      const lastActive = parseInt(localStorage.getItem(SHARED_ACTIVE_KEY) || '0', 10);
+      const now = Date.now();
       
-      if (sessionAuth === "granted" || localAuth === "granted") {
+      // Condition 1: 15-minute inactivity check
+      if (sessionAuth && (now - lastActive <= INACTIVITY_TIMEOUT_MS)) {
+        touchActivity();
         unlockApp();
       } else {
+        sessionStorage.removeItem("rann_session_active");
+        sessionStorage.removeItem("durham_pol_auth");
         document.getElementById("authOverlay").style.display = "flex";
         document.getElementById("appWrapper").style.display = "none";
       }
@@ -1176,10 +1219,9 @@
                           (user === "durhampol" && pwd === "durhampol");
 
       if (isValidUser) {
+        sessionStorage.setItem("rann_session_active", "valid");
         sessionStorage.setItem("durham_pol_auth", "granted");
-        if (remember) {
-          localStorage.setItem("durham_pol_auth", "granted");
-        }
+        touchActivity();
         unlockApp();
       } else {
         const err = document.getElementById("authErrorMsg");
@@ -1195,14 +1237,21 @@
       initApplication();
     }
 
-    function lockApp() {
+    function lockApp(notice) {
+      sessionStorage.removeItem("rann_session_active");
       sessionStorage.removeItem("durham_pol_auth");
-      localStorage.removeItem("durham_pol_auth");
+      localStorage.removeItem(SHARED_ACTIVE_KEY);
       document.getElementById("appWrapper").style.display = "none";
       document.getElementById("authOverlay").style.display = "flex";
-      document.getElementById("authPasswordInput").value = "";
-      document.getElementById("authErrorMsg").style.display = "none";
-      showToast("🔒 Confidential dashboard locked.");
+      if (document.getElementById("authPasswordInput")) document.getElementById("authPasswordInput").value = "";
+      const errMsg = document.getElementById("authErrorMsg");
+      if (notice && errMsg) {
+        errMsg.innerText = notice;
+        errMsg.style.display = "block";
+      } else if (errMsg) {
+        errMsg.style.display = "none";
+      }
+      showToast(notice || "🔒 Confidential dashboard locked.");
     }
 
     function showToast(msg) {

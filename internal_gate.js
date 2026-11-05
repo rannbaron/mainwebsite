@@ -1,29 +1,108 @@
 // Argon2/SHA-256 Salted Cryptographic Gate for Internal Technical Pages
-// Policy: Strict Username & Password Authentication. No one-click URL parameters.
+// Policy: Strict Username & Password Authentication.
+// Automatic Session Expiration Rules:
+// 1. 15-Minute Inactivity: Log out if no private pages touched for 15 minutes.
+// 2. Browser Close: Log out immediately upon closing browser (sessionStorage boundary).
+// 3. System Suspend / Sleep / Restart: Log out immediately when machine suspends or sleeps (heartbeat drift detection).
+// 4. Zero one-click unlock URLs (password entry only).
+
 (function() {
   const EXPECTED_HASH = "c03040e2f2de7ce235c9c2e9f8fef0a323efc03a3e153c983f82a96969fcf753";
   const SALT = "argon_salt_2026_nc_sec";
-  const SESSION_KEY = "nc_internal_argon_auth";
-  const USER_KEY = "nc_authenticated_user";
+  
+  const SESSION_TOKEN_KEY = "rann_session_active";
+  const SHARED_ACTIVE_KEY = "rann_auth_last_active";
+  const USER_INFO_KEY = "rann_auth_user";
+  const INACTIVITY_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
 
   async function sha256(str) {
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
 
-  function checkAuth() {
-    return sessionStorage.getItem(SESSION_KEY) === "valid";
+  function clearSession(reason) {
+    sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    sessionStorage.removeItem(USER_INFO_KEY);
+    localStorage.removeItem(SHARED_ACTIVE_KEY);
+    if (reason) {
+      console.warn("[Auth Gate] " + reason);
+    }
   }
 
+  function touchActivity() {
+    localStorage.setItem(SHARED_ACTIVE_KEY, Date.now().toString());
+  }
+
+  function isSessionValid() {
+    const sessionActive = sessionStorage.getItem(SESSION_TOKEN_KEY);
+    if (!sessionActive) return false;
+
+    const lastActive = parseInt(localStorage.getItem(SHARED_ACTIVE_KEY) || '0', 10);
+    const now = Date.now();
+
+    if (now - lastActive > INACTIVITY_TIMEOUT_MS) {
+      clearSession("Session expired after 15 minutes of inactivity.");
+      return false;
+    }
+
+    touchActivity();
+    return true;
+  }
+
+  // Setup interaction listeners to update shared activity timestamp
+  let lastThrottle = 0;
+  function onUserInteraction() {
+    const now = Date.now();
+    if (now - lastThrottle > 2000) {
+      lastThrottle = now;
+      touchActivity();
+    }
+  }
+
+  ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(ev => {
+    window.addEventListener(ev, onUserInteraction, { passive: true });
+  });
+
+  // System Suspend / Sleep Detection via Heartbeat Drift
+  let lastHeartbeat = Date.now();
+  setInterval(() => {
+    const now = Date.now();
+    
+    // If 1-second interval jumped by > 5 seconds, machine was suspended / put to sleep
+    if (now - lastHeartbeat > 5000) {
+      clearSession("Machine was suspended or slept. Session invalidated.");
+      if (document.getElementById("argonLockOverlay") === null) {
+        renderLockScreen("Computer was suspended or slept. Please log in again.");
+      }
+      lastHeartbeat = now;
+      return;
+    }
+    lastHeartbeat = now;
+
+    // Check 15-minute inactivity across tabs
+    const lastActive = parseInt(localStorage.getItem(SHARED_ACTIVE_KEY) || '0', 10);
+    if (sessionStorage.getItem(SESSION_TOKEN_KEY) && (now - lastActive > INACTIVITY_TIMEOUT_MS)) {
+      clearSession("15 minutes of inactivity.");
+      if (document.getElementById("argonLockOverlay") === null) {
+        renderLockScreen("Logged out due to 15 minutes of inactivity.");
+      }
+    }
+  }, 1000);
+
   document.addEventListener("DOMContentLoaded", function() {
-    const isAuthed = checkAuth();
-    if (!isAuthed) {
+    if (!isSessionValid()) {
       renderLockScreen();
     }
   });
 
-  function renderLockScreen() {
+  function renderLockScreen(customNotice) {
+    if (document.getElementById("argonLockOverlay")) return;
+
     const originalContent = document.body.innerHTML;
+    const noticeHtml = customNotice 
+      ? `<div style="background: rgba(239, 68, 68, 0.15); border: 1px solid #ef4444; color: #fca5a5; padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-bottom: 16px;">${customNotice}</div>` 
+      : '';
+
     document.body.innerHTML = `
       <div id="argonLockOverlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#090d16;color:#f8fafc;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,Inter,sans-serif;z-index:999999;padding:20px;box-sizing:border-box;">
         <div style="background:#111827;border:1px solid #374151;border-radius:16px;max-width:440px;width:100%;padding:32px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.7);text-align:center;">
@@ -34,6 +113,8 @@
           <h2 style="font-size:20px;font-weight:800;color:#ffffff;margin-bottom:8px;">Restricted Access</h2>
           <p style="font-size:13px;color:#94a3b8;line-height:1.5;margin-bottom:20px;">Please enter your authorized username and password to proceed.</p>
           
+          ${noticeHtml}
+
           <form id="argonForm" onsubmit="return false;" style="display:flex;flex-direction:column;gap:12px;text-align:left;">
             <div>
               <label style="font-size:11.5px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:4px;">Username</label>
@@ -67,7 +148,6 @@
       const u = userInput.value.trim().toLowerCase();
       const p = pwdInput.value.trim();
 
-      // Check admin account: user 'rann' with master password
       const h = await sha256(SALT + p);
       let isValid = false;
       let userLevel = 1;
@@ -78,8 +158,10 @@
       }
 
       if (isValid) {
-        sessionStorage.setItem(SESSION_KEY, "valid");
-        sessionStorage.setItem(USER_KEY, JSON.stringify({ username: "rann", name: "Rann Bar-On", level: userLevel }));
+        sessionStorage.setItem(SESSION_TOKEN_KEY, "valid");
+        sessionStorage.setItem(USER_INFO_KEY, JSON.stringify({ username: "rann", name: "Rann Bar-On", level: userLevel }));
+        touchActivity();
+        
         document.body.innerHTML = originalContent;
         const scripts = document.body.querySelectorAll("script");
         scripts.forEach(s => {
