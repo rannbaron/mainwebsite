@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <title>Durham Politics Tracker (Beta) &mdash; Board &amp; Term Selection Hub</title>
+  <link rel="stylesheet" href="./assets/beta.css">
+</head>
+<body>
+
+  <div id="betaAuthOverlay">
+    <div class="auth-card">
+      <div class="auth-badge">Private Beta &bull; Admin Only</div>
+      <div class="auth-title">Durham Politics Tracker (Beta)</div>
+      <div class="auth-desc">Revamped multi-term architecture preview. Restricted exclusively to <strong>rann</strong>.</div>
+      <form onsubmit="handleBetaAuth(event)">
+        <div class="auth-field">
+          <label for="betaUserInput">Username</label>
+          <input type="text" id="betaUserInput" value="rann" autocomplete="username" required>
+        </div>
+        <div class="auth-field">
+          <label for="betaPassInput">Administrator Password</label>
+          <input type="password" id="betaPassInput" placeholder="Enter master password" autocomplete="current-password" autofocus required>
+        </div>
+        <button type="submit" class="auth-btn">Sign In to Beta</button>
+        <div id="betaAuthError"></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="betaApp" style="display:none;">
+    <nav class="topbar">
+      <div class="topbar-inner">
+        <a href="./index.html" class="brand">
+          <span>Durham Politics Tracker</span>
+          <span class="beta-tag">Beta &bull; Rann Only</span>
+        </a>
+        <div class="nav-right">
+          <a class="nav-link" href="../index.html">Current Live Site</a>
+          <a class="nav-link" href="../live.html">Live Stream</a>
+          <a class="nav-link" href="../docs.html">Methodology</a>
+          <button class="nav-btn" onclick="betaSignOut()">Sign Out</button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="wrap">
+      <section class="hero">
+        <div class="hero-kicker">Term-by-Term Deliberation &amp; Voting Intelligence</div>
+        <h1>Select a Durham Governing Board &amp; Term</h1>
+        <p class="hero-sub">
+          Each board-term has its own dedicated analysis page featuring highlighted major points of conflict,
+          overall and per-topic voting blocs, prominent Executive Summary PDFs, and a full searchable meetings table.
+        </p>
+        <div class="kpi-strip" id="hubKpis"></div>
+      </section>
+
+      <section class="search-panel">
+        <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);margin-bottom:8px;">
+          Search Across All Board-Terms by Topic or Keyword
+        </div>
+        <div class="search-row">
+          <input type="search" id="hubSearchInput" class="search-input" placeholder="Search topics, debates, votes, rezonings, budgets, members (e.g. SCAD, HEART, teacher pay, tax rate)...">
+          <select id="hubBoardFilter" class="select-input">
+            <option value="all">All 3 Boards</option>
+            <option value="city">Durham City Council</option>
+            <option value="bocc">County Commissioners (BOCC)</option>
+            <option value="dps">DPS Board of Education</option>
+          </select>
+          <button class="nav-btn" id="hubClearBtn" style="display:none;" onclick="clearHubSearch()">Clear</button>
+        </div>
+        <div class="topic-chips" id="hubTopicChips"></div>
+        <div class="search-results-box" id="hubSearchResults"></div>
+      </section>
+
+      <div id="boardsContainer">
+        <div class="empty-msg">Loading board-term catalog...</div>
+      </div>
+
+      <footer>
+        Durham Politics Tracker Beta &bull; Updated <span id="hubUpdated">--</span> &bull; Private research tool (noindex)
+      </footer>
+    </main>
+  </div>
+
+  <script src="./assets/auth.js"></script>
+  <script src="./assets/beta_hub.js"></script>
+</body>
+</html>
