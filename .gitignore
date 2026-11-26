@@ -15,6 +15,7 @@ scratch/
 service_account.json
 subscribers.db
 *.db
+!durham_politics_tracker/durham_politics.db
 
 # Local exploratory analysis & generated images (not needed for web deployment)
 *.ipynb
