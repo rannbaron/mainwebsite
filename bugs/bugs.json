@@ -230,6 +230,45 @@
       "submitted_by": "Rann Bar-On",
       "date": "2026-11-03",
       "resolution": "Implemented in quiz_retake_immediate_scorer.py and task_notify_quiz_retake_scores; armed standing daemon task-14192 (*/2 * * * *). Live tested and verified with 7 students notified."
+    },
+    {
+      "id": "BUG-20261103-4361",
+      "title": "Student Report: Possible typo in Worksheet 9-2 Problem 3 on Worksheet 9-2",
+      "category": "Courseware / Materials",
+      "priority": "P=8",
+      "status": "Open",
+      "assigned_agent": "gradescope-tools-specialist",
+      "reporter": "tyler.m.rose@duke.edu",
+      "description": "Hi Professor, On Worksheet 9-2 problem 3b, the equation has 2x^2 + 3y = 12, but the prompt later refers to y^3. I think this might be a typo in the problem statement. Letting you know in case others are confused!",
+      "progress": "Report logged via student email auto-responder. Queued for 24-hour verification & LaTeX update.",
+      "created_at": "2026-11-03T14:25:33.941390-05:00",
+      "updated_at": "2026-11-03T14:25:33.941394-05:00"
+    },
+    {
+      "id": "BUG-20261103-2189",
+      "title": "Student Report: Possible typo and bug on Worksheet 9-2 problem 3 on Worksheet 9-2",
+      "category": "Courseware / Materials",
+      "priority": "P=8",
+      "status": "Open",
+      "assigned_agent": "gradescope-tools-specialist",
+      "reporter": "tyler.m.rose@duke.edu",
+      "description": "Hi Professor, On Worksheet 9-2 problem 3b, the equation has 2x^2 + 3y = 12, but the prompt later refers to y^3. I think this might be a typo or mistake in the problem statement. Letting you know in case others are confused!",
+      "progress": "Report logged via student email auto-responder. Queued for 24-hour verification & LaTeX update.",
+      "created_at": "2026-11-03T14:26:46.234363-05:00",
+      "updated_at": "2026-11-03T14:26:46.234372-05:00"
+    },
+    {
+      "id": "BUG-20261103-9730",
+      "title": "Student Report: Typo and error on Worksheet 9-2 Problem 2 on Worksheet 9-2",
+      "category": "Courseware / Materials",
+      "priority": "P=8",
+      "status": "Open",
+      "assigned_agent": "gradescope-tools-specialist",
+      "reporter": "tyler.m.rose@duke.edu",
+      "description": "There is a typo in the denominator of Problem 2 on Worksheet 9-2.",
+      "progress": "Report logged via student email auto-responder. Queued for 24-hour verification & LaTeX update.",
+      "created_at": "2026-11-03T14:27:22.724704-05:00",
+      "updated_at": "2026-11-03T14:27:22.724710-05:00"
     }
   ]
 }

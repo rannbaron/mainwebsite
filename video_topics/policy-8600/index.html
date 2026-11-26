@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Summary: policy 8600 | #DPSCommunity | DPS Board of Education Monthly Meeting | 5/28/26</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --accent-hover: #0284c7;
+            --success-color: #34d399;
+            --badge-bg: #0369a1;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 24px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 16px; }
+        h1 { font-size: 1.85rem; color: #fff; margin-bottom: 8px; }
+        .meta-line { color: var(--text-muted); font-size: 0.95rem; display: flex; gap: 16px; flex-wrap: wrap; }
+        .badge { background: var(--badge-bg); color: #fff; padding: 3px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+        
+        .main-grid { display: grid; grid-template-columns: 1fr 400px; gap: 24px; }
+        @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+        
+        /* Video Player */
+        .video-container { background: #000; border-radius: 8px; overflow: hidden; position: relative; border: 1px solid var(--border-color); }
+        video { width: 100%; height: auto; display: block; }
+        .player-controls {
+            padding: 12px; background: var(--card-bg); display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .btn {
+            background: #334155; color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer;
+            font-size: 0.85rem; transition: background 0.15s;
+        }
+        .btn:hover { background: var(--accent-hover); }
+        
+        /* Chapter Chips */
+        .chips-container {
+            margin-top: 14px; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px;
+        }
+        .chip {
+            background: #1e293b; color: var(--text-muted); border: 1px solid var(--border-color);
+            padding: 6px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; white-space: nowrap;
+        }
+        .chip:hover { background: #334155; color: var(--accent-color); border-color: var(--accent-color); }
+        
+        /* Cards */
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; margin-bottom: 20px;
+        }
+        .card h3, .card h4 { color: var(--accent-color); margin-bottom: 12px; }
+        .card ul { padding-left: 20px; }
+        .card li { margin-bottom: 8px; }
+        
+        /* Transcript Box */
+        .transcript-card { max-height: 520px; display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+        .transcript-header { padding: 14px 16px; border-bottom: 1px solid var(--border-color); background: #1a2234; display: flex; justify-content: space-between; align-items: center; }
+        .search-input {
+            background: #0f172a; border: 1px solid var(--border-color); color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 0.85rem; width: 140px;
+        }
+        .transcript-scroll { overflow-y: auto; padding: 12px 16px; flex-grow: 1; }
+        .transcript-row { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; line-height: 1.4; display: flex; gap: 10px; align-items: flex-start; }
+        .ts-btn {
+            background: #2563eb; color: #fff; border: none; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;
+            cursor: pointer; font-family: monospace; flex-shrink: 0;
+        }
+        .ts-btn:hover { background: var(--accent-hover); }
+        .transcript-row.active { background: rgba(56, 189, 248, 0.15); border-left: 3px solid var(--accent-color); padding-left: 6px; }
+        
+        /* Downloads bar */
+        .downloads-bar { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+        .download-link {
+            color: var(--accent-color); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 4px;
+        }
+        .download-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="margin-bottom: 8px;">
+                <a href="../index.html" style="color: var(--accent-color); text-decoration: none; font-size: 0.85rem;">← Back to Video Topics Index</a>
+            </div>
+            <h1>🎯 policy 8600</h1>
+            <div class="meta-line">
+                <span>📹 <strong>Source:</strong> #DPSCommunity | DPS Board of Education Monthly Meeting | 5/28/26</span>
+                <span>⏱️ <strong>Topic Footage:</strong> 00:25:15</span>
+                <span class="badge">Auto-Extracted Clip</span>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <!-- Left Column: Video & Summaries -->
+            <div class="left-col">
+                <div class="video-container">
+                    <video id="topicVideo" controls preload="metadata" poster="poster.jpg">
+                        <source src="video.mp4" type="video/mp4">
+                        <track src="transcript.vtt" kind="subtitles" srclang="en" label="English" default>
+                        Your browser does not support the video tag.
+                    </video>
+                    <div class="player-controls">
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Speed:</span>
+                        <button class="btn" onclick="setSpeed(1.0)">1.0x</button>
+                        <button class="btn" onclick="setSpeed(1.25)">1.25x</button>
+                        <button class="btn" onclick="setSpeed(1.5)">1.5x</button>
+                        <button class="btn" onclick="setSpeed(2.0)">2.0x</button>
+                        <button class="btn" onclick="skip(-10)" style="margin-left: auto;">⏪ -10s</button>
+                        <button class="btn" onclick="skip(10)">+10s ⏩</button>
+                    </div>
+                </div>
+
+                <div class="chips-container">
+                    <button class="chip" onclick="seekVideo(0.0)">⏱️ 00:00:00 - Part 1: Detailed Discussion & Policy Deliberation</button>
+<button class="chip" onclick="seekVideo(187.0)">⏱️ 00:03:07 - Part 2: Board Discussion, Motions & Action Vote</button>
+                </div>
+
+                <!-- Executive Summary -->
+                <div class="card" style="margin-top: 20px;">
+                    <h3>📋 Executive Summary</h3>
+                    <p style="margin-bottom: 14px; font-size: 1.05rem; color: #e2e8f0;">This video topic report focuses on **policy 8600** as addressed in *#DPSCommunity | DPS Board of Education Monthly Meeting | 5/28/26*. Across 2 matched discussion segments totaling 00:25:15 of meeting footage, board members and staff conducted a focused review and deliberation on the matter. Key formal actions and deliberations occurred during the session, highlighted by: [03:07:48] Second: second read >> Um second read >> just to I'm going be annoying.</p>
+                    
+                    <h4 style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 6px;">Key Takeaways:</h4>
+                    <ul>
+                        <li><strong>Total footage reviewed:</strong>  00:25:15 across 2 segment(s).</li>
+<li><strong>Primary deliberation window:</strong>  02:49:11 - 03:11:19.</li>
+<li><strong>Action/Motion:</strong>  Second: second read at the June 9th work session</li>
+<li><strong>Outcome/Next Steps:</strong>  Second: second read >> Um second read >> just to I'm going be annoying</li>
+<li><strong>Key References:</strong>  'policy 8600', 'policy 4326', 'May 26th'.</li>
+                    </ul>
+                </div>
+
+                
+            <div class="card" style="border-left: 4px solid #f59e0b;">
+                <h3 style="color: #f59e0b;">⚖️ Sources of Disagreement & Debate Alignment</h3>
+                
+                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 14px; margin-bottom: 12px;">
+                    <h4 style="color: #f59e0b; margin-bottom: 6px; font-size: 1rem;">⚖️ Reporting Deadlines & Finance Staff Compliance Burden vs. Public Transparency</h4>
+                    <p style="color: #cbd5e1; font-size: 0.9rem; margin-bottom: 10px;">Deliberation over the timeline for publishing quarterly budget transparency reports. Board members debated whether requiring publication strictly 'within 30 days' placed an unrealistic operational burden on the finance department during period reconciliations, versus the public interest in ensuring timely and unambiguous financial reporting.</p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 10px;">
+                        <div style="background: #1e293b; padding: 10px; border-radius: 4px; border-top: 3px solid #64748b;">
+                            <strong style="color: #94a3b8; font-size: 0.85rem;">Stance A: Advocating Flexibility & Acknowledging Staff Capacity</strong>
+                            <ul style="font-size: 0.82rem; color: #cbd5e1; margin-top: 4px; padding-left: 16px;"><li>Concerns regarding the finance department's capacity to audit and finalize quarterly indicators within tight windows</li><li>Avoiding policies that setting staff up for compliance defaults during heavy budget seasons</li></ul>
+                            <div style="font-size: 0.8rem; color: #38bdf8; margin-top: 6px;"><em>Alignment:</em> Board discussion highlighting staff capacity considerations</div>
+                        </div>
+                        <div style="background: #1e293b; padding: 10px; border-radius: 4px; border-top: 3px solid #38bdf8;">
+                            <strong style="color: #38bdf8; font-size: 0.85rem;">Stance B: Advocating Strict Accountability & Clarified 30-Day Window</strong>
+                            <ul style="font-size: 0.82rem; color: #cbd5e1; margin-top: 4px; padding-left: 16px;"><li>Ambiguity of '30 days after' vs 'within 30 days'</li><li>Ensuring community dashboards and school board oversight are not delayed by open-ended timelines</li></ul>
+                            <div style="font-size: 0.8rem; color: #34d399; margin-top: 6px;"><em>Alignment:</em> Natalie Beyer, Emily Chávez</div>
+                        </div>
+                    </div>
+                    <div style="background: #1e293b; padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; color: #94a3b8;">
+                        <strong style="color: #e2e8f0;">Resolution:</strong> Amended by consensus on first reading: Emily Chávez moved the policy with an explicit amendment to Section 4A specifying that reporting occur 'within 30 days'. The revised text was approved unanimously to return for second reading on June 9.
+                    </div>
+                </div>
+                
+            </div>
+            
+
+                
+            <div class="card" style="border-left: 4px solid #34d399;">
+                <h3 style="color: #34d399;">🗳️ Complete Voting Record & Member Stances</h3>
+                
+                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 14px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+                        <h4 style="color: #34d399; margin: 0; font-size: 1rem;">🗳️ Policy 8600 (Budget Transparency) — Approval on First Reading</h4>
+                        <span class="badge" style="background: #059669; font-size: 0.85rem;">Passed / Approved on First Reading (Unanimous (7-0))</span>
+                    </div>
+                    <div style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 8px;">
+                        <strong>Mover:</strong> Emily Chávez &bull; <strong>Seconder:</strong> Joy Harrell-Goff &bull; <em>Voice Vote</em>
+                    </div>
+                    <ul style="font-size: 0.85rem; color: #cbd5e1; padding-left: 18px; margin-bottom: 8px;"><li><em>Adopted Amendment:</em> Section 4A amendment: Mandates that reporting on outlined financial indicators occur 'within 30 days' of quarter close.</li></ul>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem;">
+                        <div style="background: #14532d; padding: 6px 10px; border-radius: 4px; color: #bbf7d0;">
+                            <strong>Ayes (7):</strong> Bettina Umstead (Chair), Joy Harrell-Goff (Vice Chair), Emily Chávez, Natalie Beyer, Millicent Rogers, Wendell Tabb, Alexandra Valladares
+                        </div>
+                        <div style="background: #7f1d1d; padding: 6px 10px; border-radius: 4px; color: #fecaca;">
+                            <strong>Nays (0):</strong> None
+                        </div>
+                    </div>
+                    <div style="font-size: 0.82rem; color: #94a3b8; margin-top: 6px;"><strong>Note:</strong> Presided over by Chair Bettina Umstead. Second reading scheduled for the June 9 work session.</div>
+                </div>
+                
+                <div style="background: #0f172a; border: 1px solid #334155; border-radius: 6px; padding: 14px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap;">
+                        <h4 style="color: #34d399; margin: 0; font-size: 1rem;">🗳️ Motion to Enter Closed Session</h4>
+                        <span class="badge" style="background: #059669; font-size: 0.85rem;">Passed Unanimously (Unanimous)</span>
+                    </div>
+                    <div style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 8px;">
+                        <strong>Mover:</strong> Natalie Beyer &bull; <strong>Seconder:</strong> Millicent Rogers &bull; <em>Voice Vote</em>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem;">
+                        <div style="background: #14532d; padding: 6px 10px; border-radius: 4px; color: #bbf7d0;">
+                            <strong>Ayes (1):</strong> All Board Members Present
+                        </div>
+                        <div style="background: #7f1d1d; padding: 6px 10px; border-radius: 4px; color: #fecaca;">
+                            <strong>Nays (0):</strong> None
+                        </div>
+                    </div>
+                    <div style="font-size: 0.82rem; color: #94a3b8; margin-top: 6px;"><strong>Note:</strong> Pursuant to general statutory exceptions for confidential matters.</div>
+                </div>
+                
+            </div>
+            
+
+                
+
+                <!-- Detailed Breakdown -->
+                <div class="card">
+                    <h3>🔍 Detailed Discussion Breakdown</h3>
+                    
+            <div class="card segment-card">
+                <h4>Part 1: Detailed Discussion & Policy Deliberation <span class="badge">01:47:06 - 01:50:14 (00:03:07)</span></h4>
+                <ul><li>[01:47:05] is, you know, and this has been a few days since I've heard this, but middle days since I've heard this, but middle of June potentially um where we'll see of June potentially um where we'll see some action come through. Um but, uh</li>
+<li>[01:47:12] some action come through. Um but, uh we'll see. It's been quiet um right, we'll see. It's been quiet um right, they we've gotten the details that we've they we've gotten the details that we've gotten and then they've gotten really</li>
+<li>[01:47:17] gotten and then they've gotten really quiet. So, um so I'm not taking any quiet. So, um so I'm not taking any bets on it, but um but potentially um bets on it, but um but potentially um middle of June we'll see some action.</li>
+<li>[01:47:26] middle of June we'll see some action. >> Okay. And then if um >> Okay. And then if um I'm just thinking timeline wise like I'm just thinking timeline wise like there's some ways that I think that what</li>
+<li>[01:48:31] Thank you. The next item on our agenda is The next item on our agenda is policy 8600 policy 8600 um which is coming from the policy um which is coming from the policy committee uh budget transparency is for</li></ul>
+            </div>
+            
+
+            <div class="card segment-card">
+                <h4>Part 2: Board Discussion, Motions & Action Vote <span class="badge">02:49:11 - 03:11:19 (00:22:08)</span></h4>
+                <ul><li>[02:52:26] great. Um the next item on our agenda is a Um the next item on our agenda is a policy 8600 budget transparency first policy 8600 budget transparency first reading.</li>
+<li>[03:03:58] inconsistent. So for what that's worth, So for what that's worth, um, um, and I wanted to make a motion to approve and I wanted to make a motion to approve budget transparency policy 68600 on</li>
+<li>[03:04:11] budget transparency policy 68600 on first read. Um, with the minor change first read. Um, with the minor change with minor changes to include with minor changes to include um, saying in 4A within 30 days</li>
+<li>[03:04:50] discussed. >> Second. It's been moved by Emily Chávez >> Second. It's been moved by Emily Chávez and seconded by Joy Harrell-Goff that we and seconded by Joy Harrell-Goff that we approve um policy 8600 budget</li>
+<li>[03:04:59] approve um policy 8600 budget transparency transparency um um for the first read. Is there any other for the first read. Is there any other discussion?</li></ul>
+            </div>
+            
+                </div>
+
+                <!-- Download Links -->
+                <div class="card">
+                    <h4>💾 Downloads & Assets</h4>
+                    <div class="downloads-bar">
+                        <a class="download-link" href="video.mp4" download>📥 Download Edited Clip (MP4)</a>
+                        <a class="download-link" href="transcript.txt" download>📄 Transcript (.txt)</a>
+                        <a class="download-link" href="summary.md" download>📝 Summary Report (.md)</a>
+                        <a class="download-link" href="summary.json" download>📊 Structured Data (.json)</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Interactive Transcript -->
+            <div class="right-col">
+                <div class="card transcript-card">
+                    <div class="transcript-header">
+                        <h3 style="margin: 0; font-size: 1.05rem;">Interactive Transcript</h3>
+                        <input type="text" id="transcriptSearch" class="search-input" placeholder="Search..." oninput="filterTranscript()">
+                    </div>
+                    <div class="transcript-scroll" id="transcriptContainer">
+                        <div class="transcript-row" data-start="6425.28" data-end="6432.159"><button class="ts-btn" onclick="seekVideo(6425.28)">01:47:05</button><span class="text">is, you know, and this has been a few days since I've heard this, but middle days since I've heard this, but middle of June potentially um where we'll see of June potentially um where we'll see some action come through. Um but, uh</span></div>
+<div class="transcript-row" data-start="6432.159" data-end="6437.36"><button class="ts-btn" onclick="seekVideo(6432.159)">01:47:12</button><span class="text">some action come through. Um but, uh we'll see. It's been quiet um right, we'll see. It's been quiet um right, they we've gotten the details that we've they we've gotten the details that we've gotten and then they've gotten really</span></div>
+<div class="transcript-row" data-start="6437.36" data-end="6446.88"><button class="ts-btn" onclick="seekVideo(6437.36)">01:47:17</button><span class="text">gotten and then they've gotten really quiet. So, um so I'm not taking any quiet. So, um so I'm not taking any bets on it, but um but potentially um bets on it, but um but potentially um middle of June we'll see some action.</span></div>
+<div class="transcript-row" data-start="6446.88" data-end="6452.639"><button class="ts-btn" onclick="seekVideo(6446.88)">01:47:26</button><span class="text">middle of June we'll see some action. >> Okay. And then if um >> Okay. And then if um I'm just thinking timeline wise like I'm just thinking timeline wise like there's some ways that I think that what</span></div>
+<div class="transcript-row" data-start="6452.639" data-end="6458.56"><button class="ts-btn" onclick="seekVideo(6452.639)">01:47:32</button><span class="text">there's some ways that I think that what we have budgeted for has given us some c we have budgeted for has given us some c cushion depending on what they do we cushion depending on what they do we might need to be re revisiting this</span></div>
+<div class="transcript-row" data-start="6458.56" data-end="6461.84"><button class="ts-btn" onclick="seekVideo(6458.56)">01:47:38</button><span class="text">might need to be re revisiting this budget looking at July and August. Is budget looking at July and August. Is that correct?</span></div>
+<div class="transcript-row" data-start="6461.84" data-end="6468.96"><button class="ts-btn" onclick="seekVideo(6461.84)">01:47:41</button><span class="text">that correct? >> That would be fair. Right. And so we've >> That would be fair. Right. And so we've um you know so there's um you know we um you know so there's um you know we know that we've got um</span></div>
+<div class="transcript-row" data-start="6468.96" data-end="6474.88"><button class="ts-btn" onclick="seekVideo(6468.96)">01:47:48</button><span class="text">know that we've got um you know just a little bit you know just a little bit of breathing room to work with and the of breathing room to work with and the opportunity to attain some more. Uh, and</span></div>
+<div class="transcript-row" data-start="6474.88" data-end="6481.6"><button class="ts-btn" onclick="seekVideo(6474.88)">01:47:54</button><span class="text">opportunity to attain some more. Uh, and so it's um so it's um though I wouldn't prefer it, it's in the though I wouldn't prefer it, it's in the best interest of our employees that if</span></div>
+<div class="transcript-row" data-start="6481.6" data-end="6489.679"><button class="ts-btn" onclick="seekVideo(6481.6)">01:48:01</button><span class="text">best interest of our employees that if we do need to come back and do some do we do need to come back and do some do some additional things in July and some additional things in July and August, we would um for sure. So</span></div>
+<div class="transcript-row" data-start="6489.679" data-end="6496.4"><button class="ts-btn" onclick="seekVideo(6489.679)">01:48:09</button><span class="text">August, we would um for sure. So >> I appreciate that. Um, it's unfortunate >> I appreciate that. Um, it's unfortunate that folks overdue for this budget that folks overdue for this budget information for school systems, for</span></div>
+<div class="transcript-row" data-start="6496.4" data-end="6501.6"><button class="ts-btn" onclick="seekVideo(6496.4)">01:48:16</button><span class="text">information for school systems, for state governments, we're all folks who state governments, we're all folks who are trying to plan and don't have the are trying to plan and don't have the information that they need. Um, any</span></div>
+<div class="transcript-row" data-start="6501.6" data-end="6504.239"><button class="ts-btn" onclick="seekVideo(6501.6)">01:48:21</button><span class="text">information that they need. Um, any other questions for colleagues?</span></div>
+<div class="transcript-row" data-start="6504.239" data-end="6509.199"><button class="ts-btn" onclick="seekVideo(6504.239)">01:48:24</button><span class="text">other questions for colleagues? from colleagues, from colleagues, Mr. Ter, I think that'll close out.</span></div>
+<div class="transcript-row" data-start="6509.199" data-end="6511.6"><button class="ts-btn" onclick="seekVideo(6509.199)">01:48:29</button><span class="text">Mr. Ter, I think that'll close out. Thank you.</span></div>
+<div class="transcript-row" data-start="6511.6" data-end="6520.48"><button class="ts-btn" onclick="seekVideo(6511.6)">01:48:31</button><span class="text">Thank you. The next item on our agenda is The next item on our agenda is policy 8600 policy 8600 um which is coming from the policy um which is coming from the policy committee uh budget transparency is for</span></div>
+<div class="transcript-row" data-start="6520.48" data-end="6524.31"><button class="ts-btn" onclick="seekVideo(6520.48)">01:48:40</button><span class="text">committee uh budget transparency is for first reading.</span></div>
+<div class="transcript-row" data-start="6526.47" data-end="6535.679"><button class="ts-btn" onclick="seekVideo(6526.47)">01:48:46</button><span class="text">I'm sorry I'm skipping over thing. I apologize. strategic plan. This apologize. strategic plan. This we the next item on our agenda is our we the next item on our agenda is our four operation services strategic plan</span></div>
+<div class="transcript-row" data-start="6535.679" data-end="6547.59"><button class="ts-btn" onclick="seekVideo(6535.679)">01:48:55</button><span class="text">four operation services strategic plan priority five update.</span></div>
+<div class="transcript-row" data-start="6549.43" data-end="6554.56"><button class="ts-btn" onclick="seekVideo(6549.43)">01:49:09</button><span class="text">>> All right. Um good evening. Uh my name is Anthony White and I am the executive is Anthony White and I am the executive director of auxiliary services for DPS.</span></div>
+<div class="transcript-row" data-start="6554.56" data-end="6561.6"><button class="ts-btn" onclick="seekVideo(6554.56)">01:49:14</button><span class="text">director of auxiliary services for DPS. This evening we will be presenting um an This evening we will be presenting um an update on priority five of the DPS update on priority five of the DPS strategic plan. And joining me tonight</span></div>
+<div class="transcript-row" data-start="6561.6" data-end="6571.36"><button class="ts-btn" onclick="seekVideo(6561.6)">01:49:21</button><span class="text">strategic plan. And joining me tonight are Clifton Williams, the executive are Clifton Williams, the executive director of maintenance and building director of maintenance and building services and also Mr. Paul Majumpdy who services and also Mr. Paul Majumpdy who is the executive director of information</span></div>
+<div class="transcript-row" data-start="6571.36" data-end="6580.88"><button class="ts-btn" onclick="seekVideo(6571.36)">01:49:31</button><span class="text">is the executive director of information technology. Um Devin Mitchell, our technology. Um Devin Mitchell, our interim senior executive director of interim senior executive director of construction and capital construction and capital planning was also a part of this work,</span></div>
+<div class="transcript-row" data-start="6580.88" data-end="6582.719"><button class="ts-btn" onclick="seekVideo(6580.88)">01:49:40</button><span class="text">planning was also a part of this work, but she's not here with us this evening.</span></div>
+<div class="transcript-row" data-start="6582.719" data-end="6589.36"><button class="ts-btn" onclick="seekVideo(6582.719)">01:49:42</button><span class="text">but she's not here with us this evening. But I definitely wanted to give her But I definitely wanted to give her shout out for her work on this. Next shout out for her work on this. Next slide.</span></div>
+<div class="transcript-row" data-start="6589.36" data-end="6597.6"><button class="ts-btn" onclick="seekVideo(6589.36)">01:49:49</button><span class="text">slide. So during tonight's presentation, we So during tonight's presentation, we will review the four goals connected to will review the four goals connected to priority 5. We will begin by priority 5. We will begin by highlighting some of the strategies and</span></div>
+<div class="transcript-row" data-start="6597.6" data-end="6605.6"><button class="ts-btn" onclick="seekVideo(6597.6)">01:49:57</button><span class="text">highlighting some of the strategies and initiatives currently underway to initiatives currently underway to support progress towards these goals. At support progress towards these goals. At the end of the presentation, we will the end of the presentation, we will also share data slides that</span></div>
+<div class="transcript-row" data-start="6605.6" data-end="6612.32"><button class="ts-btn" onclick="seekVideo(6605.6)">01:50:05</button><span class="text">also share data slides that demonstrate our current progress related demonstrate our current progress related to each goal. Next slide, please.</span></div>
+<div class="transcript-row" data-start="6612.32" data-end="6617.6"><button class="ts-btn" onclick="seekVideo(6612.32)">01:50:12</button><span class="text">to each goal. Next slide, please. As we move through the strategy slides, As we move through the strategy slides, we will focus on four key areas.</span></div>
+<div class="transcript-row" data-start="10147.76" data-end="10153.439"><button class="ts-btn" onclick="seekVideo(10147.76)">02:49:07</button><span class="text">it's almost like competition like a business at this point because there's business at this point because there's so many options that families so many options that families have. We want to show them the things</span></div>
+<div class="transcript-row" data-start="10153.439" data-end="10156.16"><button class="ts-btn" onclick="seekVideo(10153.439)">02:49:13</button><span class="text">have. We want to show them the things that are available here.</span></div>
+<div class="transcript-row" data-start="10156.16" data-end="10162.399"><button class="ts-btn" onclick="seekVideo(10156.16)">02:49:16</button><span class="text">that are available here. That is all my questions. Any other That is all my questions. Any other comments or questions from colleagues?</span></div>
+<div class="transcript-row" data-start="10162.399" data-end="10163.279"><button class="ts-btn" onclick="seekVideo(10162.399)">02:49:22</button><span class="text">comments or questions from colleagues? >> Thank you all.</span></div>
+<div class="transcript-row" data-start="10163.279" data-end="10168.95"><button class="ts-btn" onclick="seekVideo(10163.279)">02:49:23</button><span class="text">>> Thank you all. >> Thank you.</span></div>
+<div class="transcript-row" data-start="10171.11" data-end="10178.64"><button class="ts-btn" onclick="seekVideo(10171.11)">02:49:31</button><span class="text">>> Yes. So the next item on our agenda is a policy committee update. We have uh two policy committee update. We have uh two items. One is a policy committee update items. One is a policy committee update is for information only. Um and Miss</span></div>
+<div class="transcript-row" data-start="10178.64" data-end="10182.56"><button class="ts-btn" onclick="seekVideo(10178.64)">02:49:38</button><span class="text">is for information only. Um and Miss Carter Uton who's the chair of that Carter Uton who's the chair of that committee has an update that she would committee has an update that she would like to share.</span></div>
+<div class="transcript-row" data-start="10182.56" data-end="10188.88"><button class="ts-btn" onclick="seekVideo(10182.56)">02:49:42</button><span class="text">like to share. >> Thank you. Um I just wanted to add a >> Thank you. Um I just wanted to add a verbal update because that um the update verbal update because that um the update for information only that's on the</span></div>
+<div class="transcript-row" data-start="10188.88" data-end="10198.8"><button class="ts-btn" onclick="seekVideo(10188.88)">02:49:48</button><span class="text">for information only that's on the agenda is um only part of the story. So agenda is um only part of the story. So we met on the 21st and that update we met on the 21st and that update that's on the agenda describes what</span></div>
+<div class="transcript-row" data-start="10198.8" data-end="10206.0"><button class="ts-btn" onclick="seekVideo(10198.8)">02:49:58</button><span class="text">that's on the agenda describes what happened that day. we had to recess that happened that day. we had to recess that meeting um to jump over to a budget meeting um to jump over to a budget meeting with our partners at the county.</span></div>
+<div class="transcript-row" data-start="10206.0" data-end="10214.16"><button class="ts-btn" onclick="seekVideo(10206.0)">02:50:06</button><span class="text">meeting with our partners at the county. Um so we cut that one short which Um so we cut that one short which means we then reconvened on Tuesday and means we then reconvened on Tuesday and due to the posting time of our agenda</span></div>
+<div class="transcript-row" data-start="10214.16" data-end="10222.24"><button class="ts-btn" onclick="seekVideo(10214.16)">02:50:14</button><span class="text">due to the posting time of our agenda wasn't able to put up a um written wasn't able to put up a um written update. So just wanted to share a couple update. So just wanted to share a couple words about what we did on Tuesday. Um</span></div>
+<div class="transcript-row" data-start="10222.24" data-end="10228.88"><button class="ts-btn" onclick="seekVideo(10222.24)">02:50:22</button><span class="text">words about what we did on Tuesday. Um so we spent the bulk of the Tuesday um so we spent the bulk of the Tuesday um May 26th meeting working through changes May 26th meeting working through changes to policy 4326.</span></div>
+<div class="transcript-row" data-start="10228.88" data-end="10235.84"><button class="ts-btn" onclick="seekVideo(10228.88)">02:50:28</button><span class="text">to policy 4326. That's rules for use of seclusion and That's rules for use of seclusion and restraint in schools. Um that included restraint in schools. Um that included some updates and improvements I think to</span></div>
+<div class="transcript-row" data-start="10235.84" data-end="10242.24"><button class="ts-btn" onclick="seekVideo(10235.84)">02:50:35</button><span class="text">some updates and improvements I think to annual reporting of data back to the annual reporting of data back to the board and improvements related to verbal board and improvements related to verbal and written notification for caregivers</span></div>
+<div class="transcript-row" data-start="10242.24" data-end="10249.52"><button class="ts-btn" onclick="seekVideo(10242.24)">02:50:42</button><span class="text">and written notification for caregivers and parents among other things. So now and parents among other things. So now this policy is going to come back to this policy is going to come back to this board on June 9th um for uh second</span></div>
+<div class="transcript-row" data-start="10249.52" data-end="10252.479"><button class="ts-btn" onclick="seekVideo(10249.52)">02:50:49</button><span class="text">this board on June 9th um for uh second read at the June 9th work session.</span></div>
+<div class="transcript-row" data-start="10252.479" data-end="10260.64"><button class="ts-btn" onclick="seekVideo(10252.479)">02:50:52</button><span class="text">read at the June 9th work session. Um, we spent so much time on that policy Um, we spent so much time on that policy that we did not have an opportunity to that we did not have an opportunity to discuss two other policies uh that are</span></div>
+<div class="transcript-row" data-start="10260.64" data-end="10270.319"><button class="ts-btn" onclick="seekVideo(10260.64)">02:51:00</button><span class="text">discuss two other policies uh that are important and were on the agenda. That's important and were on the agenda. That's policy 1750 policy 1750 um 7220, the grievance procedure for um 7220, the grievance procedure for employees and also policy 3400</span></div>
+<div class="transcript-row" data-start="10270.319" data-end="10277.76"><button class="ts-btn" onclick="seekVideo(10270.319)">02:51:10</button><span class="text">employees and also policy 3400 evaluation of student progress. Um evaluation of student progress. Um that's an NCSBA revision. So this was that's an NCSBA revision. So this was the last policy committee meeting of the</span></div>
+<div class="transcript-row" data-start="10277.76" data-end="10285.359"><button class="ts-btn" onclick="seekVideo(10277.76)">02:51:17</button><span class="text">the last policy committee meeting of the year. So we ended up sending both of year. So we ended up sending both of these the June 9 work session for these the June 9 work session for first reading also. So we will have some</span></div>
+<div class="transcript-row" data-start="10285.359" data-end="10288.0"><button class="ts-btn" onclick="seekVideo(10285.359)">02:51:25</button><span class="text">first reading also. So we will have some fun policy work to do at that meeting.</span></div>
+<div class="transcript-row" data-start="10288.0" data-end="10293.04"><button class="ts-btn" onclick="seekVideo(10288.0)">02:51:28</button><span class="text">fun policy work to do at that meeting. Finally, we've been trying to set aside Finally, we've been trying to set aside some time during our meetings to just some time during our meetings to just reflect on how things have been going</span></div>
+<div class="transcript-row" data-start="10293.04" data-end="10299.279"><button class="ts-btn" onclick="seekVideo(10293.04)">02:51:33</button><span class="text">reflect on how things have been going this year. This was the first year of this year. This was the first year of the policy committee. Um so I think the policy committee. Um so I think we've learned some things about what's</span></div>
+<div class="transcript-row" data-start="10299.279" data-end="10308.0"><button class="ts-btn" onclick="seekVideo(10299.279)">02:51:39</button><span class="text">we've learned some things about what's been working well and what um has been been working well and what um has been challenging this year. Um, and I'm I'd challenging this year. Um, and I'm I'd like to take an opportunity to talk</span></div>
+<div class="transcript-row" data-start="10308.0" data-end="10314.64"><button class="ts-btn" onclick="seekVideo(10308.0)">02:51:48</button><span class="text">like to take an opportunity to talk about those still. So, we decided that about those still. So, we decided that we wanted to also do that at the June 9 we wanted to also do that at the June 9 work session. Um, but in the</span></div>
+<div class="transcript-row" data-start="10314.64" data-end="10322.08"><button class="ts-btn" onclick="seekVideo(10314.64)">02:51:54</button><span class="text">work session. Um, but in the meantime, I'm working on a brief um meantime, I'm working on a brief um survey for all board members and um survey for all board members and um staff that were involved too just to</span></div>
+<div class="transcript-row" data-start="10322.08" data-end="10327.439"><button class="ts-btn" onclick="seekVideo(10322.08)">02:52:02</button><span class="text">staff that were involved too just to provide some basic feedback if you're provide some basic feedback if you're interested in that way and I can compile interested in that way and I can compile it so we have something to reflect on</span></div>
+<div class="transcript-row" data-start="10327.439" data-end="10331.92"><button class="ts-btn" onclick="seekVideo(10327.439)">02:52:07</button><span class="text">it so we have something to reflect on and also, you know, we can share and also, you know, we can share feedback during the meeting. but just feedback during the meeting. but just want to put together a good set of</span></div>
+<div class="transcript-row" data-start="10331.92" data-end="10337.12"><button class="ts-btn" onclick="seekVideo(10331.92)">02:52:11</button><span class="text">want to put together a good set of recommendations for um the next person recommendations for um the next person that's going to be leading this that's going to be leading this committee.</span></div>
+<div class="transcript-row" data-start="10337.12" data-end="10340.479"><button class="ts-btn" onclick="seekVideo(10337.12)">02:52:17</button><span class="text">committee. Thank you for the time. That's my Thank you for the time. That's my update.</span></div>
+<div class="transcript-row" data-start="10340.479" data-end="10345.04"><button class="ts-btn" onclick="seekVideo(10340.479)">02:52:20</button><span class="text">update. Thank you, Miss Carter. And if you could Thank you, Miss Carter. And if you could um also provide that so we can make sure um also provide that so we can make sure we add it to the minutes, that'd be</span></div>
+<div class="transcript-row" data-start="10345.04" data-end="10346.8"><button class="ts-btn" onclick="seekVideo(10345.04)">02:52:25</button><span class="text">we add it to the minutes, that'd be great.</span></div>
+<div class="transcript-row" data-start="10346.8" data-end="10356.71"><button class="ts-btn" onclick="seekVideo(10346.8)">02:52:26</button><span class="text">great. Um the next item on our agenda is a Um the next item on our agenda is a policy 8600 budget transparency first policy 8600 budget transparency first reading.</span></div>
+<div class="transcript-row" data-start="10358.87" data-end="10364.469"><button class="ts-btn" onclick="seekVideo(10358.87)">02:52:38</button><span class="text">Are you leading that M card or is that coming from staff</span></div>
+<div class="transcript-row" data-start="10366.87" data-end="10370.63"><button class="ts-btn" onclick="seekVideo(10366.87)">02:52:46</button><span class="text">but at transparency? Yes, Mr. Ters from the precies.</span></div>
+<div class="transcript-row" data-start="10374.23" data-end="10383.439"><button class="ts-btn" onclick="seekVideo(10374.23)">02:52:54</button><span class="text">Wonderful. Good evening again. Um so uh we were glad um as administration to we were glad um as administration to be able to get this um particular policy be able to get this um particular policy to first read. Um this is one of</span></div>
+<div class="transcript-row" data-start="10383.439" data-end="10391.84"><button class="ts-btn" onclick="seekVideo(10383.439)">02:53:03</button><span class="text">to first read. Um this is one of two in particular that were um the two in particular that were um the fruits of the meet and confer process fruits of the meet and confer process and um I think we've u met with policy</span></div>
+<div class="transcript-row" data-start="10391.84" data-end="10400.0"><button class="ts-btn" onclick="seekVideo(10391.84)">02:53:11</button><span class="text">and um I think we've u met with policy committee on two occasions since uh the committee on two occasions since uh the meet and confer meetings uh wrapped up meet and confer meetings uh wrapped up in February um and worked carefully um</span></div>
+<div class="transcript-row" data-start="10400.0" data-end="10408.319"><button class="ts-btn" onclick="seekVideo(10400.0)">02:53:20</button><span class="text">in February um and worked carefully um with the board members on that committee with the board members on that committee worked carefully with um representation worked carefully with um representation from DAE uh as well as legal counsel to</span></div>
+<div class="transcript-row" data-start="10408.319" data-end="10416.56"><button class="ts-btn" onclick="seekVideo(10408.319)">02:53:28</button><span class="text">from DAE uh as well as legal counsel to make that policy honor um the spirit of make that policy honor um the spirit of of what um our educator association was of what um our educator association was trying to accomplish regarding uh</span></div>
+<div class="transcript-row" data-start="10416.56" data-end="10424.16"><button class="ts-btn" onclick="seekVideo(10416.56)">02:53:36</button><span class="text">trying to accomplish regarding uh financial and budget transparency in the financial and budget transparency in the district. And so we're um after a couple district. And so we're um after a couple of rounds of editing, happy to have it</span></div>
+<div class="transcript-row" data-start="10424.16" data-end="10428.479"><button class="ts-btn" onclick="seekVideo(10424.16)">02:53:44</button><span class="text">of rounds of editing, happy to have it at a point where we're where we have it at a point where we're where we have it in front of the board or the full board</span></div>
+<div class="transcript-row" data-start="10428.479" data-end="10437.12"><button class="ts-btn" onclick="seekVideo(10428.479)">02:53:48</button><span class="text">in front of the board or the full board u for contemplation. Um and certainly we u for contemplation. Um and certainly we have a goal um for this to be in have a goal um for this to be in effect uh for the start of the new</span></div>
+<div class="transcript-row" data-start="10437.12" data-end="10444.16"><button class="ts-btn" onclick="seekVideo(10437.12)">02:53:57</button><span class="text">effect uh for the start of the new fiscal year that starts on July 1st and fiscal year that starts on July 1st and and that has also another factor in and that has also another factor in terms of our timing in getting that</span></div>
+<div class="transcript-row" data-start="10444.16" data-end="10452.56"><button class="ts-btn" onclick="seekVideo(10444.16)">02:54:04</button><span class="text">terms of our timing in getting that in place and we'll just share um you in place and we'll just share um you know I've appreciated the the care know I've appreciated the the care and concern um from multiple board</span></div>
+<div class="transcript-row" data-start="10452.56" data-end="10461.359"><button class="ts-btn" onclick="seekVideo(10452.56)">02:54:12</button><span class="text">and concern um from multiple board members about the finance department's members about the finance department's ability to comply with this policy um ability to comply with this policy um in a way that would not overt tax the</span></div>
+<div class="transcript-row" data-start="10461.359" data-end="10466.72"><button class="ts-btn" onclick="seekVideo(10461.359)">02:54:21</button><span class="text">in a way that would not overt tax the finance department, but still honor the finance department, but still honor the spirit, right, of what our community spirit, right, of what our community wants and what our educator association</span></div>
+<div class="transcript-row" data-start="10466.72" data-end="10476.24"><button class="ts-btn" onclick="seekVideo(10466.72)">02:54:26</button><span class="text">wants and what our educator association wants with transparency. And so we've um wants with transparency. And so we've um we feel good about how it's written. Uh we feel good about how it's written. Uh and we've already um spent some time,</span></div>
+<div class="transcript-row" data-start="10476.24" data-end="10483.279"><button class="ts-btn" onclick="seekVideo(10476.24)">02:54:36</button><span class="text">and we've already um spent some time, you know, tweaking some of our existing you know, tweaking some of our existing um protocols and structures to make sure um protocols and structures to make sure that we can easily pivot into that for</span></div>
+<div class="transcript-row" data-start="10483.279" data-end="10491.04"><button class="ts-btn" onclick="seekVideo(10483.279)">02:54:43</button><span class="text">that we can easily pivot into that for the new year um in the way that we the new year um in the way that we organize our documents and to and so organize our documents and to and so we'll much like we do um for our annual</span></div>
+<div class="transcript-row" data-start="10491.04" data-end="10499.84"><button class="ts-btn" onclick="seekVideo(10491.04)">02:54:51</button><span class="text">we'll much like we do um for our annual audit um in terms of how we organize our audit um in terms of how we organize our work and you know we're building work and you know we're building our work around this now too and it's um</span></div>
+<div class="transcript-row" data-start="10499.84" data-end="10505.2"><button class="ts-btn" onclick="seekVideo(10499.84)">02:54:59</button><span class="text">our work around this now too and it's um I see positive benefits I see positive benefits um for my team and and the um for my team and and the accountability, you know, that</span></div>
+<div class="transcript-row" data-start="10505.2" data-end="10511.439"><button class="ts-btn" onclick="seekVideo(10505.2)">02:55:05</button><span class="text">accountability, you know, that we're held to um in the standard that we we're held to um in the standard that we follow. So, I think it's mutually follow. So, I think it's mutually beneficial for the finance department at</span></div>
+<div class="transcript-row" data-start="10511.439" data-end="10520.16"><button class="ts-btn" onclick="seekVideo(10511.439)">02:55:11</button><span class="text">beneficial for the finance department at DPS and the community um the way that DPS and the community um the way that this is structured. Uh and so um don't this is structured. Uh and so um don't want to belabor it too much, but um</span></div>
+<div class="transcript-row" data-start="10520.16" data-end="10531.269"><button class="ts-btn" onclick="seekVideo(10520.16)">02:55:20</button><span class="text">want to belabor it too much, but um happy to answer any questions or address happy to answer any questions or address kind of any concerns for the full board kind of any concerns for the full board u where the policyy's concerned.</span></div>
+<div class="transcript-row" data-start="10533.91" data-end="10543.76"><button class="ts-btn" onclick="seekVideo(10533.91)">02:55:33</button><span class="text">Miss Byer. >> So, I would um appreciate all the work >> So, I would um appreciate all the work that's gone into this and um from lots that's gone into this and um from lots of folks and the improvements that it um</span></div>
+<div class="transcript-row" data-start="10543.76" data-end="10551.04"><button class="ts-btn" onclick="seekVideo(10543.76)">02:55:43</button><span class="text">of folks and the improvements that it um has finally getting close to being has finally getting close to being ready. I know it will be much ready. I know it will be much appreciated</span></div>
+<div class="transcript-row" data-start="10551.04" data-end="10559.52"><button class="ts-btn" onclick="seekVideo(10551.04)">02:55:51</button><span class="text">appreciated throughout the community and a model for throughout the community and a model for the state. I had a few tiny things for the state. I had a few tiny things for for discussion. Um, one thing, Mr.</span></div>
+<div class="transcript-row" data-start="10559.52" data-end="10566.479"><button class="ts-btn" onclick="seekVideo(10559.52)">02:55:59</button><span class="text">for discussion. Um, one thing, Mr. Malone, the fir this verb tenses in the Malone, the fir this verb tenses in the first sentence are kind of bothering me first sentence are kind of bothering me that we're fostering trust eradicates</span></div>
+<div class="transcript-row" data-start="10566.479" data-end="10574.08"><button class="ts-btn" onclick="seekVideo(10566.479)">02:56:06</button><span class="text">that we're fostering trust eradicates suspicion and promotes equity. So, if we suspicion and promotes equity. So, if we can pick a tense there, I think that can pick a tense there, I think that would be improved. And I don't have one</span></div>
+<div class="transcript-row" data-start="10574.08" data-end="10583.52"><button class="ts-btn" onclick="seekVideo(10574.08)">02:56:14</button><span class="text">would be improved. And I don't have one to suggest. I just think that if we to suggest. I just think that if we foster trust and eradicate and promote foster trust and eradicate and promote maybe is that does that bothering</span></div>
+<div class="transcript-row" data-start="10583.52" data-end="10590.08"><button class="ts-btn" onclick="seekVideo(10583.52)">02:56:23</button><span class="text">maybe is that does that bothering anybody else? I mean, it's Yeah. Yeah, anybody else? I mean, it's Yeah. Yeah, it helps me to get to where we're it helps me to get to where we're finally looking at a clean one rather</span></div>
+<div class="transcript-row" data-start="10590.08" data-end="10596.55"><button class="ts-btn" onclick="seekVideo(10590.08)">02:56:30</button><span class="text">finally looking at a clean one rather than a track changes to find things like than a track changes to find things like that. Um,</span></div>
+<div class="transcript-row" data-start="10599.429" data-end="10606.55"><button class="ts-btn" onclick="seekVideo(10599.429)">02:56:39</button><span class="text">that was one. Let's see. Um, Um, BA</span></div>
+<div class="transcript-row" data-start="10608.23" data-end="10616.96"><button class="ts-btn" onclick="seekVideo(10608.23)">02:56:48</button><span class="text">quarterly reporting. In the last sentence there, it says that, you know, sentence there, it says that, you know, that the district will publish each that the district will publish each quarterly report 30 days after. To me,</span></div>
+<div class="transcript-row" data-start="10616.96" data-end="10624.56"><button class="ts-btn" onclick="seekVideo(10616.96)">02:56:56</button><span class="text">quarterly report 30 days after. To me, it we're trying to get the spirit of it we're trying to get the spirit of within 30 days rather than specifically within 30 days rather than specifically 30 days. Does that help to kind of Do</span></div>
+<div class="transcript-row" data-start="10624.56" data-end="10632.24"><button class="ts-btn" onclick="seekVideo(10624.56)">02:57:04</button><span class="text">30 days. Does that help to kind of Do you see what I'm saying? Rod's you see what I'm saying? Rod's looking at and like that very last looking at and like that very last sentence in for a Yeah, sorry. Roman</span></div>
+<div class="transcript-row" data-start="10632.24" data-end="10638.08"><button class="ts-btn" onclick="seekVideo(10632.24)">02:57:12</button><span class="text">sentence in for a Yeah, sorry. Roman numerals throw me just like uh numerals throw me just like uh [laughter] chairs. No, just kidding.</span></div>
+<div class="transcript-row" data-start="10638.08" data-end="10648.16"><button class="ts-btn" onclick="seekVideo(10638.08)">02:57:18</button><span class="text">[laughter] chairs. No, just kidding. Yeah, I did. I did go to jail Yeah, I did. I did go to jail >> uh for graduate school. Yep. Um >> uh for graduate school. Yep. Um yeah,</span></div>
+<div class="transcript-row" data-start="10648.16" data-end="10651.2"><button class="ts-btn" onclick="seekVideo(10648.16)">02:57:28</button><span class="text">yeah, within 30.</span></div>
+<div class="transcript-row" data-start="10651.2" data-end="10653.279"><button class="ts-btn" onclick="seekVideo(10651.2)">02:57:31</button><span class="text">within 30. Yeah.</span></div>
+<div class="transcript-row" data-start="10653.279" data-end="10663.59"><button class="ts-btn" onclick="seekVideo(10653.279)">02:57:33</button><span class="text">Yeah. Oh, microphone. Sorry. Sorry.</span></div>
+<div class="transcript-row" data-start="10663.91" data-end="10665.68"><button class="ts-btn" onclick="seekVideo(10663.91)">02:57:43</button><span class="text">>> You like >> Say it again.</span></div>
+<div class="transcript-row" data-start="10665.68" data-end="10670.96"><button class="ts-btn" onclick="seekVideo(10665.68)">02:57:45</button><span class="text">>> Say it again. Yes, I personally would prefer within 30 Yes, I personally would prefer within 30 days if that works for Jeremy's team.</span></div>
+<div class="transcript-row" data-start="10670.96" data-end="10676.64"><button class="ts-btn" onclick="seekVideo(10670.96)">02:57:50</button><span class="text">days if that works for Jeremy's team. >> And I agree. I think that was the >> And I agree. I think that was the spirit um was to have it within 30.</span></div>
+<div class="transcript-row" data-start="10676.64" data-end="10684.08"><button class="ts-btn" onclick="seekVideo(10676.64)">02:57:56</button><span class="text">spirit um was to have it within 30. >> And then somewhere in here, I wrote >> And then somewhere in here, I wrote down B, but I don't know which B. Uh down B, but I don't know which B. Uh somewhere in here, we talk about the</span></div>
+<div class="transcript-row" data-start="10684.08" data-end="10690.96"><button class="ts-btn" onclick="seekVideo(10684.08)">02:58:04</button><span class="text">somewhere in here, we talk about the report a lot. We talk this report, the report a lot. We talk this report, the report, but then there's lots of report, but then there's lots of documents. And so, I'm not sure if we</span></div>
+<div class="transcript-row" data-start="10690.96" data-end="10695.6"><button class="ts-btn" onclick="seekVideo(10690.96)">02:58:10</button><span class="text">documents. And so, I'm not sure if we need to define or be more clear about need to define or be more clear about what we're saying.</span></div>
+<div class="transcript-row" data-start="10695.6" data-end="10701.76"><button class="ts-btn" onclick="seekVideo(10695.6)">02:58:15</button><span class="text">what we're saying. It's almost sounding like it's one the It's almost sounding like it's one the report, but actually it's lots of stuff report, but actually it's lots of stuff that we're going to throw on the</span></div>
+<div class="transcript-row" data-start="10701.76" data-end="10710.63"><button class="ts-btn" onclick="seekVideo(10701.76)">02:58:21</button><span class="text">that we're going to throw on the website, I think. So, I don't know if website, I think. So, I don't know if that more precision in that language that more precision in that language would be helpful to clarify</span></div>
+<div class="transcript-row" data-start="10720.71" data-end="10730.64"><button class="ts-btn" onclick="seekVideo(10720.71)">02:58:40</button><span class="text">just to see that through. So it does say this report this report the report in multiple places. Would you the report in multiple places. Would you like to like to so I would suggest</span></div>
+<div class="transcript-row" data-start="10730.64" data-end="10737.439"><button class="ts-btn" onclick="seekVideo(10730.64)">02:58:50</button><span class="text">so I would suggest um um that it go from the report or this that it go from the report or this report to reporting.</span></div>
+<div class="transcript-row" data-start="10737.439" data-end="10744.64"><button class="ts-btn" onclick="seekVideo(10737.439)">02:58:57</button><span class="text">report to reporting. If you replace that with reporting for If you replace that with reporting for the most part when you're actively doing the most part when you're actively doing carrying out the verb of reporting you</span></div>
+<div class="transcript-row" data-start="10744.64" data-end="10750.72"><button class="ts-btn" onclick="seekVideo(10744.64)">02:59:04</button><span class="text">carrying out the verb of reporting you are taking the actions that are are taking the actions that are designated in that portion of the designated in that portion of the policy.</span></div>
+<div class="transcript-row" data-start="10750.72" data-end="10755.19"><button class="ts-btn" onclick="seekVideo(10750.72)">02:59:10</button><span class="text">policy. or whomever.</span></div>
+<div class="transcript-row" data-start="10757.349" data-end="10761.68"><button class="ts-btn" onclick="seekVideo(10757.349)">02:59:17</button><span class="text">>> Yeah. Whatever consistently works I think works I think >> as y'all make a suggestion or Mr.</span></div>
+<div class="transcript-row" data-start="10761.68" data-end="10766.56"><button class="ts-btn" onclick="seekVideo(10761.68)">02:59:21</button><span class="text">>> as y'all make a suggestion or Mr. Weber does that was just one other thing Weber does that was just one other thing that and it's throughout in several that and it's throughout in several places. Yeah.</span></div>
+<div class="transcript-row" data-start="10766.56" data-end="10774.479"><button class="ts-btn" onclick="seekVideo(10766.56)">02:59:26</button><span class="text">places. Yeah. >> And so in 4B it would be reporting >> And so in 4B it would be reporting authority. The district finance authority. The district finance department will disseminate, communicate department will disseminate, communicate and ensure accessibility of the</span></div>
+<div class="transcript-row" data-start="10774.479" data-end="10779.59"><button class="ts-btn" onclick="seekVideo(10774.479)">02:59:34</button><span class="text">and ensure accessibility of the reporting.</span></div>
+<div class="transcript-row" data-start="10781.269" data-end="10785.04"><button class="ts-btn" onclick="seekVideo(10781.269)">02:59:41</button><span class="text">>> Yeah, that and even C's titled dissemination of the report. So I just dissemination of the report. So I just Yeah.</span></div>
+<div class="transcript-row" data-start="10785.04" data-end="10787.279"><button class="ts-btn" onclick="seekVideo(10785.04)">02:59:45</button><span class="text">Yeah. >> Um dissemination of reporting.</span></div>
+<div class="transcript-row" data-start="10787.279" data-end="10788.0"><button class="ts-btn" onclick="seekVideo(10787.279)">02:59:47</button><span class="text">>> Um dissemination of reporting. >> Yeah.</span></div>
+<div class="transcript-row" data-start="10788.0" data-end="10794.479"><button class="ts-btn" onclick="seekVideo(10788.0)">02:59:48</button><span class="text">>> Yeah. >> Right. Um the district shall ensure that >> Right. Um the district shall ensure that all stakeholders are able to access the all stakeholders are able to access the reporting.</span></div>
+<div class="transcript-row" data-start="10794.479" data-end="10799.2"><button class="ts-btn" onclick="seekVideo(10794.479)">02:59:54</button><span class="text">reporting. Quarterly reporting shall be posted on Quarterly reporting shall be posted on the district's website.</span></div>
+<div class="transcript-row" data-start="10799.2" data-end="10804.72"><button class="ts-btn" onclick="seekVideo(10799.2)">02:59:59</button><span class="text">the district's website. It's the responsibility of the district It's the responsibility of the district to provide materials in English and to provide materials in English and Spanish.</span></div>
+<div class="transcript-row" data-start="10804.72" data-end="10809.359"><button class="ts-btn" onclick="seekVideo(10804.72)">03:00:04</button><span class="text">Spanish. Um, Um, I'm looking real quick.</span></div>
+<div class="transcript-row" data-start="10809.359" data-end="10818.319"><button class="ts-btn" onclick="seekVideo(10809.359)">03:00:09</button><span class="text">I'm looking real quick. >> Could we maybe get past this to >> Could we maybe get past this to staff for direction and they can decide staff for direction and they can decide reporting or information or what</span></div>
+<div class="transcript-row" data-start="10818.319" data-end="10825.2"><button class="ts-btn" onclick="seekVideo(10818.319)">03:00:18</button><span class="text">reporting or information or what >> um language might be and they can bring >> um language might be and they can bring that edited language back for second that edited language back for second reading. So all these edits would need</span></div>
+<div class="transcript-row" data-start="10825.2" data-end="10828.64"><button class="ts-btn" onclick="seekVideo(10825.2)">03:00:25</button><span class="text">reading. So all these edits would need to be updated for second reading.</span></div>
+<div class="transcript-row" data-start="10828.64" data-end="10830.72"><button class="ts-btn" onclick="seekVideo(10828.64)">03:00:28</button><span class="text">to be updated for second reading. You have something else, Miss Brier?</span></div>
+<div class="transcript-row" data-start="10830.72" data-end="10836.24"><button class="ts-btn" onclick="seekVideo(10830.72)">03:00:30</button><span class="text">You have something else, Miss Brier? >> I think that's all I found so far. Um, I >> I think that's all I found so far. Um, I just would like the chance for Mr. Teter</span></div>
+<div class="transcript-row" data-start="10836.24" data-end="10843.2"><button class="ts-btn" onclick="seekVideo(10836.24)">03:00:36</button><span class="text">just would like the chance for Mr. Teter to say one more time. Does this produce to say one more time. Does this produce additional work for the staff and your additional work for the staff and your team or is this work you were all like</span></div>
+<div class="transcript-row" data-start="10843.2" data-end="10850.16"><button class="ts-btn" onclick="seekVideo(10843.2)">03:00:43</button><span class="text">team or is this work you were all like every bullet point? Is it producin every bullet point? Is it producin scope of normal business?</span></div>
+<div class="transcript-row" data-start="10850.16" data-end="10853.84"><button class="ts-btn" onclick="seekVideo(10850.16)">03:00:50</button><span class="text">scope of normal business? Have we taken out the stuff that is Have we taken out the stuff that is extraneous work?</span></div>
+<div class="transcript-row" data-start="10853.84" data-end="10855.6"><button class="ts-btn" onclick="seekVideo(10853.84)">03:00:53</button><span class="text">extraneous work? >> Thank you. Thank you for asking that.</span></div>
+<div class="transcript-row" data-start="10855.6" data-end="10863.84"><button class="ts-btn" onclick="seekVideo(10855.6)">03:00:55</button><span class="text">>> Thank you. Thank you for asking that. And so it does um I think it broadly And so it does um I think it broadly falls in two buckets, right? So it's falls in two buckets, right? So it's it's stuff um that we were already doing</span></div>
+<div class="transcript-row" data-start="10863.84" data-end="10870.16"><button class="ts-btn" onclick="seekVideo(10863.84)">03:01:03</button><span class="text">it's stuff um that we were already doing internally um just from our good internally um just from our good practices in budget building and practices in budget building and monitoring progression of the fiscal</span></div>
+<div class="transcript-row" data-start="10870.16" data-end="10879.92"><button class="ts-btn" onclick="seekVideo(10870.16)">03:01:10</button><span class="text">monitoring progression of the fiscal year. Uh and we're conveying that um in year. Uh and we're conveying that um in a format that's more consumable for a format that's more consumable for folks that work outside of our space. Um</span></div>
+<div class="transcript-row" data-start="10879.92" data-end="10887.68"><button class="ts-btn" onclick="seekVideo(10879.92)">03:01:19</button><span class="text">folks that work outside of our space. Um and then and two um some of this is and then and two um some of this is reporting that we are already doing to reporting that we are already doing to comply uh with some general statutes</span></div>
+<div class="transcript-row" data-start="10887.68" data-end="10896.24"><button class="ts-btn" onclick="seekVideo(10887.68)">03:01:27</button><span class="text">comply uh with some general statutes that we will now do more regularly. Um that we will now do more regularly. Um and we will now include some more and we will now include some more information um that we were previously</span></div>
+<div class="transcript-row" data-start="10896.24" data-end="10903.439"><button class="ts-btn" onclick="seekVideo(10896.24)">03:01:36</button><span class="text">information um that we were previously omitting to comply with the minimum omitting to comply with the minimum standard that was in the statute. for standard that was in the statute. for example, the uh compensation information</span></div>
+<div class="transcript-row" data-start="10903.439" data-end="10912.56"><button class="ts-btn" onclick="seekVideo(10903.439)">03:01:43</button><span class="text">example, the uh compensation information um previously limited to central office um previously limited to central office that will now be expanded to all that will now be expanded to all position type in the district. And</span></div>
+<div class="transcript-row" data-start="10912.56" data-end="10920.16"><button class="ts-btn" onclick="seekVideo(10912.56)">03:01:52</button><span class="text">position type in the district. And that's a great example. It's one where that's a great example. It's one where the information was there and we the information was there and we didn't include it um in the report</span></div>
+<div class="transcript-row" data-start="10920.16" data-end="10927.359"><button class="ts-btn" onclick="seekVideo(10920.16)">03:02:00</button><span class="text">didn't include it um in the report this year because we didn't have to. And this year because we didn't have to. And so um so we're just um so um so we're just um in some respects is saving us some work</span></div>
+<div class="transcript-row" data-start="10927.359" data-end="10928.96"><button class="ts-btn" onclick="seekVideo(10927.359)">03:02:07</button><span class="text">in some respects is saving us some work um and in other respects, right?</span></div>
+<div class="transcript-row" data-start="10928.96" data-end="10935.03"><button class="ts-btn" onclick="seekVideo(10928.96)">03:02:08</button><span class="text">um and in other respects, right? We're just doing a little more editing We're just doing a little more editing to make things consumable.</span></div>
+<div class="transcript-row" data-start="10937.269" data-end="10945.03"><button class="ts-btn" onclick="seekVideo(10937.269)">03:02:17</button><span class="text">>> Super helpful. The um I found another one while I was listening to you and one while I was listening to you and so uh for a</span></div>
+<div class="transcript-row" data-start="10951.429" data-end="10960.0"><button class="ts-btn" onclick="seekVideo(10951.429)">03:02:31</button><span class="text">um the second sentence it ends um like Reporting on the indicators outlined in Reporting on the indicators outlined in section three, ensuring section three, ensuring that information is presented in a that information is presented in a manner that is clear, easily accessible,</span></div>
+<div class="transcript-row" data-start="10960.0" data-end="10964.23"><button class="ts-btn" onclick="seekVideo(10960.0)">03:02:40</button><span class="text">manner that is clear, easily accessible, and to all stakeholders.</span></div>
+<div class="transcript-row" data-start="10966.309" data-end="10971.04"><button class="ts-btn" onclick="seekVideo(10966.309)">03:02:46</button><span class="text">It that the way that sentence ends, Mr. Malone, doesn't make any sense. I'm not Malone, doesn't make any sense. I'm not sure what it's trying to say. And I sure what it's trying to say. And I don't know how we guarantee that</span></div>
+<div class="transcript-row" data-start="10971.04" data-end="10979.52"><button class="ts-btn" onclick="seekVideo(10971.04)">03:02:51</button><span class="text">don't know how we guarantee that something is accessible to all state. I something is accessible to all state. I don't know what but doesn't overpromise, don't know what but doesn't overpromise, but it grammatically doesn't make sense.</span></div>
+<div class="transcript-row" data-start="10979.52" data-end="10986.319"><button class="ts-btn" onclick="seekVideo(10979.52)">03:02:59</button><span class="text">but it grammatically doesn't make sense. And I think that might be a casualty And I think that might be a casualty of track change to clean version because of track change to clean version because I think the intent um I think the intent</span></div>
+<div class="transcript-row" data-start="10986.319" data-end="10993.2"><button class="ts-btn" onclick="seekVideo(10986.319)">03:03:06</button><span class="text">I think the intent um I think the intent of the committee in the work through the of the committee in the work through the committee was we said we can't control committee was we said we can't control disseminating it to everyone but we can</span></div>
+<div class="transcript-row" data-start="10993.2" data-end="10997.84"><button class="ts-btn" onclick="seekVideo(10993.2)">03:03:13</button><span class="text">disseminating it to everyone but we can certainly make it available where folks certainly make it available where folks can find it. Yeah.</span></div>
+<div class="transcript-row" data-start="10997.84" data-end="11010.15"><button class="ts-btn" onclick="seekVideo(10997.84)">03:03:17</button><span class="text">can find it. Yeah. >> And maybe the accessibility is to all >> And maybe the accessibility is to all stakeholders or something and take the stakeholders or something and take the hand out. I don't know. Anyway,</span></div>
+<div class="transcript-row" data-start="11012.309" data-end="11016.389"><button class="ts-btn" onclick="seekVideo(11012.309)">03:03:32</button><span class="text">>> other comments, questions, Miss um Travis,</span></div>
+<div class="transcript-row" data-start="11018.71" data-end="11020.72"><button class="ts-btn" onclick="seekVideo(11018.71)">03:03:38</button><span class="text">I had one comment and then I was going to make a motion.</span></div>
+<div class="transcript-row" data-start="11020.72" data-end="11028.0"><button class="ts-btn" onclick="seekVideo(11020.72)">03:03:40</button><span class="text">and then I was going to make a motion. Um I just want to say I'm fine with the Um I just want to say I'm fine with the um these um changes except for in the</span></div>
+<div class="transcript-row" data-start="11028.0" data-end="11034.08"><button class="ts-btn" onclick="seekVideo(11028.0)">03:03:48</button><span class="text">um these um changes except for in the first sentence I think it reads as first sentence I think it reads as transparency is eradicates and promotes.</span></div>
+<div class="transcript-row" data-start="11034.08" data-end="11038.96"><button class="ts-btn" onclick="seekVideo(11034.08)">03:03:54</button><span class="text">transparency is eradicates and promotes. So I don't think the tenses are So I don't think the tenses are inconsistent.</span></div>
+<div class="transcript-row" data-start="11038.96" data-end="11051.68"><button class="ts-btn" onclick="seekVideo(11038.96)">03:03:58</button><span class="text">inconsistent. So for what that's worth, So for what that's worth, um, um, and I wanted to make a motion to approve and I wanted to make a motion to approve budget transparency policy 68600 on</span></div>
+<div class="transcript-row" data-start="11051.68" data-end="11062.88"><button class="ts-btn" onclick="seekVideo(11051.68)">03:04:11</button><span class="text">budget transparency policy 68600 on first read. Um, with the minor change first read. Um, with the minor change with minor changes to include with minor changes to include um, saying in 4A within 30 days</span></div>
+<div class="transcript-row" data-start="11062.88" data-end="11066.95"><button class="ts-btn" onclick="seekVideo(11062.88)">03:04:22</button><span class="text">um, saying in 4A within 30 days in um</span></div>
+<div class="transcript-row" data-start="11068.87" data-end="11071.279"><button class="ts-btn" onclick="seekVideo(11068.87)">03:04:28</button><span class="text">uh throughout changing report to reporting as appropriate.</span></div>
+<div class="transcript-row" data-start="11071.279" data-end="11077.68"><button class="ts-btn" onclick="seekVideo(11071.279)">03:04:31</button><span class="text">reporting as appropriate. >> I think we had given a little more >> I think we had given a little more latitude on some of those. So maybe if latitude on some of those. So maybe if we just say with the changes that we've</span></div>
+<div class="transcript-row" data-start="11077.68" data-end="11080.88"><button class="ts-btn" onclick="seekVideo(11077.68)">03:04:37</button><span class="text">we just say with the changes that we've asked for staff to make and then go from asked for staff to make and then go from there.</span></div>
+<div class="transcript-row" data-start="11080.88" data-end="11087.84"><button class="ts-btn" onclick="seekVideo(11080.88)">03:04:40</button><span class="text">there. >> Oh, okay. I thought that Okay. I thought >> Oh, okay. I thought that Okay. I thought the wording was more precise for some, the wording was more precise for some, but that's fine with the changes we</span></div>
+<div class="transcript-row" data-start="11087.84" data-end="11090.0"><button class="ts-btn" onclick="seekVideo(11087.84)">03:04:47</button><span class="text">but that's fine with the changes we discussed.</span></div>
+<div class="transcript-row" data-start="11090.0" data-end="11099.2"><button class="ts-btn" onclick="seekVideo(11090.0)">03:04:50</button><span class="text">discussed. >> Second. It's been moved by Miss Chavez >> Second. It's been moved by Miss Chavez and seconded by Miss Herald Goff that we and seconded by Miss Herald Goff that we approve um policy 8600 budget</span></div>
+<div class="transcript-row" data-start="11099.2" data-end="11108.23"><button class="ts-btn" onclick="seekVideo(11099.2)">03:04:59</button><span class="text">approve um policy 8600 budget transparency transparency um um for the first read. Is there any other for the first read. Is there any other discussion?</span></div>
+<div class="transcript-row" data-start="11110.23" data-end="11115.52"><button class="ts-btn" onclick="seekVideo(11110.23)">03:05:10</button><span class="text">Um I did want to uplift a couple things from this policy and thank you all for from this policy and thank you all for all the work you've done on it. Um and I</span></div>
+<div class="transcript-row" data-start="11115.52" data-end="11120.8"><button class="ts-btn" onclick="seekVideo(11115.52)">03:05:15</button><span class="text">all the work you've done on it. Um and I think some of the changes that Miss Byer think some of the changes that Miss Byer has brought up will help make some of has brought up will help make some of this language a little clearer. I think</span></div>
+<div class="transcript-row" data-start="11120.8" data-end="11126.56"><button class="ts-btn" onclick="seekVideo(11120.8)">03:05:20</button><span class="text">this language a little clearer. I think one of the things that we have committed one of the things that we have committed to which I think is great um is around to which I think is great um is around language accessibility and I'm</span></div>
+<div class="transcript-row" data-start="11126.56" data-end="11132.0"><button class="ts-btn" onclick="seekVideo(11126.56)">03:05:26</button><span class="text">language accessibility and I'm appreciative that we have that in this appreciative that we have that in this policy. Um I want to uplift that we policy. Um I want to uplift that we don't have the same language in our</span></div>
+<div class="transcript-row" data-start="11132.0" data-end="11138.88"><button class="ts-btn" onclick="seekVideo(11132.0)">03:05:32</button><span class="text">don't have the same language in our other policies um a lot of those which other policies um a lot of those which are also student code of conduct are also student code of conduct employee code of conduct um and so I</span></div>
+<div class="transcript-row" data-start="11138.88" data-end="11144.64"><button class="ts-btn" onclick="seekVideo(11138.88)">03:05:38</button><span class="text">employee code of conduct um and so I would want to make sure that for other would want to make sure that for other languages if folks also want to request languages if folks also want to request those materials that's available to</span></div>
+<div class="transcript-row" data-start="11144.64" data-end="11151.279"><button class="ts-btn" onclick="seekVideo(11144.64)">03:05:44</button><span class="text">those materials that's available to them. It feels important that we have them. It feels important that we have that consistently across all policies.</span></div>
+<div class="transcript-row" data-start="11151.279" data-end="11153.76"><button class="ts-btn" onclick="seekVideo(11151.279)">03:05:51</button><span class="text">that consistently across all policies. Any other discussion?</span></div>
+<div class="transcript-row" data-start="11153.76" data-end="11164.96"><button class="ts-btn" onclick="seekVideo(11153.76)">03:05:53</button><span class="text">Any other discussion? Uh, Miss Carter, Uh, Miss Carter, I appreciate all of the uh suggestions I appreciate all of the uh suggestions that have been made this evening. Think that have been made this evening. Think they are great. And um</span></div>
+<div class="transcript-row" data-start="11164.96" data-end="11174.56"><button class="ts-btn" onclick="seekVideo(11164.96)">03:06:04</button><span class="text">they are great. And um I um I just want to say I'm excited I um I just want to say I'm excited about this policy and because it is a about this policy and because it is a collaborative effort.</span></div>
+<div class="transcript-row" data-start="11174.56" data-end="11182.479"><button class="ts-btn" onclick="seekVideo(11174.56)">03:06:14</button><span class="text">collaborative effort. um that came out of a process that's um that came out of a process that's unique and I think um it's pretty unique and I think um it's pretty special to have our educators working</span></div>
+<div class="transcript-row" data-start="11182.479" data-end="11194.08"><button class="ts-btn" onclick="seekVideo(11182.479)">03:06:22</button><span class="text">special to have our educators working alongside our administrators and teaming alongside our administrators and teaming up to create something that um will now up to create something that um will now um help us to</span></div>
+<div class="transcript-row" data-start="11194.08" data-end="11201.76"><button class="ts-btn" onclick="seekVideo(11194.08)">03:06:34</button><span class="text">um help us to share more information more broadly with share more information more broadly with the public about our finances, which the public about our finances, which hopefully will build better advocates.</span></div>
+<div class="transcript-row" data-start="11201.76" data-end="11208.479"><button class="ts-btn" onclick="seekVideo(11201.76)">03:06:41</button><span class="text">hopefully will build better advocates. And um yeah, the more information that And um yeah, the more information that people have, the more they can take with people have, the more they can take with them as they're working to spread the</span></div>
+<div class="transcript-row" data-start="11208.479" data-end="11216.08"><button class="ts-btn" onclick="seekVideo(11208.479)">03:06:48</button><span class="text">them as they're working to spread the word about what our schools need um and word about what our schools need um and how we can get those resources. So how we can get those resources. So excited about this and um and where we</span></div>
+<div class="transcript-row" data-start="11216.08" data-end="11223.2"><button class="ts-btn" onclick="seekVideo(11216.08)">03:06:56</button><span class="text">excited about this and um and where we are with it. Look forward to seeing the are with it. Look forward to seeing the next version. And that's it.</span></div>
+<div class="transcript-row" data-start="11223.2" data-end="11226.0"><button class="ts-btn" onclick="seekVideo(11223.2)">03:07:03</button><span class="text">next version. And that's it. Any other discussion?</span></div>
+<div class="transcript-row" data-start="11226.0" data-end="11233.2"><button class="ts-btn" onclick="seekVideo(11226.0)">03:07:06</button><span class="text">Any other discussion? Uh, Miss Byer, Uh, Miss Byer, >> sorry. Just to clarify, did the motion >> sorry. Just to clarify, did the motion say where it is going to?</span></div>
+<div class="transcript-row" data-start="11233.2" data-end="11235.359"><button class="ts-btn" onclick="seekVideo(11233.2)">03:07:13</button><span class="text">say where it is going to? >> I do not think it did.</span></div>
+<div class="transcript-row" data-start="11235.359" data-end="11240.88"><button class="ts-btn" onclick="seekVideo(11235.359)">03:07:15</button><span class="text">>> I do not think it did. >> No, I was No. Um, I was thinking that it >> No, I was No. Um, I was thinking that it would be it would be coming back for a</span></div>
+<div class="transcript-row" data-start="11240.88" data-end="11247.2"><button class="ts-btn" onclick="seekVideo(11240.88)">03:07:20</button><span class="text">would be it would be coming back for a second read at the second read at the >> Could you articulate that as part of the >> Could you articulate that as part of the motion? That would help me.</span></div>
+<div class="transcript-row" data-start="11247.2" data-end="11257.76"><button class="ts-btn" onclick="seekVideo(11247.2)">03:07:27</button><span class="text">motion? That would help me. >> I'm happy to do that. I move that I >> I'm happy to do that. I move that I modify my motion to um move that we modify my motion to um move that we approve 8600</span></div>
+<div class="transcript-row" data-start="11257.76" data-end="11268.0"><button class="ts-btn" onclick="seekVideo(11257.76)">03:07:37</button><span class="text">approve 8600 um budget transparency um budget transparency for first read and have it return to us for first read and have it return to us at the June 9th work session.</span></div>
+<div class="transcript-row" data-start="11268.0" data-end="11272.479"><button class="ts-btn" onclick="seekVideo(11268.0)">03:07:48</button><span class="text">at the June 9th work session. >> Um second read >> Um second read >> just to I'm going be annoying.</span></div>
+<div class="transcript-row" data-start="11272.479" data-end="11278.399"><button class="ts-btn" onclick="seekVideo(11272.479)">03:07:52</button><span class="text">>> just to I'm going be annoying. >> I want to make sure we have action at >> I want to make sure we have action at our board meeting. So we actually need our board meeting. So we actually need to go to the June 20 what is it? 28th</span></div>
+<div class="transcript-row" data-start="11278.399" data-end="11287.92"><button class="ts-btn" onclick="seekVideo(11278.399)">03:07:58</button><span class="text">to go to the June 20 what is it? 28th board meeting 25th board meeting 25th 20 I'm sorry to our June work sess our 20 I'm sorry to our June work sess our June board meeting</span></div>
+<div class="transcript-row" data-start="11287.92" data-end="11291.359"><button class="ts-btn" onclick="seekVideo(11287.92)">03:08:07</button><span class="text">June board meeting >> um okay >> um okay >> we can get it for action on that so we >> we can get it for action on that so we can have all those second reads on that</span></div>
+<div class="transcript-row" data-start="11291.359" data-end="11300.56"><button class="ts-btn" onclick="seekVideo(11291.359)">03:08:11</button><span class="text">can have all those second reads on that action action >> okay that >> okay that um so then to our said all right let me um so then to our said all right let me start over</span></div>
+<div class="transcript-row" data-start="11300.56" data-end="11307.12"><button class="ts-btn" onclick="seekVideo(11300.56)">03:08:20</button><span class="text">start over >> I'm sorry miss Chavez >> I'm sorry miss Chavez >> um let me ask does it have to come to it >> um let me ask does it have to come to it can't come to the work session</span></div>
+<div class="transcript-row" data-start="11307.12" data-end="11313.76"><button class="ts-btn" onclick="seekVideo(11307.12)">03:08:27</button><span class="text">can't come to the work session for action or we could wave the work for action or we could wave the work session policy session policy >> so that you could approve it at the work</span></div>
+<div class="transcript-row" data-start="11313.76" data-end="11315.76"><button class="ts-btn" onclick="seekVideo(11313.76)">03:08:33</button><span class="text">>> so that you could approve it at the work session.</span></div>
+<div class="transcript-row" data-start="11315.76" data-end="11320.63"><button class="ts-btn" onclick="seekVideo(11315.76)">03:08:35</button><span class="text">session. >> You all want to do that?</span></div>
+<div class="transcript-row" data-start="11323.51" data-end="11327.03"><button class="ts-btn" onclick="seekVideo(11323.51)">03:08:43</button><span class="text">>> I'm not interested in doing that. It doesn't seem</span></div>
+<div class="transcript-row" data-start="11331.349" data-end="11339.359"><button class="ts-btn" onclick="seekVideo(11331.349)">03:08:51</button><span class="text">>> I mean I guess in my mind >> it's exciting but it also starts July >> it's exciting but it also starts July 1st for the next fiscal year. So I don't 1st for the next fiscal year. So I don't see it as</span></div>
+<div class="transcript-row" data-start="11339.359" data-end="11346.0"><button class="ts-btn" onclick="seekVideo(11339.359)">03:08:59</button><span class="text">see it as pressing um and I mean yeah pressing um and I mean yeah >> and it's just that we're trying to >> and it's just that we're trying to really move into a work sessions our</span></div>
+<div class="transcript-row" data-start="11346.0" data-end="11352.16"><button class="ts-btn" onclick="seekVideo(11346.0)">03:09:06</button><span class="text">really move into a work sessions our work and then most of our action is work and then most of our action is happening at a board meeting. So that's happening at a board meeting. So that's some of the conversation that is in kind</span></div>
+<div class="transcript-row" data-start="11352.16" data-end="11356.399"><button class="ts-btn" onclick="seekVideo(11352.16)">03:09:12</button><span class="text">some of the conversation that is in kind of how our policy is set up in there. So of how our policy is set up in there. So not a trying to wait to not do</span></div>
+<div class="transcript-row" data-start="11356.399" data-end="11361.279"><button class="ts-btn" onclick="seekVideo(11356.399)">03:09:16</button><span class="text">not a trying to wait to not do something, but just wanting to make sure something, but just wanting to make sure that we're kind of following in that that we're kind of following in that same structure. Miss Carter Autton.</span></div>
+<div class="transcript-row" data-start="11361.279" data-end="11367.439"><button class="ts-btn" onclick="seekVideo(11361.279)">03:09:21</button><span class="text">same structure. Miss Carter Autton. >> Um I think that's fine with me and I'm >> Um I think that's fine with me and I'm glad that we're following our work glad that we're following our work session policy uh so closely and I just</span></div>
+<div class="transcript-row" data-start="11367.439" data-end="11373.279"><button class="ts-btn" onclick="seekVideo(11367.439)">03:09:27</button><span class="text">session policy uh so closely and I just wanted to check in to make sure that wanted to check in to make sure that gives uh Mr. Teter and his team enough gives uh Mr. Teter and his team enough time to implement and that won't cause</span></div>
+<div class="transcript-row" data-start="11373.279" data-end="11379.11"><button class="ts-btn" onclick="seekVideo(11373.279)">03:09:33</button><span class="text">time to implement and that won't cause any challenges. But if so, then that any challenges. But if so, then that sounds great.</span></div>
+<div class="transcript-row" data-start="11379.75" data-end="11382.96"><button class="ts-btn" onclick="seekVideo(11379.75)">03:09:39</button><span class="text">>> Okay, >> Mr. Teter's giving us a thumbs up.</span></div>
+<div class="transcript-row" data-start="11382.96" data-end="11394.72"><button class="ts-btn" onclick="seekVideo(11382.96)">03:09:42</button><span class="text">>> Mr. Teter's giving us a thumbs up. >> Okay, then I move um to approve policy >> Okay, then I move um to approve policy 8600, budget transparency for first read 8600, budget transparency for first read and send it to our June 25th uh monthly</span></div>
+<div class="transcript-row" data-start="11394.72" data-end="11397.279"><button class="ts-btn" onclick="seekVideo(11394.72)">03:09:54</button><span class="text">and send it to our June 25th uh monthly meeting.</span></div>
+<div class="transcript-row" data-start="11397.279" data-end="11398.399"><button class="ts-btn" onclick="seekVideo(11397.279)">03:09:57</button><span class="text">meeting. >> Second read.</span></div>
+<div class="transcript-row" data-start="11398.399" data-end="11399.2"><button class="ts-btn" onclick="seekVideo(11398.399)">03:09:58</button><span class="text">>> Second read. >> Second.</span></div>
+<div class="transcript-row" data-start="11399.2" data-end="11402.56"><button class="ts-btn" onclick="seekVideo(11399.2)">03:09:59</button><span class="text">>> Second. >> It's been moved by Miss Chavez and >> It's been moved by Miss Chavez and seconded by Miss Har.</span></div>
+<div class="transcript-row" data-start="11402.56" data-end="11405.2"><button class="ts-btn" onclick="seekVideo(11402.56)">03:10:02</button><span class="text">seconded by Miss Har. Is there any other discussion?</span></div>
+<div class="transcript-row" data-start="11405.2" data-end="11406.64"><button class="ts-btn" onclick="seekVideo(11405.2)">03:10:05</button><span class="text">Is there any other discussion? All those in favor say I.</span></div>
+<div class="transcript-row" data-start="11406.64" data-end="11407.04"><button class="ts-btn" onclick="seekVideo(11406.64)">03:10:06</button><span class="text">All those in favor say I. >> I.</span></div>
+<div class="transcript-row" data-start="11407.04" data-end="11412.399"><button class="ts-btn" onclick="seekVideo(11407.04)">03:10:07</button><span class="text">>> I. >> I. Any opposed, please use the same >> I. Any opposed, please use the same sign. It passes unanimously.</span></div>
+<div class="transcript-row" data-start="11412.399" data-end="11418.72"><button class="ts-btn" onclick="seekVideo(11412.399)">03:10:12</button><span class="text">sign. It passes unanimously. The next item on our agenda is we have The next item on our agenda is we have two items for information only. Grants, two items for information only. Grants, gifts, and donations as well as</span></div>
+<div class="transcript-row" data-start="11418.72" data-end="11426.8"><button class="ts-btn" onclick="seekVideo(11418.72)">03:10:18</button><span class="text">gifts, and donations as well as information about overnight and information about overnight and international field trips. With that, international field trips. With that, that brings us to a close session.</span></div>
+<div class="transcript-row" data-start="11426.8" data-end="11430.24"><button class="ts-btn" onclick="seekVideo(11426.8)">03:10:26</button><span class="text">that brings us to a close session. >> Move that we go into close session for >> Move that we go into close session for the reasons stated on the agenda.</span></div>
+<div class="transcript-row" data-start="11430.24" data-end="11436.16"><button class="ts-btn" onclick="seekVideo(11430.24)">03:10:30</button><span class="text">the reasons stated on the agenda. >> Second. Second. It's been moved by Miss >> Second. Second. It's been moved by Miss Byer and seconded by Vice Chair Byer and seconded by Vice Chair Rogers that we go into close session for</span></div>
+<div class="transcript-row" data-start="11436.16" data-end="11440.56"><button class="ts-btn" onclick="seekVideo(11436.16)">03:10:36</button><span class="text">Rogers that we go into close session for the reasons stated on the agenda. Is the reasons stated on the agenda. Is there any other discussion?</span></div>
+<div class="transcript-row" data-start="11440.56" data-end="11442.24"><button class="ts-btn" onclick="seekVideo(11440.56)">03:10:40</button><span class="text">there any other discussion? All those in favor say I. I.</span></div>
+<div class="transcript-row" data-start="11442.24" data-end="11448.88"><button class="ts-btn" onclick="seekVideo(11442.24)">03:10:42</button><span class="text">All those in favor say I. I. >> I. Any opposed, please use the same >> I. Any opposed, please use the same sign. It passes unanimously. With that, sign. It passes unanimously. With that, we will move into close session. We will</span></div>
+<div class="transcript-row" data-start="11448.88" data-end="11454.439"><button class="ts-btn" onclick="seekVideo(11448.88)">03:10:48</button><span class="text">we will move into close session. We will discontinue the live stream. Thank you discontinue the live stream. Thank you all for joining us this evening.</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('topicVideo');
+        const rows = document.querySelectorAll('.transcript-row');
+
+        const segments = [
+            { stream_start: 6426, stream_end: 6614, video_offset: 0 },
+            { stream_start: 10151, stream_end: 11479, video_offset: 188 }
+        ];
+
+        function mapStreamTimeToVideo(s) {
+            for (const seg of segments) {
+                if (s >= seg.stream_start - 2 && s <= seg.stream_end + 2) {
+                    return Math.max(0, seg.video_offset + (s - seg.stream_start));
+                }
+            }
+            return s;
+        }
+
+        function seekVideo(seconds) {
+            video.currentTime = mapStreamTimeToVideo(seconds);
+            video.play();
+        }
+
+        function setSpeed(rate) {
+            video.playbackRate = rate;
+        }
+
+        function skip(delta) {
+            video.currentTime = Math.max(0, video.currentTime + delta);
+        }
+
+        // Highlight active transcript cue during playback
+        video.addEventListener('timeupdate', () => {
+            const current = video.currentTime;
+            rows.forEach(row => {
+                const start = parseFloat(row.getAttribute('data-start'));
+                const end = parseFloat(row.getAttribute('data-end'));
+                if (current >= start && current <= end) {
+                    row.classList.add('active');
+                } else {
+                    row.classList.remove('active');
+                }
+            });
+        });
+
+        function filterTranscript() {
+            const query = document.getElementById('transcriptSearch').value.toLowerCase();
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? 'flex' : 'none';
+            });
+        }
+
+        // Deep-link auto-seek via ?t= parameter
+        window.addEventListener('DOMContentLoaded', () => {
+            const rawT = parseFloat(new URLSearchParams(window.location.search).get('t'));
+            if (!isNaN(rawT)) {
+                const t = mapStreamTimeToVideo(rawT);
+                video.currentTime = t;
+                video.play().catch(e => console.log('Autoplay prevented:', e));
+            }
+        });
+    </script>
+</body>
+</html>

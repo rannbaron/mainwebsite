@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Topic Summarizer Index</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a; color: #f8fafc; padding: 32px 20px; line-height: 1.5;
+        }
+        .container { max-width: 1000px; margin: 0 auto; }
+        header { margin-bottom: 30px; border-bottom: 1px solid #334155; padding-bottom: 16px; }
+        h1 { font-size: 2rem; color: #38bdf8; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .catalog-card {
+            background: #1e293b; border: 1px solid #334155; border-radius: 8px; overflow: hidden;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+        .catalog-card:hover { transform: translateY(-3px); border-color: #38bdf8; }
+        .card-thumb { width: 100%; height: 180px; object-fit: cover; background: #000; }
+        .card-body { padding: 16px; }
+        .card-body h3 { font-size: 1.15rem; color: #fff; margin-bottom: 6px; }
+        .source { font-size: 0.85rem; color: #94a3b8; margin-bottom: 10px; }
+        .desc { font-size: 0.9rem; color: #cbd5e1; margin-bottom: 14px; line-height: 1.4; }
+        .btn {
+            display: inline-block; background: #0284c7; color: #fff; padding: 6px 12px; border-radius: 4px;
+            font-size: 0.85rem; font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Video Topic Summarizer</h1>
+            <p style="color: #94a3b8;">Automated topic extraction, video cutting, and structured summaries from meeting streams.</p>
+        </header>
+        <div class="grid">
+            
+            <div class="catalog-card">
+                <a href="policy-8600/index.html" style="text-decoration: none; color: inherit;">
+                    <img src="policy-8600/poster.jpg" alt="Poster" class="card-thumb" onerror="this.style.display='none'">
+                    <div class="card-body">
+                        <h3>policy 8600</h3>
+                        <p class="source">📹 #DPSCommunity | DPS Board of Education Monthly Meeting | 5/28/26 &bull; ⏱️ 00:25:15</p>
+                        <p class="desc">This video topic report focuses on **policy 8600** as addressed in *#DPSCommunity | DPS Board of Education Monthly Meeting | 5/28/26*. Across 2 matched discussion segments totaling 00:25:15 of meeting...</p>
+                        <span class="btn">View Summary & Video &rarr;</span>
+                    </div>
+                </a>
+            </div>
+            
+        </div>
+    </div>
+</body>
+</html>

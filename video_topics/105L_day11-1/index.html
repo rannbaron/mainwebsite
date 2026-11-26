@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math 105L Day 11-1: Lecture Topic Analysis & Video Player</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --border-color: #334155;
+            --duke-blue: #00539b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 24px;
+            line-height: 1.5;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3a8a, #0369a1);
+            padding: 20px 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        .header h1 { font-size: 1.6rem; margin-bottom: 6px; }
+        .header p { color: #e2e8f0; font-size: 0.95rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            font-size: 1.15rem;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        video {
+            width: 100%;
+            border-radius: 6px;
+            background: #000;
+            display: block;
+        }
+        .controls-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .btn {
+            background: #334155;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+        .btn:hover { background: #475569; }
+        .chapter-list { list-style: none; }
+        .chapter-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .chapter-btn {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            width: fit-content;
+            font-family: monospace;
+        }
+        .chapter-btn:hover { background: #1d4ed8; }
+        .chapter-title { font-weight: 600; font-size: 0.95rem; }
+        .chapter-desc { font-size: 0.85rem; color: var(--text-muted); }
+        .downloads-bar { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+        .dl-link {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dl-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Math 105L Day 11-1: High-Degree Polynomials & Concavity Analysis</h1>
+        <p>10:20 AM Lecture (Section 001) • Fall 2026 • Duke University Mathematics</p>
+    </div>
+
+    <div class="grid">
+        <div class="left-col">
+            <div class="card">
+                <video id="lectureVideo" controls preload="metadata">
+                    <source src="video.mp4" type="video/mp4">
+                    Your browser does not support HTML5 video.
+                </video>
+                <div class="controls-bar">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">Playback Speed:</span>
+                    <button class="btn" onclick="setSpeed(0.75)">0.75x</button>
+                    <button class="btn" onclick="setSpeed(1.0)">1.0x</button>
+                    <button class="btn" onclick="setSpeed(1.25)">1.25x</button>
+                    <button class="btn" onclick="setSpeed(1.5)">1.5x</button>
+                    <button class="btn" onclick="setSpeed(2.0)">2.0x</button>
+                    <button class="btn" onclick="skip(-15)">« 15s</button>
+                    <button class="btn" onclick="skip(15)">15s »</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>💾 Course Deliverables & Downloads</h3>
+                <div class="downloads-bar">
+                    <a class="dl-link" href="Topic_Summary.pdf" download>📄 Topic Summary Report (PDF)</a>
+                    <a class="dl-link" href="Completed_Sheet.pdf" download>📝 Completed Worksheet (PDF)</a>
+                    <a class="dl-link" href="video.mp4" download>📥 Download Edited Lecture (MP4)</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-col">
+            <div class="card">
+                <h3>📌 Lecture Chapters & Jump Points</h3>
+                <ul class="chapter-list">
+                    <li class="chapter-item">
+                        <button class="chapter-btn" onclick="seekVideo(0)">00:00:00</button>
+                        <span class="chapter-title">Course Administration & Syllabus Context</span>
+                        <span class="chapter-desc">Opening announcements, Midterm 2 scheduling.</span>
+                    </li>
+                    <li class="chapter-item">
+                        <button class="chapter-btn" onclick="seekVideo(240)">00:04:00</button>
+                        <span class="chapter-title">Geometric Extrema & First Derivative Test</span>
+                        <span class="chapter-desc">Connecting function signs to slopes; critical points.</span>
+                    </li>
+                    <li class="chapter-item">
+                        <button class="chapter-btn" onclick="seekVideo(840)">00:14:00</button>
+                        <span class="chapter-title">Second Derivative Test & Fallacies</span>
+                        <span class="chapter-desc">Testing concavity; warning against setting f''(x)=0 for extrema.</span>
+                    </li>
+                    <li class="chapter-item">
+                        <button class="chapter-btn" onclick="seekVideo(1200)">00:20:00</button>
+                        <span class="chapter-title">Points of Inflection Benchmark</span>
+                        <span class="chapter-desc">Comparing y = x³, x⁴, -x⁴. Sign changes of f'' required.</span>
+                    </li>
+                    <li class="chapter-item">
+                        <button class="chapter-btn" onclick="seekVideo(1500)">00:25:00</button>
+                        <span class="chapter-title">Polynomial Setup: f(x) = (x² - 4)⁷</span>
+                        <span class="chapter-desc">First derivative f'(x) = 14x(x²-4)⁶; min at x=0, saddles at ±2.</span>
+                    </li>
+                    <li class="chapter-item">
+                        <button class="chapter-btn" onclick="seekVideo(3035)">00:50:35</button>
+                        <span class="chapter-title">The Factoring Heuristic & Inflection Candidates</span>
+                        <span class="chapter-desc">Second derivative factoring; candidate points ±2, ±2/√13.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const video = document.getElementById('lectureVideo');
+
+        function seekVideo(seconds) {
+            video.currentTime = seconds;
+            video.play();
+        }
+
+        function setSpeed(rate) {
+            video.playbackRate = rate;
+        }
+
+        function skip(delta) {
+            video.currentTime = Math.max(0, video.currentTime + delta);
+        }
+
+        // Deep-link auto-seek via ?t= parameter
+        window.addEventListener('DOMContentLoaded', () => {
+            const t = parseFloat(new URLSearchParams(window.location.search).get('t'));
+            if (!isNaN(t)) {
+                video.currentTime = t;
+                video.play().catch(e => console.log('Autoplay prevented:', e));
+            }
+        });
+    </script>
+</body>
+</html>

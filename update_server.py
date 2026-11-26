@@ -182,96 +182,103 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
     with open(base_json_path, 'r') as f:
         data = json.load(f)
 
-    # Index 2026 precinct records by (county, matched_pid)
-    dict_26 = {(r['county'], r['matched_pid']): r for _, r in p_df.iterrows()}
+    if p_df is not None:
+        # Index 2026 precinct records by (county, matched_pid)
+        dict_26 = {(r['county'], r['matched_pid']): r for _, r in p_df.iterrows()}
 
-    # County accumulators for 2026
-    county_sums = {}
-    st_tot = 0
-    st_dem = 0
-    st_rep = 0
-    st_una = 0
-    st_white = 0
-    st_black = 0
+        # County accumulators for 2026
+        county_sums = {}
+        st_tot = 0
+        st_dem = 0
+        st_rep = 0
+        st_una = 0
+        st_white = 0
+        st_black = 0
 
-    durham_splits = {'30-3': '30-1', '30-4': '30-1', '33-1': '33', '33-2': '33', '35-4': '35.3', '35-5': '35.3', '56': '53-1', '57': '53-1'}
+        durham_splits = {'30-3': '30-1', '30-4': '30-1', '33-1': '33', '33-2': '33', '35-4': '35.3', '35-5': '35.3', '56': '53-1', '57': '53-1'}
 
-    # 1. Update Precinct Data
-    for cname, plist in data['precincts'].items():
-        if cname not in county_sums:
-            county_sums[cname] = {'tot': 0, 'dem': 0, 'rep': 0, 'una': 0, 'white': 0, 'black': 0}
-        
-        for pr in plist:
-            pid = pr['id']
-            pr['name'] = format_precinct_name(cname, pid, pr.get('name'))
-            key = (cname, pid)
-            if key in dict_26:
-                row = dict_26[key]
-                c26 = {
-                    'tot': int(row['tot']),
-                    'dem': int(row['dem']),
-                    'rep': int(row['rep']),
-                    'una': int(row['una']),
-                    'white': int(row['white']),
-                    'black': int(row['black'])
-                }
-            elif cname == 'DURHAM' and pid in durham_splits and (cname, durham_splits[pid]) in dict_26:
-                row = dict_26[(cname, durham_splits[pid])]
-                c26 = {
-                    'tot': int(row['tot']),
-                    'dem': int(row['dem']),
-                    'rep': int(row['rep']),
-                    'una': int(row['una']),
-                    'white': int(row['white']),
-                    'black': int(row['black'])
-                }
-            else:
-                c26 = {'tot': 0, 'dem': 0, 'rep': 0, 'una': 0, 'white': 0, 'black': 0}
-
-            pr['data']['2026'] = c26
+        # 1. Update Precinct Data
+        for cname, plist in data['precincts'].items():
+            if cname not in county_sums:
+                county_sums[cname] = {'tot': 0, 'dem': 0, 'rep': 0, 'una': 0, 'white': 0, 'black': 0}
             
-            # Accumulate county sums
-            county_sums[cname]['tot'] += c26['tot']
-            county_sums[cname]['dem'] += c26['dem']
-            county_sums[cname]['rep'] += c26['rep']
-            county_sums[cname]['una'] += c26['una']
-            county_sums[cname]['white'] += c26['white']
-            county_sums[cname]['black'] += c26['black']
+            for pr in plist:
+                pid = pr['id']
+                pr['name'] = format_precinct_name(cname, pid, pr.get('name'))
+                key = (cname, pid)
+                if key in dict_26:
+                    row = dict_26[key]
+                    c26 = {
+                        'tot': int(row['tot']),
+                        'dem': int(row['dem']),
+                        'rep': int(row['rep']),
+                        'una': int(row['una']),
+                        'white': int(row['white']),
+                        'black': int(row['black'])
+                    }
+                elif cname == 'DURHAM' and pid in durham_splits and (cname, durham_splits[pid]) in dict_26:
+                    row = dict_26[(cname, durham_splits[pid])]
+                    c26 = {
+                        'tot': int(row['tot']),
+                        'dem': int(row['dem']),
+                        'rep': int(row['rep']),
+                        'una': int(row['una']),
+                        'white': int(row['white']),
+                        'black': int(row['black'])
+                    }
+                else:
+                    c26 = {'tot': 0, 'dem': 0, 'rep': 0, 'una': 0, 'white': 0, 'black': 0}
 
-    # 2. Update County Data
-    county_direct = {}
-    for cname, c_group in p_df.groupby('county'):
-        county_direct[cname] = {
-            'tot': int(c_group['tot'].sum()),
-            'dem': int(c_group['dem'].sum()),
-            'rep': int(c_group['rep'].sum()),
-            'una': int(c_group['una'].sum()),
-            'white': int(c_group['white'].sum()),
-            'black': int(c_group['black'].sum())
+                pr['data']['2026'] = c26
+                
+                # Accumulate county sums
+                county_sums[cname]['tot'] += c26['tot']
+                county_sums[cname]['dem'] += c26['dem']
+                county_sums[cname]['rep'] += c26['rep']
+                county_sums[cname]['una'] += c26['una']
+                county_sums[cname]['white'] += c26['white']
+                county_sums[cname]['black'] += c26['black']
+
+        # 2. Update County Data
+        county_direct = {}
+        for cname, c_group in p_df.groupby('county'):
+            county_direct[cname] = {
+                'tot': int(c_group['tot'].sum()),
+                'dem': int(c_group['dem'].sum()),
+                'rep': int(c_group['rep'].sum()),
+                'una': int(c_group['una'].sum()),
+                'white': int(c_group['white'].sum()),
+                'black': int(c_group['black'].sum())
+            }
+
+        for county in data['counties']:
+            cid = county['id']
+            c_stats = county_direct.get(cid) or county_sums.get(cid, {'tot': 0, 'dem': 0, 'rep': 0, 'una': 0, 'white': 0, 'black': 0})
+            county['data']['2026'] = c_stats
+            
+            st_tot += c_stats['tot']
+            st_dem += c_stats['dem']
+            st_rep += c_stats['rep']
+            st_una += c_stats['una']
+            st_white += c_stats['white']
+            st_black += c_stats['black']
+
+        # 3. Update Statewide Summary
+        data['state']['ev_day'] = ev_day
+        data['state']['data']['2026'] = {
+            'tot': st_tot,
+            'dem': st_dem,
+            'rep': st_rep,
+            'una': st_una,
+            'white': st_white,
+            'black': st_black
         }
-
-    for county in data['counties']:
-        cid = county['id']
-        c_stats = county_direct.get(cid) or county_sums.get(cid, {'tot': 0, 'dem': 0, 'rep': 0, 'una': 0, 'white': 0, 'black': 0})
-        county['data']['2026'] = c_stats
-        
-        st_tot += c_stats['tot']
-        st_dem += c_stats['dem']
-        st_rep += c_stats['rep']
-        st_una += c_stats['una']
-        st_white += c_stats['white']
-        st_black += c_stats['black']
-
-    # 3. Update Statewide Summary
-    data['state']['ev_day'] = ev_day
-    data['state']['data']['2026'] = {
-        'tot': st_tot,
-        'dem': st_dem,
-        'rep': st_rep,
-        'una': st_una,
-        'white': st_white,
-        'black': st_black
-    }
+    else:
+        st_data = data.get('state', {}).get('data', {}).get('2026', {})
+        st_tot = st_data.get('tot', 0)
+        st_dem = st_data.get('dem', 0)
+        st_rep = st_data.get('rep', 0)
+        st_una = st_data.get('una', 0)
 
     # 3.5. Recompute 2026 Vote Forecasts (Dual-Regime & Empirical Bayes)
     try:
@@ -291,8 +298,11 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Warning: Error computing vote forecast: {e}")
 
     # Save updated base JSON
-    with open(base_json_path, 'w') as f:
-        json.dump(data, f)
+    try:
+        with open(base_json_path, 'w') as f:
+            json.dump(data, f)
+    except OSError as e:
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: {base_json_path} write skipped: {e}")
 
     # 4. Inject into earlyvote/index.html, earlyvote.html, and beta/index.html
     compact_json = json.dumps(data, separators=(',', ':'))
@@ -309,18 +319,21 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
 
     for p in target_pages:
         if os.path.exists(p):
-            with open(p, 'r', encoding='utf-8') as f:
-                h = f.read()
-            h = re.sub(r'Cumulative Day \d+', f'Cumulative Day {ev_day}', h)
-            h = re.sub(r'State Summary \(Day \d+\)', f'State Summary (Day {ev_day})', h)
-            h = re.sub(
-                r'window\.NC_MAP_DATA\s*=\s*\{[\s\S]*?\};\s*</script>',
-                f'window.NC_MAP_DATA = {compact_json};\n  </script>',
-                h
-            )
-            with open(p, 'w', encoding='utf-8') as f:
-                f.write(h)
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Injected updated data into {p} ({len(h):,} bytes)")
+            try:
+                with open(p, 'r', encoding='utf-8') as f:
+                    h = f.read()
+                h = re.sub(r'Cumulative Day \d+', f'Cumulative Day {ev_day}', h)
+                h = re.sub(r'State Summary \(Day \d+\)', f'State Summary (Day {ev_day})', h)
+                h = re.sub(
+                    r'window\.NC_MAP_DATA\s*=\s*\{[\s\S]*?\};\s*</script>',
+                    f'window.NC_MAP_DATA = {compact_json};\n  </script>',
+                    h
+                )
+                with open(p, 'w', encoding='utf-8') as f:
+                    f.write(h)
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Injected updated data into {p} ({len(h):,} bytes)")
+            except OSError as e:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: Could not write {p}: {e}")
 
         # Copy to destination public_html if specified
         dest_path = dest_public_html or os.getenv("DEST_HTML_PATH", "")
@@ -360,56 +373,58 @@ def update_map_files(p_df, ev_day, base_json_path, output_html_path, dest_public
         print(f"Warning: {output_html_path} not found. Please provide an index.html template.")
 
     # 4.5. Export daily county party CSV for diffing and email notifications
-    try:
-        c_party = p_df.groupby('county').agg(
-            dem=('dem', 'sum'),
-            rep=('rep', 'sum'),
-            una=('una', 'sum'),
-            tot=('tot', 'sum')
-        ).reset_index()
-        c_party.columns = ['County', 'Democrat (2026)', 'Republican (2026)', 'Unaffiliated (2026)', 'Total 2026']
-        st_row = pd.DataFrame([{
-            'County': 'STATEWIDE TOTAL',
-            'Democrat (2026)': int(c_party['Democrat (2026)'].sum()),
-            'Republican (2026)': int(c_party['Republican (2026)'].sum()),
-            'Unaffiliated (2026)': int(c_party['Unaffiliated (2026)'].sum()),
-            'Total 2026': int(c_party['Total 2026'].sum())
-        }])
-        c_party = pd.concat([c_party, st_row], ignore_index=True)
-        csv_name = f"nc_early_voting_party_ev_day_{ev_day}.csv"
-        if os.path.exists(csv_name):
-            try:
-                existing_df = pd.read_csv(csv_name)
-                if 'Total 2022' in existing_df.columns:
-                    c_party_map = {r['County'].upper().strip(): r for _, r in c_party.iterrows()}
-                    for idx, row in existing_df.iterrows():
-                        c_key = str(row['County']).upper().strip()
-                        if c_key in c_party_map:
-                            up = c_party_map[c_key]
-                            existing_df.at[idx, 'Total 2026'] = up['Total 2026']
-                            existing_df.at[idx, 'Democrat (2026)'] = up['Democrat (2026)']
-                            existing_df.at[idx, 'Republican (2026)'] = up['Republican (2026)']
-                            existing_df.at[idx, 'Unaffiliated (2026)'] = up['Unaffiliated (2026)']
-                    existing_df.to_csv(csv_name, index=False)
-                    print(f"[{datetime.now().strftime('%H:%M:%S')}] Updated 2026 returns in multi-year breakdown: {csv_name}")
-                else:
+    if p_df is not None:
+        try:
+            c_party = p_df.groupby('county').agg(
+                dem=('dem', 'sum'),
+                rep=('rep', 'sum'),
+                una=('una', 'sum'),
+                tot=('tot', 'sum')
+            ).reset_index()
+            c_party.columns = ['County', 'Democrat (2026)', 'Republican (2026)', 'Unaffiliated (2026)', 'Total 2026']
+            st_row = pd.DataFrame([{
+                'County': 'STATEWIDE TOTAL',
+                'Democrat (2026)': int(c_party['Democrat (2026)'].sum()),
+                'Republican (2026)': int(c_party['Republican (2026)'].sum()),
+                'Unaffiliated (2026)': int(c_party['Unaffiliated (2026)'].sum()),
+                'Total 2026': int(c_party['Total 2026'].sum())
+            }])
+            c_party = pd.concat([c_party, st_row], ignore_index=True)
+            csv_name = f"nc_early_voting_party_ev_day_{ev_day}.csv"
+            if os.path.exists(csv_name):
+                try:
+                    existing_df = pd.read_csv(csv_name)
+                    if 'Total 2022' in existing_df.columns:
+                        c_party_map = {r['County'].upper().strip(): r for _, r in c_party.iterrows()}
+                        for idx, row in existing_df.iterrows():
+                            c_key = str(row['County']).upper().strip()
+                            if c_key in c_party_map:
+                                up = c_party_map[c_key]
+                                existing_df.at[idx, 'Total 2026'] = up['Total 2026']
+                                existing_df.at[idx, 'Democrat (2026)'] = up['Democrat (2026)']
+                                existing_df.at[idx, 'Republican (2026)'] = up['Republican (2026)']
+                                existing_df.at[idx, 'Unaffiliated (2026)'] = up['Unaffiliated (2026)']
+                        existing_df.to_csv(csv_name, index=False)
+                        print(f"[{datetime.now().strftime('%H:%M:%S')}] Updated 2026 returns in multi-year breakdown: {csv_name}")
+                    else:
+                        c_party.to_csv(csv_name, index=False)
+                        print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
+                except Exception:
                     c_party.to_csv(csv_name, index=False)
                     print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
-            except Exception:
+            else:
                 c_party.to_csv(csv_name, index=False)
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
-        else:
-            c_party.to_csv(csv_name, index=False)
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Exported daily county party breakdown: {csv_name}")
 
-        # Export latest daily email artifacts for web app immediate welcome dispatch
-        try:
-            import send_daily_summary_email
-            email_data = send_daily_summary_email.compute_daily_changes()
-            send_daily_summary_email.save_latest_email_artifacts(email_data)
+            # Export latest daily email artifacts for web app immediate welcome dispatch
+            try:
+                import send_daily_summary_email
+                email_data = send_daily_summary_email.compute_daily_changes()
+                send_daily_summary_email.save_latest_email_artifacts(email_data)
+            except Exception as e:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: Could not save daily email artifacts: {e}")
         except Exception as e:
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: Could not save daily email artifacts: {e}")
-    except Exception as e:
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: Could not export daily party CSV: {e}")
         print(f"[{datetime.now().strftime('%H:%M:%S')}] Notice: Could not export daily party CSV: {e}")
 
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Statewide 2026 Total: {st_tot:,} votes (Dem: {st_dem:,}, Rep: {st_rep:,}, Una: {st_una:,})")
@@ -436,8 +451,13 @@ def main():
     try:
         has_update, downloaded_zip = check_for_updates(zip_path, meta_path, force=args.force)
     except Exception as e:
-        print(f"Update check failed: {e}")
-        sys.exit(1)
+        print(f"Update check notice: {e}")
+        if os.path.exists(base_json_path):
+            print("Falling back to local cached precinct dataset in base JSON...")
+            has_update = True
+            downloaded_zip = None
+        else:
+            sys.exit(1)
 
     if not has_update and not args.force:
         print("Everything is up to date.")
@@ -448,10 +468,14 @@ def main():
         base_data = json.load(f)
     shp_lookup = base_data.get('precinct_lookup', {})
 
-    p_df, ev_day = process_2026_returns(zip_path, shp_lookup, target_ev_day=args.ev_day)
-    if p_df is not None:
-        update_map_files(p_df, ev_day, base_json_path, html_path, dest_public_html=args.dest_path)
-        print("Server update completed successfully!")
+    if downloaded_zip and os.path.exists(downloaded_zip):
+        p_df, ev_day = process_2026_returns(zip_path, shp_lookup, target_ev_day=args.ev_day)
+    else:
+        p_df = None
+        ev_day = base_data.get('state', {}).get('ev_day', 19)
+
+    update_map_files(p_df, ev_day, base_json_path, html_path, dest_public_html=args.dest_path)
+    print("Server update completed successfully!")
 
 if __name__ == "__main__":
     main()
