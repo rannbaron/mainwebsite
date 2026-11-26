@@ -441,11 +441,24 @@ function renderMeetingsTable() {
             <strong>${esc(v.item_title)}</strong>
             <span class="pill ${v.is_split ? "pill-split" : "pill-pass"}">${esc(v.outcome)} (${esc(v.tally)})</span>
           </div>
+          ${v.is_split && v.ayes && v.ayes.length ? `<div style="font-size:11.5px;color:#6ee7b7;margin-top:3px;"><strong>Ayes:</strong> ${esc(v.ayes.join(", "))}</div>` : ""}
           ${v.nays.length ? `<div style="font-size:11.5px;color:#fca5a5;margin-top:3px;"><strong>Nays:</strong> ${esc(v.nays.join(", "))}</div>` : ""}
           ${v.abstentions.length ? `<div style="font-size:11.5px;color:#fde68a;margin-top:2px;"><strong>Abstentions:</strong> ${esc(v.abstentions.join(", "))}</div>` : ""}
           ${v.discussion_detail || v.notes ? `<div style="font-size:11.5px;color:var(--muted);margin-top:3px;">${esc(v.discussion_detail || v.notes)}</div>` : ""}
         </div>
       `).join("") || `<div style="color:var(--dim);font-size:12px;">No formal non-consent roll-call votes recorded.</div>`;
+
+      const splitSumItems = (m.votes || []).filter(v => v.is_split).map(v => {
+        const sides = [];
+        if (v.ayes && v.ayes.length) sides.push(`<span style="color:#6ee7b7;"><strong>Ayes:</strong> ${esc(v.ayes.join(", "))}</span>`);
+        if (v.nays && v.nays.length) sides.push(`<span style="color:#fca5a5;"><strong>Nays:</strong> ${esc(v.nays.join(", "))}</span>`);
+        if (v.abstentions && v.abstentions.length) sides.push(`<span style="color:#fde68a;"><strong>Abstain:</strong> ${esc(v.abstentions.join(", "))}</span>`);
+        return `<div style="font-size:12px;margin-top:4px;"><strong>${esc(v.item_title)}</strong> (${esc(v.outcome)} ${esc(v.tally)}) &mdash; ${sides.join(" &bull; ") || "Roll-call names not recorded"}</div>`;
+      }).join("");
+
+      const splitSumBox = splitSumItems
+        ? `<div style="margin-top:10px;padding:10px 12px;border-radius:8px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);"><div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:#fca5a5;">Split Votes Breakdown (Names on Each Side)</div>${splitSumItems}</div>`
+        : "";
 
       drawerHtml = `
         <tr class="drawer-row">
@@ -453,6 +466,7 @@ function renderMeetingsTable() {
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;">
               <div style="max-width:860px;font-size:13px;color:#e2e8f0;">
                 <strong style="color:var(--accent);">Executive Summary:</strong> ${esc(m.executive_summary)}
+                ${splitSumBox}
               </div>
               <div style="display:flex;gap:8px;flex-wrap:wrap;">
                 ${m.pdf_exists ? `<a class="pdf-btn" href="${esc(m.pdf_url)}" target="_blank" rel="noopener">&#128196; Open Full Executive Summary PDF</a>` : ""}
