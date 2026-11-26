@@ -1780,6 +1780,7 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
             <span style="font-size: 11px; color: var(--text-dim);">${{v.category || 'General'}}</span>
           </div>
           <div class="vote-title">${{vUrl ? `<a href="${{vUrl}}" target="_blank" rel="noopener noreferrer" style="color:#f8fafc;text-decoration:none;">${{v.item_title}}</a>` : v.item_title}}</div>
+          ${{v.discussion_detail ? `<div class="vote-breakdown" style="margin-top:6px;margin-bottom:6px;color:#cbd5e1;line-height:1.5;"><strong>Discussion:</strong> ${{v.discussion_detail}}</div>` : ''}}
           <div class="vote-breakdown">
             <strong>Mover:</strong> ${{v.mover || 'N/A'}} | <strong>Seconder:</strong> ${{v.seconder || 'N/A'}} | <strong>Format:</strong> ${{v.vote_format}}
           </div>

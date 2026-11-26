@@ -165,6 +165,7 @@ class DurhamPoliticsDB:
                 ("agenda_items", "vote_summary", "TEXT"),
                 ("votes", "timestamp_seconds", "INTEGER"),
                 ("votes", "timestamp_label", "TEXT"),
+                ("votes", "discussion_detail", "TEXT"),
                 ("sources_of_disagreement", "timestamp_seconds", "INTEGER"),
                 ("sources_of_disagreement", "timestamp_label", "TEXT"),
             ]
@@ -613,6 +614,7 @@ class DurhamPoliticsDB:
                     v_keys = v.keys()
                     v_ts = v["timestamp_seconds"] if "timestamp_seconds" in v_keys else None
                     v_ts_lbl = v["timestamp_label"] if "timestamp_label" in v_keys else ""
+                    v_disc = v["discussion_detail"] if "discussion_detail" in v_keys else ""
                     votes.append({
                         "id": v["id"],
                         "item_title": v["item_title"],
@@ -628,6 +630,7 @@ class DurhamPoliticsDB:
                         "abstentions": json.loads(v["abstentions"] or "[]"),
                         "amendments": json.loads(v["amendments"] or "[]"),
                         "notes": v["notes"],
+                        "discussion_detail": v_disc or "",
                         "category": v["category"],
                         "timestamp_seconds": v_ts,
                         "timestamp_label": v_ts_lbl or "",

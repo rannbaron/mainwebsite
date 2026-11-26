@@ -29,6 +29,7 @@ from durham_politics_tracker.database import DurhamPoliticsDB
 from durham_politics_tracker.site_generator import generate_durhampolitics_page
 
 EXTRACTED_PATH = _SCRIPT_DIR / "agenda_timestamps_extracted.json"
+VOTE_DISCUSSIONS_PATH = _SCRIPT_DIR / "vote_discussions_extracted.json"
 SUMMARIES_DIR = OUTPUT_DIR / "summaries"
 
 
@@ -194,6 +195,8 @@ def build_meeting_pdf(meeting: dict, out_path: Path):
                 f'<font color="{outcome_color}"><b>[{esc(v.get("outcome"))} — {esc(v.get("tally"))}]</b></font>{ts_html}',
                 item_title_style,
             ))
+            if v.get("discussion_detail"):
+                story.append(Paragraph(f"<b>Discussion &amp; Deliberation:</b> {esc(v['discussion_detail'])}", body_style))
             details = []
             if v.get("mover"):
                 details.append(f"<b>Mover:</b> {esc(v['mover'])}")
@@ -247,14 +250,20 @@ def main():
     db = DurhamPoliticsDB()
 
     extracted = json.loads(EXTRACTED_PATH.read_text(encoding="utf-8")) if EXTRACTED_PATH.exists() else {}
-    print(f"Loaded extracted agenda/timestamps for {len(extracted)} meetings.")
+    vote_discussions = json.loads(VOTE_DISCUSSIONS_PATH.read_text(encoding="utf-8")) if VOTE_DISCUSSIONS_PATH.exists() else {}
+    print(f"Loaded extracted agenda/timestamps for {len(extracted)} meetings and detailed discussions for {len(vote_discussions)} votes.")
 
     agenda_count = 0
     vote_ts_count = 0
     dis_ts_count = 0
+    vote_disc_count = 0
 
     with db.get_connection() as conn:
         cur = conn.cursor()
+        for vote_id, detail in vote_discussions.items():
+            if detail:
+                cur.execute("UPDATE votes SET discussion_detail = ? WHERE id = ?", (detail, vote_id))
+                vote_disc_count += 1
         for meeting_id, payload in extracted.items():
             # Replace agenda items for this meeting
             cur.execute("DELETE FROM agenda_items WHERE meeting_id = ?", (meeting_id,))

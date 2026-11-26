@@ -251,12 +251,16 @@ def synthesize_live_summary(
                 is_unam = "unanimous" in txt.lower()
                 outcome = "Failed" if "fail" in txt.lower() else "Passed"
                 tally = f"{tally_m.group(1)}-{tally_m.group(2)}" if tally_m else ("Unanimous" if is_unam else "Voice / Roll Call")
+                # Gather surrounding ~4 lines of discussion context leading up to this vote
+                ctx_lines = [x["text"] for x in current_block[-5:]]
+                disc_ctx = " ".join(ctx_lines).strip()[:650]
                 votes.append({
                     "item_title": block_title,
                     "outcome": outcome,
                     "tally": tally,
                     "timestamp_seconds": sec,
                     "timestamp_label": format_seconds(sec),
+                    "discussion_detail": disc_ctx,
                     "notes": txt[:200],
                 })
 
@@ -459,8 +463,8 @@ def archive_completed_meeting(
                 "category": classify_category(v["item_title"]),
             })
             conn.execute(
-                "UPDATE votes SET timestamp_seconds = ?, timestamp_label = ? WHERE id = ?",
-                (v["timestamp_seconds"], v["timestamp_label"], f"v_{meeting_id}_{idx:02d}"),
+                "UPDATE votes SET timestamp_seconds = ?, timestamp_label = ?, discussion_detail = ? WHERE id = ?",
+                (v["timestamp_seconds"], v["timestamp_label"], v.get("discussion_detail", ""), f"v_{meeting_id}_{idx:02d}"),
             )
 
     dataset = db.export_full_dataset()
