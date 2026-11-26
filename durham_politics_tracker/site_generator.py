@@ -893,6 +893,8 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
         <div id="authErrorMsg" class="auth-error">Invalid username or password. Please verify and retry.</div>
         <div style="margin-top: 12px; font-size: 12.5px; color: var(--text-muted); text-align: center;">
           Need an account? <a href="/durhampolitics/signup.html" style="color: #60a5fa; text-decoration: none; font-weight: 600;">Request Access &rarr;</a>
+          &nbsp;&bull;&nbsp;
+          <a href="/durhampolitics/docs.html" style="color: var(--text-muted); text-decoration: none;">Documentation</a>
         </div>
       </form>
     </div>
@@ -914,7 +916,7 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
         </div>
 
         <div class="header-actions">
-          <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);cursor:pointer;background:rgba(15,23,42,0.65);border:1px solid var(--border);padding:6px 10px;border-radius:8px;white-space:nowrap;" title="Toggle blanket consent agenda votes in counts and lists (pulled items are always included)">
+          <label style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--text-muted);cursor:pointer;background:rgba(15,23,42,0.65);border:1px solid var(--card-border);padding:6px 10px;border-radius:8px;white-space:nowrap;" title="Toggle blanket consent agenda votes in counts and lists (pulled items are always included)">
             <input type="checkbox" id="includeConsentAgendaToggle" onchange="toggleConsentAgenda(this.checked)" style="accent-color:#3b82f6;cursor:pointer;" />
             <span>Include Consent Agenda</span>
           </label>
@@ -922,6 +924,9 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
             <span class="search-icon">&#128269;</span>
             <input type="text" id="globalSearchInput" class="search-input" placeholder="Search votes, topics, officials..." oninput="handleGlobalSearch(this.value)">
           </div>
+          <a href="/durhampolitics/docs.html" style="display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border-radius:8px;border:1px solid var(--card-border);background:rgba(15,23,42,0.65);color:var(--text-main);text-decoration:none;font-size:12px;font-weight:600;white-space:nowrap;" title="Site Documentation & Guide">
+            <span>&#128214;</span> Docs
+          </a>
         </div>
       </div>
     </header>
@@ -2311,6 +2316,8 @@ def generate_live_meeting_page() -> str:
       <button class="auth-btn" type="submit">Unlock Live Meeting</button>
       <div style="margin-top:12px;text-align:center;font-size:12px;color:var(--text-muted);">
         Need an account? <a href="/durhampolitics/signup.html" style="color:#60a5fa;text-decoration:none;font-weight:600;">Request Access &rarr;</a>
+        &nbsp;&bull;&nbsp;
+        <a href="/durhampolitics/docs.html" style="color:var(--text-muted);text-decoration:none;">Documentation</a>
       </div>
     </form>
   </div>
@@ -2323,6 +2330,7 @@ def generate_live_meeting_page() -> str:
       </div>
       <div class="hdr-right">
         <span id="summaryStatus">Summary updates every 60s (Real-time Audio ASR)</span>
+        <a href="/durhampolitics/docs.html" class="btn-back">&#128214; Docs</a>
         <a href="/durhampolitics/" class="btn-back">&larr; Back to Archive</a>
       </div>
     </header>

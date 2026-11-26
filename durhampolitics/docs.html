@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <title>Documentation &amp; Guide | Durham Politics Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #070b14;
+      --bg-surface: #0f1623;
+      --bg-card: #151e30;
+      --bg-elevated: #1c2841;
+      --border: #23304c;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #3b82f6;
+      --dps: #3b82f6;
+      --city: #10b981;
+      --bocc: #f59e0b;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(15, 22, 35, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+    }
+    .hdr-inner {
+      max-width: 1080px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 12px; flex-wrap: wrap;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: #fff; font-weight: 800; font-size: 16px; }
+    .brand-logo {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: linear-gradient(135deg, #2563eb, #10b981);
+      display: inline-flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 13px; color: #fff;
+    }
+    .nav-links { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .nav-btn {
+      padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg-card); color: var(--text-main); text-decoration: none;
+      font-size: 12.5px; font-weight: 600;
+    }
+    .nav-btn:hover { background: var(--bg-elevated); }
+    .nav-btn.primary { background: rgba(37, 99, 235, 0.22); border-color: rgba(96, 165, 250, 0.45); color: #93c5fd; }
+
+    .layout {
+      max-width: 1080px; margin: 28px auto 64px auto; padding: 0 20px;
+      display: grid; grid-template-columns: 230px 1fr; gap: 28px;
+    }
+    @media (max-width: 820px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { position: static !important; }
+    }
+    .toc {
+      position: sticky; top: 76px; align-self: start;
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 16px;
+    }
+    .toc h3 {
+      font-size: 11px; font-weight: 800; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--text-dim); margin-bottom: 10px;
+    }
+    .toc a {
+      display: block; padding: 6px 8px; border-radius: 6px;
+      color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 500;
+    }
+    .toc a:hover { background: var(--bg-card); color: #fff; }
+
+    main { min-width: 0; }
+    .hero {
+      background: linear-gradient(135deg, rgba(37,99,235,0.16), rgba(16,185,129,0.1));
+      border: 1px solid var(--border); border-radius: 14px; padding: 28px; margin-bottom: 24px;
+    }
+    .hero h1 { font-size: 26px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .hero p { font-size: 14.5px; color: var(--text-muted); }
+
+    section.doc-card {
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px; margin-bottom: 20px;
+    }
+    section.doc-card h2 {
+      font-size: 18px; font-weight: 800; color: #fff;
+      margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    }
+    section.doc-card h3 {
+      font-size: 14px; font-weight: 700; color: #93c5fd; margin: 16px 0 6px 0;
+    }
+    p { font-size: 14px; color: #cbd5e1; margin-bottom: 10px; }
+    ul { margin: 8px 0 12px 20px; color: #cbd5e1; font-size: 13.8px; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: 'JetBrains Mono', monospace; font-size: 12px;
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 2px 6px; border-radius: 5px; color: #93c5fd;
+    }
+    table {
+      width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px;
+    }
+    th, td {
+      text-align: left; padding: 10px 12px; border: 1px solid var(--border);
+    }
+    th { background: var(--bg-card); color: #e2e8f0; font-weight: 700; }
+    td { color: #cbd5e1; }
+    .pill {
+      display: inline-block; padding: 2px 8px; border-radius: 999px;
+      font-size: 11px; font-weight: 700;
+    }
+    .pill-green { background: rgba(16,185,129,0.2); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.4); }
+    .pill-yellow { background: rgba(245,158,11,0.2); color: #fcd34d; border: 1px solid rgba(245,158,11,0.4); }
+    .pill-red { background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.4); }
+    .callout {
+      background: var(--bg-card); border-left: 3px solid var(--accent);
+      border-radius: 8px; padding: 12px 14px; margin: 12px 0; font-size: 13.5px; color: #cbd5e1;
+    }
+    footer {
+      text-align: center; font-size: 12px; color: var(--text-dim);
+      padding: 20px; border-top: 1px solid var(--border);
+    }
+    footer a { color: #60a5fa; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hdr-inner">
+      <a class="brand" href="/durhampolitics/">
+        <span class="brand-logo">DP</span>
+        <span>Durham Politics Tracker &mdash; Documentation</span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-btn primary" href="/durhampolitics/">&larr; Tracker Dashboard</a>
+        <a class="nav-btn" href="/durhampolitics/live.html">Live Monitor</a>
+        <a class="nav-btn" href="/durhampolitics/signup.html">Request Account</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="toc">
+      <h3>Contents</h3>
+      <a href="#coverage">1. Scope &amp; Coverage</a>
+      <a href="#navigation">2. Dashboard Navigation</a>
+      <a href="#consent">3. Consent Agenda Filter</a>
+      <a href="#alignments">4. Heatmaps &amp; Dissent</a>
+      <a href="#videos-pdfs">5. Video Links &amp; PDFs</a>
+      <a href="#live">6. Live Meeting Monitor</a>
+      <a href="#pipeline">7. Audio ASR &amp; Automation</a>
+      <a href="#accounts">8. Accounts &amp; Privacy</a>
+    </aside>
+
+    <main>
+      <div class="hero">
+        <h1>Durham Politics Tracker Documentation</h1>
+        <p>Complete reference for navigating meeting archives, voting alignments, executive summary PDFs, real-time live meeting monitoring, and user account access across Durham's three major local governing bodies.</p>
+      </div>
+
+      <section class="doc-card" id="coverage">
+        <h2>1. Scope &amp; Coverage</h2>
+        <p>The Durham Politics Tracker automatically ingests, transcribes, and analyzes public meetings from Durham's three primary elected local boards from each newest cohort's seating date forward:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>Governing Body</th>
+              <th>Seats</th>
+              <th>Coverage Start</th>
+              <th>Official Video Channel</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Durham City Council</strong></td>
+              <td>7</td>
+              <td>Dec 1, 2025 <em>(Matt Kopac seated)</em></td>
+              <td><code>@CityofDurhamNC</code></td>
+            </tr>
+            <tr>
+              <td><strong>DPS Board of Education</strong></td>
+              <td>7</td>
+              <td>July 6, 2026 <em>(Natalie Bent Kitaif seated)</em></td>
+              <td><code>@durhampublicschoolsboardof2290</code></td>
+            </tr>
+            <tr>
+              <td><strong>Durham Board of County Commissioners (BOCC)</strong></td>
+              <td>5</td>
+              <td>Dec 2, 2024 <em>(Stephen Valentine seated)</em></td>
+              <td><code>@DCoWebmaster</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="doc-card" id="navigation">
+        <h2>2. Dashboard Navigation</h2>
+        <ul>
+          <li><strong>Overview &amp; Macro Trends:</strong> High-level KPI cards (Tracked Meetings, Recorded Formal Votes, Contested Roll Calls, Deliberation Issues), cross-body fault line summaries, and recent landmark votes.</li>
+          <li><strong>Board Tabs (DPS School Board, City Council, County Commissioners):</strong> Displays all currently seated members' vote totals, Aye rate, Dissent rate, full voting history modal (<em>Inspect Full Voting Record</em>), and every tracked meeting in reverse chronological order.</li>
+          <li><strong>Member Directory:</strong> Filter officials across all bodies by <em>Current Serving Officials</em>, <em>Preceding / Former Members</em>, or <em>All</em>.</li>
+          <li><strong>Voting Alignments &amp; Heatmaps:</strong> Board-specific pairwise voting agreement grids and Dissent Frequency Leaderboards.</li>
+          <li><strong>Meeting Archives &amp; Video:</strong> Master filterable timeline across all three boards by body, year, and global search keywords.</li>
+        </ul>
+      </section>
+
+      <section class="doc-card" id="consent">
+        <h2>3. Consent Agenda Filter</h2>
+        <p>By default, <strong>blanket Consent Agenda and Settle Agenda votes are excluded</strong> from all vote counts, member totals, dissent percentages, pairwise alignment grids, and meeting vote lists.</p>
+        <div class="callout">
+          <strong>Pulled Items Always Count:</strong> Any item pulled off the consent agenda for separate discussion or a standalone vote is <em>always included</em> in the counts by default.
+        </div>
+        <p>To include blanket consent agenda votes back into all calculations and lists, check the <strong>Include Consent Agenda</strong> checkbox in the top header bar. Every KPI, member card, alignment table, and vote list updates immediately.</p>
+      </section>
+
+      <section class="doc-card" id="alignments">
+        <h2>4. Pairwise Heatmaps &amp; Dissent Leaderboard</h2>
+        <h3>Upper-Triangular Pairwise Agreement Grid</h3>
+        <p>Select a board from the dropdown to inspect pairwise agreement among its currently seated members. Because agreement is symmetric, only the main diagonal and upper triangle are displayed to avoid duplicate cells:</p>
+        <ul>
+          <li><span class="pill pill-green">&ge; 95%</span> &mdash; High voting agreement (green)</li>
+          <li><span class="pill pill-yellow">90% &ndash; 94.9%</span> &mdash; Moderate divergence (yellow)</li>
+          <li><span class="pill pill-red">&lt; 90%</span> &mdash; Frequent disagreement (red)</li>
+        </ul>
+        <h3>Dissent Frequency Leaderboard</h3>
+        <p>The leaderboard directly beneath the grid is strictly scoped to the <strong>currently selected board</strong>. Each member's Dissent Rate measures <code>NAY</code> votes cast against carried majority motions divided by total recorded votes cast (<code>dissents / votes_cast</code>).</p>
+      </section>
+
+      <section class="doc-card" id="videos-pdfs">
+        <h2>5. Video Timestamp Links &amp; Executive Summary PDFs</h2>
+        <p>Every meeting card provides direct verification back to the primary video record:</p>
+        <ul>
+          <li><strong>Full Meeting Video:</strong> Click the meeting title or the <em>Watch Video Recording</em> button to open the official YouTube recording.</li>
+          <li><strong>Agenda Topics &amp; Timestamps:</strong> Expand <em>Agenda Topics &amp; Timestamps</em> on any meeting card to view chronological agenda items, each with a clickable <code>&#9658; HH:MM:SS</code> deep link (<code>&amp;t=&lt;seconds&gt;s</code>) jumping directly to that topic in the video.</li>
+          <li><strong>Roll Call Votes &amp; Debates:</strong> Every individual vote (including inside each official's <em>Inspect Full Voting Record</em> modal) and debate card links directly to its exact timestamp in the video, and includes a detailed <strong>Discussion</strong> summary.</li>
+          <li><strong>Executive Summary PDF:</strong> Click <em>Executive Summary PDF</em> on any meeting to open a downloadable, print-ready report (<code>/durhampolitics/summaries/&lt;meeting_id&gt;.pdf</code>) containing meeting metadata, executive overview, chronological agenda discussions, detailed per-vote <em>Discussion &amp; Deliberation</em> summaries, formal vote breakdowns, policy debates, and clickable timestamp hyperlinks embedded inside the PDF.</li>
+        </ul>
+      </section>
+
+      <section class="doc-card" id="live">
+        <h2>6. Live Meeting in Progress</h2>
+        <p>When any of the three tracked Durham boards is actively broadcasting live on YouTube, a pulsing red <strong>Live Meeting in Progress</strong> tab appears automatically in the navigation bar.</p>
+        <p>Clicking the tab opens <a href="/durhampolitics/live.html" style="color:#60a5fa;">/durhampolitics/live.html</a> in a split-pane layout:</p>
+        <ul>
+          <li><strong>Left Pane:</strong> Dynamically updating <em>Executive Summary of Discussion So Far</em> (overview, agenda topics covered so far, and motions/votes observed), refreshed every <strong>60 seconds</strong>.</li>
+          <li><strong>Top Right Pane:</strong> Embedded live video player of the ongoing broadcast.</li>
+          <li><strong>Bottom Right Pane:</strong> Auto-scrolling running transcript generated in real time from the video's audio stream (with search filter and auto-scroll toggle).</li>
+        </ul>
+      </section>
+
+      <section class="doc-card" id="pipeline">
+        <h2>7. Audio ASR Processing &amp; GitHub Automation</h2>
+        <p>All ongoing monitoring and archival run automatically via GitHub Actions (<code>durham_live_and_archive.yml</code>) every 5 minutes:</p>
+        <ul>
+          <li><strong>Live Real-Time Audio ASR (No Captions):</strong> During live meetings, audio is streamed directly from the video via <code>yt-dlp</code> + <code>ffmpeg</code> and transcribed in rolling 20-second chunks using <code>faster-whisper</code>, normalized with Durham official name registries, and summarized every 60 seconds.</li>
+          <li><strong>Dual Audio + Captions Archival:</strong> When a meeting concludes, the pipeline runs both audio ASR and caption extraction (<code>dual_transcriber.py</code>), scores both transcripts for reliability, picks the more reliable source, updates <code>durham_politics.db</code>, generates the Executive Summary PDF, and redeploys the site automatically.</li>
+        </ul>
+      </section>
+
+      <section class="doc-card" id="accounts">
+        <h2>8. Accounts, Approval &amp; Privacy</h2>
+        <ul>
+          <li><strong>Requesting Access:</strong> New users can sign up at <a href="/durhampolitics/signup.html" style="color:#60a5fa;">/durhampolitics/signup</a>. Passwords are salted and hashed (SHA-256) in the browser before submission; plaintext passwords are never emailed or stored.</li>
+          <li><strong>Administrator Approval:</strong> Every signup triggers an immediate approval notification to <code>rann@rannbar-on.com</code>, which can be approved or revoked via the GitHub Actions workflow.</li>
+          <li><strong>Strict Page Isolation:</strong> Approved user accounts grant access <strong>exclusively</strong> to <code>https://rannbar-on.com/durhampolitics/</code> (including its live view, PDFs, and docs) and are denied access to all other private pages on <code>rannbar-on.com</code>.</li>
+          <li><strong>Idle Session Timeout:</strong> Authenticated sessions remain active across page navigation and automatically time out after <strong>1 hour of idle time</strong>.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    Durham Politics Tracker &bull;
+    <a href="/durhampolitics/">Dashboard</a> &bull;
+    <a href="/durhampolitics/live.html">Live Monitor</a> &bull;
+    <a href="/durhampolitics/signup.html">Request Account</a> &bull;
+    Private Research Tool (<code>noindex, nofollow</code>)
+  </footer>
+</body>
+</html>
