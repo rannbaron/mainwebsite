@@ -131,12 +131,26 @@ function renderAllFilteredSections() {
 
 function renderConflicts() {
   const themesBar = document.getElementById("conflictThemesBar");
-  themesBar.innerHTML = (TERM_DATA.top_conflict_themes || []).map(th => `
-    <button class="topic-chip ${ACTIVE_TOPIC === th.topic ? "active" : ""}" onclick="toggleTermTopic('${esc(th.topic)}')">
-      <span class="topic-dot" style="background:${esc(th.color)};"></span>
-      <strong>${esc(th.topic)}</strong>: ${th.conflicts_count} conflict(s) &bull; ${th.split_votes_count} split vote(s)
-    </button>
-  `).join("");
+  const topicBlocMap = Object.fromEntries((TERM_DATA.topic_blocs || []).map(tb => [tb.topic, tb]));
+  themesBar.innerHTML = (TERM_DATA.top_conflict_themes || []).map(th => {
+    const tb = topicBlocMap[th.topic];
+    let alignHtml = "";
+    if (tb && (tb.blocs || []).length >= 2) {
+      const aNames = tb.blocs[0].members.map(m => m.short_name).join(", ");
+      const bNames = tb.blocs[1].members.map(m => m.short_name).join(", ");
+      alignHtml = `<div class="theme-area-align"><span style="color:#93c5fd;">${esc(aNames)}</span> <span style="color:var(--dim);">vs</span> <span style="color:#fcd34d;">${esc(bNames)}</span></div>`;
+    }
+    return `
+      <button class="theme-area-card ${ACTIVE_TOPIC === th.topic ? "active" : ""}" onclick="toggleTermTopic('${esc(th.topic)}')">
+        <div class="theme-area-top">
+          <div class="theme-area-name"><span class="topic-dot" style="background:${esc(th.color)};"></span>${esc(th.topic)}</div>
+          <span class="pill pill-split">${th.split_votes_count} split${th.split_votes_count === 1 ? "" : "s"}</span>
+        </div>
+        <div class="theme-area-meta">${th.conflicts_count} recorded debate(s) &amp; contested votes &bull; Click to filter</div>
+        ${alignHtml}
+      </button>
+    `;
+  }).join("");
 
   const filtered = (TERM_DATA.conflicts || []).filter(c => {
     if (ACTIVE_TOPIC && c.category !== ACTIVE_TOPIC) return false;

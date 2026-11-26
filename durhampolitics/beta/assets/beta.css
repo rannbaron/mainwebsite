@@ -261,7 +261,21 @@ a:hover { text-decoration: underline; }
 .tsw-pill.active { background: rgba(56,189,248,0.18); border-color: var(--accent); color: #fff; }
 
 /* Conflict Cards */
-.themes-bar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+/* Conflict Areas Overview Grid */
+.themes-bar {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 10px; margin-bottom: 16px;
+}
+.theme-area-card {
+  text-align: left; cursor: pointer; background: var(--bg-elev); border: 1px solid var(--border);
+  border-radius: 11px; padding: 13px 15px; color: var(--text); transition: border-color 0.15s, background 0.15s;
+}
+.theme-area-card:hover { border-color: var(--border-hi); background: var(--surface); }
+.theme-area-card.active { border-color: var(--accent); background: rgba(56,189,248,0.12); }
+.theme-area-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.theme-area-name { font-size: 13.5px; font-weight: 800; display: flex; align-items: center; gap: 7px; }
+.theme-area-meta { font-size: 11.5px; color: var(--muted); margin-top: 4px; }
+.theme-area-align { font-size: 11.5px; color: #cbd5e1; margin-top: 6px; line-height: 1.4; }
 .conflicts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(540px, 1fr)); gap: 14px; }
 @media (max-width: 640px) { .conflicts-grid { grid-template-columns: 1fr; } }
 .conflict-card {

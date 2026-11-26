@@ -170,9 +170,12 @@ function renderBoards() {
     });
     const cardsHtml = terms.map(t => {
       const k = t.kpis || {};
-      const themesHtml = (t.top_themes || []).map(th =>
-        `<span class="pill pill-cat"><span class="topic-dot" style="background:${esc(th.color)};"></span>${esc(th.topic)} (${th.conflicts_count})</span>`
-      ).join("");
+      const themesHtml = (t.top_themes || []).map(th => {
+        const meta = th.split_votes_count
+          ? `${th.split_votes_count} split${th.split_votes_count === 1 ? "" : "s"}`
+          : `${th.conflicts_count} debate${th.conflicts_count === 1 ? "" : "s"}`;
+        return `<span class="pill pill-cat"><span class="topic-dot" style="background:${esc(th.color)};"></span>${esc(th.topic)} <span style="color:var(--muted);">(${meta})</span></span>`;
+      }).join("");
       return `
         <a class="term-card" href="${esc(t.href + qSuffix)}">
           <div>
@@ -193,8 +196,7 @@ function renderBoards() {
               <div class="tstat"><b style="color:#fcd34d;">${k.split_votes_count || 0}</b><span>Splits</span></div>
               <div class="tstat"><b style="color:#c4b5fd;">${k.conflicts_count || 0}</b><span>Conflicts</span></div>
             </div>
-            ${themesHtml ? `<div class="term-themes">${themesHtml}</div>` : ""}
-            ${t.top_conflict_preview ? `<div class="term-conflict-preview"><strong>Top Flashpoint:</strong> ${esc(t.top_conflict_preview)}</div>` : ""}
+            ${themesHtml ? `<div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--dim);margin-top:12px;">Primary Areas of Disagreement</div><div class="term-themes" style="margin-top:6px;">${themesHtml}</div>` : ""}
           </div>
           <div class="term-card-cta">
             <span>Open Term Conflicts, Voting Blocs &amp; Meetings</span>
