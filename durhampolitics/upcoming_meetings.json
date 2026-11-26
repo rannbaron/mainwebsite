@@ -1,10 +1,20 @@
 {
-  "updated_at": "2026-11-26T16:58:39.648861+00:00",
+  "updated_at": "2026-11-26T17:02:21.273241+00:00",
   "portals": {
     "bocc": "https://durhamcounty.legistar.com/Calendar.aspx",
     "city": "https://cityordinances.durhamnc.gov/OnBaseAgendaOnline",
     "city_calendar": "https://www.durhamnc.gov/AgendaCenter",
     "dps": "https://www.dpsnc.net/page/board-of-education"
   },
-  "meetings": []
+  "meetings": [
+    {
+      "body_id": "city",
+      "video_id": "tK-Tiwg8mek",
+      "title": "Durham City Council December 7, 2026",
+      "date": "",
+      "time_et": "",
+      "video_url": "https://www.youtube.com/watch?v=tK-Tiwg8mek",
+      "source": "youtube_upcoming"
+    }
+  ]
 }

@@ -128,7 +128,7 @@ def parse_youtube_streams_page(body_id: str, html: str) -> Dict[str, Any]:
     except Exception:
         return result
 
-    # Recursively walk for videoRenderer objects
+    # Recursively walk for both legacy `videoRenderer` and newer `lockupViewModel` objects
     stack = [data]
     seen = set()
     kws = MEETING_KEYWORDS[body_id]
@@ -136,7 +136,68 @@ def parse_youtube_streams_page(body_id: str, html: str) -> Dict[str, Any]:
     while stack:
         node = stack.pop()
         if isinstance(node, dict):
-            if "videoRenderer" in node and isinstance(node["videoRenderer"], dict):
+            if "lockupViewModel" in node and isinstance(node["lockupViewModel"], dict):
+                lm = node["lockupViewModel"]
+                vid = lm.get("contentId")
+                if vid and vid not in seen:
+                    seen.add(vid)
+                    lm_str = json.dumps(lm)
+                    # Extract title from metadata.lockupMetadataViewModel.title.content
+                    title = (
+                        lm.get("metadata", {})
+                        .get("lockupMetadataViewModel", {})
+                        .get("title", {})
+                        .get("content", "")
+                    )
+                    if not title:
+                        m_t = re.search(r'"title":\s*\{"content":\s*"([^"]+)"', lm_str)
+                        title = m_t.group(1) if m_t else ""
+                    if not any(k in title.lower() for k in kws):
+                        continue
+
+                    is_upcoming = '"text": "Upcoming"' in lm_str or '"text":"Upcoming"' in lm_str or "Scheduled for" in lm_str
+                    is_live = (
+                        "BADGE_STYLE_LIVE" in lm_str
+                        or '"text": "LIVE"' in lm_str
+                        or '"text":"LIVE"' in lm_str
+                        or "watching now" in lm_str.lower()
+                    ) and not is_upcoming
+
+                    if is_live:
+                        result["live"].append({
+                            "body_id": body_id,
+                            "video_id": vid,
+                            "title": title,
+                            "video_url": f"https://www.youtube.com/watch?v={vid}",
+                        })
+                    elif is_upcoming:
+                        # Try to parse "Scheduled for 12/7/26, 7:00 PM" from metadata text
+                        date_str, time_str = "", ""
+                        m_sch = re.search(r"Scheduled for\s+(\d{1,2})/(\d{1,2})/(\d{2,4}),?\s+(\d{1,2}:\d{2}\s*[AP]M)", lm_str, re.I)
+                        if m_sch:
+                            mo, dy, yr = int(m_sch.group(1)), int(m_sch.group(2)), int(m_sch.group(3))
+                            if yr < 100:
+                                yr += 2000
+                            date_str = f"{yr:04d}-{mo:02d}-{dy:02d}"
+                            time_str = m_sch.group(4).strip()
+                        result["upcoming"].append({
+                            "body_id": body_id,
+                            "video_id": vid,
+                            "title": title,
+                            "date": date_str,
+                            "time_et": time_str,
+                            "video_url": f"https://www.youtube.com/watch?v={vid}",
+                            "source": "youtube_upcoming",
+                        })
+                    else:
+                        if len(result["recent_completed"]) < 6:
+                            result["recent_completed"].append({
+                                "body_id": body_id,
+                                "video_id": vid,
+                                "title": title,
+                                "video_url": f"https://www.youtube.com/watch?v={vid}",
+                            })
+            elif "videoRenderer" in node and isinstance(node["videoRenderer"], dict):
                 vr = node["videoRenderer"]
                 vid = vr.get("videoId")
                 if vid and vid not in seen:
