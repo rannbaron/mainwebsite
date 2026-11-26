@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <title>Live Meeting in Progress | Durham Politics Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #070b14;
+      --bg-surface: #0f1623;
+      --bg-card: #151e30;
+      --bg-elevated: #1c2841;
+      --border: #23304c;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #3b82f6;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warn: #f59e0b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-base);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    #authOverlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: radial-gradient(circle at top, #13203d 0%, #070b14 70%);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .auth-card {
+      width: 100%; max-width: 400px; background: var(--bg-surface);
+      border: 1px solid var(--border); border-radius: 14px; padding: 28px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    }
+    .auth-card h2 { font-size: 18px; margin-bottom: 6px; }
+    .auth-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 18px; }
+    .auth-input {
+      width: 100%; padding: 10px 12px; margin-bottom: 12px; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg-card); color: var(--text-main);
+      font-size: 14px;
+    }
+    .auth-btn {
+      width: 100%; padding: 10px 14px; border-radius: 8px; border: none;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #fff;
+      font-weight: 700; font-size: 14px; cursor: pointer;
+    }
+    #liveApp {
+      display: none;
+      flex-direction: column;
+      height: 100vh;
+      width: 100%;
+    }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px; background: var(--bg-surface); border-bottom: 1px solid var(--border);
+      gap: 12px; flex-shrink: 0; flex-wrap: wrap;
+    }
+    .hdr-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .live-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 800;
+      background: rgba(239,68,68,0.2); color: #fca5a5; border: 1px solid rgba(239,68,68,0.45);
+      text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;
+    }
+    .live-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: #ef4444;
+      box-shadow: 0 0 8px #ef4444; animation: pulse 1.4s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+    .hdr-title { font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hdr-right { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text-muted); }
+    .btn-back {
+      padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg-card); color: var(--text-main); text-decoration: none;
+      font-size: 12px; font-weight: 600;
+    }
+    .btn-back:hover { background: var(--bg-elevated); }
+
+    /* Split Layout: Left = Exec Summary, Top-Right = Video, Bottom-Right = Running Transcript */
+    .split-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(420px, 1.15fr) minmax(380px, 0.85fr);
+      grid-template-rows: 1fr 1fr;
+      gap: 12px;
+      padding: 12px;
+      min-height: 0;
+    }
+    .pane {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .pane-left { grid-column: 1; grid-row: 1 / span 2; }
+    .pane-top-right { grid-column: 2; grid-row: 1; }
+    .pane-bottom-right { grid-column: 2; grid-row: 2; }
+    .pane-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; background: var(--bg-card); border-bottom: 1px solid var(--border);
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+      color: #cbd5e1; flex-shrink: 0; gap: 8px;
+    }
+    .pane-body { flex: 1; overflow-y: auto; padding: 16px; min-height: 0; }
+    .video-wrap { flex: 1; background: #000; position: relative; min-height: 0; }
+    .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .section-hdr {
+      font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;
+      color: #60a5fa; margin: 16px 0 8px 0;
+    }
+    .section-hdr:first-child { margin-top: 0; }
+    .exec-box {
+      background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+      border-radius: 8px; padding: 14px; font-size: 13.5px; line-height: 1.6; color: #e2e8f0;
+    }
+    .topic-card, .vote-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px; margin-bottom: 10px;
+    }
+    .topic-head {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px;
+    }
+    .ts-chip {
+      display: inline-flex; align-items: center; gap: 4px; font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 600; color: #93c5fd; background: rgba(37,99,235,0.2);
+      border: 1px solid rgba(96,165,250,0.35); border-radius: 999px; padding: 2px 8px;
+      text-decoration: none;
+    }
+    .transcript-line {
+      font-size: 12.5px; line-height: 1.5; padding: 5px 8px; border-radius: 6px;
+      border-bottom: 1px solid rgba(35,48,76,0.45);
+    }
+    .transcript-line:hover { background: rgba(59,130,246,0.08); }
+    .t-ts {
+      font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #60a5fa;
+      margin-right: 8px; text-decoration: none;
+    }
+    .empty-state {
+      height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; color: var(--text-muted); gap: 10px; padding: 24px;
+    }
+    @media (max-width: 960px) {
+      body { height: auto; overflow: auto; }
+      #liveApp { height: auto; }
+      .split-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+      .pane-left, .pane-top-right, .pane-bottom-right { grid-column: 1; grid-row: auto; min-height: 360px; }
+      .video-wrap { min-height: 280px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="authOverlay">
+    <form class="auth-card" onsubmit="handleAuth(event)">
+      <h2>Durham Politics Tracker — Live Feed</h2>
+      <p>Enter credentials to access the real-time meeting dashboard.</p>
+      <input id="authUser" class="auth-input" type="text" placeholder="Username" required>
+      <input id="authPass" class="auth-input" type="password" placeholder="Password" required>
+      <div id="authErr" style="color:#fca5a5;font-size:12px;margin-bottom:10px;display:none;">Invalid credentials.</div>
+      <button class="auth-btn" type="submit">Unlock Live Meeting</button>
+    </form>
+  </div>
+
+  <div id="liveApp">
+    <header>
+      <div class="hdr-left">
+        <span class="live-pill" id="liveBadge"><span class="live-dot"></span> <span id="liveBadgeText">Checking...</span></span>
+        <div class="hdr-title" id="liveTitle">Durham Local Government Live Meeting Monitor</div>
+      </div>
+      <div class="hdr-right">
+        <span id="summaryStatus">Summary updates every 60s (Real-time Audio ASR)</span>
+        <a href="/durhampolitics/" class="btn-back">&larr; Back to Archive</a>
+      </div>
+    </header>
+
+    <div class="split-grid">
+      <!-- LEFT: Dynamically Updating Executive Summary -->
+      <section class="pane pane-left">
+        <div class="pane-header">
+          <span>Executive Summary of Discussion So Far</span>
+          <span id="summaryTimer" style="font-family:'JetBrains Mono',monospace;color:#6ee7b7;">Next update: 60s</span>
+        </div>
+        <div class="pane-body" id="summaryPane">
+          <div class="empty-state">Waiting for live stream audio analysis...</div>
+        </div>
+      </section>
+
+      <!-- TOP RIGHT: Live Video -->
+      <section class="pane pane-top-right">
+        <div class="pane-header">
+          <span>Live Meeting Video</span>
+          <a id="openYtLink" href="#" target="_blank" rel="noopener noreferrer" style="color:#93c5fd;text-decoration:none;display:none;">Open on YouTube &#8599;</a>
+        </div>
+        <div class="video-wrap" id="videoWrap">
+          <div class="empty-state">No live video stream active right now.</div>
+        </div>
+      </section>
+
+      <!-- BOTTOM RIGHT: Running Transcript -->
+      <section class="pane pane-bottom-right">
+        <div class="pane-header">
+          <span>Running Transcript (Real-Time Video Audio ASR)</span>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input id="transcriptFilter" type="text" placeholder="Filter..." oninput="renderTranscript()" style="background:var(--bg-surface);border:1px solid var(--border);color:#fff;padding:3px 8px;border-radius:6px;font-size:11px;width:110px;">
+            <label style="display:inline-flex;align-items:center;gap:4px;font-size:11px;text-transform:none;cursor:pointer;">
+              <input id="autoScrollToggle" type="checkbox" checked> Auto-scroll
+            </label>
+          </div>
+        </div>
+        <div class="pane-body" id="transcriptPane" style="padding:10px;">
+          <div class="empty-state">Real-time audio transcript will appear here once a meeting begins.</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const SHARED_ACTIVE_KEY = "rann_auth_last_active";
+    const INACTIVITY_TIMEOUT_MS = 60 * 60 * 1000;
+    let lastActiveMem = Date.now();
+    let currentVideoId = null;
+    let latestData = null;
+    let secondsToSummaryRefresh = 60;
+
+    function touchActivity() {
+      lastActiveMem = Date.now();
+      try { localStorage.setItem(SHARED_ACTIVE_KEY, lastActiveMem.toString()); } catch(e) {}
+    }
+    function getLastActive() {
+      try {
+        const s = parseInt(localStorage.getItem(SHARED_ACTIVE_KEY) || "0", 10);
+        return Math.max(s || 0, lastActiveMem);
+      } catch(e) { return lastActiveMem; }
+    }
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(ev => {
+      window.addEventListener(ev, () => touchActivity(), { passive: true });
+    });
+    setInterval(() => {
+      const isAuthed = sessionStorage.getItem("rann_session_active") || sessionStorage.getItem("durham_pol_auth");
+      if (isAuthed && (Date.now() - getLastActive() > INACTIVITY_TIMEOUT_MS)) {
+        sessionStorage.removeItem("rann_session_active");
+        sessionStorage.removeItem("durham_pol_auth");
+        document.getElementById("liveApp").style.display = "none";
+        document.getElementById("authOverlay").style.display = "flex";
+      }
+    }, 5000);
+
+    function handleAuth(e) {
+      e.preventDefault();
+      const u = document.getElementById("authUser").value.trim().toLowerCase();
+      const p = document.getElementById("authPass").value.trim();
+      if ((u === "rann" && p === "AS2cYGy9GD7qRt@XV&gf$yUX!pD@") || (u === "durhampol" && p === "durhampol")) {
+        sessionStorage.setItem("rann_session_active", "valid");
+        sessionStorage.setItem("durham_pol_auth", "granted");
+        touchActivity();
+        unlockLive();
+      } else {
+        document.getElementById("authErr").style.display = "block";
+      }
+    }
+
+    function unlockLive() {
+      document.getElementById("authOverlay").style.display = "none";
+      document.getElementById("liveApp").style.display = "flex";
+      fetchLiveStatus(true);
+      setInterval(() => fetchLiveStatus(false), 10000);
+      setInterval(() => {
+        secondsToSummaryRefresh = secondsToSummaryRefresh <= 1 ? 60 : secondsToSummaryRefresh - 1;
+        const el = document.getElementById("summaryTimer");
+        if (el) el.innerText = "Next summary sync: " + secondsToSummaryRefresh + "s";
+        if (secondsToSummaryRefresh === 60) fetchLiveStatus(true);
+      }, 1000);
+    }
+
+    function esc(s) {
+      return String(s || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    async function fetchLiveStatus(forceSummary) {
+      try {
+        const res = await fetch("/durhampolitics/live_status.json?t=" + Date.now(), { cache: "no-store" });
+        if (!res.ok) return;
+        const data = await res.json();
+        const prevSummaryTs = latestData ? latestData.summary_updated_at : null;
+        latestData = data;
+
+        const badge = document.getElementById("liveBadgeText");
+        const titleEl = document.getElementById("liveTitle");
+        const ytLink = document.getElementById("openYtLink");
+
+        if (!data || !data.is_live) {
+          badge.innerText = "OFFLINE";
+          titleEl.innerText = "No Meeting Currently in Progress";
+          ytLink.style.display = "none";
+          currentVideoId = null;
+          document.getElementById("videoWrap").innerHTML = '<div class="empty-state"><strong>No Durham meeting is currently live.</strong><span>When City Council, DPS Board, or BOCC goes live, this page activates automatically with real-time audio transcription and 60-second executive summaries.</span><a href="/durhampolitics/" class="btn-back">Return to Meeting Archives</a></div>';
+          document.getElementById("summaryPane").innerHTML = '<div class="empty-state">No live session in progress. Past meetings and Executive Summary PDFs are available in the main archive.</div>';
+          document.getElementById("transcriptPane").innerHTML = '<div class="empty-state">Standing by for next live broadcast...</div>';
+          return;
+        }
+
+        const bName = data.body_name || (data.body_id || "").toUpperCase();
+        badge.innerText = "LIVE • " + (data.body_id || "").toUpperCase();
+        titleEl.innerText = data.title || (bName + " — Live Meeting");
+        if (data.video_url) {
+          ytLink.href = data.video_url;
+          ytLink.style.display = "inline";
+        }
+
+        if (data.video_id && data.video_id !== currentVideoId) {
+          currentVideoId = data.video_id;
+          document.getElementById("videoWrap").innerHTML = `<iframe src="https://www.youtube.com/embed/${encodeURIComponent(data.video_id)}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+        }
+
+        if (forceSummary || data.summary_updated_at !== prevSummaryTs) {
+          renderSummary(data);
+        }
+        renderTranscript();
+      } catch (e) {
+        console.error("Live status poll failed:", e);
+      }
+    }
+
+    function renderSummary(data) {
+      const pane = document.getElementById("summaryPane");
+      const updatedStr = data.summary_updated_at ? new Date(data.summary_updated_at).toLocaleTimeString() : "Updating...";
+      document.getElementById("summaryStatus").innerText = "Last summary: " + updatedStr + " • Real-time Audio ASR";
+
+      let html = `
+        <div class="section-hdr">Executive Overview So Far</div>
+        <div class="exec-box">${esc(data.executive_summary || "Listening to live meeting audio and synthesizing initial summary...")}</div>
+      `;
+
+      const topics = data.topics_so_far || [];
+      html += `<div class="section-hdr">Agenda Topics Discussed So Far (${topics.length})</div>`;
+      if (!topics.length) {
+        html += `<div style="font-size:12.5px;color:var(--text-dim);">Topics will populate automatically as agenda items are discussed.</div>`;
+      } else {
+        topics.forEach(t => {
+          const tsUrl = (data.video_url && t.start_seconds !== undefined) ? `${data.video_url}&t=${t.start_seconds}s` : (data.video_url || "#");
+          html += `
+            <div class="topic-card">
+              <div class="topic-head">
+                <strong style="font-size:13px;color:#fff;">${esc(t.title)}</strong>
+                <a class="ts-chip" href="${tsUrl}" target="_blank" rel="noopener noreferrer">&#9658; ${esc(t.timestamp_label || "Live")}</a>
+              </div>
+              <div style="font-size:12.5px;color:var(--text-muted);line-height:1.5;">${esc(t.discussion_summary || "")}</div>
+              ${t.vote_summary ? `<div style="font-size:12px;color:#6ee7b7;margin-top:6px;"><strong>Vote / Action:</strong> ${esc(t.vote_summary)}</div>` : ""}
+            </div>
+          `;
+        });
+      }
+
+      const votes = data.votes_so_far || [];
+      html += `<div class="section-hdr">Motions &amp; Votes Observed So Far (${votes.length})</div>`;
+      if (!votes.length) {
+        html += `<div style="font-size:12.5px;color:var(--text-dim);">No formal votes detected yet in the live audio.</div>`;
+      } else {
+        votes.forEach(v => {
+          const tsUrl = (data.video_url && v.timestamp_seconds !== undefined) ? `${data.video_url}&t=${v.timestamp_seconds}s` : (data.video_url || "#");
+          html += `
+            <div class="vote-card">
+              <div class="topic-head">
+                <strong style="font-size:13px;color:#fff;">${esc(v.item_title)}</strong>
+                <a class="ts-chip" href="${tsUrl}" target="_blank" rel="noopener noreferrer">&#9658; ${esc(v.timestamp_label || "")}</a>
+              </div>
+              <div style="font-size:12px;color:#93c5fd;">Outcome: <strong>${esc(v.outcome || "Recorded")}</strong> ${v.tally ? "(" + esc(v.tally) + ")" : ""}</div>
+              ${v.notes ? `<div style="font-size:12px;color:var(--text-muted);margin-top:4px;">${esc(v.notes)}</div>` : ""}
+            </div>
+          `;
+        });
+      }
+
+      pane.innerHTML = html;
+    }
+
+    function renderTranscript() {
+      const pane = document.getElementById("transcriptPane");
+      if (!latestData || !latestData.is_live) return;
+      const filter = (document.getElementById("transcriptFilter").value || "").trim().toLowerCase();
+      const lines = (latestData.transcript_lines || []).filter(l => !filter || (l.text || "").toLowerCase().includes(filter));
+      if (!lines.length) {
+        pane.innerHTML = '<div class="empty-state">Transcribing live audio stream via local ASR...</div>';
+        return;
+      }
+      const baseUrl = latestData.video_url || "";
+      pane.innerHTML = lines.map(l => {
+        const href = baseUrl && l.seconds !== undefined ? `${baseUrl}&t=${l.seconds}s` : baseUrl;
+        return `<div class="transcript-line"><a class="t-ts" href="${href}" target="_blank" rel="noopener noreferrer">[${esc(l.timestamp)}]</a><span>${esc(l.text)}</span></div>`;
+      }).join("");
+
+      if (document.getElementById("autoScrollToggle").checked) {
+        pane.scrollTop = pane.scrollHeight;
+      }
+    }
+
+    (function() {
+      const sessionAuth = sessionStorage.getItem("rann_session_active") || sessionStorage.getItem("durham_pol_auth");
+      if (sessionAuth && (Date.now() - getLastActive() <= INACTIVITY_TIMEOUT_MS)) {
+        touchActivity();
+        unlockLive();
+      }
+    })();
+  </script>
+</body>
+</html>

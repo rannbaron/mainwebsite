@@ -1,0 +1,17 @@
+{
+  "is_live": false,
+  "body_id": null,
+  "body_name": null,
+  "video_id": null,
+  "video_url": null,
+  "title": null,
+  "started_at": null,
+  "summary_updated_at": null,
+  "transcript_updated_at": null,
+  "executive_summary": "",
+  "topics_so_far": [],
+  "votes_so_far": [],
+  "debates_so_far": [],
+  "transcript_lines": [],
+  "source_mode": "realtime_audio_asr"
+}
