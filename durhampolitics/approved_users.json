@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T18:12:00.000000+00:00",
+  "updated_at": "2026-11-26T19:49:40.000000+00:00",
   "allowed_route": "/durhampolitics",
   "users": [
     {
@@ -13,6 +13,18 @@
         "/durhampolitics"
       ],
       "approved_at": "2026-11-26T18:12:00.000000+00:00"
+    },
+    {
+      "username": "beyerland",
+      "full_name": "Natalie Beyer",
+      "email": "natalie.beyer@gmail.com",
+      "salt": "fc6b277eb3a970c18051a002d44ddfaf",
+      "password_hash": "cc24f003ed4b15c76363b13f445b47046323350b9fb5cc92223efb82e2d99aba",
+      "status": "APPROVED",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "approved_at": "2026-11-26T19:49:40.000000+00:00"
     },
     {
       "username": "charliereece",

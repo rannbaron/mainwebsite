@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-11-26T18:12:00.000000+00:00",
-  "total": 4,
+  "updated_at": "2026-11-26T19:49:40.000000+00:00",
+  "total": 5,
   "accounts": [
     {
       "id": 1,
@@ -56,6 +56,20 @@
       ],
       "status": "APPROVED",
       "created_at": "2026-11-26T18:12:00.000000+00:00",
+      "last_login": null
+    },
+    {
+      "id": 5,
+      "username": "beyerland",
+      "full_name": "Natalie Beyer",
+      "email": "natalie.beyer@gmail.com",
+      "privilege_level": 2,
+      "privilege_name": "Standard Member",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "status": "APPROVED",
+      "created_at": "2026-11-26T19:49:40.000000+00:00",
       "last_login": null
     }
   ],
