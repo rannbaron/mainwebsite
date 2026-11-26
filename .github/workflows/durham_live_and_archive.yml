@@ -1,14 +1,18 @@
-name: Durham Live Meeting Monitor & Auto-Archiver
+name: Durham Live Meeting Monitor & Auto-Archiver (Hybrid)
 
 on:
   schedule:
-    # Check every 5 minutes for live City Council, DPS Board, or BOCC meetings
-    # and archive any newly completed meetings with dual audio+caption ASR & PDFs.
-    - cron: '*/5 * * * *'
+    # 1. Daily morning schedule sync & overnight archive catch-up (~8:00 AM EST / 9:00 AM EDT)
+    - cron: '0 13 * * *'
+    # 2. Meeting-window lightweight pre-checks (Mon-Fri ~8:00 AM - 10:45 PM ET, every 15 min)
+    #    13:00-23:45 UTC Mon-Fri = ~8:00 AM - 6:45 PM EST / 9:00 AM - 7:45 PM EDT
+    - cron: '*/15 13-23 * * 1-5'
+    #    00:00-03:45 UTC Tue-Sat = ~7:00 PM - 10:45 PM EST / 8:00 PM - 11:45 PM EDT Mon-Fri
+    - cron: '*/15 0-3 * * 2-6'
   workflow_dispatch:
     inputs:
-      force_archive_scan:
-        description: 'Force scan for newly completed meetings'
+      force_run:
+        description: 'Force full check/archive run on ubuntu-latest'
         required: false
         default: true
         type: boolean
@@ -24,7 +28,45 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  monitor:
+  # Stage 1: Ultra-cheap ($0.002/min) stdlib-only check on ubuntu-slim (~5 seconds)
+  precheck:
+    runs-on: ubuntu-slim
+    timeout-minutes: 5
+    outputs:
+      should_run: ${{ steps.check.outputs.should_run }}
+      reason: ${{ steps.check.outputs.reason }}
+      live_body: ${{ steps.check.outputs.live_body }}
+    env:
+      DURHAM_OUTPUT_DIR: ${{ github.workspace }}/durhampolitics
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Run lightweight schedule sync & live detector (no apt/pip installs)
+        id: check
+        run: |
+          FLAGS=""
+          if [ "${{ github.event.schedule }}" = "0 13 * * *" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            FLAGS="--sync-schedule --check-archive"
+          fi
+          python3 durham_politics_tracker/schedule_and_precheck.py $FLAGS
+
+      - name: Commit updated upcoming_meetings.json if changed
+        run: |
+          if ! git diff --quiet durhampolitics/upcoming_meetings.json 2>/dev/null || [ -n "$(git ls-files --others --exclude-standard durhampolitics/upcoming_meetings.json)" ]; then
+            git config user.name "Durham Politics Tracker Bot"
+            git config user.email "bot@rannbar-on.com"
+            git add durhampolitics/upcoming_meetings.json
+            git commit -m "Sync upcoming Durham meeting schedule"
+            git push
+          fi
+
+  # Stage 2: Full ubuntu-latest audio ASR & auto-archiver (ONLY runs when a meeting is live, scheduled now, or newly ended)
+  process:
+    needs: precheck
+    if: needs.precheck.outputs.should_run == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_run)
     runs-on: ubuntu-latest
     timeout-minutes: 330
     env:
@@ -40,8 +82,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
-      - name: Install system & Python dependencies
+      - name: Install audio ASR & PDF dependencies
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg nodejs
@@ -53,6 +96,7 @@ jobs:
           git config user.name "Durham Politics Tracker Bot"
           git config user.email "bot@rannbar-on.com"
 
-      - name: Run live meeting detector, real-time audio processor & auto-archiver
+      - name: Run live real-time audio processor & auto-archiver
         run: |
+          echo "Triggered by: ${{ needs.precheck.outputs.reason }}"
           python3 durham_politics_tracker/live_meeting_daemon.py --once

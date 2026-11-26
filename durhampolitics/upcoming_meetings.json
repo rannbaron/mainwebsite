@@ -1,0 +1,10 @@
+{
+  "updated_at": "2026-11-26T16:58:39.648861+00:00",
+  "portals": {
+    "bocc": "https://durhamcounty.legistar.com/Calendar.aspx",
+    "city": "https://cityordinances.durhamnc.gov/OnBaseAgendaOnline",
+    "city_calendar": "https://www.durhamnc.gov/AgendaCenter",
+    "dps": "https://www.dpsnc.net/page/board-of-education"
+  },
+  "meetings": []
+}
