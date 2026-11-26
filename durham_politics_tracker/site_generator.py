@@ -1931,10 +1931,12 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
       }});
       html += `</tr></thead><tbody>`;
 
-      members.forEach(m1 => {{
+      members.forEach((m1, i) => {{
         html += `<tr><th>${{m1.name}}</th>`;
-        members.forEach(m2 => {{
-          if (m1.id === m2.id) {{
+        members.forEach((m2, j) => {{
+          if (j < i) {{
+            html += `<td class="heat-self" style="background: transparent; border-color: transparent;"></td>`;
+          }} else if (i === j) {{
             html += `<td class="heat-self">100%</td>`;
           }} else {{
             const score = (matrix[m1.id] && matrix[m1.id][m2.id] !== undefined) ? matrix[m1.id][m2.id] : null;
