@@ -1,5 +1,18 @@
 {
-  "updated_at": "2026-11-26T16:55:00+00:00",
+  "updated_at": "2026-11-26T17:25:16.995810+00:00",
   "allowed_route": "/durhampolitics",
-  "users": []
+  "users": [
+    {
+      "username": "mekopac",
+      "full_name": "Matt Kopac",
+      "email": "mekopac@gmail.com",
+      "salt": "fbe2d23a8526b2e24a254df4916409ce",
+      "password_hash": "1f53921678f30573ea4d0cdc6915ed5f46f6d5c96383fc091610095f7e1fd24f",
+      "status": "APPROVED",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "approved_at": "2026-11-26T17:25:16.995810+00:00"
+    }
+  ]
 }
