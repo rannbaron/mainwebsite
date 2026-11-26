@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-11-26T17:30:53.762607+00:00",
-  "total": 3,
+  "updated_at": "2026-11-26T18:12:00.000000+00:00",
+  "total": 4,
   "accounts": [
     {
       "id": 1,
@@ -42,6 +42,20 @@
       ],
       "status": "APPROVED",
       "created_at": "2026-11-26T17:30:53.762607+00:00",
+      "last_login": null
+    },
+    {
+      "id": 4,
+      "username": "@nidaallam",
+      "full_name": "Nida Allam",
+      "email": "nida@nidaallam.com",
+      "privilege_level": 2,
+      "privilege_name": "Standard Member",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "status": "APPROVED",
+      "created_at": "2026-11-26T18:12:00.000000+00:00",
       "last_login": null
     }
   ],

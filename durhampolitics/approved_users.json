@@ -1,7 +1,19 @@
 {
-  "updated_at": "2026-11-26T17:30:53.762607+00:00",
+  "updated_at": "2026-11-26T18:12:00.000000+00:00",
   "allowed_route": "/durhampolitics",
   "users": [
+    {
+      "username": "@nidaallam",
+      "full_name": "Nida Allam",
+      "email": "nida@nidaallam.com",
+      "salt": "8f16d3d5b3aa5ea4fa30907fd0d9e0e8",
+      "password_hash": "d01002706b3be0cda119d43696ea6895954d8c181be4d98d6d3c57456cab6c18",
+      "status": "APPROVED",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "approved_at": "2026-11-26T18:12:00.000000+00:00"
+    },
     {
       "username": "charliereece",
       "full_name": "Charlie Reece",
