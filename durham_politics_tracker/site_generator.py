@@ -891,6 +891,9 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
         </label>
         <button type="submit" class="auth-btn">Unlock Command Center &rarr;</button>
         <div id="authErrorMsg" class="auth-error">Invalid username or password. Please verify and retry.</div>
+        <div style="margin-top: 12px; font-size: 12.5px; color: var(--text-muted); text-align: center;">
+          Need an account? <a href="/durhampolitics/signup.html" style="color: #60a5fa; text-decoration: none; font-weight: 600;">Request Access &rarr;</a>
+        </div>
       </form>
     </div>
   </div>
@@ -1247,24 +1250,77 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
       }}
     }}
 
-    function handleAuth(e) {{
+    async function sha256Hex(str) {{
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }}
+
+    async function verifyApprovedDurhamUser(identifier, password) {{
+      try {{
+        const res = await fetch("/durhampolitics/approved_users.json?t=" + Date.now(), {{ cache: "no-store" }});
+        if (!res.ok) return null;
+        const data = await res.json();
+        const users = (data && data.users) || [];
+        const idLow = identifier.toLowerCase();
+        const match = users.find(u =>
+          u.status === "APPROVED" &&
+          (u.allowed_pages || []).includes("/durhampolitics") &&
+          ((u.username || "").toLowerCase() === idLow || (u.email || "").toLowerCase() === idLow)
+        );
+        if (!match || !match.salt || !match.password_hash) return null;
+        const computed = await sha256Hex(match.salt + ":" + password);
+        return computed === match.password_hash ? match : null;
+      }} catch (e) {{
+        return null;
+      }}
+    }}
+
+    async function handleAuth(e) {{
       e.preventDefault();
       const user = (document.getElementById("authUsernameInput") ? document.getElementById("authUsernameInput").value.trim().toLowerCase() : "");
       const pwd = document.getElementById("authPasswordInput").value.trim();
-      const remember = document.getElementById("rememberAuthCheckbox").checked;
 
-      const isValidUser = (user === "rann" && pwd === "{MASTER_PASSWORD}") ||
-                          (user === "durhampol" && pwd === "{PAGE_PASSWORD}");
-
-      if (isValidUser) {{
+      if (user === "rann" && pwd === "{MASTER_PASSWORD}") {{
         sessionStorage.setItem("rann_session_active", "valid");
         sessionStorage.setItem("durham_pol_auth", "granted");
+        touchActivity();
+        unlockApp();
+        return;
+      }}
+      if (user === "durhampol" && pwd === "{PAGE_PASSWORD}") {{
+        sessionStorage.setItem("durham_pol_auth", "granted");
+        try {{
+          localStorage.setItem("rann_auth_user", JSON.stringify({{
+            username: "durhampol", fullName: "Durham Politics Guest",
+            privilegeLevel: 2, privilegeName: "Standard Member", allowedPages: ["/durhampolitics"]
+          }}));
+        }} catch(ex) {{}}
+        touchActivity();
+        unlockApp();
+        return;
+      }}
+
+      const approved = await verifyApprovedDurhamUser(user, pwd);
+      if (approved) {{
+        // Strictly scope approved users to /durhampolitics/ ONLY (never grant master session)
+        sessionStorage.removeItem("rann_session_active");
+        sessionStorage.setItem("durham_pol_auth", "granted");
+        try {{
+          localStorage.setItem("rann_auth_user", JSON.stringify({{
+            username: approved.username,
+            fullName: approved.full_name || approved.username,
+            email: approved.email || "",
+            privilegeLevel: 2,
+            privilegeName: "Standard Member",
+            allowedPages: ["/durhampolitics"]
+          }}));
+        }} catch(ex) {{}}
         touchActivity();
         unlockApp();
       }} else {{
         const err = document.getElementById("authErrorMsg");
         err.style.display = "block";
-        err.innerText = "Invalid username or password. Access denied.";
+        err.innerText = "Invalid username/password, or account is still pending approval.";
         document.getElementById("authPasswordInput").focus();
       }}
     }}
@@ -2251,8 +2307,11 @@ def generate_live_meeting_page() -> str:
       <p>Enter credentials to access the real-time meeting dashboard.</p>
       <input id="authUser" class="auth-input" type="text" placeholder="Username" required>
       <input id="authPass" class="auth-input" type="password" placeholder="Password" required>
-      <div id="authErr" style="color:#fca5a5;font-size:12px;margin-bottom:10px;display:none;">Invalid credentials.</div>
+      <div id="authErr" style="color:#fca5a5;font-size:12px;margin-bottom:10px;display:none;">Invalid credentials or pending approval.</div>
       <button class="auth-btn" type="submit">Unlock Live Meeting</button>
+      <div style="margin-top:12px;text-align:center;font-size:12px;color:var(--text-muted);">
+        Need an account? <a href="/durhampolitics/signup.html" style="color:#60a5fa;text-decoration:none;font-weight:600;">Request Access &rarr;</a>
+      </div>
     </form>
   </div>
 
@@ -2340,18 +2399,50 @@ def generate_live_meeting_page() -> str:
       }}
     }}, 5000);
 
-    function handleAuth(e) {{
+    async function sha256Hex(str) {{
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }}
+
+    async function handleAuth(e) {{
       e.preventDefault();
       const u = document.getElementById("authUser").value.trim().toLowerCase();
       const p = document.getElementById("authPass").value.trim();
-      if ((u === "rann" && p === "{MASTER_PASSWORD}") || (u === "durhampol" && p === "{PAGE_PASSWORD}")) {{
+      if (u === "rann" && p === "{MASTER_PASSWORD}") {{
         sessionStorage.setItem("rann_session_active", "valid");
         sessionStorage.setItem("durham_pol_auth", "granted");
         touchActivity();
         unlockLive();
-      }} else {{
-        document.getElementById("authErr").style.display = "block";
+        return;
       }}
+      if (u === "durhampol" && p === "{PAGE_PASSWORD}") {{
+        sessionStorage.setItem("durham_pol_auth", "granted");
+        touchActivity();
+        unlockLive();
+        return;
+      }}
+      try {{
+        const res = await fetch("/durhampolitics/approved_users.json?t=" + Date.now(), {{ cache: "no-store" }});
+        if (res.ok) {{
+          const data = await res.json();
+          const match = ((data && data.users) || []).find(x =>
+            x.status === "APPROVED" &&
+            (x.allowed_pages || []).includes("/durhampolitics") &&
+            ((x.username || "").toLowerCase() === u || (x.email || "").toLowerCase() === u)
+          );
+          if (match && match.salt && match.password_hash) {{
+            const h = await sha256Hex(match.salt + ":" + p);
+            if (h === match.password_hash) {{
+              sessionStorage.removeItem("rann_session_active");
+              sessionStorage.setItem("durham_pol_auth", "granted");
+              touchActivity();
+              unlockLive();
+              return;
+            }}
+          }}
+        }}
+      }} catch (err) {{}}
+      document.getElementById("authErr").style.display = "block";
     }}
 
     function unlockLive() {{

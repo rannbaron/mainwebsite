@@ -1,0 +1,82 @@
+name: Approve or Revoke Durham Politics User
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        default: 'approve'
+        type: choice
+        options:
+          - approve
+          - revoke
+      username:
+        description: 'Username from signup email'
+        required: true
+        type: string
+      full_name:
+        description: 'Full name of user'
+        required: false
+        default: ''
+        type: string
+      email:
+        description: 'User email address'
+        required: false
+        default: ''
+        type: string
+      salt:
+        description: 'Salt from signup email (leave blank if setting temporary_password)'
+        required: false
+        default: ''
+        type: string
+      password_hash:
+        description: 'SHA-256 password_hash from signup email (leave blank if setting temporary_password)'
+        required: false
+        default: ''
+        type: string
+      temporary_password:
+        description: 'Optional: set a password directly instead of using salt/password_hash'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  manage_user:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      SMTP_USER: ${{ secrets.SMTP_USER }}
+      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply account approval / revocation (scoped strictly to /durhampolitics/)
+        run: |
+          python3 durham_politics_tracker/scripts/manage_approved_users.py \
+            --action "${{ inputs.action }}" \
+            --username "${{ inputs.username }}" \
+            --full-name "${{ inputs.full_name }}" \
+            --email "${{ inputs.email }}" \
+            --salt "${{ inputs.salt }}" \
+            --password-hash "${{ inputs.password_hash }}" \
+            --temporary-password "${{ inputs.temporary_password }}"
+
+      - name: Commit, push, and deploy Pages
+        run: |
+          git config user.name "Durham Politics Tracker Bot"
+          git config user.email "bot@rannbar-on.com"
+          git add durhampolitics/approved_users.json accounts.json
+          git commit -m "Account ${{ inputs.action }}: ${{ inputs.username }} (durhampolitics only)"
+          git push
+          gh workflow run deploy_pages.yml

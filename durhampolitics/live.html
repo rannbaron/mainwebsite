@@ -168,8 +168,11 @@
       <p>Enter credentials to access the real-time meeting dashboard.</p>
       <input id="authUser" class="auth-input" type="text" placeholder="Username" required>
       <input id="authPass" class="auth-input" type="password" placeholder="Password" required>
-      <div id="authErr" style="color:#fca5a5;font-size:12px;margin-bottom:10px;display:none;">Invalid credentials.</div>
+      <div id="authErr" style="color:#fca5a5;font-size:12px;margin-bottom:10px;display:none;">Invalid credentials or pending approval.</div>
       <button class="auth-btn" type="submit">Unlock Live Meeting</button>
+      <div style="margin-top:12px;text-align:center;font-size:12px;color:var(--text-muted);">
+        Need an account? <a href="/durhampolitics/signup.html" style="color:#60a5fa;text-decoration:none;font-weight:600;">Request Access &rarr;</a>
+      </div>
     </form>
   </div>
 
@@ -257,18 +260,50 @@
       }
     }, 5000);
 
-    function handleAuth(e) {
+    async function sha256Hex(str) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function handleAuth(e) {
       e.preventDefault();
       const u = document.getElementById("authUser").value.trim().toLowerCase();
       const p = document.getElementById("authPass").value.trim();
-      if ((u === "rann" && p === "AS2cYGy9GD7qRt@XV&gf$yUX!pD@") || (u === "durhampol" && p === "durhampol")) {
+      if (u === "rann" && p === "AS2cYGy9GD7qRt@XV&gf$yUX!pD@") {
         sessionStorage.setItem("rann_session_active", "valid");
         sessionStorage.setItem("durham_pol_auth", "granted");
         touchActivity();
         unlockLive();
-      } else {
-        document.getElementById("authErr").style.display = "block";
+        return;
       }
+      if (u === "durhampol" && p === "durhampol") {
+        sessionStorage.setItem("durham_pol_auth", "granted");
+        touchActivity();
+        unlockLive();
+        return;
+      }
+      try {
+        const res = await fetch("/durhampolitics/approved_users.json?t=" + Date.now(), { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          const match = ((data && data.users) || []).find(x =>
+            x.status === "APPROVED" &&
+            (x.allowed_pages || []).includes("/durhampolitics") &&
+            ((x.username || "").toLowerCase() === u || (x.email || "").toLowerCase() === u)
+          );
+          if (match && match.salt && match.password_hash) {
+            const h = await sha256Hex(match.salt + ":" + p);
+            if (h === match.password_hash) {
+              sessionStorage.removeItem("rann_session_active");
+              sessionStorage.setItem("durham_pol_auth", "granted");
+              touchActivity();
+              unlockLive();
+              return;
+            }
+          }
+        }
+      } catch (err) {}
+      document.getElementById("authErr").style.display = "block";
     }
 
     function unlockLive() {

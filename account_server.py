@@ -580,9 +580,9 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
             hashed, salt = hash_password(password)
 
             is_nida = is_nida_allam(full_name, email, username)
-            default_role = "Policy Analyst" if is_nida else "Guest"
-            default_level = 6 if is_nida else 1
-            default_pages = json.dumps(["/durhampolitics"]) if is_nida else json.dumps([])
+            default_role = "Policy Analyst" if is_nida else "Standard Member"
+            default_level = 6 if is_nida else 2
+            default_pages = json.dumps(["/durhampolitics"])
             default_status = "APPROVED" if is_nida else "PENDING_APPROVAL"
 
             ACTIVE_2FA_CHALLENGES[challenge_id] = {
@@ -609,6 +609,14 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
             }
 
             dispatch_2fa_email(email=email, code=code, purpose="Account Registration", user_name=full_name)
+            if not is_nida:
+                notify_rann_new_signup(
+                    full_name=full_name,
+                    email=email,
+                    username=username,
+                    timestamp=datetime.now(timezone.utc).isoformat(),
+                    role_name=default_role
+                )
 
             self._send_json(200, {
                 "success": True,
@@ -945,7 +953,8 @@ class AccountHTTPHandler(BaseHTTPRequestHandler):
                 new_level = 2
                 role_name = "Standard Member"
 
-            pages_json = json.dumps(allowed_pages) if allowed_pages is not None else None
+            # Approved accounts default strictly to /durhampolitics ONLY
+            pages_json = json.dumps(allowed_pages if allowed_pages is not None else ["/durhampolitics"])
 
             with get_db() as conn:
                 cursor = conn.cursor()

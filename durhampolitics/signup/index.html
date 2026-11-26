@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <title>Request Account | Durham Politics Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #070b14;
+      --bg-surface: #0f1623;
+      --bg-card: #151e30;
+      --border: #23304c;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --accent: #3b82f6;
+      --success: #10b981;
+      --danger: #ef4444;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top, #13203d 0%, #070b14 70%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+    .card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      background: rgba(59, 130, 246, 0.18);
+      color: #93c5fd;
+      border: 1px solid rgba(96, 165, 250, 0.35);
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 22px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+    .subtitle { font-size: 13.5px; color: var(--text-muted); line-height: 1.5; margin-bottom: 22px; }
+    .scope-note {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      color: #a7f3d0;
+      margin-bottom: 20px;
+      line-height: 1.45;
+    }
+    .field { margin-bottom: 14px; }
+    label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text-main);
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+    input:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+    .hint { font-size: 11.5px; color: var(--text-dim); margin-top: 4px; }
+    .err {
+      display: none;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 12.5px;
+      margin-bottom: 14px;
+    }
+    .btn {
+      width: 100%;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 6px;
+    }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .footer-links {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .footer-links a { color: #60a5fa; text-decoration: none; font-weight: 600; }
+    .success-box {
+      display: none;
+      text-align: center;
+      padding: 12px 0;
+    }
+    .success-box h2 { color: #34d399; font-size: 20px; margin-bottom: 10px; }
+    .success-box p { font-size: 13.5px; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+    .fallback-box {
+      display: none;
+      margin-top: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">Durham Politics Tracker</span>
+    <h1>Request an Account</h1>
+    <p class="subtitle">Sign up to request access to the Durham Local Government Meeting &amp; Voting Intelligence tracker.</p>
+
+    <div class="scope-note">
+      <strong>Access Policy:</strong> New registrations are emailed immediately to the administrator (<code>rann@rannbar-on.com</code>) for review. Once approved, your account grants access exclusively to <strong>https://rannbar-on.com/durhampolitics/</strong> (no other private pages).
+    </div>
+
+    <form id="signupForm" onsubmit="handleSignup(event)">
+      <div id="errBox" class="err"></div>
+
+      <div class="field">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" type="text" placeholder="Jane Doe" required>
+      </div>
+
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input id="email" type="email" placeholder="jane@example.org" required>
+      </div>
+
+      <div class="field">
+        <label for="username">Desired Username</label>
+        <input id="username" type="text" placeholder="janedoe" pattern="[a-zA-Z0-9_.-]{3,32}" required>
+        <div class="hint">3–32 characters (letters, numbers, underscore, dot, or hyphen).</div>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" minlength="12" placeholder="At least 12 characters" required>
+        <div class="hint">Hashed in your browser (SHA-256 + random salt) before submission—your plaintext password is never emailed.</div>
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirm Password</label>
+        <input id="confirmPassword" type="password" minlength="12" placeholder="Re-enter password" required>
+      </div>
+
+      <div class="field">
+        <label for="notes">Affiliation / Reason for Access (Optional)</label>
+        <textarea id="notes" rows="2" placeholder="e.g., Durham resident, community advocate, journalist"></textarea>
+      </div>
+
+      <button id="submitBtn" class="btn" type="submit">Submit Account Request</button>
+    </form>
+
+    <div id="successBox" class="success-box">
+      <h2>&#10003; Request Submitted</h2>
+      <p id="successMsg">
+        Your registration request has been emailed to <strong>rann@rannbar-on.com</strong> for approval.
+        Once approved, you can sign in at <a href="/durhampolitics/" style="color:#60a5fa;">https://rannbar-on.com/durhampolitics/</a> using your chosen username and password.
+      </p>
+      <a href="/durhampolitics/" class="btn" style="display:inline-block;text-decoration:none;">Go to Durham Politics Login &rarr;</a>
+      <div id="fallbackBox" class="fallback-box"></div>
+    </div>
+
+    <div class="footer-links">
+      Already approved? <a href="/durhampolitics/">Sign in to Durham Politics Tracker &rarr;</a>
+    </div>
+  </div>
+
+  <script>
+    function toHex(buf) {
+      return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    async function hashPasswordClient(password) {
+      const saltBytes = new Uint8Array(16);
+      crypto.getRandomValues(saltBytes);
+      const salt = toHex(saltBytes);
+      const data = new TextEncoder().encode(salt + ":" + password);
+      const digest = await crypto.subtle.digest("SHA-256", data);
+      return { salt, passwordHash: toHex(digest) };
+    }
+
+    function showError(msg) {
+      const box = document.getElementById("errBox");
+      box.innerText = msg;
+      box.style.display = "block";
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+      document.getElementById("errBox").style.display = "none";
+
+      const fullName = document.getElementById("fullName").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const username = document.getElementById("username").value.trim().toLowerCase();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const notes = document.getElementById("notes").value.trim();
+
+      if (username === "rann" || username === "durhampol" || username === "admin") {
+        showError("That username is reserved. Please choose another.");
+        return;
+      }
+      if (password.length < 12) {
+        showError("Password must be at least 12 characters.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        showError("Passwords do not match.");
+        return;
+      }
+
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+      btn.innerText = "Submitting request...";
+
+      try {
+        const { salt, passwordHash } = await hashPasswordClient(password);
+        const approvalUrl = "https://github.com/rannbaron/mainwebsite/actions/workflows/approve_durhampolitics_user.yml";
+        const requestedAt = new Date().toISOString();
+
+        // Dispatch immediate email notification to rann@rannbar-on.com via FormSubmit AJAX
+        let emailed = false;
+        try {
+          const resp = await fetch("https://formsubmit.co/ajax/rann@rannbar-on.com", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            },
+            body: JSON.stringify({
+              _subject: `[Durham Politics Account Request] ${fullName} (${username})`,
+              _template: "table",
+              _captcha: "false",
+              full_name: fullName,
+              email: email,
+              username: username,
+              requested_scope: "https://rannbar-on.com/durhampolitics/ ONLY",
+              notes: notes || "(none)",
+              salt: salt,
+              password_hash: passwordHash,
+              requested_at: requestedAt,
+              approve_on_github: approvalUrl
+            })
+          });
+          if (resp.ok) emailed = true;
+        } catch (netErr) {
+          console.warn("FormSubmit dispatch error:", netErr);
+        }
+
+        document.getElementById("signupForm").style.display = "none";
+        document.getElementById("successBox").style.display = "block";
+
+        if (!emailed) {
+          const mailSubject = encodeURIComponent(`[Durham Politics Account Request] ${fullName} (${username})`);
+          const mailBody = encodeURIComponent(
+            `New Durham Politics Tracker account request:\n\n` +
+            `Full Name: ${fullName}\n` +
+            `Email: ${email}\n` +
+            `Username: ${username}\n` +
+            `Scope: https://rannbar-on.com/durhampolitics/ ONLY\n` +
+            `Notes: ${notes || "(none)"}\n` +
+            `Salt: ${salt}\n` +
+            `Password Hash (SHA-256): ${passwordHash}\n\n` +
+            `Approve on GitHub Actions:\n${approvalUrl}`
+          );
+          const fb = document.getElementById("fallbackBox");
+          fb.style.display = "block";
+          fb.innerHTML = `Your browser blocked the automatic notification service. <a href="mailto:rann@rannbar-on.com?subject=${mailSubject}&body=${mailBody}" style="color:#60a5fa;font-weight:700;">Click here to email rann@rannbar-on.com directly</a> with your pre-filled approval details.`;
+        }
+      } catch (err) {
+        showError("Could not process registration: " + err.message);
+        btn.disabled = false;
+        btn.innerText = "Submit Account Request";
+      }
+    }
+  </script>
+</body>
+</html>
