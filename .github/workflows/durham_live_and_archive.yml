@@ -1,0 +1,58 @@
+name: Durham Live Meeting Monitor & Auto-Archiver
+
+on:
+  schedule:
+    # Check every 5 minutes for live City Council, DPS Board, or BOCC meetings
+    # and archive any newly completed meetings with dual audio+caption ASR & PDFs.
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      force_archive_scan:
+        description: 'Force scan for newly completed meetings'
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  actions: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "durham-live-monitor"
+  cancel-in-progress: false
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      DURHAM_OUTPUT_DIR: ${{ github.workspace }}/durhampolitics
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system & Python dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg nodejs
+          pip install --upgrade pip
+          pip install yt-dlp faster-whisper numpy reportlab
+
+      - name: Configure Git author
+        run: |
+          git config user.name "Durham Politics Tracker Bot"
+          git config user.email "bot@rannbar-on.com"
+
+      - name: Run live meeting detector, real-time audio processor & auto-archiver
+        run: |
+          python3 durham_politics_tracker/live_meeting_daemon.py --once
