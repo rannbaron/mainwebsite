@@ -1,7 +1,19 @@
 {
-  "updated_at": "2026-11-26T17:25:16.995810+00:00",
+  "updated_at": "2026-11-26T17:30:53.762607+00:00",
   "allowed_route": "/durhampolitics",
   "users": [
+    {
+      "username": "charliereece",
+      "full_name": "Charlie Reece",
+      "email": "charliereece@gmail.com",
+      "salt": "a7e1b9c9af6a8658d22ab4a731407f2c",
+      "password_hash": "6796137c2b69998f90ef1ef5cd25548c04139e433f4c630ee76341cd17a8ab7f",
+      "status": "APPROVED",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "approved_at": "2026-11-26T17:30:53.762607+00:00"
+    },
     {
       "username": "mekopac",
       "full_name": "Matt Kopac",
