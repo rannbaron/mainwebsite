@@ -34,9 +34,18 @@ window.__onBetaAuthUnlocked = async function () {
   });
   const sel = document.getElementById("hubBoardFilter");
   sel.addEventListener("change", () => {
-    ACTIVE_BOARD = sel.value;
-    renderSearchAndBoards();
+    selectHubBoard(sel.value);
   });
+};
+
+window.selectHubBoard = function (boardId) {
+  ACTIVE_BOARD = boardId;
+  const sel = document.getElementById("hubBoardFilter");
+  if (sel) sel.value = boardId;
+  document.querySelectorAll("#hubBoardTabs .tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-board") === boardId);
+  });
+  renderSearchAndBoards();
 };
 
 function renderHubKpis() {
@@ -73,6 +82,9 @@ window.clearHubSearch = function () {
   SEARCH_Q = "";
   document.getElementById("hubSearchInput").value = "";
   document.getElementById("hubBoardFilter").value = "all";
+  document.querySelectorAll("#hubBoardTabs .tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.getAttribute("data-board") === "all");
+  });
   renderTopicChips();
   renderSearchAndBoards();
 };
@@ -176,20 +188,25 @@ function renderBoards() {
           : `${th.conflicts_count} debate${th.conflicts_count === 1 ? "" : "s"}`;
         return `<span class="pill pill-cat"><span class="topic-dot" style="background:${esc(th.color)};"></span>${esc(th.topic)} <span style="color:var(--muted);">(${meta})</span></span>`;
       }).join("");
+      const isJoint = b.id === "jccpc" || b.id === "joint_cc";
+      const covHtml = t.coverage_note
+        ? `<div style="margin-top:8px;font-size:11.5px;color:#fcd34d;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:7px;padding:5px 8px;">Archive note: ${esc(t.coverage_note)}</div>`
+        : "";
       return `
         <a class="term-card" href="${esc(t.href + qSuffix)}">
           <div>
             <div class="term-card-top">
               <div>
                 <div class="term-title">${esc(t.label)}</div>
-                <div class="term-dates">${esc(t.date_range_label)}${t.transition_reason ? " &bull; " + esc(t.transition_reason) : ""}</div>
+                <div class="term-dates">${esc(t.date_range_label)}${!isJoint && t.transition_reason ? " &bull; " + esc(t.transition_reason) : ""}</div>
               </div>
               <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">
-                ${t.is_current ? `<span class="pill pill-current">Current Term</span>` : ""}
+                ${t.is_current && !isJoint ? `<span class="pill pill-current">Current Term</span>` : ""}
                 ${cohesionPill(t.cohesion)}
               </div>
             </div>
-            <div class="term-roster"><strong>Seated:</strong> ${esc((t.roster_names || []).join(", ") || "See term page")}</div>
+            ${!isJoint ? `<div class="term-roster"><strong>Seated:</strong> ${esc((t.roster_names || []).join(", ") || "See term page")}</div>` : ""}
+            ${covHtml}
             <div class="term-stats-row">
               <div class="tstat"><b>${k.meetings_count || 0}</b><span>Meetings</span></div>
               <div class="tstat"><b style="color:#fca5a5;">${k.pdfs_count || 0}</b><span>PDFs</span></div>
@@ -199,15 +216,19 @@ function renderBoards() {
             ${themesHtml ? `<div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--dim);margin-top:12px;">Primary Areas of Disagreement</div><div class="term-themes" style="margin-top:6px;">${themesHtml}</div>` : ""}
           </div>
           <div class="term-card-cta">
-            <span>Open Term Conflicts, Voting Blocs &amp; Meetings</span>
+            <span>${isJoint ? "Open " + esc(t.short_label) + " Meetings, Conflicts &amp; Summaries" : "Open Term Conflicts, Voting Blocs &amp; Meetings"}</span>
             <span>&rarr;</span>
           </div>
         </a>
       `;
     }).join("") || `<div class="empty-msg">No terms match the active topic filter for this board.</div>`;
 
-    const pendingNote = b.pending_terms_count > 0
-      ? ` &bull; ${b.pending_terms_count} earlier historical term(s) backfilling from grid ASR`
+    const isJointBoard = b.id === "jccpc" || b.id === "joint_cc";
+    const yearTabsStrip = isJointBoard
+      ? `<div class="term-switcher" style="margin-bottom:14px;">${terms.map(t => `<a class="tsw-pill" href="${esc(t.href + qSuffix)}"><strong>${esc(t.short_label)}</strong> <span style="color:var(--dim);">(${(t.kpis || {}).meetings_count || 0}m)</span></a>`).join("")}</div>`
+      : "";
+    const pendingNote = (!isJointBoard && b.pending_terms_count > 0)
+      ? ` &bull; ${b.pending_terms_count} pre-YouTube term(s) have no recordings`
       : "";
 
     return `
@@ -217,8 +238,9 @@ function renderBoards() {
             <span class="board-stripe" style="background:${esc(b.badge_color)};"></span>
             <span>${esc(b.name)}</span>
           </div>
-          <div class="board-sec-meta">${b.terms.length} term(s) ready &bull; ${b.total_seats} seats &bull; ${esc(b.regular_schedule)}${pendingNote}</div>
+          <div class="board-sec-meta">${b.terms.length} ${isJointBoard ? "year(s)" : "term(s)"} &bull; ${esc(b.regular_schedule)}${pendingNote}</div>
         </div>
+        ${yearTabsStrip}
         <div class="terms-grid">${cardsHtml}</div>
       </section>
     `;

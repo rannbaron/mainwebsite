@@ -68,8 +68,11 @@ function renderHero() {
   document.getElementById("heroKicker").innerHTML =
     `${esc(c.body_name)} &bull; ${esc(c.date_range_label)}${c.is_current ? " &bull; Current Term" : ""}`;
   document.getElementById("heroTitle").textContent = c.label;
+  const subParts = [];
+  if (c.transition_reason) subParts.push(c.transition_reason);
+  if (c.coverage_note) subParts.push("Archive coverage: " + c.coverage_note);
   document.getElementById("heroSub").textContent =
-    c.transition_reason || `Complete meeting record, conflict highlights, and roll-call coalition analysis for ${c.label}.`;
+    subParts.join(" — ") || `Complete meeting record, conflict highlights, and roll-call coalition analysis for ${c.label}.`;
 
   document.getElementById("termKpis").innerHTML = `
     <div class="kpi"><div class="kpi-lbl">Meetings</div><div class="kpi-val" style="color:#6ee7b7;">${k.meetings_count}</div><div class="kpi-sub">${esc(k.earliest_meeting)} &rarr; ${esc(k.latest_meeting)}</div></div>
