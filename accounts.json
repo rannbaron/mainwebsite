@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-11-26T19:49:40.000000+00:00",
-  "total": 5,
+  "updated_at": "2026-11-27T15:06:41.699044+00:00",
+  "total": 7,
   "accounts": [
     {
       "id": 1,
@@ -70,6 +70,34 @@
       ],
       "status": "APPROVED",
       "created_at": "2026-11-26T19:49:40.000000+00:00",
+      "last_login": null
+    },
+    {
+      "id": 6,
+      "username": "carlrist",
+      "full_name": "Carl Rist",
+      "email": "carlrist62@gmail.com",
+      "privilege_level": 2,
+      "privilege_name": "Standard Member",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "status": "APPROVED",
+      "created_at": "2026-11-27T15:06:41.699044+00:00",
+      "last_login": null
+    },
+    {
+      "id": 7,
+      "username": "jborden",
+      "full_name": "Jeremy Borden",
+      "email": "borden.jeremy@gmail.com",
+      "privilege_level": 2,
+      "privilege_name": "Standard Member",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "status": "APPROVED",
+      "created_at": "2026-11-27T15:06:41.699044+00:00",
       "last_login": null
     }
   ],

@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T19:49:40.000000+00:00",
+  "updated_at": "2026-11-27T15:06:41.699044+00:00",
   "allowed_route": "/durhampolitics",
   "users": [
     {
@@ -27,6 +27,18 @@
       "approved_at": "2026-11-26T19:49:40.000000+00:00"
     },
     {
+      "username": "carlrist",
+      "full_name": "Carl Rist",
+      "email": "carlrist62@gmail.com",
+      "salt": "84bcbef9cacd819e44f2ad7876fd4c4e",
+      "password_hash": "048b10b4f6bb7bac7f62810a7f99980fb12ae3af4406121418ee2183c3829f23",
+      "status": "APPROVED",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "approved_at": "2026-11-27T15:06:41.699044+00:00"
+    },
+    {
       "username": "charliereece",
       "full_name": "Charlie Reece",
       "email": "charliereece@gmail.com",
@@ -37,6 +49,18 @@
         "/durhampolitics"
       ],
       "approved_at": "2026-11-26T17:30:53.762607+00:00"
+    },
+    {
+      "username": "jborden",
+      "full_name": "Jeremy Borden",
+      "email": "borden.jeremy@gmail.com",
+      "salt": "7893c97263f037c9589e0008b9ca17ba",
+      "password_hash": "345f439c55fd5e85903c40d59ecc53c552bd2645b309f35271ef7e82ab4c1d19",
+      "status": "APPROVED",
+      "allowed_pages": [
+        "/durhampolitics"
+      ],
+      "approved_at": "2026-11-27T15:06:41.699044+00:00"
     },
     {
       "username": "mekopac",
