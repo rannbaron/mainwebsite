@@ -356,7 +356,8 @@ function searchClipsNL(intent) {
     if (score <= 0) continue;
     // Prefer timestamped clips and debates/split votes
     if (cl.ts) score += 8;
-    if (cl.k === "debate") score += 7;
+    if (cl.k === "justification") score += 18;
+    else if (cl.k === "debate") score += 7;
     else if (cl.k === "split_vote") score += 6;
 
     scored.push({ cl, score, stanceMatch });
@@ -489,7 +490,7 @@ function renderSearchResults() {
   let bodyHtml = "";
   if (RESULT_TAB === "clips") {
     const shown = SHOW_MORE_CLIPS ? clipHits.slice(0, 60) : clipHits.slice(0, 12);
-    const kindLbl = k => k === "debate" ? "Policy Debate" : k === "split_vote" ? "Split Vote" : k === "vote" ? "Vote" : "Agenda Clip";
+    const kindLbl = k => k === "justification" ? "Spoken Justification" : k === "debate" ? "Policy Debate" : k === "split_vote" ? "Split Vote" : k === "vote" ? "Vote" : "Agenda Clip";
     const boardShortMap = {};
     const cohortLblMap = {};
     (HUB_DATA.boards || []).forEach(bd => {

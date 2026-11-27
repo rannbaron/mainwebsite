@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <title>DPS Board of Education: Natural-Language Search &amp; Decision Patterns — Durham Politics Beta</title>
+  <link rel="stylesheet" href="./assets/beta.css" />
+  <style>
+    .boe-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; }
+    .boe-tab {
+      background:var(--surface); border:1px solid var(--border); color:var(--muted);
+      padding:9px 16px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer;
+    }
+    .boe-tab.active { background:rgba(59,130,246,0.2); border-color:var(--dps); color:#93c5fd; }
+    .boe-panel { display:none; }
+    .boe-panel.active { display:block; }
+    .nl-box {
+      background:var(--bg-elev); border:1px solid var(--border-hi); border-radius:14px;
+      padding:18px 20px; margin-bottom:18px;
+    }
+    .nl-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .nl-input {
+      flex:1; min-width:260px; background:#080d19; border:1px solid var(--border);
+      color:var(--text); padding:11px 14px; border-radius:10px; font-size:14px; outline:none;
+    }
+    .nl-input:focus { border-color:var(--dps); }
+    .nl-examples { display:flex; gap:7px; flex-wrap:wrap; margin-top:10px; align-items:center; }
+    .nl-ex {
+      background:var(--surface); border:1px solid var(--border); color:#cbd5e1;
+      padding:4px 10px; border-radius:999px; font-size:11.5px; cursor:pointer;
+    }
+    .nl-ex:hover { border-color:var(--dps); color:#fff; }
+    .stream-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+    .stream-btn {
+      background:var(--surface); border:1px solid var(--border); color:var(--muted);
+      padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;
+    }
+    .stream-btn.active { background:rgba(59,130,246,0.22); border-color:var(--dps); color:#bfdbfe; }
+    .res-card {
+      background:var(--bg-elev); border:1px solid var(--border); border-radius:12px;
+      padding:14px 16px; margin-bottom:10px;
+    }
+    .res-top { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:flex-start; }
+    .res-title { font-weight:700; font-size:14px; color:#fff; }
+    .res-meta { font-size:12px; color:var(--muted); margin-top:3px; }
+    .res-body { font-size:12.5px; color:#cbd5e1; margin-top:8px; line-height:1.55; }
+    .b-pill {
+      display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px;
+      background:rgba(59,130,246,0.18); color:#93c5fd; border:1px solid rgba(59,130,246,0.4);
+      margin-right:5px; margin-top:4px;
+    }
+    .b-pill.green { background:rgba(16,185,129,0.16); color:#6ee7b7; border-color:rgba(16,185,129,0.4); }
+    .b-pill.warn { background:rgba(245,158,11,0.18); color:#fcd34d; border-color:rgba(245,158,11,0.4); }
+    .b-pill.red { background:rgba(239,68,68,0.18); color:#fca5a5; border-color:rgba(239,68,68,0.4); }
+    .b-pill.purple { background:rgba(167,139,250,0.18); color:#ddd6fe; border-color:rgba(167,139,250,0.4); }
+    .doc-links-row { display:flex; flex-wrap:wrap; gap:7px; margin-top:9px; }
+    .doc-btn {
+      display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600;
+      padding:5px 10px; border-radius:8px; background:var(--surface-2); border:1px solid var(--border);
+      color:#e2e8f0;
+    }
+    .doc-btn:hover { border-color:var(--accent); color:#fff; text-decoration:none; }
+    .filter-bar {
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      background:var(--bg-elev); border:1px solid var(--border); border-radius:12px;
+      padding:13px 15px; margin-bottom:14px;
+    }
+    .filter-bar input, .filter-bar select {
+      background:#080d19; border:1px solid var(--border); color:var(--text);
+      padding:7px 10px; border-radius:8px; font-size:12.5px;
+    }
+    .filter-bar label { font-size:12px; color:var(--muted); display:inline-flex; align-items:center; gap:5px; cursor:pointer; }
+    .matrix-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--bg-elev); }
+    .matrix-tbl { width:100%; border-collapse:collapse; font-size:12px; }
+    .matrix-tbl th, .matrix-tbl td { padding:8px 10px; border-bottom:1px solid rgba(36,52,84,0.55); text-align:center; white-space:nowrap; }
+    .matrix-tbl th { background:var(--surface); color:var(--muted); font-weight:700; }
+    .matrix-tbl th:first-child, .matrix-tbl td:first-child { text-align:left; position:sticky; left:0; background:var(--bg-elev); font-weight:700; border-right:1px solid var(--border); }
+    .matrix-tbl th:first-child { background:var(--surface); }
+    .m-cell { cursor:pointer; }
+    .m-cell:hover { filter:brightness(1.25); outline:1px solid var(--dps); }
+    .m-sub { display:block; font-size:10px; opacity:0.78; font-weight:500; }
+    .mem-chip-bar { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:14px; }
+    .mem-chip {
+      background:var(--surface); border:1px solid var(--border); color:var(--muted);
+      padding:5px 11px; border-radius:999px; font-size:12px; font-weight:600; cursor:pointer;
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    .mem-chip.active { color:#fff; border-color:var(--dps); background:rgba(59,130,246,0.2); }
+    .chart-box { background:var(--bg-elev); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px; overflow-x:auto; }
+  </style>
+</head>
+<body>
+  <div id="betaAuthOverlay">
+    <form class="auth-card" onsubmit="handleBetaAuth(event)">
+      <div class="auth-badge">&#128274; Admin Beta Preview</div>
+      <div class="auth-title">Durham Politics Tracker</div>
+      <div class="auth-desc">Sign in as administrator (<code>rann</code>) to access DPS Board of Education Deep Search &amp; Decision Patterns.</div>
+      <div class="auth-field">
+        <label for="betaUserInput">Username</label>
+        <input id="betaUserInput" type="text" autocomplete="username" value="rann" required />
+      </div>
+      <div class="auth-field">
+        <label for="betaPassInput">Master Password</label>
+        <input id="betaPassInput" type="password" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="auth-btn">Enter Beta Preview</button>
+      <div id="betaAuthError"></div>
+    </form>
+  </div>
+
+  <div id="betaApp" style="display:none;">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./index.html">
+          <span>Durham Politics Tracker</span>
+          <span class="beta-tag">Beta Preview</span>
+        </a>
+        <nav class="nav-right">
+          <a class="nav-link" href="./index.html">&larr; All Boards &amp; Terms</a>
+          <a class="nav-link" href="./development.html">City Development</a>
+          <a class="nav-link" href="./boe.html" style="color:#93c5fd;border-color:rgba(59,130,246,0.45);">DPS Board Explorer</a>
+          <button class="nav-btn" onclick="betaSignOut()">Sign Out</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="hero" style="background:linear-gradient(135deg, rgba(59,130,246,0.18), rgba(167,139,250,0.09));">
+        <div class="hero-kicker">Durham Public Schools Board of Education &bull; Diligent Community Docs + Board Decisions (2016&ndash;2026)</div>
+        <h1>DPS Board of Education: Natural-Language Search &amp; Decision Intelligence</h1>
+        <p class="hero-sub">
+          Search across official Diligent Community meeting agendas, Precis memos (with extracted Executive Summaries &amp; Fiscal Impacts), Board minutes, policies, contracts, roll-call votes, and recorded debates&mdash;and track how individual Board members' voting patterns evolved across issues and terms.
+        </p>
+        <div class="kpi-strip" id="boeKpis"></div>
+      </section>
+
+      <div class="boe-tabs">
+        <button class="boe-tab active" data-tab="search" onclick="setBoeTab('search')">1. Natural-Language BoE Search (Docs + Votes + Debates)</button>
+        <button class="boe-tab" data-tab="members" onclick="setBoeTab('members')">2. Board Member Patterns &amp; Evolution (2016&ndash;2026)</button>
+        <button class="boe-tab" data-tab="docs" onclick="setBoeTab('docs')">3. Official Diligent Document Archive</button>
+      </div>
+
+      <!-- TAB 1: NATURAL LANGUAGE SEARCH -->
+      <section id="panel-search" class="boe-panel active">
+        <div class="nl-box">
+          <div style="font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:#93c5fd;margin-bottom:8px;">
+            Ask in Plain English &mdash; Searches Official Precis, Policies, Minutes, Votes &amp; Debates Locally in Browser
+          </div>
+          <div class="nl-row">
+            <input id="boeNlInput" class="nl-input" type="search" placeholder="e.g. &quot;classified staff pay raises and DAE&quot; or &quot;school consolidation rightsizing&quot; or &quot;Natalie Beyer opposing budget&quot;..." oninput="runBoeNlSearch()" />
+            <select id="boeNlYear" onchange="runBoeNlSearch()" style="background:#080d19;border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px;font-size:12.5px;">
+              <option value="">All Years</option>
+            </select>
+            <button class="nav-btn" onclick="clearBoeSearch()">Clear</button>
+          </div>
+          <div class="nl-examples">
+            <span style="font-size:11px;color:var(--dim);font-weight:700;">Try:</span>
+            <button class="nl-ex" onclick="tryBoeQuery('classified staff pay raises step plan DAE')">Classified staff pay &amp; DAE</button>
+            <button class="nl-ex" onclick="tryBoeQuery('rightsizing consolidation MGT facilities')">Rightsizing &amp; consolidation</button>
+            <button class="nl-ex" onclick="tryBoeQuery('bus drivers transportation routes')">Bus drivers &amp; transportation</button>
+            <button class="nl-ex" onclick="tryBoeQuery('budget amendment county funding fund balance')">Budget &amp; county funding</button>
+            <button class="nl-ex" onclick="tryBoeQuery('Beyer opposing vote no dissent')">Natalie Beyer dissents</button>
+            <button class="nl-ex" onclick="tryBoeQuery('policy 4301 suspensions student discipline safety')">Discipline &amp; Policy 4301</button>
+            <button class="nl-ex" onclick="tryBoeQuery('magnet lottery IGNITE school improvement')">Magnet / IGNITE / SIP</button>
+          </div>
+          <div id="boeIntentBadge" style="font-size:12px;color:var(--muted);margin-top:10px;"></div>
+        </div>
+
+        <div class="stream-tabs" id="boeStreamTabs">
+          <button class="stream-btn active" data-stream="all" onclick="setBoeStream('all')">All Results</button>
+          <button class="stream-btn" data-stream="docs" onclick="setBoeStream('docs')">Official Docs &amp; Precis</button>
+          <button class="stream-btn" data-stream="votes" onclick="setBoeStream('votes')">Board Votes &amp; Splits</button>
+          <button class="stream-btn" data-stream="debates" onclick="setBoeStream('debates')">Recorded Debates</button>
+        </div>
+        <div id="boeSearchResults"></div>
+        <div id="boeSearchMore" style="text-align:center;margin-top:12px;"></div>
+      </section>
+
+      <!-- TAB 2: MEMBER PATTERNS & EVOLUTION -->
+      <section id="panel-members" class="boe-panel">
+        <div class="filter-bar">
+          <strong style="font-size:12.5px;">Scope:</strong>
+          <label><input type="checkbox" id="boeMatContested" onchange="renderBoeMembers()" /> Contested / Split Votes Only</label>
+          <span style="font-size:12px;color:var(--muted);margin-left:auto;">Click any cell to search that member's votes on that topic</span>
+        </div>
+        <div class="matrix-wrap" id="boeMatrixWrap" style="margin-bottom:20px;"></div>
+
+        <div class="filter-bar">
+          <strong style="font-size:12.5px;">Year-by-Year Approval Trajectory:</strong>
+          <button class="nav-btn" onclick="selectBoeCurrent()">Current / Recent Board</button>
+          <button class="nav-btn" onclick="selectBoeTop(6)">Top 6 Most Active</button>
+        </div>
+        <div class="mem-chip-bar" id="boeEvoChips"></div>
+        <div class="chart-box" id="boeEvoChart"></div>
+      </section>
+
+      <!-- TAB 3: DOCUMENT ARCHIVE -->
+      <section id="panel-docs" class="boe-panel">
+        <div class="filter-bar">
+          <input id="docSearch" type="search" placeholder="Filter by title, agenda item, fiscal impact, precis summary..." oninput="renderBoeDocsArchive()" style="min-width:260px;" />
+          <select id="docCat" onchange="renderBoeDocsArchive()">
+            <option value="">All Categories</option>
+            <option value="PRECIS">PRECIS</option>
+            <option value="MINUTES">MINUTES</option>
+            <option value="AGENDA">AGENDA</option>
+            <option value="BUDGET">BUDGET</option>
+            <option value="POLICY">POLICY</option>
+            <option value="CONTRACT">CONTRACT</option>
+            <option value="PRESENTATION">PRESENTATION</option>
+            <option value="COMPENSATION">COMPENSATION</option>
+            <option value="ACADEMICS">ACADEMICS</option>
+            <option value="DOCUMENT">DOCUMENT</option>
+          </select>
+          <select id="docYear" onchange="renderBoeDocsArchive()"><option value="">All Years</option></select>
+          <label><input type="checkbox" id="docHasFiscal" onchange="renderBoeDocsArchive()" /> Has Fiscal Impact ($)</label>
+          <button class="nav-btn" onclick="resetDocArchiveFilters()">Reset</button>
+        </div>
+        <div id="docArchiveCount" style="font-size:12.5px;color:var(--muted);margin-bottom:10px;"></div>
+        <div id="docArchiveList"></div>
+        <div id="docArchiveMore" style="text-align:center;margin-top:12px;"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./assets/auth.js"></script>
+  <script src="./assets/beta_boe.js"></script>
+</body>
+</html>
