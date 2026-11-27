@@ -188,7 +188,7 @@ function renderBoards() {
           : `${th.conflicts_count} debate${th.conflicts_count === 1 ? "" : "s"}`;
         return `<span class="pill pill-cat"><span class="topic-dot" style="background:${esc(th.color)};"></span>${esc(th.topic)} <span style="color:var(--muted);">(${meta})</span></span>`;
       }).join("");
-      const isJoint = b.id === "jccpc" || b.id === "joint_cc";
+      const isJoint = b.id === "jccpc" || b.id === "joint_cc" || b.id === "joint_bocc_boe";
       const covHtml = t.coverage_note
         ? `<div style="margin-top:8px;font-size:11.5px;color:#fcd34d;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:7px;padding:5px 8px;">Archive note: ${esc(t.coverage_note)}</div>`
         : "";
@@ -223,7 +223,7 @@ function renderBoards() {
       `;
     }).join("") || `<div class="empty-msg">No terms match the active topic filter for this board.</div>`;
 
-    const isJointBoard = b.id === "jccpc" || b.id === "joint_cc";
+    const isJointBoard = b.id === "jccpc" || b.id === "joint_cc" || b.id === "joint_bocc_boe";
     const yearTabsStrip = isJointBoard
       ? `<div class="term-switcher" style="margin-bottom:14px;">${terms.map(t => `<a class="tsw-pill" href="${esc(t.href + qSuffix)}"><strong>${esc(t.short_label)}</strong> <span style="color:var(--dim);">(${(t.kpis || {}).meetings_count || 0}m)</span></a>`).join("")}</div>`
       : "";
