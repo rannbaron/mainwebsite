@@ -5,8 +5,9 @@ Produces the interactive single-page application at:
 """
 
 import json
+import re
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any, Dict, List, Optional, Set
 
 from .config import (
     HTML_OUTPUT_PATH, DATA_EXPORT_PATH, PAGE_PASSWORD, MASTER_PASSWORD,
@@ -14,21 +15,350 @@ from .config import (
 )
 from .database import DurhamPoliticsDB
 
+
+def _is_blanket_consent_vote(v: Dict[str, Any]) -> bool:
+    title = (v.get("item_title") or "").lower()
+    mtype = (v.get("motion_type") or "").lower()
+    notes = (v.get("notes") or "").lower()
+    combined = f"{title} {mtype} {notes}"
+    is_pulled = bool(
+        re.search(r"pulled\s+(consent\s+)?item", title, re.I)
+        or re.search(r"pulled\s+and\s+approved", notes, re.I)
+        or re.search(r"pulled\s+for\s+(separate|discussion)", notes, re.I)
+        or re.search(r"^approval of pulled", title, re.I)
+        or re.search(r"^approve pulled", title, re.I)
+    )
+    if is_pulled:
+        return False
+    return any(
+        k in combined
+        for k in (
+            "consent agenda",
+            "settle the agenda",
+            "settle agenda",
+            "settlement of the agenda",
+            "settle and adopt meeting agenda",
+        )
+    )
+
+
+def _real_vote_names(arr: Any) -> List[str]:
+    out = []
+    for x in (arr or []):
+        s = str(x or "").strip()
+        if s and not re.match(r"^(none|n/a|na|0|null|-)$", s, re.I):
+            out.append(s)
+    return out
+
+
+def _is_generic_unanimous_ayes(v: Dict[str, Any]) -> bool:
+    nays = _real_vote_names(v.get("nays"))
+    abst = _real_vote_names(v.get("abstentions"))
+    if nays or abst:
+        return False
+    ayes = _real_vote_names(v.get("ayes"))
+    if not ayes:
+        return True
+    if re.search(r"unanimous|7-0|6-0-0|5-0-0|5-0", str(v.get("tally") or ""), re.I):
+        return True
+    return any(
+        re.search(
+            r"all\s+(present|members|commissioners|council|board)|board\s+members|unanimous|supporting|and\s+others|^\d+\s+commissioners|^council\s+members$",
+            x.strip(),
+            re.I,
+        )
+        for x in ayes
+    )
+
+
+def _member_matches_list(name_list: List[str], member: Dict[str, Any]) -> bool:
+    clean_name = re.sub(r"\([^)]*\)", "", re.sub(r"^Dr\.?\s+", "", member.get("name", ""), flags=re.I))
+    clean_name = re.sub(r"\s+", " ", clean_name).strip().lower()
+    parts = [p for p in clean_name.split(" ") if p]
+    last = parts[-1] if parts else ""
+    aliases = [str(a).lower().strip() for a in (member.get("aliases") or []) if a]
+    for raw in _real_vote_names(name_list):
+        nl = raw.lower()
+        if clean_name and clean_name in nl:
+            return True
+        if len(last) >= 4 and last in nl:
+            return True
+        for a in aliases:
+            if len(a) >= 4:
+                if a in nl:
+                    return True
+            elif len(a) >= 3 and re.search(r"\b" + re.escape(a) + r"\b", nl):
+                return True
+    return False
+
+
+def _compute_scope_stats(
+    meetings: List[Dict[str, Any]],
+    scope_members: List[Dict[str, Any]],
+    cohorts_by_id: Dict[str, Dict[str, Any]],
+    include_consent: bool,
+) -> Dict[str, Any]:
+    total_votes = 0
+    contested_votes = 0
+    total_disagreements = 0
+
+    mem_stats: Dict[str, Dict[str, Any]] = {}
+    for m in scope_members:
+        mem_stats[m["id"]] = {
+            "votes_cast": 0, "ayes": 0, "nays": 0, "abstains": 0,
+            "aye_pct": 0.0, "nay_pct": 0.0, "dissent_rate": 0.0, "dissents_count": 0,
+        }
+
+    pair_agree: Dict[str, Dict[str, int]] = {}
+    pair_total: Dict[str, Dict[str, int]] = {}
+
+    for mtg in meetings:
+        total_disagreements += len(mtg.get("disagreements") or [])
+        vis_votes = [
+            v for v in (mtg.get("votes") or [])
+            if include_consent or not _is_blanket_consent_vote(v)
+        ]
+        total_votes += len(vis_votes)
+        contested_votes += sum(1 for v in vis_votes if v.get("is_contested"))
+
+        # Determine exact seated member IDs for this meeting's cohort
+        c_obj = cohorts_by_id.get(mtg.get("cohort_id") or "")
+        seated_ids: Set[str] = set(c_obj.get("member_ids", [])) if c_obj else {m["id"] for m in scope_members if m.get("is_current")}
+        cand_members = [m for m in scope_members if m["id"] in seated_ids] if seated_ids else scope_members
+
+        for v in vis_votes:
+            outcome_passed = "pass" in str(v.get("outcome") or "").lower()
+            generic_ayes = outcome_passed and _is_generic_unanimous_ayes(v)
+            cast_by_id: Dict[str, str] = {}
+            for mem in cand_members:
+                mid = mem["id"]
+                if _member_matches_list(v.get("nays") or [], mem):
+                    mem_stats[mid]["nays"] += 1
+                    mem_stats[mid]["votes_cast"] += 1
+                    if outcome_passed:
+                        mem_stats[mid]["dissents_count"] += 1
+                    cast_by_id[mid] = "NAY"
+                elif _member_matches_list(v.get("abstentions") or [], mem):
+                    mem_stats[mid]["abstains"] += 1
+                    mem_stats[mid]["votes_cast"] += 1
+                    cast_by_id[mid] = "ABSTAIN"
+                elif _member_matches_list(v.get("ayes") or [], mem) or (generic_ayes and mid in seated_ids):
+                    mem_stats[mid]["ayes"] += 1
+                    mem_stats[mid]["votes_cast"] += 1
+                    cast_by_id[mid] = "AYE"
+
+            ids = list(cast_by_id.keys())
+            for i in range(len(ids)):
+                id1 = ids[i]
+                for j in range(i + 1, len(ids)):
+                    id2 = ids[j]
+                    pair_total.setdefault(id1, {})[id2] = pair_total.get(id1, {}).get(id2, 0) + 1
+                    pair_total.setdefault(id2, {})[id1] = pair_total.get(id2, {}).get(id1, 0) + 1
+                    if cast_by_id[id1] == cast_by_id[id2]:
+                        pair_agree.setdefault(id1, {})[id2] = pair_agree.get(id1, {}).get(id2, 0) + 1
+                        pair_agree.setdefault(id2, {})[id1] = pair_agree.get(id2, {}).get(id1, 0) + 1
+
+    for mid, st in mem_stats.items():
+        vc = st["votes_cast"]
+        if vc > 0:
+            st["aye_pct"] = round((st["ayes"] / vc) * 100.0, 1)
+            st["nay_pct"] = round((st["nays"] / vc) * 100.0, 1)
+            st["dissent_rate"] = round((st["dissents_count"] / vc) * 100.0, 1)
+
+    pairwise: Dict[str, Dict[str, Optional[float]]] = {}
+    for m1 in scope_members:
+        id1 = m1["id"]
+        pairwise[id1] = {}
+        for m2 in scope_members:
+            id2 = m2["id"]
+            if id1 == id2:
+                pairwise[id1][id2] = 100.0
+            else:
+                tot = pair_total.get(id1, {}).get(id2, 0)
+                if tot == 0:
+                    pairwise[id1][id2] = None
+                else:
+                    agr = pair_agree.get(id1, {}).get(id2, 0)
+                    pairwise[id1][id2] = round((agr / tot) * 100.0, 1)
+
+    unanimous = total_votes - contested_votes
+    return {
+        "meetings_count": len(meetings),
+        "votes_count": total_votes,
+        "contested_votes": contested_votes,
+        "unanimous_votes": unanimous,
+        "unanimous_pct": round((unanimous / max(total_votes, 1)) * 100.0, 1) if total_votes > 0 else 100.0,
+        "disagreements_count": total_disagreements,
+        "members": mem_stats,
+        "pairwise": pairwise,
+    }
+
+
+def _build_multi_cohort_payload(dataset: Dict[str, Any], out_dir: Path) -> Dict[str, Any]:
+    """
+    Writes per-cohort lazy-loaded JSON files under <out_dir>/data/ and returns
+    a fast, compact APP_DATA payload with the 3 current boards embedded inline
+    and precomputed stats for every board + historical cohort.
+    """
+    data_dir = out_dir / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
+    all_meetings: List[Dict[str, Any]] = dataset.get("meetings", [])
+    all_members: List[Dict[str, Any]] = dataset.get("stats", {}).get("members", [])
+    cohorts_by_body: Dict[str, List[Dict[str, Any]]] = dataset.get("cohorts") or {}
+
+    # Fallback synthesis if DB has no cohorts yet
+    for b in BODIES.keys():
+        if not cohorts_by_body.get(b):
+            cur_mems = [m for m in all_members if m["body_id"] == b and m.get("is_current")]
+            cohorts_by_body[b] = [{
+                "id": f"{b}_current",
+                "body_id": b,
+                "label": f"Current {BODIES[b]['short_name']}",
+                "short_label": "Current Board",
+                "start_date": "2024-01-01",
+                "end_date": None,
+                "is_current": True,
+                "sort_order": 1,
+                "transition_reason": "Current seated board",
+                "meeting_count": sum(1 for m in all_meetings if m["body_id"] == b),
+                "member_ids": [m["id"] for m in cur_mems],
+                "members": [{"member_id": m["id"], "role": m["title"], "district": m["district"]} for m in cur_mems],
+            }]
+
+    cohorts_by_id: Dict[str, Dict[str, Any]] = {}
+    current_cohort_ids: Dict[str, str] = {}
+    for b, clist in cohorts_by_body.items():
+        for c in clist:
+            cohorts_by_id[c["id"]] = c
+            if c.get("is_current") and b not in current_cohort_ids:
+                current_cohort_ids[b] = c["id"]
+        if b not in current_cohort_ids and clist:
+            current_cohort_ids[b] = clist[0]["id"]
+
+    # Group meetings by cohort_id
+    meetings_by_cohort: Dict[str, List[Dict[str, Any]]] = {cid: [] for cid in cohorts_by_id.keys()}
+    for m in all_meetings:
+        cid = m.get("cohort_id")
+        if not cid or cid not in cohorts_by_id:
+            cid = current_cohort_ids.get(m["body_id"])
+            m["cohort_id"] = cid
+        if cid:
+            meetings_by_cohort.setdefault(cid, []).append(m)
+
+    # Update exact meeting counts on cohort metadata and write lazy JSON shard per cohort
+    for cid, mlist in meetings_by_cohort.items():
+        mlist.sort(key=lambda x: (x.get("date") or "", x.get("id") or ""), reverse=True)
+        if cid in cohorts_by_id:
+            cohorts_by_id[cid]["meeting_count"] = len(mlist)
+        shard_path = data_dir / f"meetings_{cid}.json"
+        shard_path.write_text(json.dumps(mlist, ensure_ascii=False), encoding="utf-8")
+
+    # Write lightweight global search index across ALL meetings (2012-2026)
+    search_index = []
+    years_set: Set[str] = set()
+    for m in all_meetings:
+        yr = str(m.get("date") or "")[:4]
+        if yr.isdigit():
+            years_set.add(yr)
+        search_index.append({
+            "id": m["id"],
+            "body_id": m["body_id"],
+            "cohort_id": m.get("cohort_id"),
+            "date": m.get("date", ""),
+            "year": yr,
+            "title": m.get("title", ""),
+            "chair": m.get("presiding_chair", ""),
+            "summary": (m.get("executive_summary") or "")[:320],
+            "votes": [v.get("item_title", "") for v in (m.get("votes") or [])],
+            "debates": [d.get("issue", "") for d in (m.get("disagreements") or [])],
+            "has_contested": any(v.get("is_contested") for v in (m.get("votes") or [])),
+        })
+    (data_dir / "search_index.json").write_text(json.dumps(search_index, ensure_ascii=False), encoding="utf-8")
+
+    # Precompute cohort_stats & overall_stats for BOTH excl_consent & incl_consent
+    members_by_id = {m["id"]: m for m in all_members}
+    cohort_stats: Dict[str, Dict[str, Any]] = {"excl": {}, "incl": {}}
+    overall_stats: Dict[str, Dict[str, Any]] = {}
+
+    for mode_key, incl_flag in (("excl", False), ("incl", True)):
+        tot_m = len(all_meetings)
+        tot_v = 0
+        tot_c = 0
+        tot_d = 0
+        for b, clist in cohorts_by_body.items():
+            b_meetings = [m for m in all_meetings if m["body_id"] == b]
+            b_members = [m for m in all_members if m["body_id"] == b]
+            all_b_st = _compute_scope_stats(b_meetings, b_members, cohorts_by_id, incl_flag)
+            cohort_stats[mode_key][f"all_{b}"] = all_b_st
+            tot_v += all_b_st["votes_count"]
+            tot_c += all_b_st["contested_votes"]
+            tot_d += all_b_st["disagreements_count"]
+
+            for c in clist:
+                cid = c["id"]
+                c_mems = [members_by_id[mid] for mid in c.get("member_ids", []) if mid in members_by_id]
+                cohort_stats[mode_key][cid] = _compute_scope_stats(
+                    meetings_by_cohort.get(cid, []), c_mems, cohorts_by_id, incl_flag
+                )
+
+        unanim = tot_v - tot_c
+        overall_stats[mode_key] = {
+            "total_meetings": tot_m,
+            "total_votes": tot_v,
+            "contested_votes": tot_c,
+            "unanimous_votes": unanim,
+            "unanimous_pct": round((unanim / max(tot_v, 1)) * 100.0, 1) if tot_v > 0 else 100.0,
+            "total_disagreements": tot_d,
+            "last_updated": dataset.get("stats", {}).get("overall", {}).get("last_updated", ""),
+        }
+
+    # Embed the 3 CURRENT board cohorts directly for instant first paint!
+    # Also embed all cohorts inline ONLY if total serialized meetings size is small (< 2.5 MB)
+    embedded_meetings_by_cohort: Dict[str, List[Dict[str, Any]]] = {}
+    for b, cid in current_cohort_ids.items():
+        embedded_meetings_by_cohort[cid] = meetings_by_cohort.get(cid, [])
+
+    full_size_est = len(json.dumps(all_meetings, ensure_ascii=False))
+    all_embedded = False
+    if full_size_est < 2_500_000:
+        embedded_meetings_by_cohort = meetings_by_cohort
+        all_embedded = True
+
+    meta = dict(dataset.get("metadata") or {})
+    meta["years"] = sorted(years_set, reverse=True)
+    meta["current_cohorts"] = current_cohort_ids
+    meta["all_embedded"] = all_embedded
+    meta["total_cohorts"] = sum(len(v) for v in cohorts_by_body.values())
+
+    return {
+        "metadata": meta,
+        "cohorts": cohorts_by_body,
+        "members": all_members,
+        "overall_stats": overall_stats,
+        "cohort_stats": cohort_stats,
+        "meetings_by_cohort": embedded_meetings_by_cohort,
+    }
+
+
 def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
     """
     Extracts the full database state and renders the standalone interactive
-    password-protected HTML application.
+    password-protected HTML application with multi-cohort historical support
+    (defaulting to Current Boards with lazy-loaded prior cohort archives).
     """
     if db is None:
         db = DurhamPoliticsDB(read_only=True)
 
     dataset = db.export_full_dataset()
-    data_json = json.dumps(dataset, ensure_ascii=False)
 
     # Ensure output directory exists
     HTML_OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
-    # Save data export JSON
+    app_payload = _build_multi_cohort_payload(dataset, HTML_OUTPUT_PATH.parent)
+    data_json = json.dumps(app_payload, ensure_ascii=False)
+
+    # Save lightweight summary export JSON (always well under GitHub's 100 MB limit)
     with open(DATA_EXPORT_PATH, "w", encoding="utf-8") as f:
         f.write(data_json)
 
@@ -849,6 +1179,70 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
       outline: none;
     }}
 
+    .cohort-bar {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 14px;
+      padding: 12px 14px;
+      background: var(--card-inner);
+      border: 1px solid #23304c;
+      border-radius: 10px;
+    }}
+    .cohort-bar-left {{
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }}
+    .cohort-bar-label {{
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+    }}
+    .cohort-meta-pills {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }}
+    .cohort-pill {{
+      background: rgba(59, 130, 246, 0.14);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      color: #93c5fd;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }}
+    .cohort-note {{
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }}
+    .btn-load-more {{
+      display: block;
+      margin: 18px auto 6px auto;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+    }}
+    .btn-load-more:hover {{
+      background: #334155;
+      color: #fff;
+    }}
+
     /* Toast Notification */
     #toast {{
       position: fixed;
@@ -911,7 +1305,7 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
           <div class="brand-logo">DP</div>
           <div class="brand-text">
             <h1>Durham Politics Tracker <span class="badge-confidential">Private Access</span></h1>
-            <p>Nov 2024 – Nov 2026 Deliberation & Voting Intelligence | DPS, City Council & BOCC</p>
+            <p id="headerCoverageSub">2012 – Nov 2026 Full Historical Archive &amp; Voting Intelligence | DPS, City Council &amp; BOCC</p>
           </div>
         </div>
 
@@ -978,7 +1372,7 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
           <div class="kpi-card">
             <div class="kpi-label">Tracked Meetings</div>
             <div class="kpi-value" id="kpiTotalMeetings">0</div>
-            <div class="kpi-subtext">Nov 2024 – Nov 2026 public sessions</div>
+            <div class="kpi-subtext" id="kpiMeetingsSubtext">Full historical archive across 3 boards</div>
           </div>
           <div class="kpi-card">
             <div class="kpi-label">Recorded Formal Votes</div>
@@ -1055,70 +1449,97 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
       <!-- ================= TAB 2: DPS ================= -->
       <div id="tab_dps" class="tab-pane">
         <div class="card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
             <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Durham Public Schools Board of Education</h2>
             <span class="badge-body dps">7 Total Seats</span>
           </div>
           <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-            Oversees Durham County's K-12 public school system, serving over 32,000 students across 56 schools. Responsibilities include superintendent supervision (Dr. Anthony S. Lewis), operational budget adoption, state class-size compliance, facility construction (2022 bond projects), and staff compensation supplements.
+            Oversees Durham County's K-12 public school system, serving over 32,000 students across 56 schools. Defaults to the <strong>Current Board</strong> (seated July 6, 2026); select any prior seating cohort below to inspect historical rosters, voting records, and meeting archives back to 2016.
           </p>
+          <div class="cohort-bar">
+            <div class="cohort-bar-left">
+              <span class="cohort-bar-label">Board Cohort:</span>
+              <select id="cohortSelect_dps" class="filter-select" onchange="onBoardCohortChange('dps', this.value)"></select>
+            </div>
+            <div id="cohortMeta_dps" class="cohort-meta-pills"></div>
+          </div>
+          <div id="cohortNote_dps" class="cohort-note"></div>
         </div>
-        <div class="section-title">DPS Board Members</div>
+        <div class="section-title" id="dpsMembersTitle">DPS Board Members</div>
         <div id="dpsMembersGrid" class="members-grid"></div>
 
-        <div class="section-title" style="margin-top: 32px;">DPS Meeting Chronology & Roll Calls</div>
+        <div class="section-title" style="margin-top: 32px;" id="dpsMeetingsTitle">DPS Meeting Chronology &amp; Roll Calls</div>
         <div id="dpsMeetingsTimeline" class="timeline"></div>
       </div>
 
       <!-- ================= TAB 3: CITY COUNCIL ================= -->
       <div id="tab_city" class="tab-pane">
         <div class="card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
             <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Durham City Council</h2>
             <span class="badge-body city">7 Total Seats (Mayor + 6 Council Members)</span>
           </div>
           <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-            The legislative and policy-making body of the City of Durham. Enacts municipal ordinances, sets city ad valorem property tax rates, adopts the annual capital and operating budget ($640M+), oversees development zoning and annexation requests, and guides public safety investments including the DPD and HEART non-police crisis program.
+            The legislative and policy-making body of the City of Durham. Defaults to the <strong>Current Council</strong> (seated Dec 1, 2025); select any prior council cohort below to inspect historical rosters, voting records, and meeting archives back to 2012.
           </p>
+          <div class="cohort-bar">
+            <div class="cohort-bar-left">
+              <span class="cohort-bar-label">Board Cohort:</span>
+              <select id="cohortSelect_city" class="filter-select" onchange="onBoardCohortChange('city', this.value)"></select>
+            </div>
+            <div id="cohortMeta_city" class="cohort-meta-pills"></div>
+          </div>
+          <div id="cohortNote_city" class="cohort-note"></div>
         </div>
-        <div class="section-title">City Council Members</div>
+        <div class="section-title" id="cityMembersTitle">City Council Members</div>
         <div id="cityMembersGrid" class="members-grid"></div>
 
-        <div class="section-title" style="margin-top: 32px;">City Council Meeting Chronology & Roll Calls</div>
+        <div class="section-title" style="margin-top: 32px;" id="cityMeetingsTitle">City Council Meeting Chronology &amp; Roll Calls</div>
         <div id="cityMeetingsTimeline" class="timeline"></div>
       </div>
 
       <!-- ================= TAB 4: BOCC ================= -->
       <div id="tab_bocc" class="tab-pane">
         <div class="card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
             <h2 style="font-size: 20px; font-weight: 800; color: #fff;">Durham Board of County Commissioners (BOCC)</h2>
             <span class="badge-body bocc">5 County-wide Seats</span>
           </div>
           <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6;">
-            The governing body of Durham County, managing public health, social services, property appraisals, county court administration, and local funding supplements for Durham Public Schools and Durham Technical Community College. Chaired by Dr. Mike Lee (elected Dec 2025; Vice Chair Nida Allam).
+            The governing body of Durham County. Defaults to the <strong>Current Board</strong> (seated Dec 2, 2024; chaired by Dr. Mike Lee since Dec 2025); select any prior BOCC cohort below to inspect historical rosters, voting records, and meeting archives back to 2012.
           </p>
+          <div class="cohort-bar">
+            <div class="cohort-bar-left">
+              <span class="cohort-bar-label">Board Cohort:</span>
+              <select id="cohortSelect_bocc" class="filter-select" onchange="onBoardCohortChange('bocc', this.value)"></select>
+            </div>
+            <div id="cohortMeta_bocc" class="cohort-meta-pills"></div>
+          </div>
+          <div id="cohortNote_bocc" class="cohort-note"></div>
         </div>
-        <div class="section-title">County Commissioners</div>
+        <div class="section-title" id="boccMembersTitle">County Commissioners</div>
         <div id="boccMembersGrid" class="members-grid"></div>
 
-        <div class="section-title" style="margin-top: 32px;">BOCC Meeting Chronology & Roll Calls</div>
+        <div class="section-title" style="margin-top: 32px;" id="boccMeetingsTitle">BOCC Meeting Chronology &amp; Roll Calls</div>
         <div id="boccMeetingsTimeline" class="timeline"></div>
       </div>
 
       <!-- ================= TAB 5: MEMBERS ================= -->
       <div id="tab_members" class="tab-pane">
         <div class="filter-bar">
-          <select id="memberFilterBody" class="filter-select" onchange="renderMembers()">
+          <select id="memberFilterBody" class="filter-select" onchange="onMemberBodyFilterChange()">
             <option value="all">All Governing Bodies</option>
             <option value="dps">DPS School Board</option>
             <option value="city">Durham City Council</option>
             <option value="bocc">County Commissioners (BOCC)</option>
           </select>
+          <select id="memberFilterCohort" class="filter-select" onchange="renderMembers()" style="display:none;">
+            <option value="all">All Cohorts</option>
+          </select>
           <select id="memberFilterStatus" class="filter-select" onchange="renderMembers()">
             <option value="current">Current Serving Officials</option>
-            <option value="all">All (Including Preceding Members)</option>
-            <option value="former">Preceding / Former Members Only</option>
+            <option value="all">All Officials (2012–2026)</option>
+            <option value="former">Former / Preceding Members Only</option>
           </select>
         </div>
         <div id="allMembersGrid" class="members-grid"></div>
@@ -1129,22 +1550,24 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
         <div class="card">
           <h2 style="font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 8px;">Pairwise Voting Agreement Heatmap</h2>
           <p style="font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
-            Calculates the percentage of recorded votes where two members voted identically when both were present. Green cells indicate voting agreement &ge; 95%; yellow indicates 90&ndash;94.9%; red indicates &lt; 90%.
+            Calculates the percentage of recorded votes where two seated members voted identically when both were present. Green cells indicate voting agreement &ge; 95%; yellow indicates 90&ndash;94.9%; red indicates &lt; 90%. Defaults to the Current Board; switch cohorts to analyze any prior board composition.
           </p>
           <div class="filter-bar">
-            <select id="alignmentBodySelect" class="filter-select" onchange="renderPairwiseHeatmap(this.value)">
-              <option value="city">Durham City Council Agreement Grid</option>
-              <option value="dps">DPS Board of Education Agreement Grid</option>
-              <option value="bocc">Durham County Commissioners (BOCC) Grid</option>
+            <select id="alignmentBodySelect" class="filter-select" onchange="onAlignmentBodyChange(this.value)">
+              <option value="city">Durham City Council</option>
+              <option value="dps">DPS Board of Education</option>
+              <option value="bocc">Durham County Commissioners (BOCC)</option>
             </select>
+            <select id="alignmentCohortSelect" class="filter-select" onchange="renderPairwiseHeatmap()"></select>
           </div>
+          <div id="alignmentCohortNote" style="font-size: 12px; color: var(--text-dim); margin-bottom: 10px;"></div>
           <div id="heatmapContainer" class="heatmap-wrapper"></div>
         </div>
 
         <div class="card" style="margin-top: 20px;">
           <h3 id="dissentLeaderboardTitle" style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px;">Dissent Frequency Leaderboard</h3>
           <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">
-            Officials on the selected board who cast the highest proportion of dissenting votes (NAY against a carried majority motion) out of all recorded votes:
+            Officials in the selected board &amp; cohort who cast the highest proportion of dissenting votes (NAY against a carried majority motion) out of all recorded votes:
           </p>
           <div id="dissentLeaderboard"></div>
         </div>
@@ -1153,23 +1576,25 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
       <!-- ================= TAB 7: TIMELINE ================= -->
       <div id="tab_timeline" class="tab-pane">
         <div class="filter-bar">
-          <select id="timelineFilterBody" class="filter-select" onchange="renderTimeline()">
-            <option value="all">All Bodies</option>
+          <select id="timelineFilterBody" class="filter-select" onchange="onTimelineBodyChange()">
+            <option value="all">All Governing Bodies</option>
             <option value="dps">DPS School Board</option>
             <option value="city">City Council</option>
             <option value="bocc">County Commissioners</option>
           </select>
+          <select id="timelineFilterCohort" class="filter-select" onchange="renderTimeline()">
+            <option value="current">Current Boards (Default)</option>
+            <option value="all">All Historical Boards (2012–2026)</option>
+          </select>
           <select id="timelineFilterYear" class="filter-select" onchange="renderTimeline()">
-            <option value="all">All Years (2024–2026)</option>
-            <option value="2026">2026 Meetings</option>
-            <option value="2025">2025 Meetings</option>
-            <option value="2024">2024 Meetings</option>
+            <option value="all">All Years</option>
           </select>
           <select id="timelineFilterContested" class="filter-select" onchange="renderTimeline()">
             <option value="all">All Recorded Sessions</option>
             <option value="contested">Contested Roll Calls Only</option>
           </select>
         </div>
+        <div id="timelineStatusNote" style="font-size: 12px; color: var(--text-dim); margin-bottom: 10px;"></div>
         <div id="masterTimelineList" class="timeline"></div>
       </div>
 
@@ -1360,26 +1785,55 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
     function switchTab(tabId) {{
       const panes = document.querySelectorAll(".tab-pane");
       panes.forEach(p => p.classList.remove("active"));
-      
+
       const btns = document.querySelectorAll(".tab-btn");
       btns.forEach(b => b.classList.remove("active"));
 
       const targetPane = document.getElementById(`tab_${{tabId}}`);
       if (targetPane) targetPane.classList.add("active");
 
-      // Set active button
-      event.currentTarget.classList.add("active");
+      if (typeof event !== "undefined" && event && event.currentTarget) {{
+        event.currentTarget.classList.add("active");
+      }}
 
       if (tabId === "alignments") {{
-        const bodySelect = document.getElementById("alignmentBodySelect").value;
-        renderPairwiseHeatmap(bodySelect);
+        renderPairwiseHeatmap();
+      }} else if (tabId === "timeline") {{
+        renderTimeline();
       }}
     }}
 
     // ----------------------------------------------------
-    // Consent Agenda Filtering & Dynamic Stat Recomputation
+    // Multi-Cohort State, Lazy Loading & Consent Filtering
     // ----------------------------------------------------
     let includeConsentAgenda = false;
+    const LOADED_MEETINGS_BY_COHORT = Object.assign({{}}, APP_DATA.meetings_by_cohort || {{}});
+    const COHORT_FETCH_PROMISES = {{}};
+    let SEARCH_INDEX_CACHE = null;
+
+    const SELECTED_COHORT = {{
+      dps: (APP_DATA.metadata.current_cohorts && APP_DATA.metadata.current_cohorts.dps) || (APP_DATA.cohorts.dps[0] && APP_DATA.cohorts.dps[0].id),
+      city: (APP_DATA.metadata.current_cohorts && APP_DATA.metadata.current_cohorts.city) || (APP_DATA.cohorts.city[0] && APP_DATA.cohorts.city[0].id),
+      bocc: (APP_DATA.metadata.current_cohorts && APP_DATA.metadata.current_cohorts.bocc) || (APP_DATA.cohorts.bocc[0] && APP_DATA.cohorts.bocc[0].id),
+    }};
+
+    const BOARD_NAMES = {{
+      dps: "DPS Board of Education",
+      city: "Durham City Council",
+      bocc: "Durham County Commissioners (BOCC)"
+    }};
+
+    const MEMBERS_BY_ID = {{}};
+    (APP_DATA.members || []).forEach(m => {{ MEMBERS_BY_ID[m.id] = m; }});
+
+    const COHORTS_BY_ID = {{}};
+    Object.keys(APP_DATA.cohorts || {{}}).forEach(b => {{
+      (APP_DATA.cohorts[b] || []).forEach(c => {{ COHORTS_BY_ID[c.id] = c; }});
+    }});
+
+    function statsModeKey() {{
+      return includeConsentAgenda ? "incl" : "excl";
+    }}
 
     function isBlanketConsentAgendaVote(v) {{
       const title = (v.item_title || "").toLowerCase();
@@ -1408,28 +1862,6 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
       return includeConsentAgenda ? arr : arr.filter(v => !isBlanketConsentAgendaVote(v));
     }}
 
-    const MEMBER_ALIASES = {{
-      "matt_kopac": ["kopac", "kopack", "kopacek", "kopec", "kobec", "kubic", "copac", "copack", "copak", "copek", "corbett"],
-      "shanetta_burris": ["burris", "burrus", "burries", "burus", "barris", "barriss", "burgess", "boris"],
-      "carl_rist": ["rist", "rrist", "ris", "ree", "reese", "wrist", "rynkiewicz"],
-      "javiera_caballero": ["caballero", "cababiero", "cabayro", "cabayo", "cayetano", "cavayto", "cáviero", "clavijo", "fayto", "javier", "javiera", "mayor pro tem"],
-      "nate_baker": ["baker", "bigger"],
-      "chelsea_cook": ["cook"],
-      "leonardo_williams": ["williams", "leonardo"],
-      "nida_allam": ["allam", "alam", "alum", "alom", "lom", "long", "nida"],
-      "stephen_valentine": ["valentine"],
-      "mike_lee": ["mike lee", "chair lee", "dr. lee", "dr lee"],
-      "michelle_burton": ["burton"],
-      "wendy_jacobs": ["jacobs"],
-      "joy_harrell_goff": ["harrell-goff", "harrell goff", "herald goff", "goff"],
-      "xavier_cason": ["cason", "xavier"],
-      "natalie_bent_kitaif": ["kitaif", "bent kitaif"],
-      "nadeen_bir": ["nadeen bir", "nadine bir", "ms bir", "ms. bir", "bir"],
-      "gabby_rivero": ["rivero", "gabby"],
-      "wendell_tabb": ["tabb", "wendell"],
-      "millicent_rogers": ["rogers", "millicent"]
-    }};
-
     function realVoteNames(arr) {{
       return (arr || []).filter(x => x && !/^(none|n\\/a|na|0|null|-)$/i.test(String(x).trim()));
     }}
@@ -1445,146 +1877,197 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
     }}
 
     function memberMatchesVoteList(nameList, member) {{
-      const cleanName = member.name.replace(/^Dr\\.?\\s+/i, "").replace(/\\([^)]*\\)/g, "").replace(/\\s+/g, " ").trim().toLowerCase();
+      const cleanName = (member.name || "").replace(/^Dr\\.?\\s+/i, "").replace(/\\([^)]*\\)/g, "").replace(/\\s+/g, " ").trim().toLowerCase();
       const parts = cleanName.split(" ").filter(Boolean);
       const last = parts[parts.length - 1] || "";
-      const aliases = MEMBER_ALIASES[member.id] || [];
+      const aliases = (member.aliases || []).map(a => String(a || "").toLowerCase().trim()).filter(Boolean);
       return realVoteNames(nameList).some(n => {{
         const nl = n.toLowerCase();
-        if (nl.includes(cleanName)) return true;
+        if (cleanName && nl.includes(cleanName)) return true;
         if (last.length >= 4 && nl.includes(last)) return true;
-        return aliases.some(a => a.length >= 4 ? nl.includes(a) : new RegExp(`\\\\b${{a}}\\\\b`, "i").test(nl));
+        return aliases.some(a => {{
+          if (a.length >= 4) return nl.includes(a);
+          if (a.length >= 3) return new RegExp(`\\\\b${{a.replace(/[.*+?^${{}}()|[\\]\\\\]/g, "\\\\$&")}}\\\\b`, "i").test(nl);
+          return false;
+        }});
       }});
     }}
 
-    function recomputeVoteStats() {{
-      let totalVotes = 0;
-      let contestedVotes = 0;
-
-      // Reset member counters
-      const memberMap = {{}};
-      APP_DATA.stats.members.forEach(mem => {{
-        mem.ayes = 0;
-        mem.nays = 0;
-        mem.abstains = 0;
-        mem.votes_cast = 0;
-        mem.dissents_count = 0;
-        memberMap[mem.id] = mem;
-      }});
-
-      // Pairwise counters per body
-      const pairwiseAgree = {{}};
-      const pairwiseTotal = {{}};
-      Object.keys(APP_DATA.stats.pairwise || {{}}).forEach(b => {{
-        pairwiseAgree[b] = {{}};
-        pairwiseTotal[b] = {{}};
-      }});
-
-      APP_DATA.meetings.forEach(m => {{
-        const visVotes = getVisibleVotes(m.votes);
-        totalVotes += visVotes.length;
-        contestedVotes += visVotes.filter(v => v.is_contested).length;
-
-        const bodyMembers = APP_DATA.stats.members.filter(mem => mem.body_id === m.body_id);
-        const currentBodyMembers = bodyMembers.filter(mem => mem.is_current);
-        visVotes.forEach(v => {{
-          const outcomePassed = (v.outcome || "").toLowerCase().includes("pass");
-          const genericAyes = outcomePassed && isGenericUnanimousAyes(v);
-          const castById = {{}};
-          bodyMembers.forEach(mem => {{
-            if (memberMatchesVoteList(v.nays, mem)) {{
-              mem.nays += 1;
-              mem.votes_cast += 1;
-              if (outcomePassed) mem.dissents_count += 1;
-              castById[mem.id] = "NAY";
-            }} else if (memberMatchesVoteList(v.abstentions, mem)) {{
-              mem.abstains += 1;
-              mem.votes_cast += 1;
-              castById[mem.id] = "ABSTAIN";
-            }} else if (memberMatchesVoteList(v.ayes, mem) || (genericAyes && mem.is_current)) {{
-              mem.ayes += 1;
-              mem.votes_cast += 1;
-              castById[mem.id] = "AYE";
-            }}
+    async function ensureCohortMeetingsLoaded(cohortId) {{
+      if (!cohortId) return [];
+      if (LOADED_MEETINGS_BY_COHORT[cohortId]) {{
+        return LOADED_MEETINGS_BY_COHORT[cohortId];
+      }}
+      if (!COHORT_FETCH_PROMISES[cohortId]) {{
+        COHORT_FETCH_PROMISES[cohortId] = fetch(`/durhampolitics/data/meetings_${{encodeURIComponent(cohortId)}}.json`)
+          .then(res => (res.ok ? res.json() : []))
+          .then(data => {{
+            LOADED_MEETINGS_BY_COHORT[cohortId] = Array.isArray(data) ? data : [];
+            return LOADED_MEETINGS_BY_COHORT[cohortId];
+          }})
+          .catch(() => {{
+            LOADED_MEETINGS_BY_COHORT[cohortId] = [];
+            return [];
           }});
+      }}
+      return COHORT_FETCH_PROMISES[cohortId];
+    }}
 
-          const ids = Object.keys(castById);
-          for (let i = 0; i < ids.length; i++) {{
-            for (let j = i + 1; j < ids.length; j++) {{
-              const id1 = ids[i], id2 = ids[j];
-              pairwiseTotal[m.body_id][id1] = pairwiseTotal[m.body_id][id1] || {{}};
-              pairwiseTotal[m.body_id][id2] = pairwiseTotal[m.body_id][id2] || {{}};
-              pairwiseAgree[m.body_id][id1] = pairwiseAgree[m.body_id][id1] || {{}};
-              pairwiseAgree[m.body_id][id2] = pairwiseAgree[m.body_id][id2] || {{}};
+    async function ensureManyCohortsLoaded(cohortIds) {{
+      const lists = await Promise.all(cohortIds.map(cid => ensureCohortMeetingsLoaded(cid)));
+      const merged = [];
+      lists.forEach(arr => merged.push(...arr));
+      merged.sort((a, b) => (b.date || "").localeCompare(a.date || "") || (b.id || "").localeCompare(a.id || ""));
+      return merged;
+    }}
 
-              pairwiseTotal[m.body_id][id1][id2] = (pairwiseTotal[m.body_id][id1][id2] || 0) + 1;
-              pairwiseTotal[m.body_id][id2][id1] = (pairwiseTotal[m.body_id][id2][id1] || 0) + 1;
-              if (castById[id1] === castById[id2]) {{
-                pairwiseAgree[m.body_id][id1][id2] = (pairwiseAgree[m.body_id][id1][id2] || 0) + 1;
-                pairwiseAgree[m.body_id][id2][id1] = (pairwiseAgree[m.body_id][id2][id1] || 0) + 1;
-              }}
-            }}
-          }}
-        }});
+    async function ensureSearchIndexLoaded() {{
+      if (SEARCH_INDEX_CACHE) return SEARCH_INDEX_CACHE;
+      try {{
+        const res = await fetch("/durhampolitics/data/search_index.json");
+        if (res.ok) {{
+          SEARCH_INDEX_CACHE = await res.json();
+          return SEARCH_INDEX_CACHE;
+        }}
+      }} catch (e) {{}}
+      // Fallback to already-loaded meetings
+      const fallback = [];
+      Object.values(LOADED_MEETINGS_BY_COHORT).forEach(arr => {{
+        arr.forEach(m => fallback.push({{
+          id: m.id, body_id: m.body_id, cohort_id: m.cohort_id, date: m.date,
+          year: (m.date || "").slice(0, 4), title: m.title || "", chair: m.presiding_chair || "",
+          summary: (m.executive_summary || "").slice(0, 320),
+          votes: (m.votes || []).map(v => v.item_title || ""),
+          debates: (m.disagreements || []).map(d => d.issue || ""),
+          has_contested: (m.votes || []).some(v => v.is_contested)
+        }}));
       }});
+      SEARCH_INDEX_CACHE = fallback;
+      return SEARCH_INDEX_CACHE;
+    }}
 
-      const unanimousVotes = totalVotes - contestedVotes;
-      APP_DATA.stats.overall.total_votes = totalVotes;
-      APP_DATA.stats.overall.contested_votes = contestedVotes;
-      APP_DATA.stats.overall.unanimous_votes = unanimousVotes;
-      APP_DATA.stats.overall.unanimous_pct = totalVotes > 0 ? Math.round((unanimousVotes / totalVotes) * 1000) / 10 : 0.0;
-
-      APP_DATA.stats.members.forEach(mem => {{
-        mem.aye_pct = mem.votes_cast > 0 ? Math.round((mem.ayes / mem.votes_cast) * 1000) / 10 : 0.0;
-        mem.nay_pct = mem.votes_cast > 0 ? Math.round((mem.nays / mem.votes_cast) * 1000) / 10 : 0.0;
-        mem.dissent_rate = mem.votes_cast > 0 ? Math.round((mem.dissents_count / mem.votes_cast) * 1000) / 10 : 0.0;
-      }});
-
-      Object.keys(APP_DATA.stats.pairwise || {{}}).forEach(b => {{
-        const bMems = APP_DATA.stats.members.filter(mem => mem.body_id === b);
-        bMems.forEach(m1 => {{
-          APP_DATA.stats.pairwise[b][m1.id] = APP_DATA.stats.pairwise[b][m1.id] || {{}};
-          bMems.forEach(m2 => {{
-            if (m1.id === m2.id) {{
-              APP_DATA.stats.pairwise[b][m1.id][m2.id] = 100.0;
-            }} else {{
-              const tot = (pairwiseTotal[b][m1.id] && pairwiseTotal[b][m1.id][m2.id]) || 0;
-              if (tot === 0) {{
-                APP_DATA.stats.pairwise[b][m1.id][m2.id] = null;
-              }} else {{
-                const agr = (pairwiseAgree[b][m1.id] && pairwiseAgree[b][m1.id][m2.id]) || 0;
-                APP_DATA.stats.pairwise[b][m1.id][m2.id] = Math.round((agr / tot) * 1000) / 10;
-              }}
-            }}
-          }});
-        }});
+    function getMemberWithScopeStats(member, scopeKey, roleOverride, districtOverride) {{
+      const mode = statsModeKey();
+      const scope = (APP_DATA.cohort_stats && APP_DATA.cohort_stats[mode] && APP_DATA.cohort_stats[mode][scopeKey]) || null;
+      const st = (scope && scope.members && scope.members[member.id]) || {{
+        votes_cast: 0, ayes: 0, nays: 0, abstains: 0, aye_pct: 0.0, nay_pct: 0.0, dissent_rate: 0.0, dissents_count: 0
+      }};
+      return Object.assign({{}}, member, st, {{
+        title: roleOverride || member.title,
+        district: districtOverride || member.district,
+        _scopeKey: scopeKey
       }});
     }}
 
     function toggleConsentAgenda(checked) {{
       includeConsentAgenda = !!checked;
-      recomputeVoteStats();
       applyStatsKPIs();
       renderOverviewLandmarks();
       renderMembers();
-      renderBodyTabs();
-      const bodySelect = document.getElementById("alignmentBodySelect") ? document.getElementById("alignmentBodySelect").value : "city";
-      renderPairwiseHeatmap(bodySelect);
-      renderDissentLeaderboard();
+      ["dps", "city", "bocc"].forEach(b => renderSingleBodyTab(b));
+      renderPairwiseHeatmap();
       renderTimeline();
+    }}
+
+    // ----------------------------------------------------
+    // Cohort Dropdown Builders (Defaulting to Current Board)
+    // ----------------------------------------------------
+    function populateBoardCohortDropdown(bodyId) {{
+      const sel = document.getElementById(`cohortSelect_${{bodyId}}`);
+      if (!sel) return;
+      const cohorts = (APP_DATA.cohorts && APP_DATA.cohorts[bodyId]) || [];
+      let html = "";
+      cohorts.forEach(c => {{
+        const tag = c.is_current ? " ★ Current" : "";
+        html += `<option value="${{c.id}}">${{c.short_label}}${{tag}} (${{c.meeting_count || 0}} mtgs)</option>`;
+      }});
+      const totalBodyMtgs = cohorts.reduce((acc, c) => acc + (c.meeting_count || 0), 0);
+      html += `<option value="all_${{bodyId}}">All Historical Boards (${{totalBodyMtgs}} mtgs)</option>`;
+      sel.innerHTML = html;
+      sel.value = SELECTED_COHORT[bodyId] || (cohorts[0] && cohorts[0].id) || `all_${{bodyId}}`;
+    }}
+
+    function populateAlignmentCohorts(bodyId) {{
+      const sel = document.getElementById("alignmentCohortSelect");
+      if (!sel) return;
+      const cohorts = (APP_DATA.cohorts && APP_DATA.cohorts[bodyId]) || [];
+      let html = "";
+      cohorts.forEach(c => {{
+        const tag = c.is_current ? " ★ Current" : "";
+        html += `<option value="${{c.id}}">${{c.short_label}}${{tag}} (${{c.meeting_count || 0}} mtgs)</option>`;
+      }});
+      sel.innerHTML = html;
+      const curId = (APP_DATA.metadata.current_cohorts && APP_DATA.metadata.current_cohorts[bodyId]) || (cohorts[0] && cohorts[0].id);
+      if (curId) sel.value = curId;
+    }}
+
+    function populateTimelineControls() {{
+      const yrSel = document.getElementById("timelineFilterYear");
+      if (yrSel) {{
+        const yrs = (APP_DATA.metadata && APP_DATA.metadata.years) || [];
+        let yhtml = `<option value="all">All Years (${{yrs.length ? yrs[yrs.length - 1] + "–" + yrs[0] : "All"}})</option>`;
+        yrs.forEach(y => {{ yhtml += `<option value="${{y}}">${{y}} Meetings</option>`; }});
+        yrSel.innerHTML = yhtml;
+      }}
+      onTimelineBodyChange(true);
+    }}
+
+    function onTimelineBodyChange(skipRender) {{
+      const bodyFilter = document.getElementById("timelineFilterBody").value;
+      const cohSel = document.getElementById("timelineFilterCohort");
+      if (!cohSel) return;
+      let html = `<option value="current">Current Board${{bodyFilter === "all" ? "s" : ""}} (Default)</option>`;
+      html += `<option value="all">All Historical Boards</option>`;
+      if (bodyFilter !== "all") {{
+        const cohorts = (APP_DATA.cohorts && APP_DATA.cohorts[bodyFilter]) || [];
+        cohorts.forEach(c => {{
+          html += `<option value="${{c.id}}">${{c.short_label}}${{c.is_current ? " ★ Current" : ""}} (${{c.meeting_count || 0}})</option>`;
+        }});
+      }}
+      cohSel.innerHTML = html;
+      cohSel.value = "current";
+      if (!skipRender) renderTimeline();
+    }}
+
+    function onMemberBodyFilterChange() {{
+      const bodyFilter = document.getElementById("memberFilterBody").value;
+      const cohSel = document.getElementById("memberFilterCohort");
+      if (bodyFilter === "all") {{
+        cohSel.style.display = "none";
+        cohSel.innerHTML = `<option value="all">All Cohorts</option>`;
+      }} else {{
+        const cohorts = (APP_DATA.cohorts && APP_DATA.cohorts[bodyFilter]) || [];
+        let html = `<option value="all">All ${{BOARD_NAMES[bodyFilter]}} Cohorts</option>`;
+        cohorts.forEach(c => {{
+          html += `<option value="${{c.id}}">${{c.short_label}}${{c.is_current ? " ★ Current" : ""}}</option>`;
+        }});
+        cohSel.innerHTML = html;
+        cohSel.style.display = "inline-block";
+      }}
+      renderMembers();
     }}
 
     // ----------------------------------------------------
     // App Initialization
     // ----------------------------------------------------
     function initApplication() {{
-      recomputeVoteStats();
+      const cov = (APP_DATA.metadata && APP_DATA.metadata.coverage) || "2012 – Nov 2026 & Ongoing";
+      const hdrSub = document.getElementById("headerCoverageSub");
+      if (hdrSub) hdrSub.innerText = `${{cov}} | DPS, City Council & BOCC`;
+      const memPill = document.getElementById("pill_members");
+      if (memPill) memPill.innerText = `${{(APP_DATA.members || []).length}} Officials`;
+      const mtgPill = document.getElementById("pill_meetings");
+      if (mtgPill) mtgPill.innerText = `${{APP_DATA.overall_stats.excl.total_meetings}} Mtgs`;
+
+      ["dps", "city", "bocc"].forEach(b => populateBoardCohortDropdown(b));
+      populateAlignmentCohorts(document.getElementById("alignmentBodySelect").value || "city");
+      populateTimelineControls();
+
       applyStatsKPIs();
       renderOverviewLandmarks();
       renderMembers();
-      renderBodyTabs();
-      renderPairwiseHeatmap("city");
-      renderDissentLeaderboard();
+      ["dps", "city", "bocc"].forEach(b => renderSingleBodyTab(b));
+      renderPairwiseHeatmap();
       renderTimeline();
       pollLiveMeetingStatus();
       setInterval(pollLiveMeetingStatus, 15000);
@@ -1615,76 +2098,183 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
     }}
 
     function applyStatsKPIs() {{
-      const s = APP_DATA.stats.overall;
+      const s = APP_DATA.overall_stats[statsModeKey()];
       document.getElementById("kpiTotalMeetings").innerText = s.total_meetings;
       document.getElementById("kpiTotalVotes").innerText = s.total_votes;
       document.getElementById("kpiContestedVotes").innerText = s.contested_votes;
       document.getElementById("kpiUnanimousPct").innerText = `${{s.unanimous_pct}}% Unanimous Consensus`;
       document.getElementById("kpiTotalDisagreements").innerText = s.total_disagreements;
+      const sub = document.getElementById("kpiMeetingsSubtext");
+      if (sub) {{
+        const cov = (APP_DATA.metadata && APP_DATA.metadata.coverage) || "Full archive";
+        const tc = (APP_DATA.metadata && APP_DATA.metadata.total_cohorts) || 0;
+        sub.innerText = `${{cov}} (${{tc}} historical boards)`;
+      }}
     }}
 
     function renderOverviewLandmarks() {{
       const container = document.getElementById("overviewLandmarkVotes");
       container.innerHTML = "";
-
-      // Gather contested or key landmark votes
-      const landmarkMeetings = APP_DATA.meetings.filter(m => m.votes.some(v => v.is_contested || v.item_title.includes("Budget")));
+      const curIds = Object.values((APP_DATA.metadata && APP_DATA.metadata.current_cohorts) || {{}});
+      const curMeetings = [];
+      curIds.forEach(cid => {{
+        (LOADED_MEETINGS_BY_COHORT[cid] || []).forEach(m => curMeetings.push(m));
+      }});
+      curMeetings.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+      const landmarkMeetings = curMeetings.filter(m =>
+        getVisibleVotes(m.votes).some(v => v.is_contested || (v.item_title || "").includes("Budget"))
+      );
       landmarkMeetings.slice(0, 5).forEach(m => {{
         container.appendChild(createMeetingElement(m));
       }});
     }}
 
-    function renderBodyTabs() {{
-      // DPS (Current Seated Members)
-      const dpsMembers = APP_DATA.stats.members.filter(m => m.body_id === "dps" && m.is_current);
-      document.getElementById("dpsMembersGrid").innerHTML = dpsMembers.map(createMemberCardHTML).join("");
-      const dpsMeetings = APP_DATA.meetings.filter(m => m.body_id === "dps");
-      const dpsTimeline = document.getElementById("dpsMeetingsTimeline");
-      dpsTimeline.innerHTML = "";
-      dpsMeetings.forEach(m => dpsTimeline.appendChild(createMeetingElement(m)));
+    // Paginated timeline renderer (prevents browser lag on 500+ historical meetings)
+    function renderPaginatedMeetings(container, meetings, pageSize) {{
+      const limit = pageSize || 30;
+      container.innerHTML = "";
+      if (!meetings.length) {{
+        container.innerHTML = `<div class="card" style="color:var(--text-muted);font-size:13px;">No meetings recorded for this selection.</div>`;
+        return;
+      }}
+      let shown = 0;
+      function appendNext() {{
+        const existingBtn = container.querySelector(".btn-load-more");
+        if (existingBtn) existingBtn.remove();
+        const slice = meetings.slice(shown, shown + limit);
+        slice.forEach(m => container.appendChild(createMeetingElement(m)));
+        shown += slice.length;
+        if (shown < meetings.length) {{
+          const btn = document.createElement("button");
+          btn.className = "btn-load-more";
+          btn.innerText = `Show More Meetings (${{shown}} of ${{meetings.length}} shown)`;
+          btn.onclick = appendNext;
+          container.appendChild(btn);
+        }}
+      }}
+      appendNext();
+    }}
 
-      // City Council (Current Seated Members)
-      const cityMembers = APP_DATA.stats.members.filter(m => m.body_id === "city" && m.is_current);
-      document.getElementById("cityMembersGrid").innerHTML = cityMembers.map(createMemberCardHTML).join("");
-      const cityMeetings = APP_DATA.meetings.filter(m => m.body_id === "city");
-      const cityTimeline = document.getElementById("cityMeetingsTimeline");
-      cityTimeline.innerHTML = "";
-      cityMeetings.forEach(m => cityTimeline.appendChild(createMeetingElement(m)));
+    function onBoardCohortChange(bodyId, cohortId) {{
+      SELECTED_COHORT[bodyId] = cohortId;
+      renderSingleBodyTab(bodyId);
+    }}
 
-      // BOCC (Current Seated Members)
-      const boccMembers = APP_DATA.stats.members.filter(m => m.body_id === "bocc" && m.is_current);
-      document.getElementById("boccMembersGrid").innerHTML = boccMembers.map(createMemberCardHTML).join("");
-      const boccMeetings = APP_DATA.meetings.filter(m => m.body_id === "bocc");
-      const boccTimeline = document.getElementById("boccMeetingsTimeline");
-      boccTimeline.innerHTML = "";
-      boccMeetings.forEach(m => boccTimeline.appendChild(createMeetingElement(m)));
+    async function renderSingleBodyTab(bodyId) {{
+      const selectedKey = SELECTED_COHORT[bodyId] || (APP_DATA.cohorts[bodyId][0] && APP_DATA.cohorts[bodyId][0].id);
+      const isAll = selectedKey === `all_${{bodyId}}`;
+      const cohortObj = isAll ? null : COHORTS_BY_ID[selectedKey];
+      const mode = statsModeKey();
+      const scopeSt = (APP_DATA.cohort_stats[mode] && APP_DATA.cohort_stats[mode][selectedKey]) || {{}};
+
+      // Meta pills & transition note
+      const metaEl = document.getElementById(`cohortMeta_${{bodyId}}`);
+      const noteEl = document.getElementById(`cohortNote_${{bodyId}}`);
+      if (metaEl) {{
+        const spanTxt = isAll
+          ? "Full Historical Archive"
+          : `${{cohortObj.start_date}} &rarr; ${{cohortObj.end_date || "Present"}}`;
+        metaEl.innerHTML = `
+          <span class="cohort-pill">${{spanTxt}}</span>
+          <span class="cohort-pill">${{scopeSt.meetings_count || 0}} Meetings</span>
+          <span class="cohort-pill">${{scopeSt.votes_count || 0}} Votes (${{scopeSt.contested_votes || 0}} Contested)</span>
+        `;
+      }}
+      if (noteEl) {{
+        noteEl.innerText = isAll
+          ? `Showing all ${{(APP_DATA.cohorts[bodyId] || []).length}} historical board compositions for ${{BOARD_NAMES[bodyId]}}.`
+          : (cohortObj && cohortObj.transition_reason ? `Cohort Notes: ${{cohortObj.transition_reason}}` : "");
+      }}
+
+      // Members Grid
+      const gridEl = document.getElementById(`${{bodyId}}MembersGrid`);
+      const mTitleEl = document.getElementById(`${{bodyId}}MembersTitle`);
+      let cardsData = [];
+      if (isAll) {{
+        if (mTitleEl) mTitleEl.innerText = `${{BOARD_NAMES[bodyId]}} — All Historical Officials`;
+        cardsData = (APP_DATA.members || [])
+          .filter(m => m.body_id === bodyId)
+          .sort((a, b) => (b.is_current - a.is_current) || (b.start_year || 0) - (a.start_year || 0) || a.name.localeCompare(b.name))
+          .map(m => getMemberWithScopeStats(m, selectedKey));
+      }} else if (cohortObj) {{
+        if (mTitleEl) mTitleEl.innerText = `${{BOARD_NAMES[bodyId]}} — Seated Members (${{cohortObj.short_label}})`;
+        cardsData = (cohortObj.members || [])
+          .map(cm => {{
+            const base = MEMBERS_BY_ID[cm.member_id];
+            if (!base) return null;
+            return getMemberWithScopeStats(base, selectedKey, cm.role, cm.district);
+          }})
+          .filter(Boolean);
+      }}
+      if (gridEl) {{
+        gridEl.innerHTML = cardsData.map(m => createMemberCardHTML(m, selectedKey)).join("");
+      }}
+
+      // Meetings Timeline (lazy-load historical cohort if needed)
+      const timelineEl = document.getElementById(`${{bodyId}}MeetingsTimeline`);
+      const mtTitleEl = document.getElementById(`${{bodyId}}MeetingsTitle`);
+      if (mtTitleEl) {{
+        mtTitleEl.innerText = isAll
+          ? `${{BOARD_NAMES[bodyId]}} — Complete Historical Chronology`
+          : `${{BOARD_NAMES[bodyId]}} — Meeting Chronology (${{cohortObj ? cohortObj.short_label : ""}})`;
+      }}
+      if (!timelineEl) return;
+
+      const neededIds = isAll
+        ? (APP_DATA.cohorts[bodyId] || []).map(c => c.id)
+        : [selectedKey];
+
+      const needsFetch = neededIds.some(cid => !LOADED_MEETINGS_BY_COHORT[cid]);
+      if (needsFetch) {{
+        timelineEl.innerHTML = `<div class="card" style="color:var(--text-muted);font-size:13px;">Loading historical meetings for this board cohort...</div>`;
+      }}
+      const meetings = await ensureManyCohortsLoaded(neededIds);
+      // Guard against rapid dropdown switches
+      if (SELECTED_COHORT[bodyId] !== selectedKey) return;
+      renderPaginatedMeetings(timelineEl, meetings, 30);
     }}
 
     function renderMembers() {{
       const bodyFilter = document.getElementById("memberFilterBody").value;
+      const cohortFilter = document.getElementById("memberFilterCohort") ? document.getElementById("memberFilterCohort").value : "all";
       const statusFilter = document.getElementById("memberFilterStatus").value;
 
-      let list = APP_DATA.stats.members;
-      if (bodyFilter !== "all") {{
-        list = list.filter(m => m.body_id === bodyFilter);
-      }}
-      if (statusFilter === "current") {{
-        list = list.filter(m => m.is_current);
-      }} else if (statusFilter === "former") {{
-        list = list.filter(m => !m.is_current);
+      let list = [];
+      if (bodyFilter !== "all" && cohortFilter !== "all" && COHORTS_BY_ID[cohortFilter]) {{
+        const coh = COHORTS_BY_ID[cohortFilter];
+        list = (coh.members || [])
+          .map(cm => {{
+            const base = MEMBERS_BY_ID[cm.member_id];
+            return base ? getMemberWithScopeStats(base, cohortFilter, cm.role, cm.district) : null;
+          }})
+          .filter(Boolean);
+      }} else {{
+        let raw = APP_DATA.members || [];
+        if (bodyFilter !== "all") {{
+          raw = raw.filter(m => m.body_id === bodyFilter);
+        }}
+        if (statusFilter === "current") {{
+          raw = raw.filter(m => m.is_current);
+        }} else if (statusFilter === "former") {{
+          raw = raw.filter(m => !m.is_current);
+        }}
+        list = raw.map(m => {{
+          const scopeKey = m.is_current && statusFilter === "current"
+            ? (APP_DATA.metadata.current_cohorts[m.body_id] || `all_${{m.body_id}}`)
+            : `all_${{m.body_id}}`;
+          return getMemberWithScopeStats(m, scopeKey);
+        }});
       }}
 
-      document.getElementById("allMembersGrid").innerHTML = list.map(createMemberCardHTML).join("");
+      document.getElementById("allMembersGrid").innerHTML = list.map(m => createMemberCardHTML(m, m._scopeKey)).join("");
     }}
 
-    function createMemberCardHTML(m) {{
+    function createMemberCardHTML(m, scopeKey) {{
       const bColor = m.body_id === "dps" ? "var(--dps-color)" : m.body_id === "city" ? "var(--city-color)" : "var(--bocc-color)";
-      const bName = m.body_id === "dps" ? "DPS Board" : m.body_id === "city" ? "City Council" : "BOCC";
-
       const termStr = m.active_terms ? m.active_terms.join(", ") : "";
-
       const tagsHTML = (m.ideology_tags || []).map(t => `<span class="tag tag-ideology">${{t}}</span>`).join("");
       const priorityHTML = (m.key_priorities || []).map(p => `<span class="tag">${{p}}</span>`).join("");
+      const sk = scopeKey || `all_${{m.body_id}}`;
 
       return `
         <div class="member-card">
@@ -1700,15 +2290,15 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
 
             <div class="member-stats">
               <div>
-                <div class="stat-box-num">${{m.votes_cast}}</div>
+                <div class="stat-box-num">${{m.votes_cast || 0}}</div>
                 <div class="stat-box-lbl">Votes Cast</div>
               </div>
               <div>
-                <div class="stat-box-num" style="color: #6ee7b7;">${{m.aye_pct}}%</div>
+                <div class="stat-box-num" style="color: #6ee7b7;">${{m.aye_pct || 0}}%</div>
                 <div class="stat-box-lbl">Aye Rate</div>
               </div>
               <div>
-                <div class="stat-box-num" style="color: #fca5a5;">${{m.dissent_rate}}%</div>
+                <div class="stat-box-num" style="color: #fca5a5;">${{m.dissent_rate || 0}}%</div>
                 <div class="stat-box-lbl">Dissent Rate</div>
               </div>
             </div>
@@ -1719,40 +2309,69 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
             <div class="tag-container" style="margin-top: 4px;">${{priorityHTML}}</div>
           </div>
 
-          <button class="btn-view-record" onclick="openMemberRecord('${{m.id}}')">
-            Inspect Full Voting Record &rarr;
+          <button class="btn-view-record" onclick="openMemberRecord('${{m.id}}', '${{sk}}')">
+            Inspect Voting Record &rarr;
           </button>
         </div>
       `;
     }}
 
-    function openMemberRecord(memberId) {{
-      const member = APP_DATA.stats.members.find(m => m.id === memberId);
+    async function openMemberRecord(memberId, scopeKey) {{
+      const member = MEMBERS_BY_ID[memberId];
       if (!member) return;
 
-      document.getElementById("modalMemberTitle").innerText = `${{member.name}} — Complete Voting History`;
+      const sk = scopeKey || `all_${{member.body_id}}`;
+      const isCohortScoped = !sk.startsWith("all_") && COHORTS_BY_ID[sk];
+      const scopeLabel = isCohortScoped ? COHORTS_BY_ID[sk].short_label : "Full Career on Board";
 
-      // Find all votes where this member cast a vote
+      document.getElementById("modalMemberTitle").innerText = `${{member.name}} — Voting History (${{scopeLabel}})`;
+      document.getElementById("modalMemberBody").innerHTML = `<div style="color:var(--text-muted);font-size:13px;">Loading voting history...</div>`;
+      document.getElementById("recordModal").style.display = "flex";
+
+      // Load all relevant cohorts where this member was seated
+      const memberCohorts = (APP_DATA.cohorts[member.body_id] || []).filter(c =>
+        (c.member_ids || []).includes(member.id)
+      );
+      const targetCohortIds = isCohortScoped
+        ? [sk]
+        : (memberCohorts.length ? memberCohorts.map(c => c.id) : (APP_DATA.cohorts[member.body_id] || []).map(c => c.id));
+
+      const meetings = await ensureManyCohortsLoaded(targetCohortIds);
+
+      let headerControls = "";
+      if (memberCohorts.length > 1) {{
+        headerControls = `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--card-border);">`;
+        headerControls += `<button class="btn-toggle-details" style="${{!isCohortScoped ? 'background:#2563eb;color:#fff;' : ''}}" onclick="openMemberRecord('${{member.id}}', 'all_${{member.body_id}}')">All Terms (${{memberCohorts.length}} Cohorts)</button>`;
+        memberCohorts.forEach(c => {{
+          const active = sk === c.id;
+          headerControls += `<button class="btn-toggle-details" style="${{active ? 'background:#2563eb;color:#fff;' : ''}}" onclick="openMemberRecord('${{member.id}}', '${{c.id}}')">${{c.short_label}}</button>`;
+        }});
+        headerControls += `</div>`;
+      }}
+
       let votesHTML = "";
-      APP_DATA.meetings.forEach(m => {{
+      let count = 0;
+      meetings.forEach(m => {{
+        const cObj = COHORTS_BY_ID[m.cohort_id];
+        const seatedHere = cObj ? (cObj.member_ids || []).includes(member.id) : member.is_current;
         getVisibleVotes(m.votes).forEach(v => {{
           const outcomePassed = (v.outcome || "").toLowerCase().includes("pass");
-          const genericAyes = m.body_id === member.body_id && member.is_current && outcomePassed && isGenericUnanimousAyes(v);
+          const genericAyes = m.body_id === member.body_id && seatedHere && outcomePassed && isGenericUnanimousAyes(v);
           const isNay = memberMatchesVoteList(v.nays, member);
           const isAbstain = !isNay && memberMatchesVoteList(v.abstentions, member);
           const isAye = !isNay && !isAbstain && (memberMatchesVoteList(v.ayes, member) || genericAyes);
 
           if (isAye || isNay || isAbstain) {{
+            count += 1;
             const badgeClass = isAye ? "vote-badge-passed" : isNay ? "vote-badge-failed" : "tag";
             const castText = isAye ? "AYE (IN FAVOR)" : isNay ? "NAY (DISSENT)" : "ABSTAIN";
-
             const tsLink = v.video_timestamp_url && v.timestamp_label
               ? `<a href="${{v.video_timestamp_url}}" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;text-decoration:none;font-size:11px;margin-left:8px;white-space:nowrap;">&#9658; ${{v.timestamp_label}}</a>`
               : (m.video_url ? `<a href="${{m.video_url}}" target="_blank" rel="noopener noreferrer" style="color:#60a5fa;text-decoration:none;font-size:11px;margin-left:8px;white-space:nowrap;">&#9658; Video</a>` : "");
 
             votesHTML += `
               <div class="vote-item">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; gap: 8px;">
                   <span style="font-size: 11px; color: var(--text-dim);">${{m.date}} &bull; ${{m.title}}${{tsLink}}</span>
                   <span class="${{badgeClass}}">${{castText}}</span>
                 </div>
@@ -1768,18 +2387,18 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
       }});
 
       if (!votesHTML) {{
-        votesHTML = `<div style="color: var(--text-muted); font-size: 13px;">No recorded roll call votes on file for this session window.</div>`;
+        votesHTML = `<div style="color: var(--text-muted); font-size: 13px;">No recorded roll call votes on file for this cohort window.</div>`;
+      }} else {{
+        votesHTML = `<div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;">Showing <strong>${{count}}</strong> recorded votes${{includeConsentAgenda ? " (including consent agenda)" : " (excluding blanket consent agenda)"}}.</div>` + votesHTML;
       }}
 
-      document.getElementById("modalMemberBody").innerHTML = votesHTML;
-      document.getElementById("recordModal").style.display = "flex";
+      document.getElementById("modalMemberBody").innerHTML = headerControls + votesHTML;
     }}
 
     function closeRecordModal() {{
       document.getElementById("recordModal").style.display = "none";
     }}
 
-    // Close modal on click outside
     window.onclick = function(e) {{
       const m = document.getElementById("recordModal");
       if (e.target === m) {{
@@ -1955,36 +2574,94 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
       }}
     }}
 
-    function renderTimeline() {{
+    async function renderTimeline() {{
       const bodyFilter = document.getElementById("timelineFilterBody").value;
+      const cohortFilter = document.getElementById("timelineFilterCohort") ? document.getElementById("timelineFilterCohort").value : "current";
       const yearFilter = document.getElementById("timelineFilterYear").value;
       const contestedFilter = document.getElementById("timelineFilterContested").value;
+      const statusEl = document.getElementById("timelineStatusNote");
+      const container = document.getElementById("masterTimelineList");
 
-      let list = APP_DATA.meetings;
-      if (bodyFilter !== "all") {{
-        list = list.filter(m => m.body_id === bodyFilter);
+      // Determine which cohorts need to be loaded
+      const bodies = bodyFilter === "all" ? ["dps", "city", "bocc"] : [bodyFilter];
+      let targetCohortIds = [];
+      if (cohortFilter === "current" && yearFilter === "all") {{
+        bodies.forEach(b => {{
+          const cid = APP_DATA.metadata.current_cohorts && APP_DATA.metadata.current_cohorts[b];
+          if (cid) targetCohortIds.push(cid);
+        }});
+      }} else if (cohortFilter !== "current" && cohortFilter !== "all" && COHORTS_BY_ID[cohortFilter]) {{
+        targetCohortIds = [cohortFilter];
+      }} else {{
+        // Either "all" selected or a specific historical year selected -> load overlapping cohorts
+        bodies.forEach(b => {{
+          (APP_DATA.cohorts[b] || []).forEach(c => {{
+            if (yearFilter === "all") {{
+              targetCohortIds.push(c.id);
+            }} else {{
+              const sd = (c.start_date || "0000").slice(0, 4);
+              const ed = (c.end_date || "9999").slice(0, 4);
+              if (sd <= yearFilter && yearFilter <= ed) {{
+                targetCohortIds.push(c.id);
+              }}
+            }}
+          }});
+        }});
       }}
+
+      const needsFetch = targetCohortIds.some(cid => !LOADED_MEETINGS_BY_COHORT[cid]);
+      if (needsFetch) {{
+        container.innerHTML = `<div class="card" style="color:var(--text-muted);font-size:13px;">Loading historical archive...</div>`;
+      }}
+
+      let list = await ensureManyCohortsLoaded(targetCohortIds);
       if (yearFilter !== "all") {{
-        list = list.filter(m => m.date.startsWith(yearFilter));
+        list = list.filter(m => (m.date || "").startsWith(yearFilter));
       }}
       if (contestedFilter === "contested") {{
-        list = list.filter(m => m.votes.some(v => v.is_contested));
+        list = list.filter(m => getVisibleVotes(m.votes).some(v => v.is_contested));
       }}
 
-      const container = document.getElementById("masterTimelineList");
-      container.innerHTML = "";
-      list.forEach(m => container.appendChild(createMeetingElement(m)));
+      if (statusEl) {{
+        statusEl.innerText = `Showing ${{list.length}} meeting${{list.length === 1 ? "" : "s"}} matching selected filters.`;
+      }}
+      renderPaginatedMeetings(container, list, 30);
     }}
 
     // ----------------------------------------------------
-    // Heatmaps & Alignment Grids
+    // Heatmaps & Alignment Grids (Board + Cohort Scoped)
     // ----------------------------------------------------
-    function renderPairwiseHeatmap(bodyId) {{
-      const matrix = APP_DATA.stats.pairwise[bodyId];
-      if (!matrix) return;
+    function onAlignmentBodyChange(bodyId) {{
+      populateAlignmentCohorts(bodyId);
+      renderPairwiseHeatmap();
+    }}
 
-      const members = APP_DATA.stats.members.filter(m => m.body_id === bodyId && m.is_current);
-      const memberIds = members.map(m => m.id);
+    function renderPairwiseHeatmap() {{
+      const bodyId = (document.getElementById("alignmentBodySelect") && document.getElementById("alignmentBodySelect").value) || "city";
+      const cohortId = (document.getElementById("alignmentCohortSelect") && document.getElementById("alignmentCohortSelect").value)
+        || (APP_DATA.metadata.current_cohorts && APP_DATA.metadata.current_cohorts[bodyId]);
+      const coh = COHORTS_BY_ID[cohortId];
+      const mode = statsModeKey();
+      const scopeSt = (APP_DATA.cohort_stats[mode] && APP_DATA.cohort_stats[mode][cohortId]) || null;
+      const matrix = (scopeSt && scopeSt.pairwise) || {{}};
+
+      const noteEl = document.getElementById("alignmentCohortNote");
+      if (noteEl && coh) {{
+        noteEl.innerText = `${{BOARD_NAMES[bodyId]}} • ${{coh.short_label}} (${{scopeSt ? scopeSt.meetings_count : 0}} meetings, ${{scopeSt ? scopeSt.votes_count : 0}} votes, ${{scopeSt ? scopeSt.contested_votes : 0}} contested)`;
+      }}
+
+      const members = coh
+        ? (coh.members || []).map(cm => {{
+            const base = MEMBERS_BY_ID[cm.member_id];
+            return base ? getMemberWithScopeStats(base, cohortId, cm.role, cm.district) : null;
+          }}).filter(Boolean)
+        : [];
+
+      if (!members.length) {{
+        document.getElementById("heatmapContainer").innerHTML = `<div style="color:var(--text-muted);font-size:13px;">No seated member records available for this cohort.</div>`;
+        renderDissentLeaderboard(bodyId, cohortId, members);
+        return;
+      }}
 
       let html = `<table class="heatmap-table"><thead><tr><th>Official</th>`;
       members.forEach(m => {{
@@ -2015,24 +2692,28 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
 
       html += `</tbody></table>`;
       document.getElementById("heatmapContainer").innerHTML = html;
-      renderDissentLeaderboard(bodyId);
+      renderDissentLeaderboard(bodyId, cohortId, members);
     }}
 
-    function renderDissentLeaderboard(bodyId) {{
+    function renderDissentLeaderboard(bodyId, cohortId, scopedMembers) {{
       const selectedBody = bodyId || (document.getElementById("alignmentBodySelect") ? document.getElementById("alignmentBodySelect").value : "city");
-      const boardNames = {{
-        dps: "DPS Board of Education",
-        city: "Durham City Council",
-        bocc: "Durham County Commissioners (BOCC)"
-      }};
+      const selectedCohort = cohortId || (document.getElementById("alignmentCohortSelect") ? document.getElementById("alignmentCohortSelect").value : null);
+      const coh = COHORTS_BY_ID[selectedCohort];
+
       const titleEl = document.getElementById("dissentLeaderboardTitle");
       if (titleEl) {{
-        titleEl.innerText = `Dissent Frequency Leaderboard — ${{boardNames[selectedBody] || selectedBody.toUpperCase()}}`;
+        const cohLbl = coh ? ` (${{coh.short_label}})` : "";
+        titleEl.innerText = `Dissent Frequency Leaderboard — ${{BOARD_NAMES[selectedBody] || selectedBody.toUpperCase()}}${{cohLbl}}`;
       }}
 
-      const sorted = APP_DATA.stats.members
-        .filter(m => m.body_id === selectedBody && m.is_current && m.votes_cast > 0)
+      const sorted = (scopedMembers || [])
+        .filter(m => m.votes_cast > 0)
         .sort((a, b) => (b.dissent_rate - a.dissent_rate) || (b.dissents_count - a.dissents_count) || a.name.localeCompare(b.name));
+
+      if (!sorted.length) {{
+        document.getElementById("dissentLeaderboard").innerHTML = `<div style="color:var(--text-muted);font-size:13px;">No recorded roll-call votes for this board cohort${{includeConsentAgenda ? "" : " (excluding blanket consent agenda)"}}.</div>`;
+        return;
+      }}
 
       let html = `<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">`;
       sorted.forEach(m => {{
@@ -2050,7 +2731,7 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
               </div>
             </div>
             <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-              Primary areas of dissent: ${{m.key_priorities.slice(0, 2).join(', ')}}
+              Primary focus: ${{(m.key_priorities || []).slice(0, 2).join(', ') || m.district}}
             </div>
           </div>
         `;
@@ -2059,31 +2740,51 @@ def generate_durhampolitics_page(db: Optional[DurhamPoliticsDB] = None) -> str:
       document.getElementById("dissentLeaderboard").innerHTML = html;
     }}
 
-    // Global Search Function
+    // Global Search Function (searches full 2012–2026 index & lazy-loads matching cohorts)
+    let _searchDebounce = null;
     function handleGlobalSearch(query) {{
-      const q = query.toLowerCase().trim();
+      clearTimeout(_searchDebounce);
+      _searchDebounce = setTimeout(() => _runGlobalSearch(query), 220);
+    }}
+
+    async function _runGlobalSearch(query) {{
+      const q = (query || "").toLowerCase().trim();
       if (!q) {{
         renderTimeline();
-        renderMembers();
         return;
       }}
 
-      // Switch to timeline tab automatically if search entered
-      const matchingMeetings = APP_DATA.meetings.filter(m => 
-        m.title.toLowerCase().includes(q) ||
-        m.executive_summary.toLowerCase().includes(q) ||
-        m.votes.some(v => v.item_title.toLowerCase().includes(q) || v.notes.toLowerCase().includes(q)) ||
-        (m.disagreements || []).some(d => d.issue.toLowerCase().includes(q) || d.summary.toLowerCase().includes(q))
-      );
+      // Switch to timeline tab
+      document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+      document.getElementById("tab_timeline").classList.add("active");
 
       const container = document.getElementById("masterTimelineList");
-      container.innerHTML = `<div style="font-size: 13px; color: var(--accent-blue); margin-bottom: 12px;">Found ${{matchingMeetings.length}} matching meeting records for "${{query}}":</div>`;
-      matchingMeetings.forEach(m => container.appendChild(createMeetingElement(m)));
+      const statusEl = document.getElementById("timelineStatusNote");
+      container.innerHTML = `<div class="card" style="color:var(--text-muted);font-size:13px;">Searching full historical archive for "${{query}}"...</div>`;
 
-      // Switch to timeline tab
-      const panes = document.querySelectorAll(".tab-pane");
-      panes.forEach(p => p.classList.remove("active"));
-      document.getElementById("tab_timeline").classList.add("active");
+      const idx = await ensureSearchIndexLoaded();
+      const hits = idx.filter(item =>
+        (item.title || "").toLowerCase().includes(q) ||
+        (item.summary || "").toLowerCase().includes(q) ||
+        (item.chair || "").toLowerCase().includes(q) ||
+        (item.date || "").includes(q) ||
+        (item.votes || []).some(t => t.toLowerCase().includes(q)) ||
+        (item.debates || []).some(d => d.toLowerCase().includes(q))
+      );
+
+      if (!hits.length) {{
+        if (statusEl) statusEl.innerText = `Found 0 matching meetings across the full archive for "${{query}}".`;
+        container.innerHTML = `<div class="card" style="color:var(--text-muted);font-size:13px;">No matching meetings found for "${{query}}".</div>`;
+        return;
+      }}
+
+      const hitIds = new Set(hits.map(h => h.id));
+      const cohortIdsNeeded = Array.from(new Set(hits.map(h => h.cohort_id).filter(Boolean)));
+      const loaded = await ensureManyCohortsLoaded(cohortIdsNeeded);
+      const matchingMeetings = loaded.filter(m => hitIds.has(m.id));
+
+      if (statusEl) statusEl.innerText = `Found ${{matchingMeetings.length}} matching meeting records across 2012–2026 for "${{query}}":`;
+      renderPaginatedMeetings(container, matchingMeetings, 30);
     }}
 
     // Check auth on load

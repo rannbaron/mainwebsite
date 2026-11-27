@@ -169,34 +169,38 @@
       </div>
 
       <section class="doc-card" id="coverage">
-        <h2>1. Scope &amp; Coverage</h2>
-        <p>The Durham Politics Tracker automatically ingests, transcribes, and analyzes public meetings from Durham's three primary elected local boards from each newest cohort's seating date forward:</p>
+        <h2>1. Scope &amp; Full Historical Coverage</h2>
+        <p>The Durham Politics Tracker ingests, transcribes (via captions and local <code>faster-whisper</code> YouTube audio ASR), and analyzes <strong>every available historical meeting</strong> across Durham's three primary elected local boards — while <strong>defaulting every view to the Current Board</strong> and offering a one-click <strong>Board Cohort Selector</strong> to inspect any prior board composition:</p>
         <table>
           <thead>
             <tr>
               <th>Governing Body</th>
               <th>Seats</th>
-              <th>Coverage Start</th>
-              <th>Official Video Channel</th>
+              <th>Current Board (Default View)</th>
+              <th>Full Historical Archive Span</th>
+              <th>Official Channel</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td><strong>Durham City Council</strong></td>
               <td>7</td>
-              <td>Dec 1, 2025 <em>(Matt Kopac seated)</em></td>
+              <td>Dec 1, 2025 &ndash; Present <em>(16 cohorts tracked)</em></td>
+              <td>May 2012 &ndash; Present</td>
               <td><code>@CityofDurhamNC</code></td>
             </tr>
             <tr>
               <td><strong>DPS Board of Education</strong></td>
               <td>7</td>
-              <td>July 6, 2026 <em>(Natalie Bent Kitaif seated)</em></td>
+              <td>July 6, 2026 &ndash; Present <em>(11 cohorts tracked)</em></td>
+              <td>Aug 2016 &ndash; Present</td>
               <td><code>@durhampublicschoolsboardof2290</code></td>
             </tr>
             <tr>
               <td><strong>Durham Board of County Commissioners (BOCC)</strong></td>
               <td>5</td>
-              <td>Dec 2, 2024 <em>(Stephen Valentine seated)</em></td>
+              <td>Dec 2, 2024 &ndash; Present <em>(6 cohorts tracked)</em></td>
+              <td>May 2012 &ndash; Present</td>
               <td><code>@DCoWebmaster</code></td>
             </tr>
           </tbody>
@@ -204,13 +208,13 @@
       </section>
 
       <section class="doc-card" id="navigation">
-        <h2>2. Dashboard Navigation</h2>
+        <h2>2. Dashboard Navigation &amp; Prior-Board Selector</h2>
         <ul>
-          <li><strong>Overview &amp; Macro Trends:</strong> High-level KPI cards (Tracked Meetings, Recorded Formal Votes, Contested Roll Calls, Deliberation Issues), cross-body fault line summaries, and recent landmark votes.</li>
-          <li><strong>Board Tabs (DPS School Board, City Council, County Commissioners):</strong> Displays all currently seated members' vote totals, Aye rate, Dissent rate, full voting history modal (<em>Inspect Full Voting Record</em>), and every tracked meeting in reverse chronological order.</li>
-          <li><strong>Member Directory:</strong> Filter officials across all bodies by <em>Current Serving Officials</em>, <em>Preceding / Former Members</em>, or <em>All</em>.</li>
-          <li><strong>Voting Alignments &amp; Heatmaps:</strong> Board-specific pairwise voting agreement grids and Dissent Frequency Leaderboards.</li>
-          <li><strong>Meeting Archives &amp; Video:</strong> Master filterable timeline across all three boards by body, year, and global search keywords.</li>
+          <li><strong>Overview &amp; Macro Trends:</strong> Full-archive KPI cards (Tracked Meetings, Recorded Formal Votes, Contested Roll Calls, Deliberation Issues across all tracked historical boards), cross-body fault line summaries, and recent landmark votes from the current boards.</li>
+          <li><strong>Board Tabs (DPS School Board, City Council, County Commissioners):</strong> Defaults to the <strong>Current Board</strong>. Use the <strong>Board Cohort</strong> dropdown to switch to any prior seating cohort (every election swearing-in, resignation, or interim appointment) or <em>All Historical Boards</em>. Selecting a cohort dynamically updates the seated members grid, cohort-specific Aye%/Dissent%/vote totals, voting history modal (with multi-term switcher), and chronological meeting archive (lazy-loaded on demand for fast initial page loads).</li>
+          <li><strong>Member Directory:</strong> Filter officials across all bodies by <em>Current Serving Officials</em> (default), <em>All Officials (2012&ndash;2026)</em>, <em>Former / Preceding Members Only</em>, or by a specific board cohort.</li>
+          <li><strong>Voting Alignments &amp; Heatmaps:</strong> Select both a <strong>Governing Body</strong> and a <strong>Board Cohort</strong> (defaulting to the Current Board) to inspect pairwise voting agreement and dissent rankings strictly for that board composition.</li>
+          <li><strong>Meeting Archives &amp; Video:</strong> Master filterable timeline across all three boards by body, board cohort (defaults to Current Boards), year (2012&ndash;2026), contested roll calls, and full-history global search.</li>
         </ul>
       </section>
 
@@ -226,14 +230,14 @@
       <section class="doc-card" id="alignments">
         <h2>4. Pairwise Heatmaps &amp; Dissent Leaderboard</h2>
         <h3>Upper-Triangular Pairwise Agreement Grid</h3>
-        <p>Select a board from the dropdown to inspect pairwise agreement among its currently seated members. Because agreement is symmetric, only the main diagonal and upper triangle are displayed to avoid duplicate cells:</p>
+        <p>Select a governing body and board cohort (defaulting to the Current Board) to inspect pairwise agreement among that cohort's seated members. Because agreement is symmetric, only the main diagonal and upper triangle are displayed to avoid duplicate cells:</p>
         <ul>
           <li><span class="pill pill-green">&ge; 95%</span> &mdash; High voting agreement (green)</li>
           <li><span class="pill pill-yellow">90% &ndash; 94.9%</span> &mdash; Moderate divergence (yellow)</li>
           <li><span class="pill pill-red">&lt; 90%</span> &mdash; Frequent disagreement (red)</li>
         </ul>
         <h3>Dissent Frequency Leaderboard</h3>
-        <p>The leaderboard directly beneath the grid is strictly scoped to the <strong>currently selected board</strong>. Each member's Dissent Rate measures <code>NAY</code> votes cast against carried majority motions divided by total recorded votes cast (<code>dissents / votes_cast</code>).</p>
+        <p>The leaderboard directly beneath the grid is strictly scoped to the <strong>selected board and cohort</strong>. Each member's Dissent Rate measures <code>NAY</code> votes cast against carried majority motions divided by total recorded votes cast within that cohort (<code>dissents / votes_cast</code>).</p>
       </section>
 
       <section class="doc-card" id="videos-pdfs">

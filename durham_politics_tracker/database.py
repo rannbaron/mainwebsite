@@ -18,6 +18,7 @@ class DurhamPoliticsDB:
     def __init__(self, db_path: Optional[Path] = None, read_only: bool = False):
         self.db_path = Path(db_path or DB_PATH)
         self.read_only = read_only
+        self._alias_cache: Optional[Dict[str, Dict[str, str]]] = None
         if not read_only:
             self.db_path.parent.mkdir(parents=True, exist_ok=True)
             self.init_schema()
@@ -149,17 +150,44 @@ class DurhamPoliticsDB:
                 FOREIGN KEY (meeting_id) REFERENCES meetings(id) ON DELETE CASCADE
             );
 
+            CREATE TABLE IF NOT EXISTS board_cohorts (
+                id TEXT PRIMARY KEY,
+                body_id TEXT NOT NULL,
+                label TEXT NOT NULL,
+                short_label TEXT NOT NULL,
+                start_date TEXT NOT NULL,
+                end_date TEXT,
+                is_current INTEGER DEFAULT 0,
+                sort_order INTEGER DEFAULT 0,
+                transition_reason TEXT,
+                FOREIGN KEY (body_id) REFERENCES bodies(id)
+            );
+
+            CREATE TABLE IF NOT EXISTS cohort_members (
+                cohort_id TEXT NOT NULL,
+                member_id TEXT NOT NULL,
+                body_id TEXT NOT NULL,
+                role TEXT NOT NULL,
+                district TEXT,
+                PRIMARY KEY (cohort_id, member_id),
+                FOREIGN KEY (cohort_id) REFERENCES board_cohorts(id) ON DELETE CASCADE,
+                FOREIGN KEY (member_id) REFERENCES members(id)
+            );
+
             CREATE INDEX IF NOT EXISTS idx_meetings_date ON meetings(date);
             CREATE INDEX IF NOT EXISTS idx_meetings_body ON meetings(body_id);
             CREATE INDEX IF NOT EXISTS idx_votes_meeting ON votes(meeting_id);
             CREATE INDEX IF NOT EXISTS idx_member_votes_member ON member_votes(member_id);
             CREATE INDEX IF NOT EXISTS idx_member_votes_vote ON member_votes(vote_id);
             CREATE INDEX IF NOT EXISTS idx_agenda_items_meeting ON agenda_items(meeting_id);
+            CREATE INDEX IF NOT EXISTS idx_cohort_members_cohort ON cohort_members(cohort_id);
             """)
 
-            # Safe incremental migrations for timestamped topics and summary PDFs
+            # Safe incremental migrations for timestamped topics, summary PDFs, and historical cohorts
             migrations = [
                 ("meetings", "summary_pdf_url", "TEXT"),
+                ("meetings", "cohort_id", "TEXT"),
+                ("members", "aliases", "TEXT"),
                 ("agenda_items", "start_seconds", "INTEGER"),
                 ("agenda_items", "timestamp_label", "TEXT"),
                 ("agenda_items", "vote_summary", "TEXT"),
@@ -173,6 +201,7 @@ class DurhamPoliticsDB:
                 existing_cols = {r[1] for r in cur.execute(f"PRAGMA table_info({table})").fetchall()}
                 if col not in existing_cols:
                     cur.execute(f"ALTER TABLE {table} ADD COLUMN {col} {col_type}")
+            cur.execute("CREATE INDEX IF NOT EXISTS idx_meetings_cohort ON meetings(cohort_id)")
 
     def insert_body(self, body_data: Dict[str, Any]):
         with self.get_connection() as conn:
@@ -192,8 +221,8 @@ class DurhamPoliticsDB:
             cur.execute("""
             INSERT OR REPLACE INTO members (
                 id, body_id, name, title, district, active_terms, is_current,
-                start_year, end_year, avatar_initials, bio, key_priorities, ideology_tags
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                start_year, end_year, avatar_initials, bio, key_priorities, ideology_tags, aliases
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 member_data["id"],
                 member_data["body_id"],
@@ -207,19 +236,112 @@ class DurhamPoliticsDB:
                 member_data.get("avatar_initials", "".join([part[0] for part in re.sub(r"\([^)]*\)", "", member_data["name"]).split() if part][:2]).upper()),
                 member_data.get("bio", ""),
                 json.dumps(member_data.get("key_priorities", [])),
-                json.dumps(member_data.get("ideology_tags", []))
+                json.dumps(member_data.get("ideology_tags", [])),
+                json.dumps(member_data.get("aliases", [])),
             ))
+        self._alias_cache = None
+
+    def insert_cohort(self, cohort_data: Dict[str, Any]):
+        """Inserts/updates a board seating cohort and its seated voting members."""
+        with self.get_connection() as conn:
+            cur = conn.cursor()
+            cur.execute("""
+            INSERT OR REPLACE INTO board_cohorts (
+                id, body_id, label, short_label, start_date, end_date,
+                is_current, sort_order, transition_reason
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, (
+                cohort_data["id"],
+                cohort_data["body_id"],
+                cohort_data["label"],
+                cohort_data.get("short_label", cohort_data["label"]),
+                cohort_data["start_date"],
+                cohort_data.get("end_date"),
+                1 if cohort_data.get("is_current", False) else 0,
+                int(cohort_data.get("sort_order", 0)),
+                cohort_data.get("transition_reason", ""),
+            ))
+            cur.execute("DELETE FROM cohort_members WHERE cohort_id = ?", (cohort_data["id"],))
+            for cm in cohort_data.get("members", []):
+                cur.execute("""
+                INSERT OR REPLACE INTO cohort_members (cohort_id, member_id, body_id, role, district)
+                VALUES (?, ?, ?, ?, ?)
+                """, (
+                    cohort_data["id"],
+                    cm["member_id"],
+                    cohort_data["body_id"],
+                    cm.get("role", "Member"),
+                    cm.get("district", ""),
+                ))
+
+    def find_cohort_for_date(self, body_id: str, date_str: str) -> Optional[str]:
+        """Returns the cohort_id for (body_id, YYYY-MM-DD)."""
+        if not body_id or not date_str:
+            return None
+        with self.get_connection() as conn:
+            cur = conn.cursor()
+            row = cur.execute("""
+                SELECT id FROM board_cohorts
+                WHERE body_id = ?
+                  AND start_date <= ?
+                  AND (end_date IS NULL OR end_date >= ?)
+                ORDER BY start_date DESC LIMIT 1
+            """, (body_id, date_str, date_str)).fetchone()
+            if row:
+                return row["id"]
+            # Fallback: if earlier than earliest cohort start_date, use earliest; else current
+            earliest = cur.execute(
+                "SELECT id, start_date FROM board_cohorts WHERE body_id = ? ORDER BY start_date ASC LIMIT 1",
+                (body_id,),
+            ).fetchone()
+            if earliest and date_str < earliest["start_date"]:
+                return earliest["id"]
+            latest = cur.execute(
+                "SELECT id FROM board_cohorts WHERE body_id = ? ORDER BY is_current DESC, start_date DESC LIMIT 1",
+                (body_id,),
+            ).fetchone()
+            return latest["id"] if latest else None
+
+    def assign_meeting_cohorts(self) -> int:
+        """Assigns cohort_id to every meeting in the meetings table based on (body_id, date)."""
+        updated = 0
+        with self.get_connection() as conn:
+            cur = conn.cursor()
+            cohorts_by_body: Dict[str, List[Tuple[str, str, str]]] = {}
+            for r in cur.execute(
+                "SELECT id, body_id, start_date, COALESCE(end_date, '9999-12-31') AS end_d FROM board_cohorts ORDER BY start_date ASC"
+            ).fetchall():
+                cohorts_by_body.setdefault(r["body_id"], []).append((r["id"], r["start_date"], r["end_d"]))
+
+            meetings = cur.execute("SELECT id, body_id, date FROM meetings").fetchall()
+            for m in meetings:
+                cands = cohorts_by_body.get(m["body_id"], [])
+                if not cands:
+                    continue
+                chosen = None
+                for cid, sd, ed in cands:
+                    if sd <= m["date"] <= ed:
+                        chosen = cid
+                if not chosen:
+                    chosen = cands[0][0] if m["date"] < cands[0][1] else cands[-1][0]
+                cur.execute("UPDATE meetings SET cohort_id = ? WHERE id = ?", (chosen, m["id"]))
+                updated += 1
+        return updated
 
     def insert_meeting(self, meeting_data: Dict[str, Any]):
         with self.get_connection() as conn:
             cur = conn.cursor()
             dt = datetime.strptime(meeting_data["date"], "%Y-%m-%d")
+            cohort_id = meeting_data.get("cohort_id") or self.find_cohort_for_date(
+                meeting_data["body_id"], meeting_data["date"]
+            )
+            pdf_url = meeting_data.get("summary_pdf_url") or f"/durhampolitics/summaries/{meeting_data['id']}.pdf"
             cur.execute("""
             INSERT OR REPLACE INTO meetings (
                 id, body_id, title, meeting_type, date, year, month,
                 presiding_chair, video_url, video_topic_slug, agenda_url, minutes_url,
-                duration, executive_summary, tags
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                duration, executive_summary, tags, summary_pdf_url, cohort_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 meeting_data["id"],
                 meeting_data["body_id"],
@@ -235,7 +357,9 @@ class DurhamPoliticsDB:
                 meeting_data.get("minutes_url", ""),
                 meeting_data.get("duration", "2h 30m"),
                 meeting_data.get("executive_summary", ""),
-                json.dumps(meeting_data.get("tags", []))
+                json.dumps(meeting_data.get("tags", [])),
+                pdf_url,
+                cohort_id,
             ))
 
     def insert_vote(self, vote_data: Dict[str, Any]):
@@ -250,8 +374,9 @@ class DurhamPoliticsDB:
             INSERT OR REPLACE INTO votes (
                 id, meeting_id, agenda_item_id, item_title, motion_type,
                 mover, seconder, vote_format, outcome, tally, is_contested,
-                ayes, nays, abstentions, amendments, notes, category
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ayes, nays, abstentions, amendments, notes, category,
+                timestamp_seconds, timestamp_label, discussion_detail
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 vote_data["id"],
                 vote_data["meeting_id"],
@@ -269,28 +394,35 @@ class DurhamPoliticsDB:
                 json.dumps(abstentions),
                 json.dumps(vote_data.get("amendments", [])),
                 vote_data.get("notes", ""),
-                vote_data.get("category", "General")
+                vote_data.get("category", "General"),
+                vote_data.get("timestamp_seconds"),
+                vote_data.get("timestamp_label", ""),
+                vote_data.get("discussion_detail", ""),
             ))
 
-            # Record individual member votes
+            # Record individual member votes scoped strictly by body_id
             meeting_body = cur.execute("SELECT body_id FROM meetings WHERE id = ?", (vote_data["meeting_id"],)).fetchone()
-            body_id = meeting_body["body_id"] if meeting_body else "dps"
+            body_id = meeting_body["body_id"] if meeting_body else vote_data.get("body_id", "dps")
 
             cur.execute("DELETE FROM member_votes WHERE vote_id = ?", (vote_data["id"],))
 
+            seen_mids = set()
             for m in ayes:
-                m_id = self._canonical_member_id(m)
-                if m_id:
+                m_id = self._canonical_member_id(m, body_id=body_id)
+                if m_id and m_id not in seen_mids:
+                    seen_mids.add(m_id)
                     cur.execute("INSERT INTO member_votes (vote_id, member_id, member_name, body_id, vote_cast) VALUES (?, ?, ?, ?, 'AYE')",
                                 (vote_data["id"], m_id, m, body_id))
             for m in nays:
-                m_id = self._canonical_member_id(m)
-                if m_id:
+                m_id = self._canonical_member_id(m, body_id=body_id)
+                if m_id and m_id not in seen_mids:
+                    seen_mids.add(m_id)
                     cur.execute("INSERT INTO member_votes (vote_id, member_id, member_name, body_id, vote_cast) VALUES (?, ?, ?, ?, 'NAY')",
                                 (vote_data["id"], m_id, m, body_id))
             for m in abstentions:
-                m_id = self._canonical_member_id(m)
-                if m_id:
+                m_id = self._canonical_member_id(m, body_id=body_id)
+                if m_id and m_id not in seen_mids:
+                    seen_mids.add(m_id)
                     cur.execute("INSERT INTO member_votes (vote_id, member_id, member_name, body_id, vote_cast) VALUES (?, ?, ?, ?, 'ABSTAIN')",
                                 (vote_data["id"], m_id, m, body_id))
 
@@ -323,8 +455,8 @@ class DurhamPoliticsDB:
                 id, meeting_id, issue, category, summary,
                 side_a_position, side_a_arguments, side_a_members,
                 side_b_position, side_b_arguments, side_b_members,
-                resolution
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                resolution, timestamp_seconds, timestamp_label
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 dis_data["id"],
                 dis_data["meeting_id"],
@@ -337,105 +469,162 @@ class DurhamPoliticsDB:
                 dis_data["side_b_position"],
                 json.dumps(dis_data.get("side_b_arguments", [])),
                 json.dumps(dis_data.get("side_b_members", [])),
-                dis_data.get("resolution", "")
+                dis_data.get("resolution", ""),
+                dis_data.get("timestamp_seconds"),
+                dis_data.get("timestamp_label", ""),
             ))
 
-    def _canonical_member_id(self, name: str) -> Optional[str]:
-        """Normalizes an official's name into a unique member ID."""
-        clean = name.lower()
-        for prefix in ["chair", "vice chair", "mayor pro tem", "mayor", "dr.", "dr", "commissioner", "council member"]:
-            clean = clean.replace(prefix, "")
-        clean = clean.strip()
+    def _build_alias_cache(self) -> Dict[str, Dict[str, str]]:
+        """Builds per-body alias lookup tables from the members table + core ASR aliases."""
+        if self._alias_cache is not None:
+            return self._alias_cache
+        cache: Dict[str, Dict[str, str]] = {"city": {}, "bocc": {}, "dps": {}, "all": {}}
+        with self.get_connection() as conn:
+            rows = conn.execute("SELECT id, body_id, name, aliases FROM members").fetchall()
+            for r in rows:
+                mid = r["id"]
+                bid = r["body_id"]
+                nm = (r["name"] or "").strip()
+                clean_nm = re.sub(r"^(?:dr\.?|mayor|chair|vice chair|commissioner|council\s*member)\s+", "", nm, flags=re.I)
+                clean_nm = re.sub(r"\([^)]*\)", "", clean_nm).strip().lower()
+                cands = [clean_nm, nm.lower(), mid.lower()]
+                parts = clean_nm.split()
+                if len(parts) >= 2 and len(parts[-1]) >= 4:
+                    cands.append(parts[-1])
+                try:
+                    al = json.loads(r["aliases"] or "[]") if "aliases" in r.keys() else []
+                    if isinstance(al, list):
+                        cands.extend(str(a).lower().strip() for a in al if a)
+                except Exception:
+                    pass
+                for c in cands:
+                    if not c or len(c) < 3:
+                        continue
+                    cache.setdefault(bid, {})[c] = mid
+                    cache["all"].setdefault(c, mid)
+        self._alias_cache = cache
+        return cache
 
+    def _canonical_member_id(self, name: str, body_id: Optional[str] = None) -> Optional[str]:
+        """Normalizes an official's name into a unique member ID, scoped by body_id."""
+        if not name or not str(name).strip():
+            return None
+        clean = str(name).lower()
+        for prefix in ["vice chair", "mayor pro tem", "mayor pro tempore", "council member", "councilmember", "commissioner", "board member", "chair", "mayor", "dr.", "dr ", "mr.", "ms.", "mrs."]:
+            clean = clean.replace(prefix, " ")
+        clean = re.sub(r"\s+", " ", clean).strip()
+        if not clean or clean in ("none", "n/a", "na", "0", "all", "unanimous", "unknown"):
+            return None
+
+        # 1. Dynamic DB-backed aliases (strictly body-scoped first!)
+        cache = self._build_alias_cache()
+        if body_id and body_id in cache:
+            body_map = cache[body_id]
+            if clean in body_map:
+                return body_map[clean]
+            # Longest-alias-first match within body
+            for k in sorted(body_map.keys(), key=len, reverse=True):
+                if len(k) >= 4 and k in clean:
+                    return body_map[k]
+                if len(k) == 3 and re.search(r"\b" + re.escape(k) + r"\b", clean):
+                    return body_map[k]
+
+        # 2. Core ASR fallback lookup
         lookup = {
-            "joy harrell-goff": "joy_harrell_goff",
-            "joy harrell goff": "joy_harrell_goff",
-            "harrell-goff": "joy_harrell_goff",
-            "xavier cason": "xavier_cason",
-            "natalie bent kitaif": "natalie_bent_kitaif",
-            "natalie kitaif": "natalie_bent_kitaif",
-            "nadeen bir": "nadeen_bir",
-            "gabrielle (gabby) rivero": "gabby_rivero",
-            "gabrielle rivero": "gabby_rivero",
-            "gabby rivero": "gabby_rivero",
-            "wendell tabb": "wendell_tabb",
-            "millicent rogers": "millicent_rogers",
-            "bettina umstead": "bettina_umstead",
-            "emily chávez": "emily_chavez",
-            "emily chavez": "emily_chavez",
-            "natalie beyer": "natalie_beyer",
-            "alexandra valladares": "alexandra_valladares",
-            "jovonia lewis": "jovonia_lewis",
-            "leonardo williams": "leonardo_williams",
-            "leo williams": "leonardo_williams",
-            "javiera caballero": "javiera_caballero",
-            "cabayro": "javiera_caballero",
-            "cababiero": "javiera_caballero",
-            "cabayo": "javiera_caballero",
-            "cayetano": "javiera_caballero",
-            "cavayto": "javiera_caballero",
-            "cáviero": "javiera_caballero",
-            "clavijo": "javiera_caballero",
-            "fayto": "javiera_caballero",
-            "nate baker": "nate_baker",
-            "baker": "nate_baker",
-            "bigger": "nate_baker",
-            "carl rist": "carl_rist",
-            "rist": "carl_rist",
-            "rrist": "carl_rist",
-            "ris": "carl_rist",
-            "ree": "carl_rist",
-            "reese": "carl_rist",
-            "matt kopac": "matt_kopac",
-            "kopac": "matt_kopac",
-            "kopack": "matt_kopac",
-            "kopacek": "matt_kopac",
-            "kopec": "matt_kopac",
-            "kobec": "matt_kopac",
-            "kubic": "matt_kopac",
-            "copac": "matt_kopac",
-            "copack": "matt_kopac",
-            "copak": "matt_kopac",
-            "copek": "matt_kopac",
-            "corbett": "matt_kopac",
-            "shanetta burris": "shanetta_burris",
-            "burris": "shanetta_burris",
-            "burrus": "shanetta_burris",
-            "burries": "shanetta_burris",
-            "burus": "shanetta_burris",
-            "barris": "shanetta_burris",
-            "barriss": "shanetta_burris",
-            "burgess": "shanetta_burris",
-            "chelsea cook": "chelsea_cook",
-            "cook": "chelsea_cook",
-            "mike lee": "mike_lee",
-            "nida allam": "nida_allam",
-            "nida alam": "nida_allam",
-            "allam": "nida_allam",
-            "alam": "nida_allam",
-            "alum": "nida_allam",
-            "alom": "nida_allam",
-            "lom": "nida_allam",
-            "long": "nida_allam",
-            "michelle burton": "michelle_burton",
-            "burton": "michelle_burton",
-            "stephen valentine": "stephen_valentine",
-            "steven valentine": "stephen_valentine",
-            "steve valentine": "stephen_valentine",
-            "valentine": "stephen_valentine",
-            "wendy jacobs": "wendy_jacobs",
-            "jacobs": "wendy_jacobs"
+            "joy harrell-goff": ("dps", "joy_harrell_goff"),
+            "joy harrell goff": ("dps", "joy_harrell_goff"),
+            "harrell-goff": ("dps", "joy_harrell_goff"),
+            "xavier cason": ("dps", "xavier_cason"),
+            "natalie bent kitaif": ("dps", "natalie_bent_kitaif"),
+            "natalie kitaif": ("dps", "natalie_bent_kitaif"),
+            "nadeen bir": ("dps", "nadeen_bir"),
+            "gabrielle (gabby) rivero": ("dps", "gabby_rivero"),
+            "gabrielle rivero": ("dps", "gabby_rivero"),
+            "gabby rivero": ("dps", "gabby_rivero"),
+            "wendell tabb": ("dps", "wendell_tabb"),
+            "millicent rogers": ("dps", "millicent_rogers"),
+            "bettina umstead": ("dps", "bettina_umstead"),
+            "emily chávez": ("dps", "emily_chavez"),
+            "emily chavez": ("dps", "emily_chavez"),
+            "natalie beyer": ("dps", "natalie_beyer"),
+            "alexandra valladares": ("dps", "alexandra_valladares"),
+            "jovonia lewis": ("dps", "jovonia_lewis"),
+            "leonardo williams": ("city", "leonardo_williams"),
+            "leo williams": ("city", "leonardo_williams"),
+            "javiera caballero": ("city", "javiera_caballero"),
+            "cabayro": ("city", "javiera_caballero"),
+            "cababiero": ("city", "javiera_caballero"),
+            "cabayo": ("city", "javiera_caballero"),
+            "cayetano": ("city", "javiera_caballero"),
+            "cavayto": ("city", "javiera_caballero"),
+            "cáviero": ("city", "javiera_caballero"),
+            "clavijo": ("city", "javiera_caballero"),
+            "fayto": ("city", "javiera_caballero"),
+            "nate baker": ("city", "nate_baker"),
+            "baker": ("city", "nate_baker"),
+            "bigger": ("city", "nate_baker"),
+            "carl rist": ("city", "carl_rist"),
+            "rist": ("city", "carl_rist"),
+            "rrist": ("city", "carl_rist"),
+            "matt kopac": ("city", "matt_kopac"),
+            "kopac": ("city", "matt_kopac"),
+            "kopack": ("city", "matt_kopac"),
+            "kopacek": ("city", "matt_kopac"),
+            "kopec": ("city", "matt_kopac"),
+            "kobec": ("city", "matt_kopac"),
+            "kubic": ("city", "matt_kopac"),
+            "copac": ("city", "matt_kopac"),
+            "copack": ("city", "matt_kopac"),
+            "copak": ("city", "matt_kopac"),
+            "copek": ("city", "matt_kopac"),
+            "corbett": ("city", "matt_kopac"),
+            "shanetta burris": ("city", "shanetta_burris"),
+            "burris": ("city", "shanetta_burris"),
+            "burrus": ("city", "shanetta_burris"),
+            "burries": ("city", "shanetta_burris"),
+            "burus": ("city", "shanetta_burris"),
+            "barris": ("city", "shanetta_burris"),
+            "barriss": ("city", "shanetta_burris"),
+            "burgess": ("city", "shanetta_burris"),
+            "chelsea cook": ("city", "chelsea_cook"),
+            "cook": ("city", "chelsea_cook"),
+            "mike lee": ("bocc", "mike_lee"),
+            "nida allam": ("bocc", "nida_allam"),
+            "nida alam": ("bocc", "nida_allam"),
+            "allam": ("bocc", "nida_allam"),
+            "alam": ("bocc", "nida_allam"),
+            "alum": ("bocc", "nida_allam"),
+            "alom": ("bocc", "nida_allam"),
+            "michelle burton": ("bocc", "michelle_burton"),
+            "burton": ("bocc", "michelle_burton"),
+            "stephen valentine": ("bocc", "stephen_valentine"),
+            "steven valentine": ("bocc", "stephen_valentine"),
+            "steve valentine": ("bocc", "stephen_valentine"),
+            "valentine": ("bocc", "stephen_valentine"),
+            "wendy jacobs": ("bocc", "wendy_jacobs"),
+            "jacobs": ("bocc", "wendy_jacobs"),
         }
 
         if clean in lookup:
-            return lookup[clean]
+            l_bid, l_mid = lookup[clean]
+            if not body_id or l_bid == body_id:
+                return l_mid
 
-        for k, v in lookup.items():
-            if k in clean:
-                return v
+        for k, (l_bid, l_mid) in lookup.items():
+            if (not body_id or l_bid == body_id) and len(k) >= 4 and k in clean:
+                return l_mid
 
         with self.get_connection() as conn:
-            m = conn.execute("SELECT id FROM members WHERE LOWER(name) LIKE ? OR id = ?", (f"%{clean}%", clean)).fetchone()
+            if body_id:
+                m = conn.execute(
+                    "SELECT id FROM members WHERE body_id = ? AND (LOWER(name) LIKE ? OR id = ?)",
+                    (body_id, f"%{clean}%", clean),
+                ).fetchone()
+            else:
+                m = conn.execute(
+                    "SELECT id FROM members WHERE LOWER(name) LIKE ? OR id = ?",
+                    (f"%{clean}%", clean),
+                ).fetchone()
             if m:
                 return m["id"]
         return None
@@ -496,6 +685,14 @@ class DurhamPoliticsDB:
 
                 dissent_rate = round((dissents / total_cast) * 100, 1) if total_cast > 0 else 0.0
 
+                m_keys = m.keys()
+                aliases_list = []
+                if "aliases" in m_keys and m["aliases"]:
+                    try:
+                        aliases_list = json.loads(m["aliases"])
+                    except Exception:
+                        aliases_list = []
+
                 member_stats.append({
                     "id": m["id"],
                     "body_id": m["body_id"],
@@ -504,10 +701,13 @@ class DurhamPoliticsDB:
                     "district": m["district"],
                     "active_terms": json.loads(m["active_terms"] or "[]"),
                     "is_current": bool(m["is_current"]),
+                    "start_year": m["start_year"],
+                    "end_year": m["end_year"],
                     "avatar_initials": m["avatar_initials"],
                     "bio": m["bio"],
                     "key_priorities": json.loads(m["key_priorities"] or "[]"),
                     "ideology_tags": json.loads(m["ideology_tags"] or "[]"),
+                    "aliases": aliases_list,
                     "votes_cast": total_cast,
                     "ayes": ayes,
                     "nays": nays,
@@ -667,10 +867,12 @@ class DurhamPoliticsDB:
 
                 m_keys = m.keys()
                 pdf_url = (m["summary_pdf_url"] if "summary_pdf_url" in m_keys else "") or f"/durhampolitics/summaries/{m_id}.pdf"
+                cohort_id = m["cohort_id"] if "cohort_id" in m_keys else None
 
                 meetings_list.append({
                     "id": m["id"],
                     "body_id": m["body_id"],
+                    "cohort_id": cohort_id,
                     "title": m["title"],
                     "meeting_type": m["meeting_type"],
                     "date": m["date"],
@@ -690,13 +892,59 @@ class DurhamPoliticsDB:
                     "disagreements": disagreements
                 })
 
+            # Export board cohorts (sorted newest-first per body)
+            cohorts_by_body: Dict[str, List[Dict[str, Any]]] = {b: [] for b in BODIES.keys()}
+            tables = {r[0] for r in cur.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()}
+            if "board_cohorts" in tables:
+                c_rows = cur.execute(
+                    "SELECT * FROM board_cohorts ORDER BY body_id ASC, is_current DESC, start_date DESC"
+                ).fetchall()
+                cm_by_cohort: Dict[str, List[Dict[str, Any]]] = {}
+                for cm in cur.execute("SELECT * FROM cohort_members").fetchall():
+                    cm_by_cohort.setdefault(cm["cohort_id"], []).append({
+                        "member_id": cm["member_id"],
+                        "role": cm["role"],
+                        "district": cm["district"],
+                    })
+                m_counts = {
+                    r["cohort_id"]: r["cnt"]
+                    for r in cur.execute(
+                        "SELECT cohort_id, COUNT(*) AS cnt FROM meetings WHERE cohort_id IS NOT NULL GROUP BY cohort_id"
+                    ).fetchall()
+                }
+                for c in c_rows:
+                    cmems = cm_by_cohort.get(c["id"], [])
+                    cohorts_by_body.setdefault(c["body_id"], []).append({
+                        "id": c["id"],
+                        "body_id": c["body_id"],
+                        "label": c["label"],
+                        "short_label": c["short_label"],
+                        "start_date": c["start_date"],
+                        "end_date": c["end_date"],
+                        "is_current": bool(c["is_current"]),
+                        "sort_order": c["sort_order"],
+                        "transition_reason": c["transition_reason"] or "",
+                        "meeting_count": m_counts.get(c["id"], 0),
+                        "member_ids": [x["member_id"] for x in cmems],
+                        "members": cmems,
+                    })
+
+            dates_all = [m["date"] for m in meetings_list if m.get("date")]
+            if dates_all:
+                min_yr = min(dates_all)[:4]
+                max_dt = datetime.strptime(max(dates_all), "%Y-%m-%d").strftime("%B %Y")
+                coverage_str = f"{min_yr} – {max_dt} & Ongoing"
+            else:
+                coverage_str = "2012 – November 2026 & Ongoing"
+
             return {
                 "metadata": {
                     "app_title": "Durham Politics Tracker",
-                    "coverage": "November 2024 – November 2026 & Ongoing",
+                    "coverage": coverage_str,
                     "bodies": BODIES,
                     "generated_at": datetime.now().isoformat()
                 },
+                "cohorts": cohorts_by_body,
                 "stats": stats,
                 "meetings": meetings_list
             }
