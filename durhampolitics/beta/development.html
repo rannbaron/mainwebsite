@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <title>Development Decision Patterns &amp; Member Evolution — Durham Politics Beta</title>
+  <link rel="stylesheet" href="./assets/beta.css" />
+  <style>
+    .dev-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; }
+    .dev-tab {
+      background:var(--surface); border:1px solid var(--border); color:var(--muted);
+      padding:9px 16px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer;
+    }
+    .dev-tab.active { background:rgba(16,185,129,0.18); border-color:var(--city); color:#6ee7b7; }
+    .dev-panel { display:none; }
+    .dev-panel.active { display:block; }
+    .filter-bar {
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      background:var(--bg-elev); border:1px solid var(--border); border-radius:12px;
+      padding:14px 16px; margin-bottom:16px;
+    }
+    .filter-bar input, .filter-bar select {
+      background:#080d19; border:1px solid var(--border); color:var(--text);
+      padding:7px 10px; border-radius:8px; font-size:12.5px;
+    }
+    .filter-bar label { font-size:12px; color:var(--muted); display:inline-flex; align-items:center; gap:5px; cursor:pointer; }
+    .criteria-table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--bg-elev); }
+    .criteria-table { width:100%; border-collapse:collapse; font-size:12px; }
+    .criteria-table th, .criteria-table td {
+      padding:8px 10px; border-bottom:1px solid rgba(36,52,84,0.55); text-align:center; white-space:nowrap;
+    }
+    .criteria-table th { background:var(--surface); color:var(--muted); font-weight:700; position:sticky; top:0; z-index:2; }
+    .criteria-table th:first-child, .criteria-table td:first-child { text-align:left; position:sticky; left:0; background:var(--bg-elev); z-index:3; font-weight:700; border-right:1px solid var(--border); }
+    .criteria-table th:first-child { background:var(--surface); z-index:4; }
+    .crit-cell { cursor:pointer; transition:filter .15s; border-radius:4px; }
+    .crit-cell:hover { filter:brightness(1.25); outline:1px solid var(--accent); }
+    .crit-n { display:block; font-size:10px; opacity:0.78; font-weight:500; }
+    .mem-chip-bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+    .mem-sel-chip {
+      background:var(--surface); border:1px solid var(--border); color:var(--muted);
+      padding:6px 11px; border-radius:999px; font-size:12px; font-weight:600; cursor:pointer;
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    .mem-sel-chip.active { color:#fff; border-color:var(--accent); background:rgba(56,189,248,0.16); }
+    .chart-box {
+      background:var(--bg-elev); border:1px solid var(--border); border-radius:12px;
+      padding:18px; margin-bottom:18px; overflow-x:auto;
+    }
+    .case-card {
+      background:var(--bg-elev); border:1px solid var(--border); border-radius:12px;
+      padding:15px 17px; margin-bottom:12px;
+    }
+    .case-hdr { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; align-items:flex-start; cursor:pointer; }
+    .case-title { font-weight:700; font-size:14.5px; color:#fff; }
+    .case-meta { font-size:12px; color:var(--muted); margin-top:3px; }
+    .proffer-pills { display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+    .p-pill {
+      font-size:11px; font-weight:700; padding:2px 8px; border-radius:999px;
+      background:rgba(16,185,129,0.15); color:#6ee7b7; border:1px solid rgba(16,185,129,0.35);
+    }
+    .p-pill.warn { background:rgba(245,158,11,0.16); color:#fcd34d; border-color:rgba(245,158,11,0.4); }
+    .p-pill.bad { background:rgba(239,68,68,0.16); color:#fca5a5; border-color:rgba(239,68,68,0.4); }
+    .p-pill.info { background:rgba(56,189,248,0.15); color:#bae6fd; border-color:rgba(56,189,248,0.35); }
+    .case-details { margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+    .spec-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:8px; margin-bottom:12px; }
+    .spec-item { background:var(--surface); border:1px solid rgba(36,52,84,0.6); border-radius:8px; padding:8px 10px; font-size:12px; }
+    .spec-lbl { font-size:10px; text-transform:uppercase; letter-spacing:0.05em; color:var(--dim); font-weight:700; }
+    .doc-list { display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
+    .doc-link {
+      display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600;
+      padding:5px 10px; border-radius:8px; background:var(--surface-2); border:1px solid var(--border);
+      color:#e2e8f0;
+    }
+    .doc-link:hover { border-color:var(--accent); color:#fff; text-decoration:none; }
+    .doc-cat { font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:4px; background:rgba(56,189,248,0.2); color:#7dd3fc; }
+  </style>
+</head>
+<body>
+  <div id="betaAuthOverlay">
+    <form class="auth-card" onsubmit="handleBetaAuth(event)">
+      <div class="auth-badge">&#128274; Admin Beta Preview</div>
+      <div class="auth-title">Durham Politics Tracker</div>
+      <div class="auth-desc">Sign in as administrator (<code>rann</code>) to view Development Decision Patterns &amp; Member Evolution.</div>
+      <div class="auth-field">
+        <label for="betaUserInput">Username</label>
+        <input id="betaUserInput" type="text" autocomplete="username" value="rann" required />
+      </div>
+      <div class="auth-field">
+        <label for="betaPassInput">Master Password</label>
+        <input id="betaPassInput" type="password" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="auth-btn">Enter Beta Preview</button>
+      <div id="betaAuthError"></div>
+    </form>
+  </div>
+
+  <div id="betaApp" style="display:none;">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./index.html">
+          <span>Durham Politics Tracker</span>
+          <span class="beta-tag">Beta Preview</span>
+        </a>
+        <nav class="nav-right">
+          <a class="nav-link" href="./index.html">&larr; All Boards &amp; Terms</a>
+          <a class="nav-link" href="./development.html" style="color:#6ee7b7;border-color:rgba(16,185,129,0.45);">Development Patterns</a>
+          <button class="nav-btn" onclick="betaSignOut()">Sign Out</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="hero">
+        <div class="hero-kicker">Durham City Council &bull; Official OnBase Supporting Docs + Roll-Call Votes (2016&ndash;2026)</div>
+        <h1>Development Decision Patterns &amp; Council Member Evolution</h1>
+        <p class="hero-sub">
+          Tracks how individual Council members' voting behavior on Zoning Map Changes, Consolidated Annexations, and Development Plans evolved across terms&mdash;and how approval rates depend on concrete case criteria extracted from official Planning Staff Reports, Memos, and Proffer sheets (affordable housing AMI, DPS donations, environmental/stormwater/transit proffers, Planning Commission recommendations, and post-PC proffer sweetening).
+        </p>
+        <div class="kpi-strip" id="devKpis"></div>
+      </section>
+
+      <div class="dev-tabs">
+        <button class="dev-tab active" data-tab="criteria" onclick="setDevTab('criteria')">1. Decision Criteria &amp; Proffer Sensitivity Matrix</button>
+        <button class="dev-tab" data-tab="evolution" onclick="setDevTab('evolution')">2. Member Evolution Over Time (2016&ndash;2026)</button>
+        <button class="dev-tab" data-tab="cases" onclick="setDevTab('cases')">3. Case Explorer &amp; Supporting Documents</button>
+      </div>
+
+      <!-- TAB 1: CRITERIA MATRIX -->
+      <section id="panel-criteria" class="dev-panel active">
+        <div class="filter-bar">
+          <strong style="font-size:12.5px;color:#e2e8f0;">Scope:</strong>
+          <label><input type="checkbox" id="critContestedOnly" onchange="renderCriteriaMatrix()" /> Contested / Split Votes Only</label>
+          <select id="critMinVotes" onchange="renderCriteriaMatrix()">
+            <option value="10">Members with 10+ votes</option>
+            <option value="5">Members with 5+ votes</option>
+            <option value="20">Members with 20+ votes</option>
+          </select>
+          <span style="font-size:12px;color:var(--muted);margin-left:auto;">Click any percentage cell to inspect those exact cases in the Case Explorer</span>
+        </div>
+        <div class="criteria-table-wrap" id="criteriaMatrixWrap"></div>
+      </section>
+
+      <!-- TAB 2: EVOLUTION OVER TIME -->
+      <section id="panel-evolution" class="dev-panel">
+        <div class="filter-bar">
+          <strong style="font-size:12.5px;color:#e2e8f0;">Compare Council Members:</strong>
+          <label><input type="checkbox" id="evoContestedOnly" onchange="renderEvolution()" /> Contested / Split Votes Only</label>
+          <button class="nav-btn" onclick="selectTopMembers(6)">Top 6 Most Active</button>
+          <button class="nav-btn" onclick="selectCurrentCouncil()">Current Council (2025&ndash;26)</button>
+        </div>
+        <div class="mem-chip-bar" id="evoMemberChips"></div>
+        <div class="chart-box" id="evoChartBox"></div>
+        <div class="criteria-table-wrap" id="evoTableWrap"></div>
+      </section>
+
+      <!-- TAB 3: CASE EXPLORER -->
+      <section id="panel-cases" class="dev-panel">
+        <div class="filter-bar">
+          <input id="caseSearch" type="text" placeholder="Search case name, Z#, PR#, applicant, proffer..." oninput="renderCases()" style="min-width:240px;" />
+          <select id="caseYear" onchange="renderCases()"><option value="">All Years</option></select>
+          <select id="caseMember" onchange="renderCases()"><option value="">Any Council Member</option></select>
+          <select id="caseVoteCast" onchange="renderCases()">
+            <option value="">Any Vote</option>
+            <option value="AYE">Voted AYE</option>
+            <option value="NAY">Voted NAY</option>
+          </select>
+          <select id="caseOutcome" onchange="renderCases()">
+            <option value="">Any Outcome</option>
+            <option value="Approved">Approved</option>
+            <option value="Denied">Denied</option>
+            <option value="Continued">Continued</option>
+          </select>
+          <select id="casePC" onchange="renderCases()">
+            <option value="">Any PC Rec.</option>
+            <option value="Approval">PC: Approval</option>
+            <option value="Denial">PC: Denial</option>
+          </select>
+          <select id="caseTier" onchange="renderCases()">
+            <option value="">Any Tier</option>
+            <option value="Urban">Urban</option>
+            <option value="Suburban">Suburban</option>
+            <option value="Rural">Rural</option>
+            <option value="Compact Neighborhood">Compact Neighborhood</option>
+            <option value="Downtown">Downtown</option>
+          </select>
+          <select id="caseProfferFilter" onchange="renderCases()">
+            <option value="">Any Proffers</option>
+            <option value="aff_yes">Has Affordable Housing Proffer</option>
+            <option value="aff_no">No Affordable Housing Proffer</option>
+            <option value="aff_60">Affordable &le;60% AMI</option>
+            <option value="dps_yes">Has DPS Cash Donation</option>
+            <option value="env_yes">Has Env/Tree/Stormwater Proffer</option>
+            <option value="transit_yes">Has Transit/Sidewalk Proffer</option>
+            <option value="post_pc">Post-PC Proffers Added</option>
+            <option value="staff_consistent">Staff Consistent</option>
+            <option value="staff_inconsistent">Staff Inconsistent</option>
+            <option value="annex">Annexation / Rural</option>
+            <option value="large200">Large (200+ Units)</option>
+          </select>
+          <label><input type="checkbox" id="caseContestedOnly" onchange="renderCases()" /> Contested Only</label>
+          <button class="nav-btn" onclick="resetCaseFilters()">Reset</button>
+        </div>
+        <div id="caseCountLine" style="font-size:12.5px;color:var(--muted);margin-bottom:10px;"></div>
+        <div id="casesList"></div>
+        <div id="casesMoreWrap" style="margin-top:14px;text-align:center;"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./assets/auth.js"></script>
+  <script src="./assets/beta_dev.js"></script>
+</body>
+</html>

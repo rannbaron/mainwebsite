@@ -37,6 +37,7 @@
           <span class="beta-tag">Beta &bull; Rann Only</span>
         </a>
         <div class="nav-right">
+          <a class="nav-link" href="./development.html" style="color:#6ee7b7;border-color:rgba(16,185,129,0.45);">Development Patterns</a>
           <a class="nav-link" href="../index.html">Current Live Site</a>
           <a class="nav-link" href="../live.html">Live Stream</a>
           <a class="nav-link" href="../docs.html">Methodology</a>
@@ -57,11 +58,14 @@
       </section>
 
       <section class="search-panel">
-        <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);margin-bottom:8px;">
-          Search Across All Board-Terms by Topic or Keyword
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+          <div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--accent);">
+            Natural-Language Video Clip Search &amp; Cross-Term Filter (Free &bull; Runs Locally in Browser)
+          </div>
+          <div style="font-size:11.5px;color:var(--muted);" id="clipIndexStatus">Loading video clip index...</div>
         </div>
         <div class="search-row">
-          <input type="search" id="hubSearchInput" class="search-input" placeholder="Search topics, debates, votes, rezonings, budgets, members (e.g. SCAD, HEART, teacher pay, tax rate)...">
+          <input type="search" id="hubSearchInput" class="search-input" placeholder="Ask in plain English — e.g. &quot;give me video clips of Nate Baker objecting to development cases&quot; or &quot;Heidi Carter on school funding&quot;...">
           <select id="hubBoardFilter" class="select-input">
             <option value="all">All Boards &amp; Joint Committees</option>
             <option value="city">Durham City Council</option>
@@ -72,6 +76,13 @@
             <option value="joint_bocc_boe">Joint BOCC–BOE</option>
           </select>
           <button class="nav-btn" id="hubClearBtn" style="display:none;" onclick="clearHubSearch()">Clear</button>
+        </div>
+        <div class="clip-examples">
+          <span class="clip-ex-lbl">Try asking:</span>
+          <button class="clip-ex-btn" onclick="runExampleQuery('give me video clips of Nate Baker objecting to development cases')">Nate Baker objecting to development cases</button>
+          <button class="clip-ex-btn" onclick="runExampleQuery('Chelsea Cook opposing police or surveillance')">Chelsea Cook opposing police / surveillance</button>
+          <button class="clip-ex-btn" onclick="runExampleQuery('DPS Board split votes on teacher and staff pay')">DPS split votes on staff pay</button>
+          <button class="clip-ex-btn" onclick="runExampleQuery('BOCC debates on property taxes and school funding')">BOCC debates on taxes &amp; school funding</button>
         </div>
         <div class="topic-chips" id="hubTopicChips"></div>
         <div class="search-results-box" id="hubSearchResults"></div>

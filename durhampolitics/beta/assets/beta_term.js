@@ -424,6 +424,9 @@ function renderMeetingsTable() {
     const vidBtn = m.video_url
       ? `<a class="vid-btn sm" href="${esc(m.video_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">&#9654; Video</a>`
       : "";
+    const obBtn = m.onbase_url
+      ? `<a class="nav-link" style="font-size:11px;padding:3px 8px;border-color:rgba(16,185,129,0.4);color:#6ee7b7;" href="${esc(m.onbase_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">&#128206; OnBase (${m.onbase_docs_count || 0} docs)</a>`
+      : "";
 
     let drawerHtml = "";
     if (isOpen) {
@@ -451,6 +454,25 @@ function renderMeetingsTable() {
         </div>
       `).join("") || `<div style="color:var(--dim);font-size:12px;">No formal non-consent roll-call votes recorded.</div>`;
 
+      const obItemsHtml = (m.onbase_items || []).length ? `
+        <div class="drawer-box" style="margin-top:12px;">
+          <h4>Official OnBase Agenda Items &amp; Supporting Documents (${m.onbase_docs_count || 0} PDFs)</h4>
+          ${(m.onbase_items || []).map(oi => `
+            <details style="border-bottom:1px solid rgba(36,52,84,0.45);padding:6px 0;">
+              <summary style="cursor:pointer;font-size:12.5px;color:#e2e8f0;font-weight:600;">
+                ${oi.num ? esc(oi.num) + ". " : ""}${esc(oi.title)}
+                ${oi.case_num ? `<span class="pill pill-cat" style="margin-left:6px;font-size:10px;">${esc(oi.case_num)}</span>` : ""}
+                ${oi.vote ? `<span class="pill pill-pass" style="margin-left:6px;font-size:10px;">${esc(oi.vote)}</span>` : ""}
+                <span style="color:var(--dim);font-size:11px;margin-left:6px;">(${(oi.docs || []).length} docs)</span>
+              </summary>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin:7px 0 4px 12px;">
+                ${(oi.docs || []).map(d => `<a href="${esc(d.u)}" target="_blank" rel="noopener" style="font-size:11px;padding:3px 8px;border-radius:6px;background:var(--surface-2);border:1px solid var(--border);color:#cbd5e1;"><strong style="color:#7dd3fc;">[${esc(d.c)}]</strong> ${esc(d.t)}</a>`).join("")}
+              </div>
+            </details>
+          `).join("")}
+        </div>
+      ` : "";
+
       const splitSumItems = (m.votes || []).filter(v => v.is_split).map(v => {
         const sides = [];
         if (v.ayes && v.ayes.length) sides.push(`<span style="color:#6ee7b7;"><strong>Ayes:</strong> ${esc(v.ayes.join(", "))}</span>`);
@@ -474,12 +496,14 @@ function renderMeetingsTable() {
               <div style="display:flex;gap:8px;flex-wrap:wrap;">
                 ${m.pdf_exists ? `<a class="pdf-btn" href="${esc(m.pdf_url)}" target="_blank" rel="noopener">&#128196; Open Full Executive Summary PDF</a>` : ""}
                 ${m.video_url ? `<a class="vid-btn" href="${esc(m.video_url)}" target="_blank" rel="noopener">&#9654; Watch Full Video</a>` : ""}
+                ${m.onbase_url ? `<a class="nav-btn" style="border-color:var(--city);color:#6ee7b7;" href="${esc(m.onbase_url)}" target="_blank" rel="noopener">&#128206; Official OnBase Agenda</a>` : ""}
               </div>
             </div>
             <div class="drawer-grid">
               <div class="drawer-box"><h4>Timestamped Agenda Topics (${(m.agenda_items || []).length})</h4>${agHtml}</div>
               <div class="drawer-box"><h4>Recorded Votes (${(m.votes || []).length})</h4>${vtHtml}</div>
             </div>
+            ${obItemsHtml}
           </td>
         </tr>
       `;
@@ -500,6 +524,7 @@ function renderMeetingsTable() {
           <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;">
             ${pdfBtn}
             ${vidBtn}
+            ${obBtn}
           </div>
         </td>
         <td>${topicPills}</td>
