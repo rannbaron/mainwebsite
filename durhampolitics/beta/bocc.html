@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <title>BOCC: Natural-Language Search &amp; Decision Patterns — Durham Politics Beta</title>
+  <link rel="stylesheet" href="./assets/beta.css" />
+  <style>
+    .bocc-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; }
+    .bocc-tab {
+      background:var(--surface); border:1px solid var(--border); color:var(--muted);
+      padding:9px 16px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer;
+    }
+    .bocc-tab.active { background:rgba(245,158,11,0.20); border-color:var(--bocc); color:#fcd34d; }
+    .bocc-panel { display:none; }
+    .bocc-panel.active { display:block; }
+    .nl-box {
+      background:var(--bg-elev); border:1px solid var(--border-hi); border-radius:14px;
+      padding:18px 20px; margin-bottom:18px;
+    }
+    .nl-row { display:flex; gap:10px; flex-wrap:wrap; }
+    .nl-input {
+      flex:1; min-width:260px; background:#080d19; border:1px solid var(--border);
+      color:var(--text); padding:11px 14px; border-radius:10px; font-size:14px; outline:none;
+    }
+    .nl-input:focus { border-color:var(--bocc); }
+    .nl-examples { display:flex; gap:7px; flex-wrap:wrap; margin-top:10px; align-items:center; }
+    .nl-ex {
+      background:var(--surface); border:1px solid var(--border); color:#cbd5e1;
+      padding:4px 10px; border-radius:999px; font-size:11.5px; cursor:pointer;
+    }
+    .nl-ex:hover { border-color:var(--bocc); color:#fff; }
+    .stream-tabs { display:flex; gap:8px; flex-wrap:wrap; margin:12px 0; }
+    .stream-btn {
+      background:var(--surface); border:1px solid var(--border); color:var(--muted);
+      padding:6px 12px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;
+    }
+    .stream-btn.active { background:rgba(245,158,11,0.22); border-color:var(--bocc); color:#fde68a; }
+    .res-card {
+      background:var(--bg-elev); border:1px solid var(--border); border-radius:12px;
+      padding:14px 16px; margin-bottom:10px;
+    }
+    .res-top { display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:flex-start; }
+    .res-title { font-weight:700; font-size:14px; color:#fff; }
+    .res-meta { font-size:12px; color:var(--muted); margin-top:3px; }
+    .res-body { font-size:12.5px; color:#cbd5e1; margin-top:8px; line-height:1.55; }
+    .res-rec { font-size:12px; color:#fde68a; background:rgba(245,158,11,0.08); border-left:3px solid var(--bocc); padding:6px 10px; border-radius:6px; margin-top:7px; }
+    .b-pill {
+      display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:999px;
+      background:rgba(245,158,11,0.18); color:#fcd34d; border:1px solid rgba(245,158,11,0.4);
+      margin-right:5px; margin-top:4px;
+    }
+    .b-pill.green { background:rgba(16,185,129,0.16); color:#6ee7b7; border-color:rgba(16,185,129,0.4); }
+    .b-pill.blue { background:rgba(59,130,246,0.18); color:#93c5fd; border-color:rgba(59,130,246,0.4); }
+    .b-pill.red { background:rgba(239,68,68,0.18); color:#fca5a5; border-color:rgba(239,68,68,0.4); }
+    .b-pill.purple { background:rgba(167,139,250,0.18); color:#ddd6fe; border-color:rgba(167,139,250,0.4); }
+    .doc-links-row { display:flex; flex-wrap:wrap; gap:7px; margin-top:9px; }
+    .doc-btn {
+      display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600;
+      padding:5px 10px; border-radius:8px; background:var(--surface-2); border:1px solid var(--border);
+      color:#e2e8f0;
+    }
+    .doc-btn:hover { border-color:var(--bocc); color:#fff; text-decoration:none; }
+    .filter-bar {
+      display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+      background:var(--bg-elev); border:1px solid var(--border); border-radius:12px;
+      padding:13px 15px; margin-bottom:14px;
+    }
+    .filter-bar input, .filter-bar select {
+      background:#080d19; border:1px solid var(--border); color:var(--text);
+      padding:7px 10px; border-radius:8px; font-size:12.5px;
+    }
+    .filter-bar label { font-size:12px; color:var(--muted); display:inline-flex; align-items:center; gap:5px; cursor:pointer; }
+    .matrix-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:12px; background:var(--bg-elev); }
+    .matrix-tbl { width:100%; border-collapse:collapse; font-size:12px; }
+    .matrix-tbl th, .matrix-tbl td { padding:8px 10px; border-bottom:1px solid rgba(36,52,84,0.55); text-align:center; white-space:nowrap; }
+    .matrix-tbl th { background:var(--surface); color:var(--muted); font-weight:700; }
+    .matrix-tbl th:first-child, .matrix-tbl td:first-child { text-align:left; position:sticky; left:0; background:var(--bg-elev); font-weight:700; border-right:1px solid var(--border); }
+    .matrix-tbl th:first-child { background:var(--surface); }
+    .m-cell { cursor:pointer; }
+    .m-cell:hover { filter:brightness(1.25); outline:1px solid var(--bocc); }
+    .m-sub { display:block; font-size:10px; opacity:0.78; font-weight:500; }
+    .mem-chip-bar { display:flex; gap:7px; flex-wrap:wrap; margin-bottom:14px; }
+    .mem-chip {
+      background:var(--surface); border:1px solid var(--border); color:var(--muted);
+      padding:5px 11px; border-radius:999px; font-size:12px; font-weight:600; cursor:pointer;
+      display:inline-flex; align-items:center; gap:6px;
+    }
+    .mem-chip.active { color:#fff; border-color:var(--bocc); background:rgba(245,158,11,0.20); }
+    .chart-box { background:var(--bg-elev); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:16px; overflow-x:auto; }
+  </style>
+</head>
+<body>
+  <div id="betaAuthOverlay">
+    <form class="auth-card" onsubmit="handleBetaAuth(event)">
+      <div class="auth-badge">&#128274; Admin Beta Preview</div>
+      <div class="auth-title">Durham Politics Tracker</div>
+      <div class="auth-desc">Sign in as administrator (<code>rann</code>) to access Durham BOCC Deep Search &amp; Decision Patterns.</div>
+      <div class="auth-field">
+        <label for="betaUserInput">Username</label>
+        <input id="betaUserInput" type="text" autocomplete="username" value="rann" required />
+      </div>
+      <div class="auth-field">
+        <label for="betaPassInput">Master Password</label>
+        <input id="betaPassInput" type="password" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="auth-btn">Enter Beta Preview</button>
+      <div id="betaAuthError"></div>
+    </form>
+  </div>
+
+  <div id="betaApp" style="display:none;">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="./index.html">
+          <span>Durham Politics Tracker</span>
+          <span class="beta-tag">Beta Preview</span>
+        </a>
+        <nav class="nav-right">
+          <a class="nav-link" href="./index.html">&larr; All Boards &amp; Terms</a>
+          <a class="nav-link" href="./development.html" style="color:#6ee7b7;border-color:rgba(16,185,129,0.45);">City Development</a>
+          <a class="nav-link" href="./bocc.html" style="color:#fcd34d;border-color:rgba(245,158,11,0.5);">BOCC Explorer</a>
+          <a class="nav-link" href="./boe.html" style="color:#93c5fd;border-color:rgba(59,130,246,0.45);">DPS Board Explorer</a>
+          <button class="nav-btn" onclick="betaSignOut()">Sign Out</button>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="hero" style="background:linear-gradient(135deg, rgba(245,158,11,0.18), rgba(16,185,129,0.08));">
+        <div class="hero-kicker">Durham Board of County Commissioners &bull; Legistar Official Docs + Granicus Archive (2006&ndash;2026)</div>
+        <h1>BOCC: Natural-Language Search &amp; Decision Intelligence</h1>
+        <p class="hero-sub">
+          Search across 12 years of official Legistar Board Action memos (with extracted Request for Board Action summaries, County Manager Recommendations, Fiscal Impacts, and clickable PDF/DOCX attachments) alongside 20 years of Commissioner roll-call votes, split votes, and policy debates (2006&ndash;2026).
+        </p>
+        <div class="kpi-strip" id="boccKpis"></div>
+      </section>
+
+      <div class="bocc-tabs">
+        <button class="bocc-tab active" data-tab="search" onclick="setBoccTab('search')">1. Natural-Language BOCC Search (Matters + Docs + Votes + Debates)</button>
+        <button class="bocc-tab" data-tab="members" onclick="setBoccTab('members')">2. Commissioner Patterns &amp; Evolution (2006&ndash;2026)</button>
+        <button class="bocc-tab" data-tab="matters" onclick="setBoccTab('matters')">3. Official Legistar Matters &amp; Attachments Archive</button>
+      </div>
+
+      <!-- TAB 1: NATURAL LANGUAGE SEARCH -->
+      <section id="panel-search" class="bocc-panel active">
+        <div class="nl-box">
+          <div style="font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:#fcd34d;margin-bottom:8px;">
+            Ask in Plain English &mdash; Searches Official Legistar Action Memos, Attachments, Roll-Call Votes &amp; Recorded Debates
+          </div>
+          <div class="nl-row">
+            <input id="boccNlInput" class="nl-input" type="search" placeholder="e.g. &quot;property tax rate and DPS school funding&quot; or &quot;Heidi Carter opposing rezoning&quot; or &quot;Sheriff detention jail contract&quot;..." oninput="runBoccNlSearch()" />
+            <select id="boccNlYear" onchange="runBoccNlSearch()" style="background:#080d19;border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px;font-size:12.5px;">
+              <option value="">All Years</option>
+            </select>
+            <button class="nav-btn" onclick="clearBoccSearch()">Clear</button>
+          </div>
+          <div class="nl-examples">
+            <span style="font-size:11px;color:var(--dim);font-weight:700;">Try:</span>
+            <button class="nl-ex" onclick="tryBoccQuery('property tax revaluation budget school funding DPS')">Tax rate &amp; DPS funding</button>
+            <button class="nl-ex" onclick="tryBoccQuery('rezoning watershed UDO planning JCCPC')">Rezoning &amp; Watershed / UDO</button>
+            <button class="nl-ex" onclick="tryBoccQuery('Sheriff detention center jail COPS grant')">Sheriff &amp; Detention</button>
+            <button class="nl-ex" onclick="tryBoccQuery('transit light rail bus GoTriangle sales tax')">Transit &amp; GoTriangle</button>
+            <button class="nl-ex" onclick="tryBoccQuery('affordable housing bond eviction rental assistance')">Affordable Housing</button>
+            <button class="nl-ex" onclick="tryBoccQuery('Nida Allam opposing vote no dissent')">Nida Allam dissents</button>
+            <button class="nl-ex" onclick="tryBoccQuery('Heidi Carter opposing vote no dissent')">Heidi Carter dissents</button>
+            <button class="nl-ex" onclick="tryBoccQuery('DSS social services public health Alliance mental health')">DSS &amp; Public Health</button>
+          </div>
+          <div id="boccIntentBadge" style="font-size:12px;color:var(--muted);margin-top:10px;"></div>
+        </div>
+
+        <div class="stream-tabs" id="boccStreamTabs">
+          <button class="stream-btn active" data-stream="all" onclick="setBoccStream('all')">All Results</button>
+          <button class="stream-btn" data-stream="matters" onclick="setBoccStream('matters')">Official Legistar Matters &amp; Docs</button>
+          <button class="stream-btn" data-stream="votes" onclick="setBoccStream('votes')">BOCC Votes &amp; Splits</button>
+          <button class="stream-btn" data-stream="debates" onclick="setBoccStream('debates')">Recorded Debates</button>
+        </div>
+        <div id="boccSearchResults"></div>
+        <div id="boccSearchMore" style="text-align:center;margin-top:12px;"></div>
+      </section>
+
+      <!-- TAB 2: COMMISSIONER PATTERNS & EVOLUTION -->
+      <section id="panel-members" class="bocc-panel">
+        <div class="filter-bar">
+          <strong style="font-size:12.5px;">Scope:</strong>
+          <label><input type="checkbox" id="boccMatContested" onchange="renderBoccMembers()" /> Contested / Split Votes Only</label>
+          <span style="font-size:12px;color:var(--muted);margin-left:auto;">Click any cell to search that Commissioner's votes on that topic</span>
+        </div>
+        <div class="matrix-wrap" id="boccMatrixWrap" style="margin-bottom:20px;"></div>
+
+        <div class="filter-bar">
+          <strong style="font-size:12.5px;">Year-by-Year Approval Trajectory (2006&ndash;2026):</strong>
+          <button class="nav-btn" onclick="selectBoccCurrent()">Current Board (2024&ndash;26)</button>
+          <button class="nav-btn" onclick="selectBoccTop(6)">Top 6 Most Active</button>
+        </div>
+        <div class="mem-chip-bar" id="boccEvoChips"></div>
+        <div class="chart-box" id="boccEvoChart"></div>
+      </section>
+
+      <!-- TAB 3: OFFICIAL LEGISTAR MATTERS ARCHIVE -->
+      <section id="panel-matters" class="bocc-panel">
+        <div class="filter-bar">
+          <input id="matSearch" type="search" placeholder="Filter by file #, title, Request for Board Action, Manager Rec, attachment..." oninput="renderBoccArchive()" style="min-width:260px;" />
+          <select id="matCat" onchange="renderBoccArchive()">
+            <option value="">All Categories</option>
+            <option value="BUDGET">BUDGET &amp; TAXES</option>
+            <option value="ZONING">ZONING &amp; PLANNING</option>
+            <option value="SCHOOLS">SCHOOLS &amp; EDUCATION</option>
+            <option value="HOUSING">AFFORDABLE HOUSING</option>
+            <option value="SAFETY">PUBLIC SAFETY &amp; SHERIFF</option>
+            <option value="HEALTH_HUMAN_SVCS">HEALTH &amp; HUMAN SVCS</option>
+            <option value="TRANSIT_ENV">TRANSIT &amp; ENVIRONMENT</option>
+            <option value="GRANT">GRANTS &amp; ARPA</option>
+            <option value="CONTRACT">CONTRACTS &amp; ILA</option>
+            <option value="MINUTES">MINUTES</option>
+            <option value="GOVERNANCE">GOVERNANCE</option>
+          </select>
+          <select id="matYear" onchange="renderBoccArchive()"><option value="">All Years</option></select>
+          <label><input type="checkbox" id="matHasFiscal" onchange="renderBoccArchive()" /> Has Fiscal Impact ($)</label>
+          <label><input type="checkbox" id="matHasDocs" onchange="renderBoccArchive()" /> Has Supporting Attachments</label>
+          <button class="nav-btn" onclick="resetBoccArchiveFilters()">Reset</button>
+        </div>
+        <div id="matArchiveCount" style="font-size:12.5px;color:var(--muted);margin-bottom:10px;"></div>
+        <div id="matArchiveList"></div>
+        <div id="matArchiveMore" style="text-align:center;margin-top:12px;"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./assets/auth.js"></script>
+  <script src="./assets/beta_bocc.js"></script>
+</body>
+</html>

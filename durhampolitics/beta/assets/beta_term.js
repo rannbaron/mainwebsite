@@ -425,7 +425,7 @@ function renderMeetingsTable() {
       ? `<a class="vid-btn sm" href="${esc(m.video_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">&#9654; Video</a>`
       : "";
     const obBtn = m.onbase_url
-      ? `<a class="nav-link" style="font-size:11px;padding:3px 8px;border-color:rgba(16,185,129,0.4);color:#6ee7b7;" href="${esc(m.onbase_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">&#128206; ${esc(m.portal_label || "Official Docs")} (${m.onbase_docs_count || 0})</a>`
+      ? `<a class="nav-link" style="font-size:11px;padding:3px 8px;border-color:rgba(16,185,129,0.4);color:#6ee7b7;" href="${esc(m.onbase_url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">&#128206; OnBase (${m.onbase_docs_count || 0} docs)</a>`
       : "";
 
     let drawerHtml = "";
@@ -456,7 +456,7 @@ function renderMeetingsTable() {
 
       const obItemsHtml = (m.onbase_items || []).length ? `
         <div class="drawer-box" style="margin-top:12px;">
-          <h4>Official Agenda Items &amp; Supporting Documents (${m.onbase_docs_count || 0} files)</h4>
+          <h4>Official OnBase Agenda Items &amp; Supporting Documents (${m.onbase_docs_count || 0} PDFs)</h4>
           ${(m.onbase_items || []).map(oi => `
             <details style="border-bottom:1px solid rgba(36,52,84,0.45);padding:6px 0;">
               <summary style="cursor:pointer;font-size:12.5px;color:#e2e8f0;font-weight:600;">
