@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <title>Executive Summary PDFs Archive &mdash; Durham Politics Tracker (Rann Only)</title>
+  <link rel="stylesheet" href="../beta/assets/beta.css">
+</head>
+<body>
+
+  <div id="betaAuthOverlay">
+    <div class="auth-card">
+      <div class="auth-badge">Private Archive &bull; Admin Only</div>
+      <div class="auth-title">Executive Summary PDFs</div>
+      <div class="auth-desc">20-year Durham Executive Summary PDF archive. Restricted exclusively to <strong>rann</strong>.</div>
+      <form onsubmit="handleBetaAuth(event)">
+        <div class="auth-field">
+          <label for="betaUserInput">Username</label>
+          <input type="text" id="betaUserInput" value="rann" autocomplete="username" required>
+        </div>
+        <div class="auth-field">
+          <label for="betaPassInput">Administrator Password</label>
+          <input type="password" id="betaPassInput" placeholder="Enter master password" autocomplete="current-password" autofocus required>
+        </div>
+        <button type="submit" class="auth-btn">Sign In</button>
+        <div id="betaAuthError"></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="betaApp" style="display:none;">
+    <nav class="topbar">
+      <div class="topbar-inner">
+        <a href="../beta/index.html" class="brand">
+          <span>Durham Politics Tracker</span>
+          <span class="beta-tag">Summaries &bull; Rann Only</span>
+        </a>
+        <div class="nav-right">
+          <a class="nav-link" href="../beta/index.html">Beta Hub</a>
+          <a class="nav-link" href="../beta/development.html" style="color:#6ee7b7;border-color:rgba(16,185,129,0.45);">City Development</a>
+          <a class="nav-link" href="../beta/bocc.html" style="color:#fcd34d;border-color:rgba(245,158,11,0.45);">BOCC Explorer</a>
+          <a class="nav-link" href="../beta/boe.html" style="color:#93c5fd;border-color:rgba(59,130,246,0.45);">DPS Board Explorer</a>
+          <button class="nav-btn" onclick="betaSignOut()">Sign Out</button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="wrap">
+      <section class="hero">
+        <div class="hero-kicker">Complete 20-Year Executive Summary PDF Archive</div>
+        <h1>Durham Meeting Executive Summaries</h1>
+        <p class="hero-sub">
+          Filter and open Executive Summary PDFs across Durham City Council, Board of County Commissioners (BOCC),
+          DPS Board of Education, JCCPC, Joint City-County, and Joint BOCC&ndash;BOE meetings (2006&ndash;2026).
+        </p>
+        <div class="kpi-strip" id="sumKpis"></div>
+      </section>
+
+      <section class="search-panel">
+        <div class="search-row">
+          <input type="search" id="sumSearchInput" class="search-input" placeholder="Filter PDFs by meeting title, date, topic, official, or summary text...">
+          <select id="sumBoardFilter" class="select-input">
+            <option value="all">All Governing Bodies</option>
+            <option value="city">Durham City Council</option>
+            <option value="bocc">County Commissioners (BOCC)</option>
+            <option value="dps">DPS Board of Education</option>
+            <option value="jccpc">JCCPC (Planning Committee)</option>
+            <option value="joint_cc">Joint City-County Committee</option>
+            <option value="joint_bocc_boe">Joint BOCC&ndash;BOE</option>
+          </select>
+          <select id="sumYearFilter" class="select-input">
+            <option value="all">All Years</option>
+          </select>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);cursor:pointer;white-space:nowrap;">
+            <input type="checkbox" id="sumSplitsOnly"> Split votes only
+          </label>
+          <button class="nav-btn" id="sumClearBtn" style="display:none;" onclick="clearSumFilters()">Clear</button>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-hdr">
+          <div>
+            <h2>Executive Summary PDFs</h2>
+            <div class="section-sub" id="sumCountSub">Loading PDF archive...</div>
+          </div>
+        </div>
+        <div class="card-box">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width:104px;">Date</th>
+                <th style="width:130px;">Body</th>
+                <th>Meeting &amp; Summary</th>
+                <th style="width:135px;">PDF</th>
+                <th style="width:110px;">Links</th>
+              </tr>
+            </thead>
+            <tbody id="sumTableBody">
+              <tr><td colspan="5" class="empty-msg">Loading Executive Summary PDFs...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="text-align:center;margin-top:14px;" id="sumMoreWrap"></div>
+      </section>
+
+      <footer>
+        <a href="../beta/index.html">&larr; Back to Beta Hub</a> &bull; Updated <span id="sumUpdated">--</span> &bull; Restricted to <strong>rann</strong> (noindex)
+      </footer>
+    </main>
+  </div>
+
+  <script src="../beta/assets/auth.js"></script>
+  <script>
+  (function () {
+    let ALL_PDFS = [];
+    let LIMIT = 80;
+
+    function esc(s) {
+      return String(s == null ? "" : s)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function render() {
+      const q = (document.getElementById("sumSearchInput").value || "").trim().toLowerCase();
+      const board = document.getElementById("sumBoardFilter").value || "all";
+      const yr = document.getElementById("sumYearFilter").value || "all";
+      const splitsOnly = document.getElementById("sumSplitsOnly").checked;
+      document.getElementById("sumClearBtn").style.display = (q || board !== "all" || yr !== "all" || splitsOnly) ? "inline-block" : "none";
+
+      const tokens = q ? q.split(/\s+/).filter(Boolean) : [];
+      const filtered = ALL_PDFS.filter(m => {
+        if (board !== "all" && m.body_id !== board) return false;
+        if (yr !== "all" && !(m.date || "").startsWith(yr)) return false;
+        if (splitsOnly && !(m.split_votes_count > 0)) return false;
+        if (tokens.length) {
+          const hay = (m.date + " " + m.title + " " + m.body_short + " " + (m.summary || "") + " " + (m.q || "")).toLowerCase();
+          for (const tk of tokens) { if (!hay.includes(tk)) return false; }
+        }
+        return true;
+      });
+
+      document.getElementById("sumCountSub").textContent =
+        "Showing " + Math.min(LIMIT, filtered.length).toLocaleString() + " of " + filtered.length.toLocaleString() + " Executive Summary PDFs";
+
+      const tbody = document.getElementById("sumTableBody");
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-msg">No Executive Summary PDFs match your filters.</td></tr>';
+        document.getElementById("sumMoreWrap").innerHTML = "";
+        return;
+      }
+
+      tbody.innerHTML = filtered.slice(0, LIMIT).map(m => {
+        const splitBadge = m.split_votes_count > 0
+          ? ' <span class="badge" style="background:rgba(239,68,68,0.16);color:#fca5a5;border:1px solid rgba(239,68,68,0.35);">' + m.split_votes_count + ' split</span>'
+          : "";
+        const termHref = "../beta/" + (m.term_href || "").replace(/^\.\//, "");
+        const vidBtn = m.video_url
+          ? '<a class="nav-link" style="padding:3px 7px;font-size:11px;" href="' + esc(m.video_url) + '" target="_blank" rel="noopener">Video</a> '
+          : "";
+        return "<tr>"
+          + '<td style="white-space:nowrap;font-family:monospace;font-size:12px;">' + esc(m.date) + "</td>"
+          + '<td><span class="badge">' + esc(m.body_short || m.body_id) + "</span></td>"
+          + '<td><div style="font-weight:700;color:#f8fafc;">' + esc(m.title) + splitBadge + "</div>"
+          + (m.summary ? '<div style="font-size:12px;color:var(--muted);margin-top:3px;">' + esc(m.summary) + "</div>" : "") + "</td>"
+          + '<td><a class="pdf-btn" href="' + esc(m.pdf_url) + '" target="_blank" rel="noopener">Open PDF</a></td>'
+          + '<td style="white-space:nowrap;">' + vidBtn + '<a class="nav-link" style="padding:3px 7px;font-size:11px;" href="' + esc(termHref) + '">Term</a></td>'
+          + "</tr>";
+      }).join("");
+
+      const moreWrap = document.getElementById("sumMoreWrap");
+      if (filtered.length > LIMIT) {
+        moreWrap.innerHTML = '<button class="nav-btn" onclick="window.__showMoreSums()">Show More (' + (filtered.length - LIMIT).toLocaleString() + ' remaining)</button>';
+      } else {
+        moreWrap.innerHTML = "";
+      }
+    }
+
+    window.__showMoreSums = function () { LIMIT += 120; render(); };
+    window.clearSumFilters = function () {
+      document.getElementById("sumSearchInput").value = "";
+      document.getElementById("sumBoardFilter").value = "all";
+      document.getElementById("sumYearFilter").value = "all";
+      document.getElementById("sumSplitsOnly").checked = false;
+      LIMIT = 80;
+      render();
+    };
+
+    window.__onBetaAuthUnlocked = async function () {
+      try {
+        const res = await fetch("../beta/data/hub_index.json?v=" + Date.now());
+        const data = await res.json();
+        ALL_PDFS = (data.search_meetings || [])
+          .filter(m => m.pdf_url)
+          .sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+
+        const yrs = Array.from(new Set(ALL_PDFS.map(m => (m.date || "").slice(0, 4)).filter(Boolean))).sort().reverse();
+        const ySel = document.getElementById("sumYearFilter");
+        yrs.forEach(y => {
+          const opt = document.createElement("option");
+          opt.value = y;
+          opt.textContent = y;
+          ySel.appendChild(opt);
+        });
+
+        const byBody = {};
+        ALL_PDFS.forEach(m => { byBody[m.body_id] = (byBody[m.body_id] || 0) + 1; });
+        document.getElementById("sumKpis").innerHTML = [
+          { lbl: "Total PDFs", val: ALL_PDFS.length.toLocaleString(), sub: (yrs[yrs.length - 1] || "") + "–" + (yrs[0] || "") },
+          { lbl: "City Council", val: (byBody.city || 0).toLocaleString(), sub: "Summaries" },
+          { lbl: "County BOCC", val: (byBody.bocc || 0).toLocaleString(), sub: "Summaries" },
+          { lbl: "DPS Board", val: (byBody.dps || 0).toLocaleString(), sub: "Summaries" },
+          { lbl: "Joint Boards", val: ((byBody.jccpc || 0) + (byBody.joint_cc || 0) + (byBody.joint_bocc_boe || 0)).toLocaleString(), sub: "JCCPC / CC / BOCC-BOE" }
+        ].map(k => '<div class="kpi"><div class="kpi-lbl">' + k.lbl + '</div><div class="kpi-val">' + k.val + '</div><div class="kpi-sub">' + k.sub + '</div></div>').join("");
+
+        document.getElementById("sumUpdated").textContent = data.generated_at || "";
+        ["sumSearchInput", "sumBoardFilter", "sumYearFilter", "sumSplitsOnly"].forEach(id => {
+          document.getElementById(id).addEventListener(id === "sumSearchInput" ? "input" : "change", () => { LIMIT = 80; render(); });
+        });
+        render();
+      } catch (e) {
+        document.getElementById("sumTableBody").innerHTML = '<tr><td colspan="5" class="empty-msg">Error loading summaries index.</td></tr>';
+      }
+    };
+  })();
+  </script>
+</body>
+</html>
