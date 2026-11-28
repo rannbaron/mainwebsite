@@ -86,7 +86,7 @@
   function renderKpis() {
     const s = BOE.summary || {};
     document.getElementById("boeKpis").innerHTML = `
-      <div class="kpi"><div class="kpi-lbl">Diligent Meetings</div><div class="kpi-val" style="color:#93c5fd;">${s.diligent_meetings || 0}</div><div class="kpi-sub">${esc(s.diligent_range || "2021–2026")}</div></div>
+      <div class="kpi"><div class="kpi-lbl">BoE Meetings w/ Docs</div><div class="kpi-val" style="color:#93c5fd;">${s.diligent_meetings || 0}</div><div class="kpi-sub">${esc(s.diligent_range || "2013–2026")}</div></div>
       <div class="kpi"><div class="kpi-lbl">Official Docs Indexed</div><div class="kpi-val" style="color:#6ee7b7;">${(s.docs_total || 0).toLocaleString()}</div><div class="kpi-sub">${(s.docs_text_extracted || 0).toLocaleString()} full-text parsed</div></div>
       <div class="kpi"><div class="kpi-lbl">Precis &amp; Memos</div><div class="kpi-val" style="color:#fcd34d;">${(s.precis_count || 0).toLocaleString()}</div><div class="kpi-sub">${(s.fiscal_docs_count || 0).toLocaleString()} with fiscal impact $</div></div>
       <div class="kpi"><div class="kpi-lbl">Board Votes Tracked</div><div class="kpi-val" style="color:#c4b5fd;">${(s.votes_total || 0).toLocaleString()}</div><div class="kpi-sub">${s.split_votes_total || 0} split / contested votes</div></div>
