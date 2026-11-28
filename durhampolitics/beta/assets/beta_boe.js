@@ -325,8 +325,8 @@
             </div>
             ${x.sum ? `<div class="res-body">${esc(x.sum)}</div>` : ""}
             <div class="doc-links-row">
-              <a class="doc-btn" style="border-color:var(--dps);color:#93c5fd;" href="${esc(x.u)}" target="_blank" rel="noopener">&#128206; Open Official Diligent Document</a>
-              ${x.mu ? `<a class="doc-btn" href="${esc(x.mu)}" target="_blank" rel="noopener">&#128197; Diligent Meeting Page</a>` : ""}
+              <a class="doc-btn" style="border-color:var(--dps);color:#93c5fd;" href="${esc(x.u)}" target="_blank" rel="noopener">&#128206; Open Official Document</a>
+              ${x.mu ? `<a class="doc-btn" href="${esc(x.mu)}" target="_blank" rel="noopener">&#128197; Official Meeting Page</a>` : ""}
               ${x.pdf ? `<a class="doc-btn" style="border-color:#dc2626;color:#fca5a5;" href="${esc(x.pdf)}" target="_blank" rel="noopener">&#128196; Meeting Executive Summary PDF</a>` : ""}
             </div>
           </article>
@@ -454,8 +454,25 @@
       return `<button class="mem-chip ${act ? "active" : ""}" onclick="toggleBoeEvo('${esc(m.name)}')">${dot}${esc(m.name)} (${m.n})</button>`;
     }).join("");
 
-    const years = Array.from(new Set(votes.map(v => (v.d || "").slice(0, 4)).filter(y => /^20\d\d$/.test(y)))).sort();
     const selList = members.filter(m => SELECTED_EVO.has(m.name));
+    const selNames = selList.map(m => m.name);
+    const activeYearsSet = new Set();
+    votes.forEach(v => {
+      const yr = (v.d || "").slice(0, 4);
+      if (!/^20\d\d$/.test(yr) || !v.mv) return;
+      if (selNames.some(nm => v.mv[nm])) activeYearsSet.add(yr);
+    });
+    const years = Array.from(activeYearsSet).sort();
+
+    if (!selList.length || !years.length) {
+      document.getElementById("boeEvoChart").innerHTML = `
+        <div style="font-size:13px;color:var(--muted);padding:18px 8px;">
+          Select one or more board members above to plot their Aye rate over their years on the board.
+        </div>
+      `;
+      return;
+    }
+
     const series = selList.map(m => ({
       name: m.name,
       color: colorMap[m.name],
@@ -467,13 +484,32 @@
       }),
     }));
 
-    const W = 880, H = 280, padL = 48, padR = 24, padT = 22, padB = 34;
+    const allPcts = [];
+    series.forEach(s => s.pts.forEach(p => { if (p.pct != null) allPcts.push(p.pct); }));
+    const minPct = allPcts.length ? Math.min(...allPcts) : 85;
+    let yMin = contestedOnly ? 0 : 85;
+    if (!contestedOnly && minPct < yMin) {
+      yMin = Math.max(0, Math.floor((minPct - 1) / 5) * 5);
+    }
+    const yMax = 100;
+    const span = yMax - yMin;
+    let yTicks;
+    if (yMin === 85) yTicks = [85, 88, 91, 94, 97, 100];
+    else if (yMin === 0) yTicks = [0, 25, 50, 75, 100];
+    else {
+      const step = span <= 25 ? 5 : (span <= 50 ? 10 : 20);
+      yTicks = [];
+      for (let v = yMin; v <= 100; v += step) yTicks.push(v);
+      if (yTicks[yTicks.length - 1] !== 100) yTicks.push(100);
+    }
+
+    const W = 880, H = 280, padL = 50, padR = 26, padT = 22, padB = 34;
     const plotW = W - padL - padR, plotH = H - padT - padB;
     const xPos = i => padL + (years.length <= 1 ? plotW / 2 : (i / (years.length - 1)) * plotW);
-    const yPos = p => padT + plotH - (p / 100) * plotH;
+    const yPos = p => padT + plotH - ((Math.max(yMin, Math.min(yMax, p)) - yMin) / span) * plotH;
 
     let svg = "";
-    [0, 25, 50, 75, 100].forEach(v => {
+    yTicks.forEach(v => {
       const y = yPos(v);
       svg += `<line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="rgba(148,163,184,0.18)" stroke-dasharray="3,3" />`;
       svg += `<text x="${padL - 8}" y="${y + 4}" text-anchor="end" fill="#94a3b8" font-size="11">${v}%</text>`;
@@ -494,10 +530,11 @@
       });
     });
 
+    const yrSpanLbl = years.length === 1 ? years[0] : `${years[0]}–${years[years.length - 1]}`;
     const leg = series.map(s => `<span style="display:inline-flex;align-items:center;gap:5px;margin-right:12px;font-size:12px;"><span style="width:12px;height:3px;background:${s.color};display:inline-block;"></span>${esc(s.name)}</span>`).join("");
     document.getElementById("boeEvoChart").innerHTML = `
       <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
-        <strong style="font-size:13.5px;">Board Member Aye Rate Over Time (${contestedOnly ? "Split Votes Only" : "All Non-Consent Votes"})</strong>
+        <strong style="font-size:13.5px;">Board Member Aye Rate Over Time (${yrSpanLbl} &bull; ${contestedOnly ? "Split Votes Only" : "All Non-Consent Votes"} &bull; Scale ${yMin}%–100%)</strong>
         <div>${leg}</div>
       </div>
       <svg viewBox="0 0 ${W} ${H}" style="width:100%;max-width:960px;height:auto;display:block;">${svg}</svg>
@@ -537,7 +574,7 @@
     });
 
     document.getElementById("docArchiveCount").textContent =
-      `Showing ${Math.min(filtered.length, ARCHIVE_LIMIT)} of ${filtered.length} official Diligent documents`;
+      `Showing ${Math.min(filtered.length, ARCHIVE_LIMIT)} of ${filtered.length.toLocaleString()} official DPS Board documents (2013–2026)`;
 
     const shown = filtered.slice(0, ARCHIVE_LIMIT);
     document.getElementById("docArchiveList").innerHTML = shown.map(x => `
@@ -554,8 +591,8 @@
         </div>
         ${x.sum ? `<div class="res-body">${esc(x.sum)}</div>` : ""}
         <div class="doc-links-row">
-          <a class="doc-btn" style="border-color:var(--dps);color:#93c5fd;" href="${esc(x.u)}" target="_blank" rel="noopener">&#128206; Open Diligent Document</a>
-          ${x.mu ? `<a class="doc-btn" href="${esc(x.mu)}" target="_blank" rel="noopener">&#128197; Diligent Meeting Page</a>` : ""}
+          <a class="doc-btn" style="border-color:var(--dps);color:#93c5fd;" href="${esc(x.u)}" target="_blank" rel="noopener">&#128206; Open Official Document</a>
+          ${x.mu ? `<a class="doc-btn" href="${esc(x.mu)}" target="_blank" rel="noopener">&#128197; Official Meeting Page</a>` : ""}
           ${x.pdf ? `<a class="doc-btn" style="border-color:#dc2626;color:#fca5a5;" href="${esc(x.pdf)}" target="_blank" rel="noopener">&#128196; Executive Summary PDF</a>` : ""}
         </div>
       </article>
